@@ -1,0 +1,56 @@
+<nav class="wiki-site-title" aria-label="Wiki navigation">
+  <a class="wiki-site-title__brand" href="/wiki/" translate="no">HIMR WIKI</a>
+  <a class="wiki-site-title__home" href="/">Main site</a>
+</nav>
+
+<style>
+  @layer starlight.core {
+    .wiki-site-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .wiki-site-title__brand {
+      overflow: hidden;
+      color: var(--sl-color-text-accent);
+      font-size: var(--sl-text-h4);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      text-decoration: none;
+      text-overflow: ellipsis;
+    }
+
+    .wiki-site-title__home {
+      padding-inline-start: 0.75rem;
+      border-inline-start: 1px solid var(--sl-color-gray-5);
+      color: var(--sl-color-gray-2);
+      font-size: var(--sl-text-xs);
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .wiki-site-title__home:hover,
+    .wiki-site-title__home:focus-visible {
+      color: var(--sl-color-text-accent);
+    }
+
+    @media (max-width: 30rem) {
+      .wiki-site-title__home {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+  }
+</style>

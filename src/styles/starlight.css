@@ -1,0 +1,44 @@
+:root {
+  --sl-color-accent-low: #303817;
+  --sl-color-accent: #c8ed55;
+  --sl-color-accent-high: #efffc1;
+  --sl-color-white: #f6f3e9;
+  --sl-color-gray-1: #e5e0d4;
+  --sl-color-gray-2: #b7b1a7;
+  --sl-color-gray-3: #7d7975;
+  --sl-color-gray-4: #4b494b;
+  --sl-color-gray-5: #2d2c31;
+  --sl-color-gray-6: #1b1a1f;
+  --sl-color-black: #0b0b0e;
+  --sl-font: Inter, ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e4f7a7;
+  --sl-color-accent: #526d00;
+  --sl-color-accent-high: #273400;
+  --sl-color-white: #17161a;
+  --sl-color-gray-1: #29272d;
+  --sl-color-gray-2: #4d4a51;
+  --sl-color-gray-3: #726e73;
+  --sl-color-gray-4: #aaa5a5;
+  --sl-color-gray-5: #d7d1ca;
+  --sl-color-gray-6: #eeeae1;
+  --sl-color-gray-7: #f6f3e9;
+  --sl-color-black: #fffdf7;
+}
+
+header.header {
+  border-bottom-color: color-mix(in srgb, var(--sl-color-gray-5) 80%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.site-title {
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  letter-spacing: -0.055em;
+}

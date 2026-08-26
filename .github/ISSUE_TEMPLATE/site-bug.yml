@@ -1,0 +1,82 @@
+name: Site bug
+description: Report a problem with the homepage, wiki interface, navigation, or build.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a reproducible site problem. Remove tokens, private research, personal information, and sensitive source material from screenshots and logs.
+
+  - type: input
+    id: page
+    attributes:
+      label: Affected page
+      description: Paste the public URL or repository path where the problem occurs.
+      placeholder: /wiki/... or src/...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Homepage
+        - Wiki content rendering
+        - Navigation or links
+        - Search
+        - Mobile or responsive layout
+        - Accessibility or reduced motion
+        - Local or Cloudflare build
+        - Other site behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem and its visible impact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser/device for a page bug, or Node/OS for a build bug.
+      placeholder: Firefox 128 on Android, or Node 22.16 on Ubuntu
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or sanitized logs
+      description: Optional. Drag files here only after removing private and sensitive information.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I removed tokens, private research, personal information, and sensitive source material.
+          required: true

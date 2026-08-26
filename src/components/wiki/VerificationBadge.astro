@@ -1,0 +1,109 @@
+---
+type VerificationStatus =
+  | 'unverified'
+  | 'source-matched'
+  | 'video-checked'
+  | 'community-media-checked'
+  | 'corroborated'
+  | 'disputed';
+
+interface Props {
+  status: VerificationStatus;
+  note?: string;
+  reviewedAt?: string;
+}
+
+const { status, note, reviewedAt = '25 August 2026' } = Astro.props;
+const labels: Record<VerificationStatus, string> = {
+  unverified: 'Unverified',
+  'source-matched': 'Source matched',
+  'video-checked': 'Video checked',
+  'community-media-checked': 'Community media checked',
+  corroborated: 'Corroborated',
+  disputed: 'Disputed',
+};
+---
+
+<span class="verification-summary">
+  <span class:list={['verification-badge', `verification-badge--${status}`]}>
+    <i aria-hidden="true"></i>
+    {labels[status]}
+  </span>
+  {note && (
+    <small class="verification-note">
+      <strong>Reviewed {reviewedAt}.</strong> {note}
+    </small>
+  )}
+</span>
+
+<style>
+  .verification-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    width: fit-content;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    padding: 0.28rem 0.62rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-1);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.045em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .verification-badge i {
+    width: 0.46rem;
+    height: 0.46rem;
+    border-radius: 999px;
+    background: var(--status-color, var(--sl-color-gray-3));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-color) 18%, transparent);
+  }
+
+  .verification-badge--unverified {
+    --status-color: #e9a23b;
+  }
+
+  .verification-badge--source-matched {
+    --status-color: #70aeea;
+  }
+
+  .verification-badge--video-checked {
+    --status-color: #c8ed55;
+  }
+
+  .verification-badge--community-media-checked {
+    --status-color: #70aeea;
+  }
+
+  .verification-badge--corroborated {
+    --status-color: #6dd6a8;
+  }
+
+  .verification-badge--disputed {
+    --status-color: #ec6d78;
+  }
+
+  .verification-note {
+    max-width: 72ch;
+    color: var(--sl-color-gray-2);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  :global(:root[data-theme='light']) .verification-badge {
+    background: var(--sl-color-gray-7);
+    color: var(--sl-color-gray-1);
+  }
+</style>

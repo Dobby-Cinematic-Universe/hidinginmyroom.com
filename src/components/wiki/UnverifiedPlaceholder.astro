@@ -1,0 +1,52 @@
+---
+import VerificationBadge from './VerificationBadge.astro';
+
+interface Props {
+  topic?: string;
+}
+
+const { topic = 'This topic' } = Astro.props;
+---
+
+<section class="draft-placeholder" aria-label="Unverified article placeholder">
+  <VerificationBadge
+    status="unverified"
+    note="No narrative claims on this page have passed source review."
+  />
+  <div>
+    <strong>No reviewed article has been published yet.</strong>
+    <p>
+      {topic} remains in the research queue. NotebookLM summaries and machine
+      transcripts will not be promoted here until each material claim has a precise
+      source and the required verification state.
+    </p>
+    <a href="/wiki/archive/methodology/">Read the verification method →</a>
+  </div>
+</section>
+
+<style>
+  .draft-placeholder {
+    display: grid;
+    gap: 1rem;
+    margin-block: 1.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.65rem;
+    padding: 1.1rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 55%, transparent);
+  }
+
+  .draft-placeholder strong {
+    color: var(--sl-color-white);
+    font-size: 1.05rem;
+  }
+
+  .draft-placeholder p {
+    margin: 0.35rem 0 0.55rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .draft-placeholder a {
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+</style>

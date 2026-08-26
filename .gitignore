@@ -1,0 +1,69 @@
+
+# Dependencies, generated output, and caches
+/node_modules/
+/dist/
+/.astro/
+/.cache/
+/.wrangler/
+/coverage/
+*.tsbuildinfo
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local configuration and credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Private research and capture tooling. The public repository is deliberately
+# source-only; reviewed public prose and approved still images live in src/ and
+# public/, while evidence bundles remain in the private research workspace.
+/research/
+/scripts/research/
+
+# Local source videos, audio, captures, and analysis workspaces
+/vidspublic/
+/media-analysis/
+/analysis/
+/captures/
+/downloads/
+*.mp4
+*.mov
+*.m4v
+*.mkv
+*.webm
+*.avi
+*.wav
+*.mp3
+*.m4a
+*.flac
+
+# Archives and disk images
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+*.xz
+*.zst
+*.iso
+
+# Editor, agent, and operating-system state
+/.agents/
+/.codex/
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo

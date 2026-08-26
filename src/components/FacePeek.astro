@@ -1,0 +1,1022 @@
+<div
+  class="face-peek"
+  data-face-peek
+>
+  <div class="face-peek__fallback" aria-hidden="true">
+    <span class="fallback-head">
+      <i class="fallback-hair"></i>
+      <i class="fallback-glasses fallback-glasses--left"></i>
+      <i class="fallback-glasses fallback-glasses--right"></i>
+      <i class="fallback-bridge"></i>
+      <i class="fallback-nose"></i>
+      <i class="fallback-mouth"></i>
+    </span>
+  </div>
+  <canvas class="face-peek__canvas" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  import {
+    ACESFilmicToneMapping,
+    BufferGeometry,
+    Color,
+    CylinderGeometry,
+    DirectionalLight,
+    DoubleSide,
+    ExtrudeGeometry,
+    Float32BufferAttribute,
+    Group,
+    HemisphereLight,
+    Material,
+    Mesh,
+    MeshStandardMaterial,
+    Path,
+    PerspectiveCamera,
+    QuadraticBezierCurve3,
+    Scene,
+    Shape,
+    SphereGeometry,
+    SRGBColorSpace,
+    TubeGeometry,
+    Vector3,
+    WebGLRenderer,
+  } from 'three';
+
+  type VectorTuple = [number, number, number];
+  type Pupil = { mesh: Mesh; baseX: number };
+  type HairLockConfig = {
+    rootX: number;
+    rootWidth: number;
+    rootY: number;
+    tipX: number;
+    tipWidth: number;
+    tipY: number;
+    tipShoulder: number;
+    bend: number;
+    lift: number;
+    wave?: number;
+    wavePhase?: number;
+  };
+
+  const clamp = (value: number, min: number, max: number) =>
+    Math.min(Math.max(value, min), max);
+
+  const lerp = (start: number, end: number, amount: number) =>
+    start + (end - start) * amount;
+
+  function addMesh(
+    parent: Group,
+    geometry: BufferGeometry,
+    material: Material,
+    position: VectorTuple,
+    scale: VectorTuple = [1, 1, 1],
+    rotation: VectorTuple = [0, 0, 0],
+  ) {
+    const mesh = new Mesh(geometry, material);
+    mesh.position.set(...position);
+    mesh.scale.set(...scale);
+    mesh.rotation.set(...rotation);
+    parent.add(mesh);
+    return mesh;
+  }
+
+  function makeHeadGeometry() {
+    const geometry = new SphereGeometry(1, 48, 32);
+    const positions = geometry.attributes.position;
+
+    for (let index = 0; index < positions.count; index += 1) {
+      const sourceX = positions.getX(index);
+      const sourceY = positions.getY(index);
+      const sourceZ = positions.getZ(index);
+      const front = Math.max(sourceZ, 0);
+      const cheek = 1 + Math.exp(-Math.pow((sourceY + 0.04) / 0.34, 2)) * 0.045;
+      const jawTaper = sourceY < -0.18 ? 1 - Math.min((-sourceY - 0.18) * 0.22, 0.16) : 1;
+      const chinNarrowing = sourceY < -0.72 ? 0.975 : 1;
+      const templeTaper = sourceY > 0.53 ? 0.96 : 1;
+      const chinProjection = sourceY < -0.64 ? (-sourceY - 0.64) * 0.065 * front : 0;
+
+      positions.setXYZ(
+        index,
+        sourceX * 0.75 * cheek * jawTaper * chinNarrowing * templeTaper,
+        sourceY * (sourceY < 0 ? 1.045 : 1.14),
+        sourceZ * 0.72 + chinProjection,
+      );
+    }
+
+    positions.needsUpdate = true;
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function roundedRectangle(
+    path: Shape | Path,
+    width: number,
+    height: number,
+    radius: number,
+    reverse = false,
+  ) {
+    const left = -width / 2;
+    const right = width / 2;
+    const bottom = -height / 2;
+    const top = height / 2;
+
+    if (reverse) {
+      path.moveTo(left + radius, bottom);
+      path.quadraticCurveTo(left, bottom, left, bottom + radius);
+      path.lineTo(left, top - radius);
+      path.quadraticCurveTo(left, top, left + radius, top);
+      path.lineTo(right - radius, top);
+      path.quadraticCurveTo(right, top, right, top - radius);
+      path.lineTo(right, bottom + radius);
+      path.quadraticCurveTo(right, bottom, right - radius, bottom);
+      path.lineTo(left + radius, bottom);
+    } else {
+      path.moveTo(left + radius, bottom);
+      path.lineTo(right - radius, bottom);
+      path.quadraticCurveTo(right, bottom, right, bottom + radius);
+      path.lineTo(right, top - radius);
+      path.quadraticCurveTo(right, top, right - radius, top);
+      path.lineTo(left + radius, top);
+      path.quadraticCurveTo(left, top, left, top - radius);
+      path.lineTo(left, bottom + radius);
+      path.quadraticCurveTo(left, bottom, left + radius, bottom);
+    }
+    path.closePath();
+  }
+
+  function makeRoundedPanelGeometry(
+    width: number,
+    height: number,
+    radius: number,
+    depth: number,
+    border = 0,
+  ) {
+    const shape = new Shape();
+    roundedRectangle(shape, width, height, radius);
+
+    if (border > 0) {
+      const hole = new Path();
+      roundedRectangle(
+        hole,
+        width - border * 2,
+        height - border * 2,
+        Math.max(radius - border, 0.018),
+        true,
+      );
+      shape.holes.push(hole);
+    }
+
+    const geometry = new ExtrudeGeometry(shape, {
+      depth,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      bevelSize: Math.min(depth * 0.22, 0.012),
+      bevelThickness: Math.min(depth * 0.22, 0.012),
+      curveSegments: 10,
+    });
+    geometry.translate(0, 0, -depth / 2);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function curveGeometry(
+    start: VectorTuple,
+    control: VectorTuple,
+    end: VectorTuple,
+    radius: number,
+  ) {
+    return new TubeGeometry(
+      new QuadraticBezierCurve3(
+        new Vector3(...start),
+        new Vector3(...control),
+        new Vector3(...end),
+      ),
+      12,
+      radius,
+      8,
+      false,
+    );
+  }
+
+  function hairShellZ(x: number, y: number) {
+    const ellipsoid = Math.max(
+      0.018,
+      1 - Math.pow(x / 0.88, 2) - Math.pow((y - 0.035) / 1.22, 2),
+    );
+    return Math.sqrt(ellipsoid) * 0.83 + 0.028;
+  }
+
+  function makeHairCapGeometry() {
+    const columns = 64;
+    const rows = 24;
+    const vertices: number[] = [];
+    const indices: number[] = [];
+
+    for (let column = 0; column <= columns; column += 1) {
+      const azimuth = (column / columns) * Math.PI * 2;
+      const front = Math.max(Math.sin(azimuth), 0);
+      const back = Math.max(-Math.sin(azimuth), 0);
+      const sideBias = Math.cos(azimuth);
+      const leftSide = Math.max(-sideBias, 0);
+      const rightSide = Math.max(sideBias, 0);
+      const partOpening =
+        front * Math.exp(-Math.pow((sideBias + 0.22) / 0.16, 2)) * 0.2;
+      const bottomY =
+        -0.13 +
+        Math.pow(front, 2.35) * 0.79 -
+        Math.pow(back, 1.55) * 0.27 +
+        front * sideBias * -0.07 +
+        partOpening;
+      const bottomTheta = Math.acos(clamp((bottomY - 0.035) / 1.2, -0.96, 0.98));
+
+      for (let row = 0; row <= rows; row += 1) {
+        const vertical = row / rows;
+        const theta = bottomTheta * vertical;
+        const radial = Math.sin(theta);
+        const crownTexture =
+          1 +
+          Math.sin(azimuth * 3 + 0.65) * Math.sin(theta * 1.35) * 0.018 +
+          Math.sin(azimuth * 7 - 0.4) * Math.pow(radial, 1.7) * 0.007;
+        const sideVolume =
+          1 + rightSide * Math.pow(radial, 1.25) * 0.052 - leftSide * radial * 0.016;
+        const crownLean = (1 - vertical) * -0.048;
+        const x =
+          radial * Math.cos(azimuth) * 0.86 * crownTexture * sideVolume + crownLean;
+        const y =
+          0.035 +
+          Math.cos(theta) * 1.2 +
+          Math.sin(azimuth * 4 - 0.6) * radial * 0.009 +
+          radial * (rightSide * 0.012 - leftSide * 0.008);
+        const z = radial * Math.sin(azimuth) * 0.83 * crownTexture - 0.018;
+        vertices.push(x, y, z);
+      }
+    }
+
+    for (let column = 0; column < columns; column += 1) {
+      for (let row = 0; row < rows; row += 1) {
+        const current = column * (rows + 1) + row;
+        const below = current + 1;
+        const next = current + rows + 1;
+        const nextBelow = next + 1;
+        indices.push(current, below, next, next, below, nextBelow);
+      }
+    }
+
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function makeHairLockGeometry(config: HairLockConfig) {
+    const columns = 10;
+    const rows = 14;
+    const vertices: number[] = [];
+    const indices: number[] = [];
+
+    for (let row = 0; row <= rows; row += 1) {
+      const vertical = row / rows;
+      const fall = vertical * vertical * (3 - vertical * 2);
+      const centerX =
+        lerp(config.rootX, config.tipX, fall) +
+        Math.sin(vertical * Math.PI) * config.bend +
+        Math.sin(vertical * Math.PI * 2 + (config.wavePhase ?? 0)) *
+          Math.sin(vertical * Math.PI) *
+          (config.wave ?? 0);
+      const width = lerp(config.rootWidth, config.tipWidth, Math.pow(vertical, 0.82));
+
+      for (let column = 0; column <= columns; column += 1) {
+        const horizontal = column / columns;
+        const across = horizontal - 0.5;
+        const x = centerX + across * width;
+        const rootY = config.rootY - Math.pow(Math.abs(across) * 2, 1.7) * 0.075;
+        const tipY =
+          config.tipY + Math.pow(Math.abs(across) * 2, 1.65) * config.tipShoulder;
+        const y = lerp(rootY, tipY, fall);
+        const layerLift = config.lift * (0.28 + Math.sin(vertical * Math.PI) * 0.72);
+        const z = hairShellZ(x, y) + layerLift;
+        vertices.push(x, y, z);
+      }
+    }
+
+    for (let row = 0; row < rows; row += 1) {
+      for (let column = 0; column < columns; column += 1) {
+        const current = row * (columns + 1) + column;
+        const next = current + 1;
+        const below = current + columns + 1;
+        const belowNext = below + 1;
+        indices.push(current, below, next, next, below, belowNext);
+      }
+    }
+
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function makeNoseGeometry() {
+    const rings = [
+      { y: 0.38, width: 0.03, z: 0.66, depth: 0.02 },
+      { y: 0.12, width: 0.05, z: 0.71, depth: 0.045 },
+      { y: -0.045, width: 0.075, z: 0.77, depth: 0.065 },
+      { y: -0.13, width: 0.14, z: 0.79, depth: 0.085 },
+      { y: -0.19, width: 0.115, z: 0.75, depth: 0.04 },
+    ];
+    const radialSegments = 14;
+    const vertices: number[] = [];
+    const indices: number[] = [];
+
+    for (const ring of rings) {
+      for (let segment = 0; segment < radialSegments; segment += 1) {
+        const angle = (segment / radialSegments) * Math.PI * 2;
+        vertices.push(
+          Math.cos(angle) * ring.width,
+          ring.y,
+          ring.z + Math.sin(angle) * ring.depth,
+        );
+      }
+    }
+
+    for (let ring = 0; ring < rings.length - 1; ring += 1) {
+      for (let segment = 0; segment < radialSegments; segment += 1) {
+        const next = (segment + 1) % radialSegments;
+        const current = ring * radialSegments + segment;
+        const currentNext = ring * radialSegments + next;
+        const below = (ring + 1) * radialSegments + segment;
+        const belowNext = (ring + 1) * radialSegments + next;
+        indices.push(current, currentNext, below, currentNext, belowNext, below);
+      }
+    }
+
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function addGlasses(head: Group, frameMaterial: Material, lensMaterial: Material) {
+    const glasses = new Group();
+    glasses.rotation.z = -0.012;
+    head.add(glasses);
+
+    const frame = makeRoundedPanelGeometry(0.58, 0.3, 0.07, 0.045, 0.03);
+    const lens = makeRoundedPanelGeometry(0.5, 0.215, 0.045, 0.01);
+
+    for (const centerX of [-0.32, 0.32]) {
+      addMesh(glasses, lens, lensMaterial, [centerX, 0.22, 0.785]);
+      addMesh(glasses, frame, frameMaterial, [centerX, 0.22, 0.805]);
+    }
+
+    addMesh(
+      glasses,
+      curveGeometry([-0.045, 0.245, 0.81], [0, 0.295, 0.83], [0.045, 0.245, 0.81], 0.013),
+      frameMaterial,
+      [0, 0, 0],
+    );
+
+    addMesh(
+      glasses,
+      curveGeometry([-0.61, 0.25, 0.79], [-0.72, 0.24, 0.62], [-0.73, 0.07, 0.36], 0.012),
+      frameMaterial,
+      [0, 0, 0],
+    );
+    addMesh(
+      glasses,
+      curveGeometry([0.61, 0.25, 0.79], [0.72, 0.24, 0.62], [0.73, 0.07, 0.36], 0.012),
+      frameMaterial,
+      [0, 0, 0],
+    );
+  }
+
+  function addHair(
+    head: Group,
+    hairMaterial: Material,
+    hairHighlightMaterial: Material,
+    scalpMaterial: Material,
+  ) {
+    addMesh(head, makeHairCapGeometry(), hairMaterial, [0, 0, 0]);
+
+    const locks: HairLockConfig[] = [
+      {
+        rootX: -0.27,
+        rootWidth: 0.075,
+        rootY: 1.17,
+        tipX: -0.5,
+        tipWidth: 0.19,
+        tipY: 0.69,
+        tipShoulder: 0.06,
+        bend: -0.085,
+        lift: 0.038,
+        wave: 0.023,
+        wavePhase: 0.4,
+      },
+      {
+        rootX: -0.22,
+        rootWidth: 0.1,
+        rootY: 1.17,
+        tipX: 0.46,
+        tipWidth: 0.4,
+        tipY: 0.44,
+        tipShoulder: 0.11,
+        bend: 0.18,
+        lift: 0.072,
+        wave: 0.03,
+        wavePhase: 1.4,
+      },
+      {
+        rootX: -0.1,
+        rootWidth: 0.085,
+        rootY: 1.07,
+        tipX: 0.71,
+        tipWidth: 0.28,
+        tipY: 0.16,
+        tipShoulder: 0.1,
+        bend: 0.2,
+        lift: 0.064,
+        wave: 0.026,
+        wavePhase: 2.2,
+      },
+      {
+        rootX: -0.42,
+        rootWidth: 0.21,
+        rootY: 0.83,
+        tipX: -0.7,
+        tipWidth: 0.085,
+        tipY: 0.36,
+        tipShoulder: 0.065,
+        bend: -0.07,
+        lift: 0.044,
+        wave: 0.029,
+        wavePhase: 1.9,
+      },
+      {
+        rootX: -0.59,
+        rootWidth: 0.2,
+        rootY: 0.69,
+        tipX: -0.91,
+        tipWidth: 0.065,
+        tipY: 0.02,
+        tipShoulder: 0.1,
+        bend: -0.11,
+        lift: 0.039,
+        wave: 0.032,
+        wavePhase: 0.8,
+      },
+      {
+        rootX: -0.72,
+        rootWidth: 0.16,
+        rootY: 0.52,
+        tipX: -0.82,
+        tipWidth: 0.045,
+        tipY: -0.28,
+        tipShoulder: 0.14,
+        bend: -0.025,
+        lift: 0.03,
+        wave: 0.035,
+        wavePhase: 0.1,
+      },
+      {
+        rootX: 0.31,
+        rootWidth: 0.31,
+        rootY: 0.84,
+        tipX: 0.58,
+        tipWidth: 0.16,
+        tipY: 0.24,
+        tipShoulder: 0.085,
+        bend: 0.045,
+        lift: 0.049,
+        wave: 0.017,
+        wavePhase: 1.1,
+      },
+      {
+        rootX: 0.52,
+        rootWidth: 0.27,
+        rootY: 0.71,
+        tipX: 0.79,
+        tipWidth: 0.12,
+        tipY: -0.08,
+        tipShoulder: 0.105,
+        bend: 0.055,
+        lift: 0.034,
+        wave: 0.014,
+        wavePhase: 2.4,
+      },
+      {
+        rootX: 0.69,
+        rootWidth: 0.17,
+        rootY: 0.55,
+        tipX: 0.91,
+        tipWidth: 0.055,
+        tipY: -0.12,
+        tipShoulder: 0.115,
+        bend: 0.085,
+        lift: 0.026,
+        wave: 0.011,
+        wavePhase: 1.7,
+      },
+    ];
+
+    for (const lock of locks) {
+      addMesh(head, makeHairLockGeometry(lock), hairMaterial, [0, 0, 0]);
+    }
+
+    addMesh(
+      head,
+      curveGeometry([-0.25, 1.18, 0.17], [-0.235, 1.03, 0.43], [-0.2, 0.84, 0.59], 0.004),
+      scalpMaterial,
+      [0, 0, 0],
+    );
+
+    const strandPaths: Array<[VectorTuple, VectorTuple, VectorTuple]> = [
+      [[-0.25, 1.14, 0.3], [-0.43, 0.9, 0.61], [-0.5, 0.69, 0.62]],
+      [[-0.2, 1.13, 0.32], [0.12, 0.8, 0.7], [0.45, 0.45, 0.7]],
+      [[-0.09, 1.06, 0.4], [0.34, 0.58, 0.73], [0.7, 0.17, 0.59]],
+      [[-0.59, 0.7, 0.47], [-0.77, 0.31, 0.52], [-0.9, 0.03, 0.27]],
+      [[-0.72, 0.5, 0.37], [-0.87, 0.08, 0.42], [-0.82, -0.25, 0.23]],
+      [[0.51, 0.71, 0.5], [0.68, 0.3, 0.58], [0.79, -0.07, 0.36]],
+    ];
+    for (const [start, control, end] of strandPaths) {
+      addMesh(head, curveGeometry(start, control, end, 0.004), hairHighlightMaterial, [0, 0, 0]);
+    }
+
+    const flyawayPaths: Array<[VectorTuple, VectorTuple, VectorTuple]> = [
+      [[-0.61, 0.68, 0.34], [-0.91, 0.46, 0.3], [-0.86, 0.24, 0.19]],
+      [[-0.73, 0.44, 0.28], [-0.98, 0.12, 0.22], [-0.84, -0.15, 0.16]],
+      [[-0.43, 1.03, 0.35], [-0.7, 1.08, 0.26], [-0.76, 0.91, 0.13]],
+      [[0.74, 0.26, 0.32], [0.96, 0.06, 0.24], [0.9, -0.11, 0.16]],
+    ];
+    for (const [start, control, end] of flyawayPaths) {
+      addMesh(head, curveGeometry(start, control, end, 0.006), hairMaterial, [0, 0, 0]);
+    }
+  }
+
+  function buildDanielBust() {
+    const model = new Group();
+    model.rotation.z = -0.018;
+
+    const skin = new MeshStandardMaterial({
+      color: new Color('#b9826f'),
+      roughness: 0.7,
+      metalness: 0,
+    });
+    const skinHighlight = new MeshStandardMaterial({
+      color: new Color('#d09b84'),
+      roughness: 0.66,
+      metalness: 0,
+    });
+    const skinDetail = new MeshStandardMaterial({
+      color: new Color('#8f5b53'),
+      roughness: 0.82,
+      metalness: 0,
+    });
+    const hair = new MeshStandardMaterial({
+      color: new Color('#0e0f13'),
+      roughness: 0.79,
+      metalness: 0.025,
+      side: DoubleSide,
+    });
+    const hairHighlight = new MeshStandardMaterial({
+      color: new Color('#29282e'),
+      roughness: 0.86,
+      metalness: 0,
+    });
+    const scalp = new MeshStandardMaterial({
+      color: new Color('#282226'),
+      roughness: 0.9,
+      metalness: 0,
+    });
+    const frame = new MeshStandardMaterial({
+      color: new Color('#111116'),
+      roughness: 0.25,
+      metalness: 0.24,
+    });
+    const lens = new MeshStandardMaterial({
+      color: new Color('#b8c9c4'),
+      roughness: 0.12,
+      metalness: 0.08,
+      transparent: true,
+      opacity: 0.1,
+      depthWrite: false,
+    });
+    const eyeWhite = new MeshStandardMaterial({
+      color: new Color('#e7dfd2'),
+      roughness: 0.5,
+    });
+    const irisMaterial = new MeshStandardMaterial({
+      color: new Color('#3a251d'),
+      roughness: 0.38,
+    });
+    const pupilMaterial = new MeshStandardMaterial({
+      color: new Color('#100d0d'),
+      roughness: 0.26,
+      metalness: 0.03,
+    });
+    const mouthLine = new MeshStandardMaterial({
+      color: new Color('#40262a'),
+      roughness: 0.8,
+    });
+    const lip = new MeshStandardMaterial({
+      color: new Color('#955e5c'),
+      roughness: 0.72,
+    });
+    const shirt = new MeshStandardMaterial({
+      color: new Color('#111925'),
+      roughness: 0.94,
+    });
+
+    addMesh(
+      model,
+      new SphereGeometry(1, 32, 18),
+      shirt,
+      [0, -1.5, -0.2],
+      [1.27, 0.34, 0.56],
+    );
+    addMesh(model, new CylinderGeometry(0.255, 0.34, 0.72, 24), skin, [0, -1.08, -0.13]);
+
+    const head = new Group();
+    head.position.y = 0.2;
+    model.add(head);
+
+    addMesh(head, makeHeadGeometry(), skin, [0, 0, 0]);
+    const roundedFeature = new SphereGeometry(1, 24, 16);
+    addMesh(head, roundedFeature, skin, [0, -0.88, 0.02], [0.27, 0.13, 0.18]);
+    addMesh(head, roundedFeature, skin, [-0.73, -0.03, -0.02], [0.1, 0.21, 0.09]);
+    addMesh(head, roundedFeature, skin, [0.73, -0.03, -0.02], [0.1, 0.21, 0.09]);
+
+    addMesh(head, makeNoseGeometry(), skin, [0, 0, 0]);
+    addMesh(head, roundedFeature, skin, [-0.105, -0.15, 0.75], [0.074, 0.048, 0.058]);
+    addMesh(head, roundedFeature, skin, [0.105, -0.15, 0.75], [0.074, 0.048, 0.058]);
+    addMesh(head, roundedFeature, skinDetail, [-0.069, -0.19, 0.786], [0.023, 0.01, 0.009]);
+    addMesh(head, roundedFeature, skinDetail, [0.069, -0.19, 0.786], [0.023, 0.01, 0.009]);
+
+    const pupils: Pupil[] = [];
+    for (const centerX of [-0.255, 0.255]) {
+      addMesh(head, roundedFeature, eyeWhite, [centerX, 0.2, 0.66], [0.165, 0.052, 0.058]);
+      addMesh(head, roundedFeature, irisMaterial, [centerX, 0.2, 0.712], [0.048, 0.037, 0.023]);
+      const pupil = addMesh(
+        head,
+        roundedFeature,
+        pupilMaterial,
+        [centerX, 0.2, 0.735],
+        [0.023, 0.024, 0.012],
+      );
+      pupils.push({ mesh: pupil, baseX: centerX });
+
+      addMesh(
+        head,
+        curveGeometry(
+          [centerX - 0.165, 0.2, 0.716],
+          [centerX, 0.255, 0.738],
+          [centerX + 0.165, 0.2, 0.716],
+          0.014,
+        ),
+        skin,
+        [0, 0, 0],
+      );
+      addMesh(
+        head,
+        curveGeometry(
+          [centerX - 0.15, 0.195, 0.716],
+          [centerX, 0.158, 0.73],
+          [centerX + 0.15, 0.195, 0.716],
+          0.009,
+        ),
+        skinHighlight,
+        [0, 0, 0],
+      );
+    }
+
+    addMesh(
+      head,
+      curveGeometry([-0.43, 0.43, 0.68], [-0.27, 0.49, 0.73], [-0.11, 0.455, 0.7], 0.025),
+      hair,
+      [0, 0, 0],
+    );
+    addMesh(
+      head,
+      curveGeometry([0.11, 0.455, 0.7], [0.27, 0.49, 0.73], [0.43, 0.43, 0.68], 0.025),
+      hair,
+      [0, 0, 0],
+    );
+
+    addMesh(
+      head,
+      curveGeometry([-0.27, -0.43, 0.66], [0, -0.462, 0.704], [0.27, -0.43, 0.66], 0.013),
+      mouthLine,
+      [0, 0, 0],
+    );
+    addMesh(
+      head,
+      curveGeometry([-0.26, -0.423, 0.665], [-0.13, -0.387, 0.701], [0, -0.415, 0.708], 0.018),
+      lip,
+      [0, 0, 0],
+    );
+    addMesh(
+      head,
+      curveGeometry([0, -0.415, 0.708], [0.13, -0.387, 0.701], [0.26, -0.423, 0.665], 0.018),
+      lip,
+      [0, 0, 0],
+    );
+    addMesh(head, roundedFeature, lip, [0, -0.47, 0.666], [0.26, 0.046, 0.029]);
+
+    const blemishes: Array<[number, number, number, number]> = [
+      [-0.39, 0.01, 0.58, 0.016],
+      [-0.46, -0.08, 0.51, 0.012],
+      [-0.35, -0.16, 0.58, 0.01],
+      [0.39, 0.015, 0.58, 0.014],
+      [0.45, -0.09, 0.52, 0.011],
+      [0.34, -0.19, 0.57, 0.012],
+    ];
+    for (const [x, y, z, size] of blemishes) {
+      addMesh(head, roundedFeature, skinDetail, [x, y, z], [size, size * 0.72, 0.008]);
+    }
+
+    addGlasses(head, frame, lens);
+    addHair(head, hair, hairHighlight, scalp);
+
+    return { model, head, pupils };
+  }
+
+  function initializeFace(root: HTMLElement) {
+    if (root.dataset.initialized === 'true') return;
+    root.dataset.initialized = 'true';
+
+    const canvas = root.querySelector<HTMLCanvasElement>('.face-peek__canvas');
+    if (!canvas) return;
+
+    let renderer: WebGLRenderer;
+
+    try {
+      renderer = new WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      return;
+    }
+
+    renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = SRGBColorSpace;
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.3;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(31, 1, 0.1, 100);
+    camera.position.set(0, -0.08, 7.2);
+
+    const { model, head, pupils } = buildDanielBust();
+    model.scale.setScalar(1.03);
+    scene.add(model);
+
+    scene.add(new HemisphereLight(0xffead8, 0x152023, 2.85));
+
+    const keyLight = new DirectionalLight(0xffdfc2, 3.85);
+    keyLight.position.set(2.4, 3.2, 5.1);
+    scene.add(keyLight);
+
+    const fillLight = new DirectionalLight(0xd8ff63, 1.55);
+    fillLight.position.set(-3.1, 0.8, 3.8);
+    scene.add(fillLight);
+
+    const lowerLight = new DirectionalLight(0x7aa9dc, 0.68);
+    lowerLight.position.set(0, -3, 2.2);
+    scene.add(lowerLight);
+
+    const rimLight = new DirectionalLight(0xff6f91, 0.52);
+    rimLight.position.set(3.2, -0.2, 1.8);
+    scene.add(rimLight);
+
+    let animationFrame = 0;
+    let visible = true;
+    let lastInput = 0;
+    let targetYaw = -0.13;
+    let targetPitch = 0.015;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const resize = () => {
+      const width = Math.max(root.clientWidth, 1);
+      const height = Math.max(root.clientHeight, 1);
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
+    };
+
+    const aimAt = (clientX: number, clientY: number) => {
+      const rect = root.getBoundingClientRect();
+      const centerX = rect.left + rect.width * 0.47;
+      const centerY = rect.top + rect.height * 0.42;
+      const horizontal = (clientX - centerX) / Math.max(window.innerWidth * 0.5, 1);
+      const vertical = (clientY - centerY) / Math.max(window.innerHeight * 0.6, 1);
+
+      targetYaw = clamp(horizontal * 0.42, -0.36, 0.34);
+      targetPitch = clamp(-vertical * 0.27, -0.2, 0.19);
+      lastInput = performance.now();
+    };
+
+    const onPointerMove = (event: PointerEvent) => aimAt(event.clientX, event.clientY);
+    const onDeviceOrientation = (event: DeviceOrientationEvent) => {
+      if (event.gamma === null || event.beta === null) return;
+      targetYaw = clamp(event.gamma / 88, -0.33, 0.33);
+      targetPitch = clamp((event.beta - 45) / -195, -0.18, 0.18);
+      lastInput = performance.now();
+    };
+
+    const render = (time: number) => {
+      animationFrame = 0;
+      if (!visible) return;
+
+      if (!reducedMotion && time - lastInput > 2600) {
+        targetYaw = -0.11 + Math.sin(time * 0.00042) * 0.06;
+        targetPitch = 0.01 + Math.sin(time * 0.00031) * 0.025;
+      }
+
+      if (!reducedMotion) {
+        head.rotation.y += (targetYaw - head.rotation.y) * 0.072;
+        head.rotation.x += (targetPitch - head.rotation.x) * 0.072;
+        head.position.x = targetYaw * 0.08;
+        model.rotation.y = head.rotation.y * 0.085;
+
+        for (const pupil of pupils) {
+          pupil.mesh.position.x = pupil.baseX + targetYaw * 0.12;
+          pupil.mesh.position.y = 0.2 + targetPitch * 0.13;
+        }
+      }
+
+      renderer.render(scene, camera);
+      if (!reducedMotion) animationFrame = window.requestAnimationFrame(render);
+    };
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(root);
+    resize();
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      visible = Boolean(entry?.isIntersecting);
+      if (visible && animationFrame === 0) {
+        animationFrame = window.requestAnimationFrame(render);
+      } else if (!visible && animationFrame !== 0) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      }
+    });
+    intersectionObserver.observe(root);
+
+    root.classList.add('face-peek--webgl');
+    renderer.render(scene, camera);
+
+    if (reducedMotion) {
+      root.classList.add('face-peek--reduced-motion');
+    } else {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true });
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-face-peek]').forEach(initializeFace);
+</script>
+
+<style>
+  .face-peek {
+    position: absolute;
+    z-index: 1;
+    top: 8%;
+    right: -43%;
+    width: 96%;
+    height: 72%;
+    pointer-events: none;
+    filter:
+      drop-shadow(0 0 0.55rem rgb(216 255 99 / 32%))
+      drop-shadow(0.5rem 0.72rem 0.6rem rgb(0 0 0 / 78%));
+  }
+
+  .face-peek__canvas,
+  .face-peek__fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .face-peek__canvas {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .face-peek__fallback {
+    display: grid;
+    place-items: center;
+    opacity: 0.92;
+    transition: opacity 240ms ease;
+    transform: perspective(15rem) rotateY(-8deg) rotateZ(-2deg);
+  }
+
+  .fallback-head {
+    position: relative;
+    width: 49%;
+    aspect-ratio: 0.66;
+    border: 1px solid rgb(216 255 99 / 55%);
+    border-radius: 47% 47% 42% 42% / 42% 42% 52% 52%;
+    background: #ad725d;
+    box-shadow: inset -0.42rem -0.28rem 0 #835046;
+  }
+
+  .fallback-head i {
+    position: absolute;
+    display: block;
+  }
+
+  .fallback-hair {
+    inset: -5% -7% 61% -8%;
+    border-radius: 62% 76% 29% 38% / 72% 64% 33% 42%;
+    background: #171316;
+    clip-path: polygon(
+      0 4%,
+      61% 0,
+      91% 14%,
+      100% 47%,
+      94% 74%,
+      85% 64%,
+      78% 91%,
+      66% 57%,
+      55% 96%,
+      46% 49%,
+      35% 72%,
+      23% 100%,
+      12% 70%,
+      3% 89%
+    );
+  }
+
+  .fallback-glasses {
+    top: 30%;
+    width: 41%;
+    height: 18%;
+    border: 0.15rem solid #111014;
+    border-radius: 18%;
+  }
+
+  .fallback-glasses--left {
+    left: 7%;
+  }
+
+  .fallback-glasses--right {
+    right: 7%;
+  }
+
+  .fallback-bridge {
+    top: 36.5%;
+    left: 45%;
+    width: 10%;
+    height: 0.15rem;
+    background: #111014;
+  }
+
+  .fallback-nose {
+    top: 45%;
+    left: 44%;
+    width: 14%;
+    height: 22%;
+    background: #c1876d;
+    clip-path: polygon(45% 0, 100% 85%, 50% 100%, 0 86%);
+  }
+
+  .fallback-mouth {
+    left: 38%;
+    bottom: 17%;
+    width: 25%;
+    height: 2%;
+    border: 0;
+    border-bottom: 0.16rem solid #63383d;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  .face-peek--webgl .face-peek__canvas {
+    opacity: 1;
+  }
+
+  .face-peek--webgl .face-peek__fallback {
+    opacity: 0;
+  }
+
+  .face-peek--reduced-motion .face-peek__canvas {
+    transition: none;
+  }
+
+  @media (max-width: 650px) {
+    .face-peek {
+      top: 9%;
+      right: -49%;
+      width: 102%;
+      height: 70%;
+    }
+  }
+</style>

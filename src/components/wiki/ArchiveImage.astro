@@ -1,0 +1,85 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  sourceHref: string;
+  sourceLabel: string;
+  locator?: string;
+  rightsNote?: string;
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  sourceHref,
+  sourceLabel,
+  locator,
+  rightsNote = 'Archived source image used for identification, historical context, and commentary.',
+  width,
+  height,
+} = Astro.props;
+---
+
+<figure class="archive-image">
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>
+    <strong>{caption}</strong>
+    <span>
+      Source: <a href={sourceHref} target="_blank" rel="noopener noreferrer">{sourceLabel}</a>
+      {locator && <> · {locator}</>}
+    </span>
+    <small>{rightsNote}</small>
+  </figcaption>
+</figure>
+
+<style>
+  .archive-image {
+    overflow: hidden;
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    background: var(--sl-color-gray-6);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 34rem;
+    object-fit: contain;
+    background: #08080a;
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.28rem;
+    padding: 0.82rem 0.95rem 0.9rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+  }
+
+  figcaption strong {
+    color: var(--sl-color-gray-1);
+    font-size: 0.9rem;
+  }
+
+  figcaption span,
+  figcaption small {
+    display: block;
+  }
+
+  figcaption small {
+    color: var(--sl-color-gray-3);
+  }
+</style>

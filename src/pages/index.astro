@@ -1,0 +1,357 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import LinkCard from '../components/LinkCard.astro';
+import FacePeek from '../components/FacePeek.astro';
+import { communityLinks, officialLinks } from '../data/links';
+---
+
+<BaseLayout>
+  <div class="page-shell">
+    <SiteHeader />
+
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <p class="eyebrow hero__eyebrow">
+            <span class="status-dot" aria-hidden="true"></span>
+            Current links · unofficial hub
+          </p>
+
+          <h1 id="hero-title">
+            <span>Hiding</span>
+            <span>in my</span>
+            <span class="hero__title-accent">room.</span>
+          </h1>
+
+          <p class="hero__lede">
+            Hiding in my room is Daniel Lord’s main YouTube channel. This is a
+            community-built doorway to his public profiles, the HIMR community, and
+            a growing source-led archive of the public record.
+          </p>
+
+          <div class="hero__actions">
+            <a
+              class="button button--primary"
+              href="https://www.youtube.com/@hidinginmyroom1111"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="button__play" aria-hidden="true">▶</span>
+              Watch on YouTube
+            </a>
+            <a class="button button--quiet" href="/wiki/">
+              Enter the wiki
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <aside class="signal-panel" aria-label="Current HIMR status">
+          <div class="signal-panel__topbar">
+            <span>ROOM_FEED / 1111</span>
+            <span class="signal-panel__live">
+              <i aria-hidden="true"></i>
+              online
+            </span>
+          </div>
+
+          <div class="signal-screen" aria-hidden="true" data-door-scene>
+            <div class="signal-screen__glow"></div>
+            <div class="signal-screen__doorway" data-doorway>
+              <FacePeek />
+              <span class="signal-screen__door-light"></span>
+              <div class="signal-screen__door" data-door>
+                <span></span>
+              </div>
+            </div>
+            <div class="signal-screen__type">
+              <small>TRANSMISSION</small>
+              <strong>1111</strong>
+            </div>
+          </div>
+
+          <dl class="signal-facts">
+            <div>
+              <dt>Channel</dt>
+              <dd>@hidinginmyroom1111</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>Current links</dd>
+            </div>
+            <div>
+              <dt>Community</dt>
+              <dd>r/HIMRFAM2</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <div class="ticker" aria-label="Site updates">
+        <div class="ticker__track">
+          <span>Site: hidinginmyroom.com</span>
+          <i aria-hidden="true">✦</i>
+          <span>Main YouTube: @hidinginmyroom1111</span>
+          <i aria-hidden="true">✦</i>
+          <span>Instagram: @danielhimr</span>
+          <i aria-hidden="true">✦</i>
+          <span>Main community: r/HIMRFAM2</span>
+          <i aria-hidden="true">✦</i>
+          <span>Contribute at github.com/Dobby-Cinematic-Universe</span>
+          <i aria-hidden="true">✦</i>
+        </div>
+      </div>
+
+      <section id="about" class="section about-section" aria-labelledby="about-title">
+        <div class="section-heading">
+          <p class="eyebrow">01 / About</p>
+          <h2 id="about-title">A room with a very long memory.</h2>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-copy">
+            <p class="about-copy__lead">
+              Daniel Lord is the public name used by the YouTuber and streamer behind
+              <em> Hiding In My Room</em>.
+            </p>
+            <p>
+              This independent site brings the current HIMR links together in one
+              place and is building a searchable, source-led wiki from years of video
+              transcripts. It is made by the community and is not an official Daniel
+              Lord website.
+            </p>
+          </div>
+
+          <div class="field-notes" aria-label="Current field notes">
+            <div class="field-notes__header">
+              <span>Quick routes</span>
+              <span>HIMR</span>
+            </div>
+            <ul>
+              <li>
+                <span>01</span>
+                <p><strong>Main YouTube</strong>New HIMR uploads and livestreams appear on @hidinginmyroom1111.</p>
+              </li>
+              <li>
+                <span>02</span>
+                <p><strong>New Instagram</strong>Daniel’s current account is @danielhimr.</p>
+              </li>
+              <li>
+                <span>03</span>
+                <p><strong>Community hub</strong>Start with r/HIMRFAM2 or the Discord links below.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="links" class="section links-section" aria-labelledby="links-title">
+        <div class="section-heading section-heading--row">
+          <div>
+            <p class="eyebrow">02 / Official profiles</p>
+            <h2 id="links-title">Find Daniel’s public links.</h2>
+          </div>
+          <p class="section-heading__aside">
+            Start here for Daniel’s main YouTube channel, Instagram, Amazon page,
+            and merchandise store.
+          </p>
+        </div>
+
+        <div class="link-grid link-grid--official">
+          {officialLinks.map((link) => <LinkCard link={link} />)}
+        </div>
+      </section>
+
+      <section
+        id="community"
+        class="section community-section"
+        aria-labelledby="community-title"
+      >
+        <div class="section-heading section-heading--row">
+          <div>
+            <p class="eyebrow">03 / Community</p>
+            <h2 id="community-title">Find the HIMR fam.</h2>
+          </div>
+          <p class="section-heading__aside">
+            HIMRFAM2 is the main subreddit; HIMRFAM remains readable with restricted
+            posting. The site repository is public on GitHub, and the Discord servers
+            are community-run.
+          </p>
+        </div>
+
+        <div class="link-grid">
+          {communityLinks.map((link) => <LinkCard link={link} />)}
+        </div>
+
+        <div class="community-note">
+          <span aria-hidden="true">!</span>
+          <p>
+            Community rules, moderation, and Discord invite availability can change.
+            Check each space’s rules before joining.
+          </p>
+        </div>
+      </section>
+
+      <section class="section wiki-section" aria-labelledby="wiki-title">
+        <div class="wiki-panel">
+          <div class="wiki-panel__copy">
+            <p class="eyebrow">04 / The archive</p>
+            <h2 id="wiki-title">The lore deserves an index.</h2>
+            <p>
+              A source-led guide to people, places, timelines, recurring stories, and
+              community history—using transcript search to locate material, then
+              checking cited claims against the underlying sources before publication.
+            </p>
+            <a class="button button--light" href="/wiki/">
+              Open the wiki
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="wiki-stack" aria-hidden="true">
+            <div class="wiki-sheet wiki-sheet--back">
+              <span>COMMUNITY</span>
+              <strong>04</strong>
+            </div>
+            <div class="wiki-sheet wiki-sheet--middle">
+              <span>TIMELINE</span>
+              <strong>02</strong>
+            </div>
+            <div class="wiki-sheet wiki-sheet--front">
+              <div>
+                <small>HIMR WIKI / ENTRY</small>
+                <strong>DANIEL<br />LORD</strong>
+              </div>
+              <span class="wiki-sheet__status">RESEARCH IN PROGRESS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand brand--footer" href="/" aria-label="Hiding In My Room home">
+        <span class="brand__mark" aria-hidden="true">
+          <img
+            src="/images/wiki/daniel-channel-avatar-2026-08-25.jpg"
+            alt=""
+            width="900"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        <span class="brand__text">
+          <strong>HIMR</strong>
+          <small>community site</small>
+        </span>
+      </a>
+      <p>Community-built. Unofficial. Sources before speculation.</p>
+      <a href="#main-content">Back to top ↑</a>
+    </footer>
+  </div>
+</BaseLayout>
+
+<script>
+  const clamp = (value: number, minimum: number, maximum: number) =>
+    Math.min(Math.max(value, minimum), maximum);
+
+  document.querySelectorAll<HTMLElement>('[data-door-scene]').forEach((scene) => {
+    const doorway = scene.querySelector<HTMLElement>('[data-doorway]');
+    const door = scene.querySelector<HTMLElement>('[data-door]');
+    if (!doorway || !door) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const closedAngle = -4;
+    const openAngle = -74;
+    let target = 0;
+    let current = 0;
+    let animationFrame = 0;
+    let activeTouchId: number | null = null;
+
+    const draw = () => {
+      animationFrame = 0;
+
+      if (reducedMotion.matches) {
+        target = 0;
+        current = 0;
+      } else {
+        current += (target - current) * 0.16;
+        if (Math.abs(target - current) < 0.001) current = target;
+      }
+
+      const angle = closedAngle + (openAngle - closedAngle) * current;
+      door.style.setProperty('--door-angle', `${angle.toFixed(2)}deg`);
+
+      if (current !== target) {
+        animationFrame = window.requestAnimationFrame(draw);
+      }
+    };
+
+    const requestDraw = () => {
+      if (animationFrame === 0) animationFrame = window.requestAnimationFrame(draw);
+    };
+
+    const setProximity = (clientX: number, clientY: number) => {
+      if (reducedMotion.matches) return;
+
+      const rect = doorway.getBoundingClientRect();
+      const horizontalDistance = Math.max(rect.left - clientX, 0, clientX - rect.right);
+      const verticalDistance = Math.max(rect.top - clientY, 0, clientY - rect.bottom);
+      const distance = Math.hypot(horizontalDistance, verticalDistance);
+      const reach = clamp(rect.height * 0.82, 160, 320);
+      const linear = 1 - clamp(distance / reach, 0, 1);
+
+      target = linear * linear * (3 - 2 * linear);
+      requestDraw();
+    };
+
+    const closeDoor = () => {
+      target = 0;
+      requestDraw();
+    };
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        if (event.pointerType !== 'touch') setProximity(event.clientX, event.clientY);
+      },
+      { passive: true },
+    );
+
+    scene.addEventListener(
+      'pointerdown',
+      (event) => {
+        if (event.pointerType !== 'touch') return;
+        activeTouchId = event.pointerId;
+        setProximity(event.clientX, event.clientY);
+      },
+      { passive: true },
+    );
+
+    scene.addEventListener(
+      'pointermove',
+      (event) => {
+        if (event.pointerType === 'touch' && event.pointerId === activeTouchId) {
+          setProximity(event.clientX, event.clientY);
+        }
+      },
+      { passive: true },
+    );
+
+    const releaseTouch = (event: PointerEvent) => {
+      if (event.pointerId !== activeTouchId) return;
+      activeTouchId = null;
+      closeDoor();
+    };
+
+    window.addEventListener('pointerup', releaseTouch, { passive: true });
+    window.addEventListener('pointercancel', releaseTouch, { passive: true });
+    document.documentElement.addEventListener('pointerleave', closeDoor, { passive: true });
+    window.addEventListener('blur', closeDoor);
+    reducedMotion.addEventListener('change', closeDoor);
+
+    draw();
+  });
+</script>

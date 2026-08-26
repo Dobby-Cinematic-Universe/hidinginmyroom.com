@@ -1,0 +1,160 @@
+---
+title: Sources & Verification Method
+description: How the HIMR Wiki separates archive records, machine transcripts, creator statements, and corroborated facts.
+sidebar:
+  order: 1
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
+
+<VerificationBadge
+  status="source-matched"
+  note="The archive inventory was reconciled on August 25, 2026; individual video contents remain separately reviewable."
+/>
+
+The HIMR Wiki uses transcripts to **find** evidence, not as evidence by default. A
+published claim must say no more than its cited source can establish.
+
+<Aside type="caution" title="A primary video is not automatic proof">
+  A raw video can establish what a person said or what the recording visibly shows.
+  If Daniel describes an off-camera event, the safe formulation is “Daniel said…”
+  unless an independent source corroborates the event.
+</Aside>
+
+## Current archive audit
+
+On August 25, 2026, the project preserved the live
+[transcript index](https://himr-archive.pages.dev/data/index.js) and metadata for
+[Internet Archive item 69999](https://archive.org/details/69999) and
+[item 699992](https://archive.org/details/699992). The automated reconciliation found:
+
+| Finding | Count |
+| --- | ---: |
+| Transcript records | 2,227 |
+| Records with an Internet Archive video URL | 2,043 |
+| Records without a video URL | 184 |
+| Distinct linked video URLs | 1,919 |
+| Shared video-URL groups | 67 |
+| Records participating in those shared groups | 191 |
+| Records over 250 displayed words per minute | 55 |
+| Records with a malformed displayed duration | 4 |
+
+These are **record counts**, not a verified count of distinct channel videos. A shared
+URL may be a duplicate, a chunk of a longer stream, or a mapping error. An implausible
+speech rate usually indicates suspect duration or timestamp metadata and triggers
+manual review.
+
+The dated source responses, hashes, normalized manifest, and audit are retained in
+the maintainers' private evidence store. Future snapshots do not silently replace
+earlier ones.
+
+## Evidence ladder
+
+| Material | How the wiki uses it |
+| --- | --- |
+| Raw video or audio | Verify exact speech and visible action at a stated time |
+| Human-corrected segment | Quote or closely paraphrase only the checked passage |
+| Machine transcript | Locate a likely passage; never treat it as evidence, fact, or a quotation |
+| Title or filename | Describe the archive label, not the truth of the title or date |
+| First-party statement | Attribute the statement to its author |
+| Independent reliable record | Corroborate only the facts within that record's scope |
+| Reviewed public community image or repost | Establish only what the complete preserved copy appears to show or say, with provenance limits |
+| Other community post or wiki | Establish community usage, record an attributed allegation, or generate a research lead |
+| AI or NotebookLM output | Discover topics; never cite as evidence |
+
+Automatic captions and locally generated speech recognition are machine transcripts,
+even when they were produced from the original media file. They can supply a candidate
+timestamp. A spoken quotation or close paraphrase becomes **video checked** only when
+a human reviewer directly listens to the raw segment; reviewing frames does not count
+as listening to the soundtrack.
+
+<Aside type="caution" title="Narrow public research-lead exception">
+  Benign machine-only material may appear publicly only as a conspicuously labelled
+  **unverified research lead**. The entry must provide the exact source, candidate
+  locator, whether raw media is mapped, available, or missing, and the named
+  human-review queue. It is never evidence, a fact, a quotation, or verified speech.
+  Machine-only serious wrongdoing, sexualized claims involving minors, and invasive
+  private, relationship, financial, travel, or medical detail remain outside the
+  public article until the relevant verification and sensitivity safeguards are met.
+</Aside>
+
+## Verification states
+
+- <VerificationBadge status="unverified" /> — imported or proposed; research only,
+  except for the narrowly labelled benign research-navigation exception above.
+- <VerificationBadge status="source-matched" /> — the source identity exists and has
+  been reconciled; its contents are still unchecked.
+- <VerificationBadge status="video-checked" /> — the cited raw-media segment and
+  surrounding context were manually reviewed.
+- <VerificationBadge status="community-media-checked" /> — the complete available
+  repost and post context were reviewed; no obvious substantive edit or credible
+  authenticity dispute was found, but the original is not authenticated.
+- <VerificationBadge status="corroborated" /> — an appropriate independent source
+  also supports the claim.
+- <VerificationBadge status="disputed" /> — credible sources conflict and the wiki
+  preserves the disagreement.
+
+## From search result to published sentence
+
+<Steps>
+1. **Draft one atomic claim.** Avoid combining several facts under one citation.
+2. **Locate candidate evidence.** Search the transcript archive and source manifest.
+3. **Open the underlying source.** Review the raw segment with surrounding context.
+4. **If only a repost survives, review the whole copy.** Preserve its direct media
+   URL, type, bytes, hash, post context, edit assessment, and any authenticity dispute.
+5. **Record the evidence scope.** Mark self-report, visible action, metadata,
+   independent record, corroboration, or contradiction.
+6. **Resolve the date basis.** Keep event, recording, publication, archive, and review
+   dates separate.
+7. **Check sensitivity and conflicts.** Minimize private information and preserve
+   materially different accounts.
+8. **Quarantine unsafe machine-only material.** Do not publish machine-only serious
+   wrongdoing, sexualized-minor claims, or invasive private or medical detail. A benign
+   public lead must name its raw-media status and review queue.
+9. **Publish with a precise citation.** Record the source ID, locator, check status,
+   reviewer, and review date.
+</Steps>
+
+<SourceCitation
+  sourceId="example-only"
+  title="Example raw-video citation"
+  href="https://archive.org/details/69999"
+  locator="00:12:00–00:12:26"
+  evidence="Example of a self-report; not an assertion that the reported event happened"
+  checked={false}
+>
+  This component deliberately shows whether a reader is looking at a checked segment
+  or merely a matched source.
+</SourceCitation>
+
+## Dates, contradictions, and transcript corrections
+
+A date taken only from an archive filename is labeled **filename date**. If the exact
+event or publication date cannot be established, the wiki uses a range, `circa`, or
+`unknown` rather than false precision.
+
+Video titles are not treated as conclusions. If a later source changes an earlier
+account, both are dated and attributed. The wiki does not silently choose the more
+dramatic version.
+
+Quoted words are checked against the media. Unclear audio is marked `[unclear]`,
+conservatively paraphrased, or omitted. Machine-transcript corrections do not alter
+the preserved raw snapshot.
+
+## Privacy and sensitive material
+
+The wiki does not republish home addresses, private contact details, financial account
+data, leaked intimate material, or non-public legal names merely because another site
+contains them. An allegation may be recorded with an adjacent warning when its exact
+source is attributed, its truth is labeled unverified, disputed, or corroborated, its
+corroboration status is stated, and a relevant response is included or the page says
+none was located. A corroborated allegation must still be labeled as an allegation and
+identify the independent support. A warning does not turn the allegation into fact or
+excuse doxxing, intimate material, diagnoses, threats, or harassment-oriented detail.
+Machine output alone is never enough to publish a serious allegation, a sexualized
+claim involving a minor, or invasive private, relationship, financial, travel, or
+medical detail.
+
+The complete contributor rules are maintained in the repository's editorial policy.

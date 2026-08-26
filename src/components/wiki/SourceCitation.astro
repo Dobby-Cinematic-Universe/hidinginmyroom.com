@@ -1,0 +1,192 @@
+---
+interface Props {
+  sourceId: string;
+  title: string;
+  href: string;
+  locator?: string;
+  evidence?: string;
+  checked?: boolean;
+  reviewState?:
+    | 'unverified-research-lead'
+    | 'source-matched'
+    | 'primary-media-checked'
+    | 'community-media-checked'
+    | 'corroborated'
+    | 'disputed';
+  notice?:
+    | 'unverified-allegation'
+    | 'disputed-allegation'
+    | 'corroborated-allegation';
+  warning?: string;
+  claimId?: string;
+  reviewedAt?: string;
+}
+
+const {
+  sourceId,
+  title,
+  href,
+  locator,
+  evidence = 'Source identity only',
+  checked = false,
+  reviewState,
+  notice,
+  warning,
+  claimId,
+  reviewedAt = '25 August 2026',
+} = Astro.props;
+
+const resolvedReviewState = reviewState ?? (checked ? 'primary-media-checked' : 'source-matched');
+const reviewLabels = {
+  'unverified-research-lead': 'unverified research lead; not evidence',
+  'source-matched': 'source matched; full media verification not claimed',
+  'primary-media-checked': 'primary media checked',
+  'community-media-checked': 'community repost reviewed',
+  corroborated: 'corroborated',
+  disputed: 'sources conflict',
+} as const;
+const noticeLabels = {
+  'unverified-allegation': 'Unverified allegation',
+  'disputed-allegation': 'Disputed allegation',
+  'corroborated-allegation': 'Corroborated allegation',
+} as const;
+if (notice && !warning?.trim()) {
+  throw new Error(`SourceCitation ${sourceId}: allegation notices require warning text`);
+}
+---
+
+<aside class="source-citation">
+  <div class="source-citation__header">
+    <span>Evidence record</span>
+    <span class:list={['source-citation__state', `source-citation__state--${resolvedReviewState}`]}>
+      {reviewLabels[resolvedReviewState]}
+    </span>
+  </div>
+  <a href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+  {notice && (
+    <div class:list={['source-citation__notice', `source-citation__notice--${notice}`]}>
+      <strong>{noticeLabels[notice]}</strong>
+      <span>{warning}</span>
+    </div>
+  )}
+  <dl>
+    {claimId && (
+      <div>
+        <dt>Claim ID</dt>
+        <dd><code>{claimId}</code></dd>
+      </div>
+    )}
+    <div>
+      <dt>Source ID</dt>
+      <dd><code>{sourceId}</code></dd>
+    </div>
+    {locator && (
+      <div>
+        <dt>Locator</dt>
+        <dd>{locator}</dd>
+      </div>
+    )}
+    <div>
+      <dt>Scope</dt>
+      <dd>{evidence}</dd>
+    </div>
+    <div>
+      <dt>Reviewed</dt>
+      <dd>{reviewedAt}</dd>
+    </div>
+  </dl>
+  <slot />
+</aside>
+
+<style>
+  .source-citation {
+    margin-block: 1.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-left: 3px solid var(--sl-color-accent);
+    border-radius: 0.55rem;
+    padding: 0.9rem 1rem;
+    background: color-mix(in srgb, var(--sl-color-gray-6) 62%, transparent);
+  }
+
+  .source-citation__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.48rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .source-citation__state {
+    color: #e9a23b;
+  }
+
+  .source-citation__state--unverified-research-lead {
+    color: #ec6d78;
+  }
+
+  .source-citation__state--primary-media-checked {
+    color: var(--sl-color-accent-high);
+  }
+
+  .source-citation__state--community-media-checked {
+    color: #70aeea;
+  }
+
+  .source-citation__state--corroborated,
+  .source-citation__notice--corroborated-allegation strong {
+    color: #55b986;
+  }
+
+  .source-citation__state--disputed {
+    color: #ec6d78;
+  }
+
+  .source-citation > a {
+    font-weight: 700;
+  }
+
+  .source-citation__notice {
+    display: grid;
+    gap: 0.22rem;
+    margin-top: 0.7rem;
+    border: 1px solid color-mix(in srgb, #ec6d78 58%, var(--sl-color-gray-5));
+    border-radius: 0.42rem;
+    padding: 0.62rem 0.72rem;
+    background: color-mix(in srgb, #ec6d78 10%, transparent);
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .source-citation__notice strong {
+    color: #ec6d78;
+    font-size: 0.72rem;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  dl {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0.65rem 0 0;
+    font-size: 0.82rem;
+  }
+
+  dl div {
+    display: grid;
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  dt {
+    color: var(--sl-color-gray-3);
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+  }
+</style>

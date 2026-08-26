@@ -1,0 +1,53 @@
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Hiding In My Room home">
+    <span class="brand__mark" aria-hidden="true">
+      <img
+        src="/images/wiki/daniel-channel-avatar-2026-08-25.jpg"
+        alt=""
+        width="900"
+        height="900"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </span>
+    <span class="brand__text">
+      <strong>HIMR</strong>
+      <small>community site</small>
+    </span>
+  </a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a href="/#about">About</a>
+    <a href="/#links">Links</a>
+    <a href="/#community">Community</a>
+    <a href="/wiki/overview/timeline/">Timeline</a>
+    <a class="site-nav__wiki" href="/wiki/">
+      Wiki
+      <svg aria-hidden="true" viewBox="0 0 16 16">
+        <path d="M5 3h8v8M13 3 3 13"></path>
+      </svg>
+    </a>
+  </nav>
+
+  <details class="site-menu">
+    <summary>
+      Menu
+      <span aria-hidden="true">+</span>
+    </summary>
+    <nav aria-label="Mobile primary navigation">
+      <a href="/#about">About</a>
+      <a href="/#links">Links</a>
+      <a href="/#community">Community</a>
+      <a href="/wiki/overview/timeline/">Timeline</a>
+      <a href="/wiki/">Wiki portal <span aria-hidden="true">↗</span></a>
+    </nav>
+  </details>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('.site-menu').forEach((menu) => {
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => menu.removeAttribute('open'));
+    });
+  });
+</script>

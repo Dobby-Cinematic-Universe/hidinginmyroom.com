@@ -1,0 +1,55 @@
+name: Site improvement proposal
+description: Suggest a focused interface, accessibility, navigation, or tooling improvement.
+title: "[Proposal]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the user problem before proposing an implementation. For wiki corrections or new factual topics, use the wiki issue form instead. Do not include tokens, private research, personal information, or sensitive source material.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Homepage
+        - Wiki interface or search
+        - Navigation or link directory
+        - Accessibility or reduced motion
+        - Mobile or responsive layout
+        - Contributor tooling or documentation
+        - Build or deployment
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Who encounters the problem, and what is difficult today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe the smallest useful change and any alternatives considered.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: What would success look like?
+      description: Give observable acceptance criteria, including viewport or accessibility needs where relevant.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: This proposal contains no tokens, private research, personal information, or sensitive source material.
+          required: true

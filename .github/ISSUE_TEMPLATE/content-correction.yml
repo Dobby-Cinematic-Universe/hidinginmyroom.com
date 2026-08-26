@@ -1,0 +1,67 @@
+name: Wiki correction or topic proposal
+description: Suggest a sourced correction, expansion, or notable topic for the wiki.
+title: "[Wiki]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provide public source links and precise locators. Do not upload private Discord material, leaked or intimate media, home addresses, private contact details, non-public identities, or access-bearing URLs. A public issue is not the place to submit sensitive evidence.
+
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      options:
+        - Correct an existing statement
+        - Expand an existing article
+        - Propose a new notable topic
+        - Report a disputed or unsupported claim
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Wiki page
+      description: Give the page URL or proposed page title.
+      placeholder: /wiki/... or Proposed topic
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_and_proposed
+    attributes:
+      label: Current wording and proposed change
+      description: Quote only the relevant current wording, then give the narrow replacement or addition.
+      placeholder: |
+        Current wording:
+        Proposed change:
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Public sources and exact locators
+      description: One source per line, with its public URL and timestamp, post, page, or archive filename. Explain what each source directly supports.
+      placeholder: "https://example.com/item — 02:10–02:35 — supports the attributed statement that ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: uncertainty
+    attributes:
+      label: Disputes, limitations, and response
+      description: Note edits, missing context, conflicting accounts, corroboration, denials, or whether no response was located.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have not included private, leaked, intimate, doxxing, or secret-bearing material.
+          required: true
+        - label: I understand that a source can establish what someone said without proving the underlying event.
+          required: true
