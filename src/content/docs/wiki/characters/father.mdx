@@ -12,7 +12,8 @@ import VerificationBadge from '../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  note="Robert Lord is documented as a community-used identifier, not an authenticated legal name. The tribute-labelled video's visual format is checked; its audio and implied biography are not used as evidence."
+  reviewedAt="26 August 2026"
+  note="Robert Lord remains a community-used identifier rather than an authenticated legal name. The tribute imagery is checked; sensitive machine-only family details are minimized and retained only as research leads pending direct listening."
 />
 
 **Robert Lord** is the name used for Daniel's father in at least one public
@@ -51,16 +52,52 @@ biographical events.
 
 | Filename date | Archive label | Evidentiary use |
 | --- | --- | --- |
-| 2019-01-20 | [*An update on my Dad's situation*](https://himr-archive.pages.dev/transcripts/2019/2019-01-20-an-update-on-my-dad-s-situation.html) | Transcript-index title record; contents not reviewed here |
+| 2019-01-20 | [*An update on my Dad's situation*](https://archive.org/download/69999/20190120-An%20update%20on%20my%20Dad%E2%80%99s%20situation-7ugWvOx5J0k.mp4) | Raw-backed creator-title record; contents not reviewed here |
 | 2019-01-23 | [*A Tribute to my Dad*](https://archive.org/download/69999/20190123-A%20Tribute%20to%20my%20Dad-1IdX-ZHWUaw.mp4) | Visually checked animated retrospective; audio unchecked |
-| 2019-02-09 | [*My dad died*](https://himr-archive.pages.dev/transcripts/2019/2019-02-09-my-dad-died.html) | Death-announcement-labelled archive record; audio unchecked |
-| 2019-04-07 | [*Burying my dad's ashes*](https://himr-archive.pages.dev/transcripts/2019/2019-04-07-burying-my-dad-s-ashes.html) | Ashes-labelled title record; contents not reviewed here |
-| 2020-05-02 | [*It's been a year since I lost my dad*](https://himr-archive.pages.dev/transcripts/2020/2020-05-02-it-s-been-a-year-since-i-lost-my-dad.html) | Retrospective-labelled title record; contents not reviewed here |
+| 2019-02-09 | [*My dad died*](https://archive.org/download/69999/20190209-My%20dad%20died-VZ3g3LhKELk.mp4) | Death-announcement-labelled raw archive record; audio unchecked |
+| 2019-04-07 | [*Burying my dad's ashes*](https://archive.org/download/69999/20190407-Burying%20my%20dad%E2%80%99s%20ashes-iPp_qF84wT4.mp4) | Ashes-labelled raw archive record; contents not reviewed here |
+| 2020-05-02 | [*It's been a year since I lost my dad*](https://archive.org/download/69999/20200502-It%27s%20been%20a%20year%20since%20I%20lost%20my%20dad%20%20-%28-8fi7HEQsJR8.mp4) | Raw-backed retrospective title; contents not reviewed here |
 
 The January 23 tribute has been visually checked. It is presented as a sequence of
 hand-drawn scenes rather than conventional on-camera footage. Its audio has not been
 directly reviewed in this environment, so no narrated
 family-history claim is reproduced here.
+
+### Machine-only family-event leads
+
+Two independent offline ASR passes over *An update on my Dad's situation* materially
+agree that Daniel gives an account of a serious illness at **00:40–01:08** and again
+after a cut at approximately **02:43–03:38**. Nobody directly listened to the audio,
+and no medical or civil record was reviewed. Specific machine-rendered diagnoses,
+organs, treatment details, and cause-of-death implications are withheld because they
+concern a private relative.
+
+<SourceCitation
+  sourceId="2019-01-20_2019-01-20-an-update-on-my-dad-s-situation"
+  claimId="HIMR-FATHER-0005"
+  title="An update on my Dad's situation — serious-illness lead"
+  href="https://archive.org/download/69999/20190120-An%20update%20on%20my%20Dad%E2%80%99s%20situation-7ugWvOx5J0k.mp4"
+  locator="Independent base.en and small.en agreement at raw-media approximately 00:00:40–00:01:08 and 00:02:43–00:03:38"
+  evidence="Machine-only serious-illness account lead; specific medical details withheld pending direct listening and no civil or clinical record reviewed"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
+/>
+
+In the February 9 death-announcement-labelled stream, both models produce a
+**February 6** date candidate at approximately **10:45–11:13**. Because nobody
+directly listened and no civil record was reviewed, February 6 remains a research
+candidate—not a source-checked date or verified event chronology.
+
+<SourceCitation
+  sourceId="2019-02-09_2019-02-09-my-dad-died"
+  claimId="HIMR-FATHER-0006"
+  title="My dad died — February 6 machine candidate"
+  href="https://archive.org/download/69999/20190209-My%20dad%20died-VZ3g3LhKELk.mp4"
+  locator="Independent base.en and small.en agreement at raw-media approximately 00:10:45–00:11:13; archive source label 2019-02-09"
+  evidence="Machine-only February 6, 2019 date candidate; no direct listening, death certificate, or civil record reviewed"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
+/>
 
 <SourceCitation
   sourceId="2019-01-23_2019-01-23-a-tribute-to-my-dad"

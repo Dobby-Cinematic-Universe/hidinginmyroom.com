@@ -1,0 +1,170 @@
+---
+title: The Hole-Digging Video
+description: The source-checked boundary around the June 2020 “Digging a hole” record and the community shorthand “The Hole.”
+sidebar:
+  order: 2.75
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
+import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
+import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+
+<VerificationBadge
+  status="video-checked"
+  reviewedAt="26 August 2026"
+  note="The primary title, raw-file identity, duration mismatch, two archive-generated stills, and twelve frames across three raw videos are checked. Two later bounded passages have agreeing base.en and small.en passes but no direct listening; exact dimensions, motive, and project duration remain unverified."
+/>
+
+This page uses **“The Hole”** as shorthand for a June 2020 HIMR source trail. The
+primary archive contains a record labelled *Digging a hole — part 1* and maps it to
+an Internet Archive MP4. That establishes a creator-titled digging video, not every
+detail later attached to the episode.
+
+## What the surviving source directly supports
+
+Nine frames were checked directly against the mapped raw MP4 at **00:01, 01:00,
+05:00, 10:00, 20:00, 40:00, 60:00, 75:00, and 80:20**. The opening sample shows a
+shovel at a disturbed patch in a grassy outdoor setting. Subsequent samples show an
+on-camera participant digging, a growing mound of displaced soil, and the participant
+lower relative to ground level in some later samples.
+
+Two reader-inspectable Internet Archive derivatives—the
+[earlier still](https://archive.org/download/69999/69999.thumbs%2F20200612-Digging%20a%20hole%20-%20part%201-Bkff_ETOLdI_000001.jpg)
+and [later still](https://archive.org/download/69999/69999.thumbs%2F20200612-Digging%20a%20hole%20-%20part%201-Bkff_ETOLdI_004820.jpg)—show
+the same general setting. The source title supplies the digging context. Neither the
+sampled raw frames nor the derived stills independently identify the participant or
+establish an exact date, location, depth, purpose, or number of days spent digging.
+
+<SourceCitation
+  sourceId="2020-06-12_2020-06-12-digging-a-hole-part-1"
+  claimId="HIMR-HOLE-0001"
+  title="Digging a hole — part 1"
+  href="https://archive.org/download/69999/20200612-Digging%20a%20hole%20-%20part%201-Bkff_ETOLdI.mp4"
+  locator="2020-06-12 archive-record label; mapped file 20200612-Digging a hole - part 1-Bkff_ETOLdI.mp4"
+  evidence="Creator title, source-label date, raw-file identity, and duration metadata only"
+  reviewState="source-matched"
+  reviewedAt="26 August 2026"
+/>
+
+<SourceCitation
+  sourceId="2020-06-12_2020-06-12-digging-a-hole-part-1-visual-samples"
+  claimId="HIMR-HOLE-0002"
+  title="Digging a hole — part 1 — sampled raw-video frames"
+  href="https://archive.org/download/69999/20200612-Digging%20a%20hole%20-%20part%201-Bkff_ETOLdI.mp4"
+  locator="Direct visual checks at 00:01, 01:00, 05:00, 10:00, 20:00, 40:00, 60:00, 75:00, and 80:20"
+  evidence="Sampled visual progression of digging and displaced soil only; full motion, audio, identity, measurements, location, project duration, and cause unchecked"
+  checked={true}
+  reviewState="primary-media-checked"
+  reviewedAt="26 August 2026"
+/>
+
+## Two raw-backed June follow-ups
+
+Two later June files contain follow-up footage even though their titles do not name
+the hole. *How Heartbreak triggered my Spiritual Awakening* is a mixed-topic video:
+the bounded machine passes place its hole material at approximately **00:06:55–
+00:11:10**. *REALLY GREAT NEWS GUYS :D* opens inside the excavation and returns to
+the project during approximately **00:00–00:04:45**.
+
+Separate `base.en` and `small.en` passes materially agree on a limited, benign
+creator account:
+
+- In the June 20 file, Daniel says two frogs were in the hole and describes trying to
+  remove them. He later calls the footage another update, says it is a few days later,
+  demonstrates a step cut into the side, and says he wants to widen and deepen it.
+- In the June 30 file, he says he has added steps and a seat. He estimates the hole as
+  almost as deep as he is tall and gives a roughly **1.74-metre** figure with an
+  explicit uncertainty qualifier in both machine renderings. That is his estimate,
+  not a checked measurement and not evidence for the community's exact “six-foot”
+  wording.
+- He says he wants to continue after travel and describes an unrealized plan to widen
+  it into a room-like space with a seat and small wall recesses or hooks. The source
+  does not establish that those additions were completed.
+
+<Aside type="caution" title="Unverified two-model research lead">
+  No reviewer directly perceived either soundtrack, and no generated transcript is
+  quoted. Agreement between two ASR models is transcription consistency, not
+  corroboration. The June 20 upload's heartbreak title is not treated as the cause
+  of the excavation. Both intervals remain in the maintainers' **Hole audio-review
+  queue** for direct listening.
+</Aside>
+
+<SourceCitation
+  sourceId="2020-06-20_2020-06-20-how-heartbreak-triggered-my-spiritual-awakening-hole-follow-up"
+  claimId="HIMR-HOLE-0003"
+  title="How Heartbreak triggered my Spiritual Awakening — bounded hole follow-up"
+  href="https://archive.org/download/69999/20200620-How%20Heartbreak%20triggered%20my%20Spiritual%20Awakening-M7whqHNknXY.mp4"
+  locator="Separate base.en and small.en agreement at approximately 00:06:55–00:11:10; paired with 2020-06-30 at 00:00–00:04:45"
+  evidence="Unverified machine-rendered follow-up account: frogs, a side step, widening/deepening plans, a seat, a qualified 1.74-metre estimate, and unrealized room-like plans"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
+/>
+
+<SourceCitation
+  sourceId="2020-06-30_2020-06-30-really-great-news-guys-hole-follow-up"
+  claimId="HIMR-HOLE-0003"
+  title="REALLY GREAT NEWS GUYS :D — bounded hole follow-up"
+  href="https://archive.org/download/69999/20200630-REALLY%20GREAT%20NEWS%20GUYS%20%20-D-2jrvftin1M4.mp4"
+  locator="Separate base.en and small.en agreement at approximately 00:00–00:00:42 and 00:02:59–00:04:45"
+  evidence="Unverified machine-rendered steps and seat, qualified estimate, and prospective or unrealized plans; no exact measurement established"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
+/>
+
+Three additional frames were checked directly: **June 20 at 00:09:30**, and **June
+30 at 00:00:32 and 00:03:20**. They show a large opening with displaced earth and
+tools, an on-camera participant crouched or seated within cut earth walls, and a
+low-angle view from inside the excavation toward its opening. They support visible
+continuation of the digging project, but not identity, location, exact size, motive,
+or time spent.
+
+<ArchiveImage
+  src="/images/wiki/hole-followup-2020.webp"
+  alt="A large excavation in earth with displaced soil, a shallow container, and a blue rake visible nearby"
+  width={960}
+  height={540}
+  caption="The June 20 follow-up at 00:09:30 visibly documents the excavation and nearby tools; it does not establish dimensions, duration, location, or cause"
+  sourceHref="https://archive.org/download/69999/20200620-How%20Heartbreak%20triggered%20my%20Spiritual%20Awakening-M7whqHNknXY.mp4"
+  sourceLabel="How Heartbreak triggered my Spiritual Awakening — archived raw video"
+  locator="00:09:30; uncropped frame resized from 1280x720 to 960x540 and encoded as WebP without generative alteration"
+  rightsNote="Archived public-video frame reproduced for source identification, historical context, and commentary. It establishes only the visible excavation, soil, container, and rake."
+/>
+
+<SourceCitation
+  sourceId="2020-06-30_2020-06-30-really-great-news-guys-hole-follow-up-visual"
+  claimId="HIMR-HOLE-0004"
+  title="June 2020 follow-ups — sampled raw-video frames"
+  href="https://archive.org/download/69999/20200630-REALLY%20GREAT%20NEWS%20GUYS%20%20-D-2jrvftin1M4.mp4"
+  locator="Direct visual checks in the June 20 raw video at 00:09:30 and the June 30 raw video at 00:00:32 and 00:03:20"
+  evidence="Visible continuation of an excavation: displaced earth, cut walls, tools, and an on-camera participant inside; no dimensions, identity, location, purpose, or duration established"
+  checked={true}
+  reviewState="primary-media-checked"
+  reviewedAt="26 August 2026"
+/>
+
+## A significant duration mismatch
+
+The transcript snapshot displays **00:19:11** for this record, while Internet
+Archive's metadata reports **5,071.66 seconds**—approximately **01:24:31.66**—for
+the mapped MP4. The wiki therefore does not assume that the transcript covers the
+whole raw file or use its generated summary as a complete account.
+
+<Aside type="caution" title="Details not promoted from the community timeline">
+  A supplied [community timeline](https://www.reddit.com/r/HIMRFAM/comments/1psodbp/quick_himr_timeline_from_1500_transcripts/)
+  describes a multi-day project, gives an exact depth, and proposes an emotional
+  cause. Those details were not established by the title, the two checked stills, or
+  a complete review of the unusually long mapped file, so they are not repeated here
+  as facts or as Daniel's verified account.
+</Aside>
+
+## What remains open
+
+A complete review of the 01:24:31 mapped file is needed before the wiki can describe
+the continuous progression. Direct listening is still needed before the June 20 and
+June 30 machine-rendered account can be promoted beyond a warned research lead. No
+checked source supplies an instrument measurement, a complete project chronology, a
+verified emotional cause, or evidence that the proposed room-like additions were
+completed.

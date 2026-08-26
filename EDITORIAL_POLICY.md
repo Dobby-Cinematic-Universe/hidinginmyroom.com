@@ -45,23 +45,28 @@ those subjects in the non-public research record until the applicable verificati
 sensitivity standards are met.
 
 A separate narrow **attributed self-account** exception permits a high-level
-machine-text paraphrase of a notable adult relationship or sexual claim made by the
-public creator. It records the allegation that the creator made the account; it does
-not make the machine text evidence that the speech or underlying event is true. Use
-this exception only when all of the following are satisfied:
+machine-text paraphrase of a notable first-person claim made by the public creator
+about his own circumstances, conduct, intentions, public work, adult relationships,
+or a publicly discussed family event.
+It records an unverified candidate account attributed to Daniel; it does not make the
+machine text evidence that the speech or underlying event is true. Use this exception
+only when all of the following are satisfied:
 
 - the public raw source and exact candidate range are identified;
 - at least two independent ASR passes materially agree on the central passage, while
   any single-machine supporting chronology remains explicitly labelled as such;
 - no machine-text quotation is published, and the page plainly says that nobody
   directly perceived the audio;
-- the summary is necessary for a notable topic, minimizes intimate detail, and does
-  not identify otherwise unnamed people;
+- the summary is necessary for a notable topic, stays within Daniel's own account,
+  minimizes financial, housing, travel, medical, and intimate detail, and does not
+  identify otherwise unnamed people;
 - the maintainers' review record states the underlying status, corroboration limit,
   and result of a bounded response search; and
-- minor-related or age-dependent claims, alleged crimes or abuse, leaked intimate
-  material, graphic detail, and claims whose gist depends on unresolved consent are
-  omitted.
+- minor-related or age-dependent claims, diagnostic inference, medical claims about a
+  living private third party, alleged crimes or abuse by another person, leaked
+  intimate material, graphic detail, and claims whose gist depends on unresolved
+  consent are omitted. Claims that materially accuse another living person must
+  instead satisfy the allegation standard with evidence appropriate to the claim.
 
 This exception should be rare. A visible creator caption may establish how the source
 was edited, but it does not corroborate the machine-rendered narration or the event.
