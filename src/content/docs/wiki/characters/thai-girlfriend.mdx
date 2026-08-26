@@ -12,7 +12,8 @@ import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
 
 <VerificationBadge
   status="source-matched"
-  note="The title sequence and Fast/Faster community usage are source-matched; a masked December 2022 segment was visually checked. The 2024 explanatory audio remains unavailable and its machine transcript is explicitly unverified."
+  reviewedAt="26 August 2026"
+  note="The title sequence and Fast/Faster community usage are source-matched; a masked December 2022 segment was visually checked. Two ASR passes agree on a narrow October 2022 self-account, but nobody directly heard it; the 2024 explanatory audio remains unavailable."
 />
 
 The primary titles reviewed here say “my Thai girlfriend,” “my new girlfriend,” or
@@ -90,6 +91,7 @@ in Thai.
   locator="Independent offline-ASR agreement at 01:25:15–01:25:39"
   evidence="Unverified machine-rendered nickname account attributed to Daniel; spelling, phonology, and preferred-name status unresolved"
   reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ## Public chronology
@@ -100,16 +102,44 @@ The earliest direct source used here is *Moving to Thailand to meet my Thai
 girlfriend!*, labelled October 10, 2022. The next archive label, October 11, is
 *Moving into my new girlfriend’s house*. Together, the titles establish Daniel's
 public meeting-and-moving framing. They do not verify a first meeting, when the
-relationship began, or any private housing arrangement. A machine-transcript locator
-at 11:50–12:09 is retained only for future audio review.
+relationship began, or any private housing arrangement.
 
 <SourceCitation
   sourceId="2022-10-10_2022-10-10-moving-to-thailand-to-meet-my-thai-girlfriend"
+  claimId="HIMR-FAST-0001"
   title="Moving to Thailand to meet my Thai girlfriend!"
   href="https://himr-archive.pages.dev/transcripts/2022/2022-10-10-moving-to-thailand-to-meet-my-thai-girlfriend.html"
-  locator="Archive label: 2022-10-10; unchecked transcript lead at 11:50–12:09"
+  locator="Archive title and date label: 2022-10-10"
   evidence="Meeting language in the source title only; relationship start unverified"
   checked={false}
+  reviewState="source-matched"
+/>
+
+A separate two-model review of the public raw video supplies only Daniel's anticipated
+plan. At **00:11:54–00:12:15**, independent **base.en** and **small.en** passes
+materially agree in rendering him as expecting to meet the person he described with
+the Thai-girlfriend label within hours. They also render a conditional upload plan:
+he would publish that night if the plan did not work out, but wait several days if it
+did.
+
+<Aside type="caution" title="Unheard and uncorroborated self-account">
+  Nobody directly heard this passage. It is an unverified, one-sided account attributed
+  to Daniel—not proof that a meeting occurred, that a relationship existed, that this
+  was a first meeting, or that any location claim was accurate. A bounded search of
+  the audited archive, platform, and community materials found no participant account
+  or independent corroboration; that search result does not prove none exists.
+</Aside>
+
+<SourceCitation
+  sourceId="2022-10-10_2022-10-10-moving-to-thailand-to-meet-my-thai-girlfriend"
+  claimId="HIMR-FAST-0008"
+  title="Moving to Thailand to meet my Thai girlfriend! — anticipated-meeting lead"
+  href="https://archive.org/download/699992/20221010-Moving%20to%20Thailand%20to%20meet%20my%20Thai%20girlfriend%21-2Hgkh8EqzsU.mp4"
+  locator="Independent base.en and small.en agreement at 00:11:54–00:12:15; no direct human audio review"
+  evidence="Unverified machine-rendered anticipated-meeting and conditional-upload account attributed to Daniel; no meeting, relationship, location, or first-meeting status established"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ### Late 2022: a checked masked appearance

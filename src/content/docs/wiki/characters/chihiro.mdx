@@ -11,13 +11,16 @@ import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
 
 <VerificationBadge
   status="source-matched"
-  note="One explicitly named 2019 cooking appearance is visually checked. A separate public Chihiro K upload is reconciled by platform ID to its preserved copy in HIMR Archive 2, while the person-level bridge to the 2019 participant remains unresolved."
+  reviewedAt="26 August 2026"
+  note="One explicitly named 2019 cooking appearance is visually checked. Separate two-model machine reviews now preserve Daniel's narrow marriage- and divorce-labelled accounts, but no reviewer directly heard the audio, no legal status is established, and the generic sources do not identify their other party as Chihiro."
 />
 
 Chihiro is the public on-channel name used by an archived 2019 cooking title for its
 on-camera participant. Relationship-themed titles surround that named appearance,
-but the wiki does not convert unchecked transcript narration into a
-verified marriage or divorce history. This page deliberately does not publish a
+and this page now records two narrow, conspicuously unverified accounts attributed to
+Daniel where separate ASR passes materially agree. They are not a verified marriage
+or divorce history and do not identify the unnamed wife in those sources as Chihiro.
+This page deliberately does not publish a
 surname, employer, private contact details, or identifying information outside her
 public video role.
 
@@ -47,6 +50,8 @@ public video role.
 
 The archive supplies a narrow public source trail:
 
+- A March 2018 record is titled *WE GOT MARRIED*. Its generic relationship framing
+  does not identify the other party or establish legal status.
 - An archive record labelled November 2018 is titled *Mcdonalds Q&A with my Wife*. The title establishes
   a public relationship label but does not, by itself, identify a legal spouse.
 - The August 2019 title *Cooking with Chihiro — Japanese Fried Chicken Recipe*
@@ -65,7 +70,40 @@ The archive supplies a narrow public source trail:
 
 ## Evidence-led timeline
 
-### 2018: a generic relationship-labelled record
+### March 2018: Daniel's marriage-labelled account
+
+The March 15 source is titled *WE GOT MARRIED*. Separate `base.en` and `small.en`
+passes materially agree at **02:06–02:44** that Daniel said registration had happened
+several days earlier, called himself married, acknowledged that he then had no paper
+to display, and expected documentation later. At **05:51–06:14**, both passes render
+him describing the paperwork and signing as complete and reporting that an official
+said they were technically married.
+
+No reviewer directly heard the audio. No civil record or independently authenticated
+account from the other party was located in the bounded review, and the source does
+not name its wife as Chihiro. The later application discussion and witness, family,
+and immigration detail are omitted. This is Daniel's machine-rendered account of the
+source's marriage framing—not proof of a legal marriage, its date, or the other
+party's identity.
+
+<Aside type="danger" title="Unverified machine-rendered relationship account">
+  Two ASR passes materially agree on this attributed account, but nobody directly
+  heard the audio and no civil record or authenticated statement by the unnamed other
+  party was reviewed. It must not be read as a legal-status or Chihiro-identity finding.
+</Aside>
+
+<SourceCitation
+  sourceId="2018-03-15_2018-03-15-we-got-married"
+  claimId="HIMR-CHIHIRO-0010"
+  title="WE GOT MARRIED — Daniel's marriage-registration account"
+  href="https://archive.org/download/69999/20180315-WE%20GOT%20MARRIED-4WjOr4kT1xU.mp4"
+  locator="Independent base.en and small.en agreement at 00:02:06–00:02:44 and 00:05:51–00:06:14; audio not directly perceived"
+  evidence="Unverified self-account attributed to Daniel; no legal-status, date, wife-identity, or Chihiro finding"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
+/>
+
+### November 2018: a generic relationship-labelled record
 
 The November 15 archive title uses *my Wife*. The safe conclusion is only that a
 generic relationship label appears in the channel's public packaging. The exact
@@ -110,17 +148,34 @@ visible: participation in a cooking video.
 ### 2020: a divorce-labelled record
 
 A February 18 archive record is titled *I am now Officially Divorced*. That title
-shows the creator's public framing. It does not establish a legal divorce, its date,
-the other party's identity, or Chihiro's account. Machine-transcript locators are kept
-as research leads until the audio can be manually reviewed.
+shows the creator's public framing. Separate `base.en` and `small.en` passes materially
+agree at **00:01–00:30** that Daniel said he had received an image presented to him as
+filed divorce paperwork. At **01:29–02:44**, both render him attributing the
+relationship breakdown to spending time on Discord rather than with his wife, a lack
+of common ground and a language barrier, and an inability or unwillingness to change.
+At **04:05–04:17**, he is machine-rendered acknowledging uncertainty over whether the
+paper meant a finalized divorce or merely that papers had been received.
+
+That uncertainty is essential. No reviewer directly heard the audio, and no civil
+record or independently authenticated account from the other party was located in the
+bounded review. The account does not establish a legal divorce, its timing, the other
+party's identity, or Chihiro's perspective. Cheating, court, and private-message
+details from the surrounding source are deliberately excluded.
+
+<Aside type="danger" title="Unverified machine-rendered relationship account">
+  This preserves Daniel's apparent account and his uncertainty; it does not establish
+  a divorce, its date, the unnamed other party, or Chihiro's perspective.
+</Aside>
 
 <SourceCitation
   sourceId="2020-02-18_2020-02-18-i-am-now-officially-divorced"
-  title="I am now Officially Divorced"
-  href="https://himr-archive.pages.dev/transcripts/2020/2020-02-18-i-am-now-officially-divorced.html"
-  locator="Archive title; unchecked transcript leads at 00:01–00:25 and 04:09–04:48"
-  evidence="Divorce-labelled source identity only; legal status and identity uncorroborated"
-  checked={false}
+  claimId="HIMR-CHIHIRO-0011"
+  title="I am now Officially Divorced — Daniel's relationship-breakdown account"
+  href="https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4"
+  locator="Independent base.en and small.en agreement at 00:00:01–00:00:30, 00:01:29–00:02:44, and 00:04:05–00:04:17; audio not directly perceived"
+  evidence="Unverified self-account attributed to Daniel, including his uncertainty; no legal-status, date, other-party-identity, or Chihiro finding"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ## Public Chihiro K accounts
@@ -233,16 +288,18 @@ This profile is **source matched**. The archive identities and public-name title
 reconciled, and the reproduced frame plus limited cooking footage were visually
 checked. The external YouTube and Instagram profiles are linked to each other, and
 one public channel upload is reconciled to its copy in HIMR Archive 2. Their proposed
-person-level connection to the 2019 HIMR participant remains unresolved. Spoken
-identity, relationship history, and the divorce-labelled account have not been
-independently audio-checked or corroborated by civil records.
+person-level connection to the 2019 HIMR participant remains unresolved. The 2018
+marriage-labelled and 2020 divorce-labelled accounts are published only as narrow,
+two-model machine-rendered self-accounts by Daniel. No reviewer directly heard those
+passages, and neither legal status nor the unnamed wife's identity is established.
 
 ## Concise source list
 
 | Archive label | Primary source | Evidentiary use |
 | --- | --- | --- |
+| 2018-03-15 | [WE GOT MARRIED](https://archive.org/download/69999/20180315-WE%20GOT%20MARRIED-4WjOr4kT1xU.mp4) | Daniel's unverified two-model marriage-registration account; legal status and wife identity unresolved |
 | 2018-11-15 | [Mcdonalds Q&A with my Wife](https://archive.org/download/69999/20181115-Mcdonalds%20Q%26A%20with%20my%20Wife-tVAs7LqTMrA.mp4) | Public wife label; identity uncorroborated |
 | 2019-08-29 | [Cooking with Chihiro](https://archive.org/download/69999/20190829-Cooking%20with%20Chihiro%20-%20Japanese%20Fried%20Chicken%20Recipe-BnKadvbHIf8.mp4) | Visibly checked ordinary on-camera appearance |
-| 2020-02-18 | [I am now Officially Divorced](https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4) | Divorce-labelled source; legal status and identity uncorroborated |
+| 2020-02-18 | [I am now Officially Divorced](https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4) | Daniel's unverified two-model breakdown account, including his uncertainty; legal status and identity unresolved |
 | 2021-05-16 | [Day in my life of single woman in japan](https://www.youtube.com/watch?v=keaCN2NeIRw) | Public Chihiro K upload also preserved in HIMR Archive 2; cross-video person identity unresolved |
 | 2022-04-03 | [Chihiro K — cherry-blossom vlog](https://www.youtube.com/watch?v=f1rO4XEniZo) | Links the Chihiro K YouTube channel to `@chi.chi0304`; person-level HIMR identity remains unresolved |

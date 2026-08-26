@@ -11,7 +11,8 @@ import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
 
 <VerificationBadge
   status="source-matched"
-  note="The wider chronology is source matched; representative frames from the October 10, 2022 hotel sequence were manually checked."
+  reviewedAt="26 August 2026"
+  note="The wider chronology is source matched; representative frames from the October 10, 2022 hotel sequence were manually checked. Two ASR passes also agree on a narrow self-account, but nobody directly heard it and the account remains unverified."
 />
 
 “The Thailand era” is editorial shorthand for a Thailand-centred run of HIMR
@@ -51,16 +52,42 @@ The October 10 raw video was manually spot-checked at 07:45, 08:20, 10:55,
 and 12:00. Those frames visibly show an elevator/corridor sequence, suite signage,
 and the interior of a multi-room hotel suite. The checked footage verifies the
 hotel sequence, while the destination and relationship context depend on the archive
-title. An unchecked machine-transcript segment at 11:50–12:09 remains a lead for a
-future audio review, not evidence used here.
+title.
 
 <SourceCitation
   sourceId="2022-10-10_2022-10-10-moving-to-thailand-to-meet-my-thai-girlfriend"
+  claimId="HIMR-THAI-0003"
   title="Moving to Thailand to meet my Thai girlfriend!"
   href="https://archive.org/download/699992/20221010-Moving%20to%20Thailand%20to%20meet%20my%20Thai%20girlfriend%21-2Hgkh8EqzsU.mp4"
   locator="Visual spot-checks: 07:45, 08:20, 10:55, and 12:00"
   evidence="Visible hotel sequence; destination and meeting language comes only from the source title"
   checked={true}
+  reviewState="primary-media-checked"
+/>
+
+The same public raw video has a narrower machine-speech lead. Independent **base.en**
+and **small.en** passes materially agree at **00:11:54–00:12:15** in rendering Daniel
+as expecting to meet the person associated with the Thai-girlfriend label within
+hours. They also render him describing a conditional upload plan: publishing that
+night if the plan did not work out, but waiting several days if it did.
+
+<Aside type="caution" title="Unheard and uncorroborated self-account">
+  Nobody directly heard this passage. It remains an unverified account attributed to
+  Daniel, not proof of a meeting, relationship, first meeting, or location. A bounded
+  search of the audited archive, platform, and community materials found no participant
+  account or independent corroboration; that search result does not prove none exists.
+</Aside>
+
+<SourceCitation
+  sourceId="2022-10-10_2022-10-10-moving-to-thailand-to-meet-my-thai-girlfriend"
+  claimId="HIMR-THAI-0008"
+  title="Moving to Thailand to meet my Thai girlfriend! — anticipated-meeting lead"
+  href="https://archive.org/download/699992/20221010-Moving%20to%20Thailand%20to%20meet%20my%20Thai%20girlfriend%21-2Hgkh8EqzsU.mp4"
+  locator="Independent base.en and small.en agreement at 00:11:54–00:12:15; no direct human audio review"
+  evidence="Unverified machine-rendered anticipated-meeting and conditional-upload account attributed to Daniel; no meeting, relationship, location, or first-meeting status established"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ### Bangkok-labelled duplicate records

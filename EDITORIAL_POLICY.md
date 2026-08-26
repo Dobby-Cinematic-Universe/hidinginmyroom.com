@@ -205,7 +205,7 @@ Before publishing or materially expanding a page, confirm that:
 - any public machine-only research lead is benign, conspicuously labelled, and gives
   its exact source, candidate locator, raw-media status, and named review queue;
 - any machine-text attributed self-account satisfies the separate narrow exception,
-  carries an allegation notice and response-search result, and omits minor-related,
+  carries a prominent adjacent warning and response-search result, and omits minor-related,
   age-dependent, criminal, abusive, leaked, graphic, or consent-dependent material;
 - reviewed reposts have a full-item integrity assessment and retained media hash;
 - allegations carry an adjacent warning, attribution, underlying verification state,

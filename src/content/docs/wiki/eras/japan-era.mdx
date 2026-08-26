@@ -11,7 +11,8 @@ import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
 
 <VerificationBadge
   status="source-matched"
-  note="Primary archive records and transcript locators were reconciled on August 25, 2026. Narrative audio has not yet been independently checked."
+  reviewedAt="26 August 2026"
+  note="Primary archive records were reconciled, and separate ASR passes materially agree on narrow 2018 marriage-labelled and 2020 divorce-labelled accounts attributed to Daniel. No reviewer directly heard the audio, and no legal status or other-party identity is established."
 />
 
 “The Japan era” is editorial shorthand for several Japan-centred runs of HIMR
@@ -71,10 +72,23 @@ unestablished by those titles.
 ### 2018: marriage-labelled material
 
 The March 15 archive record is titled *WE GOT MARRIED*. This proves how the upload
-was presented, not that a legal marriage occurred on or near the filename date. The
-unchecked machine transcript offers a possible announcement locator at 02:06–02:18,
-but that locator is retained for future audio review rather than used as public
-evidence.
+was presented, not that a legal marriage occurred on or near the filename date.
+Separate `base.en` and `small.en` passes materially agree at **02:06–02:44** that
+Daniel said registration had happened several days earlier, called himself married,
+acknowledged that he then had no paper to display, and expected documentation later.
+At **05:51–06:14**, both render him describing the paperwork and signing as complete
+and reporting that an official said they were technically married.
+
+No reviewer directly heard the audio, no civil record was reviewed, and the generic
+source does not identify the wife as Chihiro. Later application steps and witness,
+family, and immigration detail are omitted. This is an unverified account attributed
+to Daniel, not a legal-status or identity finding.
+
+<Aside type="danger" title="Unverified machine-rendered relationship account">
+  Two ASR passes materially agree on this attributed account, but nobody directly
+  heard the audio and no civil record or authenticated statement by the unnamed other
+  party was reviewed. It must not be read as a legal-status or Chihiro-identity finding.
+</Aside>
 
 Later 2018 records include joint and domestic labels such as *Mcdonalds Q&A with my
 Wife*. Separately, 2019 titles explicitly name Chihiro. Connecting every generic
@@ -83,11 +97,13 @@ review than this page has completed.
 
 <SourceCitation
   sourceId="2018-03-15_2018-03-15-we-got-married"
-  title="WE GOT MARRIED"
-  href="https://himr-archive.pages.dev/transcripts/2018/2018-03-15-we-got-married.html"
-  locator="Archive label: 2018-03-15; unchecked transcript lead at 02:06–02:18"
-  evidence="Source title and identity only; marriage and exact date uncorroborated"
-  checked={false}
+  claimId="HIMR-JAPAN-0009"
+  title="WE GOT MARRIED — Daniel's marriage-registration account"
+  href="https://archive.org/download/69999/20180315-WE%20GOT%20MARRIED-4WjOr4kT1xU.mp4"
+  locator="Independent base.en and small.en agreement at 00:02:06–00:02:44 and 00:05:51–00:06:14; audio not directly perceived"
+  evidence="Unverified self-account attributed to Daniel; no legal-status, event-date, wife-identity, or Chihiro finding"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ### 2019: a Chihiro-named cooking video
@@ -110,20 +126,37 @@ commentary.
 ### 2020: a divorce-labelled upload
 
 The February 18 archive record is titled *I am now Officially Divorced*. Its audio
-has not been directly reviewed, and no civil record is cited on this page.
-This page therefore establishes only that the archive contains a divorce-labelled
-update; it does not infer a legal event or date from the title.
+has not been directly heard, and no civil record is cited on this page. Separate
+`base.en` and `small.en` passes materially agree at **00:01–00:30** that Daniel said
+he received an image presented to him as filed divorce paperwork. At
+**01:29–02:44**, both render him attributing the breakdown to time spent on Discord
+rather than with his wife, a lack of common ground and a language barrier, and an
+inability or unwillingness to change. At **04:05–04:17**, he is machine-rendered
+acknowledging uncertainty over whether the paper meant a finalized divorce or merely
+that papers had been received.
+
+The account remains Daniel's alone. No independently authenticated other-party
+account was located in the bounded review, and the generic source does not identify
+the wife as Chihiro. Cheating, court, and private-message details are excluded.
+
+<Aside type="danger" title="Unverified machine-rendered relationship account">
+  This preserves Daniel's apparent account and his uncertainty; it does not establish
+  a divorce, its date, the unnamed other party, or Chihiro's perspective.
+</Aside>
 
 This title is a useful end marker for the core Japan/Chihiro publication sequence. It
-does not establish the date of a legal event or end all later Japan-related material.
+does not establish a legal event, its date, or the other party's identity, and it does
+not end all later Japan-related material.
 
 <SourceCitation
   sourceId="2020-02-18_2020-02-18-i-am-now-officially-divorced"
-  title="I am now Officially Divorced"
-  href="https://himr-archive.pages.dev/transcripts/2020/2020-02-18-i-am-now-officially-divorced.html"
-  locator="Archive label: 2020-02-18; unchecked transcript leads at 00:01–00:25 and 04:09–04:48"
-  evidence="Source title and identity only; legal status and timing uncorroborated"
-  checked={false}
+  claimId="HIMR-JAPAN-0010"
+  title="I am now Officially Divorced — Daniel's relationship-breakdown account"
+  href="https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4"
+  locator="Independent base.en and small.en agreement at 00:00:01–00:00:30, 00:01:29–00:02:44, and 00:04:05–00:04:17; audio not directly perceived"
+  evidence="Unverified self-account attributed to Daniel, including his uncertainty; no legal-status, event-date, or other-party-identity finding"
+  reviewState="unverified-research-lead"
+  reviewedAt="26 August 2026"
 />
 
 ### Later Japan-labelled records
@@ -137,8 +170,10 @@ title's characterization.
 
 This page is **source matched**. Archive identities, dates, filenames, duplicate
 hashes, and raw-video availability were checked against the August 25, 2026 source
-manifest. The visible cooking segment was spot-checked. Spoken narrative and legal or
-immigration claims remain attributed and have not been promoted to “video checked.”
+manifest. The visible cooking segment was spot-checked. The two relationship accounts
+are published only as two-model machine-rendered self-accounts attributed to Daniel;
+no audio was directly perceived, and legal, identity, and immigration claims have not
+been promoted to “video checked.”
 
 ## Concise source list
 
@@ -148,7 +183,7 @@ immigration claims remain attributed and have not been promoted to “video chec
 | 2016-07-29 | [leaving japan forever,](https://archive.org/download/69999/20160729-leaving%20japan%20forever%2C...-Pl8n2wBeh90.ia.mp4) | End marker for that archived run |
 | 2017-09-22 | [First day in Japan](https://archive.org/download/69999/20170922-First%20day%20in%20Japan%20-%20I%20feel%20so%20alone-IRQq1E1F32c.mp4) | 2017 Japan-sequence marker; duplicate title records reconciled |
 | 2017-12-01 | [I’M STAYING IN JAPAN!](https://himr-archive.pages.dev/transcripts/2017/2017-12-01-i-m-staying-in-japan.html) | Creator's framing of a longer stay |
-| 2018-03-15 | [WE GOT MARRIED](https://archive.org/download/69999/20180315-WE%20GOT%20MARRIED-4WjOr4kT1xU.mp4) | Marriage-labelled record; underlying event uncorroborated |
+| 2018-03-15 | [WE GOT MARRIED](https://archive.org/download/69999/20180315-WE%20GOT%20MARRIED-4WjOr4kT1xU.mp4) | Daniel's unverified two-model registration account; legal status and wife identity unresolved |
 | 2019-08-29 | [Cooking with Chihiro](https://archive.org/download/69999/20190829-Cooking%20with%20Chihiro%20-%20Japanese%20Fried%20Chicken%20Recipe-BnKadvbHIf8.mp4) | Visibly checked cooking example |
-| 2020-02-18 | [I am now Officially Divorced](https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4) | Divorce-labelled record; legal status uncorroborated |
+| 2020-02-18 | [I am now Officially Divorced](https://archive.org/download/69999/20200218-I%20am%20now%20Officially%20Divorced-k0nss67OKTM.mp4) | Daniel's unverified two-model breakdown account, including his uncertainty; legal status unresolved |
 | 2023-03-30 | [Exploring Osaka](https://archive.org/download/699992/20230330-Exploring%20the%20Slums%20of%20Osaka%20in%20Japan-KLokp6Ohvys.mp4) | Later Japan-labelled material |
