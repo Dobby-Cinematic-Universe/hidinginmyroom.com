@@ -5,10 +5,10 @@ sidebar:
   order: 14
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import ArchiveImage from "../../../../components/wiki/ArchiveImage.astro";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   reviewedAt="27 August 2026"
@@ -29,34 +29,37 @@ That sequence proves that material was visible again. It does **not** prove the 
 start or duration of an absence: private, unlisted, deleted, renamed, members-only,
 or undiscovered material would not necessarily appear in a signed-out catalogue.
 
-<Aside type="caution" title="Fact, title framing, and transcript lead are different">
+<Aside
+  type="caution"
+  title="Fact, title framing, and transcript lead are different"
+>
   The catalogue dates, video IDs, access states, and visible frame are directly
   reviewable. The titles “why I quit YouTube,” “Living in my Tesla Model Y,” and
   “homeless in my car” are creator/platform labels, not verified conclusions.
-  Local speech recognition can improve research locators, but it is still machine
-  text and does not become verified speech merely because a complete review copy is
-  available.
+  Local speech recognition can improve research locators, but it is still
+  machine text and does not become verified speech merely because a complete
+  review copy is available.
 </Aside>
 
 ## The visible return sequence
 
-| Published (UTC) | Listing | Access at review | What is established |
-| --- | --- | --- | --- |
-| 2026-07-30T22:28:18Z | [*why I quit YouTube*](https://www.youtube.com/watch?v=rKdcv4QvGig) | Members only | Dated public metadata, plus a separately warned local-ASR explanation from a non-redistributed contributor copy |
-| 2026-08-04T21:30:04Z | [*Cooking with Daniel - Garden Ritual*](https://www.youtube.com/watch?v=DW2nBIWbey4) | Public | Complete visual review: outdoor fire, decorated cooking setup, red drink preparation and tasting; “ritual” and any effect remain creator framing |
-| 2026-08-06T19:51:04Z | [*Romantic stargazing camping trip*](https://www.youtube.com/watch?v=sQVU5O6ScJI) | Public | Complete visual review: dome, bed, hot tub, facilities, cycling and waterfall; no stars, night, sleep, companion, or romantic interaction appears |
-| 2026-08-07T20:57:24Z | [*Living in my Tesla Model Y*](https://www.youtube.com/watch?v=9SuUVFWzp-0) | Public | Complete visual review: bedding, storage, rear-space demonstration, dashboard device, dusk setup and inserted dog photographs; model, ownership and overnight claims remain unverified |
-| 2026-08-08T21:22:44Z | [*homeless in my car*](https://www.youtube.com/watch?v=8AbFGYob9SU) | Public | Complete-source visual sampling: rear bedding, food and supplies, branded cabin, and daylight-to-dark progression; the title does not establish housing status or sleep |
-| 2026-08-10T22:15:02Z | [*feeling sad and lonely*](https://www.youtube.com/watch?v=mWVSkRjM_Ew) | Public | Complete-source visual sampling: open-hatch setup, portable-stove cooking, eating, cabin views and a long dark section; the title is not a diagnosis |
-| 2026-08-20T01:51:11Z | [*Hiding in my room is live!*](https://www.youtube.com/watch?v=jaaoXdH6bxo) | Public | Complete-source visual sampling: a dark, portrait-format car talking-head stream; visible imagery does not verify the topics discussed |
-| 2026-08-23T00:56:42Z | [*Hiding in my room is live!*](https://www.youtube.com/watch?v=UUqmpEOc5oc) | Public | Complete-source visual sampling: a dark, portrait-format car talking-head stream; visible imagery does not verify the topics discussed |
-| 2026-08-26T19:27:38Z | [*I'M BACK*](https://www.youtube.com/watch?v=gPhrE99xwqI) | Public | Retained public rendition and representative visual sampling: Daniel appears alone in a dark, portrait-format car stream; one unreviewed machine pass supplies research locators only |
+| Published (UTC)      | Listing                                                                              | Access at review | What is established                                                                                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-30T22:28:18Z | [_why I quit YouTube_](https://www.youtube.com/watch?v=rKdcv4QvGig)                  | Members only     | Dated public metadata, plus a separately warned local-ASR explanation from a non-redistributed contributor copy                                                                        |
+| 2026-08-04T21:30:04Z | [_Cooking with Daniel - Garden Ritual_](https://www.youtube.com/watch?v=DW2nBIWbey4) | Public           | Complete visual review: outdoor fire, decorated cooking setup, red drink preparation and tasting; “ritual” and any effect remain creator framing                                       |
+| 2026-08-06T19:51:04Z | [_Romantic stargazing camping trip_](https://www.youtube.com/watch?v=sQVU5O6ScJI)    | Public           | Complete visual review: dome, bed, hot tub, facilities, cycling and waterfall; no stars, night, sleep, companion, or romantic interaction appears                                      |
+| 2026-08-07T20:57:24Z | [_Living in my Tesla Model Y_](https://www.youtube.com/watch?v=9SuUVFWzp-0)          | Public           | Complete visual review: bedding, storage, rear-space demonstration, dashboard device, dusk setup and inserted dog photographs; model, ownership and overnight claims remain unverified |
+| 2026-08-08T21:22:44Z | [_homeless in my car_](https://www.youtube.com/watch?v=8AbFGYob9SU)                  | Public           | Complete-source visual sampling: rear bedding, food and supplies, branded cabin, and daylight-to-dark progression; the title does not establish housing status or sleep                |
+| 2026-08-10T22:15:02Z | [_feeling sad and lonely_](https://www.youtube.com/watch?v=mWVSkRjM_Ew)              | Public           | Complete-source visual sampling: open-hatch setup, portable-stove cooking, eating, cabin views and a long dark section; the title is not a diagnosis                                   |
+| 2026-08-20T01:51:11Z | [_Hiding in my room is live!_](https://www.youtube.com/watch?v=jaaoXdH6bxo)          | Public           | Complete-source visual sampling: a dark, portrait-format car talking-head stream; visible imagery does not verify the topics discussed                                                 |
+| 2026-08-23T00:56:42Z | [_Hiding in my room is live!_](https://www.youtube.com/watch?v=UUqmpEOc5oc)          | Public           | Complete-source visual sampling: a dark, portrait-format car talking-head stream; visible imagery does not verify the topics discussed                                                 |
+| 2026-08-26T19:27:38Z | [_I'M BACK_](https://www.youtube.com/watch?v=gPhrE99xwqI)                            | Public           | Retained public rendition and representative visual sampling: Daniel appears alone in a dark, portrait-format car stream; one unreviewed machine pass supplies research locators only  |
 
 ### August 26: a later retained and machine-indexed stream
 
 A subsequent signed-out channel capture found one additional public livestream,
 [`gPhrE99xwqI`](https://www.youtube.com/watch?v=gPhrE99xwqI). Its official watch-page
-metadata labels it *I'M BACK* and dates it **2026-08-26T19:27:38Z**. The first
+metadata labels it _I'M BACK_ and dates it **2026-08-26T19:27:38Z**. The first
 retained watch response reported **3:41:40**; the subsequently acquired public
 rendition measured **3:41:59.833**, and a later extractor observation reported
 **3:42:10**. Those values are preserved as dated observations rather than silently
@@ -66,8 +69,8 @@ remains the same.
 Representative samples across the retained rendition show Daniel alone in a dark,
 portrait-format car talking-head stream, at points eating or handling ordinary
 objects. No other person, financial record, contract, analytics screen, or location
-proof appears in the checked samples. That visual review supports Daniel as the
-on-camera participant and the car-stream setting only.
+proof appears in the checked samples. That visual review supports Daniel's visible
+presence and the car-stream setting only.
 
 <SourceCitation
   sourceId="youtube-video-gPhrE99xwqI"
@@ -95,13 +98,13 @@ on-camera participant and the car-stream setting only.
 #### What the one-pass transcript can and cannot add
 
 <Aside type="danger" title="Unreviewed machine rendering—not verified speech">
-  The only speech pass currently available is one raw **Whisper small.en** rendering.
-  It used no HIMR glossary, has no confidence calibration, and has not been heard or
-  corrected by a person. Every speech point below is therefore an unverified
-  machine rendering of **Daniel's own claim, plan, or opinion**, not a quotation or
-  corroborated event. A severe repeated-text failure begins in the seventh window at
-  about **03:15:34**, and the eighth window develops sound-label hallucinations;
-  nothing from those failure spans is used here.
+  The only speech pass currently available is one raw **Whisper small.en**
+  rendering. It used no HIMR glossary, has no confidence calibration, and has
+  not been heard or corrected by a person. Every speech point below is therefore
+  an unverified machine rendering of **Daniel's own claim, plan, or opinion**,
+  not a quotation or corroborated event. A severe repeated-text failure begins
+  in the seventh window at about **03:15:34**, and the eighth window develops
+  sound-label hallucinations; nothing from those failure spans is used here.
 </Aside>
 
 The clean early portion machine-renders Daniel calling this **day 21** of living in
@@ -209,7 +212,7 @@ or project occurred.
 ### A separately located August 4 livestream
 
 The contributor later supplied stable ID [`0OqHmjJIFrc`](https://www.youtube.com/watch?v=0OqHmjJIFrc).
-Its official watch page identifies a **2:07:43** livestream titled *life update*,
+Its official watch page identifies a **2:07:43** livestream titled _life update_,
 published on August 4 under the same stable channel ID. At the August 26 signed-out
 review, YouTube required login to confirm age before playback.
 
@@ -217,7 +220,7 @@ This item did not appear among the 24 cards in the separately dated August 25
 signed-out channel inventory. That is a discovery and access limitation—not proof
 that the stream was absent, deleted, or newly uploaded. The first eight listing rows
 above describe exactly what that earlier snapshot exposed; the August 26 row and
-*life update* are separately dated additions.
+_life update_ are separately dated additions.
 
 <SourceCitation
   sourceId="youtube-video-0OqHmjJIFrc"
@@ -240,8 +243,8 @@ above describe exactly what that earlier snapshot exposed; the August 26 row and
 />
 
 The first visible 2026 item matters because its title asks the obvious question. A
-signed-out review on August 25 could see the members-only card for *why I quit
-YouTube* and its 2:24:52 duration but could not play it. That historical access fact
+signed-out review on August 25 could see the members-only card for _why I quit
+YouTube_ and its 2:24:52 duration but could not play it. That historical access fact
 is preserved below rather than retroactively rewritten.
 
 <SourceCitation
@@ -257,13 +260,13 @@ is preserved below rather than retroactively rewritten.
 ## Machine-assisted explanations from private review copies
 
 <Aside type="caution" title="The video is not being redistributed">
-  The contributor supplied private research copies of *why I quit YouTube* and *life
-  update*. Both video-ID-labelled files match their official listings' rounded
-  durations. They are ignored by Git, remain outside repository history, and are not
-  linked, uploaded, excerpted, or used for a public frame. Audio was decoded locally
-  into offline speech recognition without retaining transcripts in the repository.
-  Neither copy was authenticated byte-for-byte against YouTube, and this environment
-  cannot directly hear audio.
+  The contributor supplied private research copies of *why I quit YouTube* and
+  *life update*. Both video-ID-labelled files match their official listings'
+  rounded durations. They are ignored by Git, remain outside repository history,
+  and are not linked, uploaded, excerpted, or used for a public frame. Audio was
+  decoded locally into offline speech recognition without retaining transcripts
+  in the repository. Neither copy was authenticated byte-for-byte against
+  YouTube, and this environment cannot directly hear audio.
 </Aside>
 
 Two offline ASR passes agree on a narrow, repeated account at **00:05:23–00:08:22**
@@ -305,7 +308,7 @@ active, or the truth of his causal account. A relationship is mentioned in the
 machine text but no person is identified here, and nothing permits assigning that
 private context to any named or community-labelled person.
 
-The August 4 *life update* contains a later machine-rendered restatement of this
+The August 4 _life update_ contains a later machine-rendered restatement of this
 reasoning. At approximately **01:35:52–01:36:41**, base.en and small.en agree on a
 passage in which Daniel appears to say he stopped uploading to try life without
 YouTube, then returned after deciding that the platform had not caused his underlying
@@ -333,7 +336,7 @@ machine text and were excluded, as was one gratuitously explicit ingredient.
 
 This documents Daniel's stream framing only. It does not verify the payment, recipe
 source, any claimed effect, Starlink performance, or that the separate public
-*Cooking with Daniel — Garden Ritual* upload is an edit of this livestream.
+_Cooking with Daniel — Garden Ritual_ upload is an edit of this livestream.
 
 <SourceCitation
   sourceId="youtube-video-0OqHmjJIFrc-local-asr-garden"
@@ -358,16 +361,17 @@ callback and is not added to the slap record.
 
 <Aside type="caution" title="How the public copies were reviewed">
   Complete ID-labelled public copies were inspected across their full visual
-  timelines, with exact full-resolution checks at material moments. Their identifiers,
-  titles and rounded durations agree with the official listings. Complete soundtracks
-  were independently indexed with two offline speech-recognition models. Because this
-  interface cannot hear audio, machine agreement improves a locator but does not turn
-  speech into a verified quotation or fact.
+  timelines, with exact full-resolution checks at material moments. Their
+  identifiers, titles and rounded durations agree with the official listings.
+  Complete soundtracks were independently indexed with two offline
+  speech-recognition models. Because this interface cannot hear audio, machine
+  agreement improves a locator but does not turn speech into a verified
+  quotation or fact.
 </Aside>
 
 ### Garden ritual: what the edit actually shows
 
-[*Cooking with Daniel - Garden Ritual*](https://www.youtube.com/watch?v=DW2nBIWbey4)
+[_Cooking with Daniel - Garden Ritual_](https://www.youtube.com/watch?v=DW2nBIWbey4)
 shows Daniel preparing a bare outdoor patch and arranging a black pot above a small
 open fire. A red five-pointed design, five small pink candles and scattered rose
 petals are visible around it. He adds materials, tends steaming liquid, transfers a
@@ -393,7 +397,7 @@ shown; two glasses do not establish a companion.
   title="Cooking with Daniel - Garden Ritual — complete visual review"
   href="https://www.youtube.com/watch?v=DW2nBIWbey4"
   locator="Complete 00:10:04.614 visual timeline; setup at 00:00:10–00:01:47 and drink preparation/tasting at 00:01:47–00:05:42"
-  evidence="Visible pot, fire, five-pointed ground design, five candles, petals, red-liquid preparation and tasting; one visible participant"
+  evidence="Visible pot, fire, five-pointed ground design, five candles, petals, red-liquid preparation and tasting; Daniel is the only visible participant"
   checked={true}
   reviewState="primary-media-checked"
 />
@@ -403,7 +407,7 @@ vanilla and honey; a honey label is independently visible. At **00:04:33–00:05
 both render him joking about selling “love potions” and describing the taste as honey
 and cinnamon. At **00:08:38–00:09:28**, both render him addressing a livestream and
 its chat/payment features, which is evidence for an edited-livestream presentation
-but not a secure bridge to the separate *life update* file. No potion effect, paid
+but not a secure bridge to the separate _life update_ file. No potion effect, paid
 recipe source, ingredient list, or stream lineage is verified.
 
 <SourceCitation
@@ -419,11 +423,11 @@ recipe source, ingredient list, or stream lineage is verified.
 
 ### Stargazing dome: title promise versus visible record
 
-The complete [*Romantic stargazing camping
-trip*](https://www.youtube.com/watch?v=sQVU5O6ScJI) shows a transparent-panelled
+The complete [_Romantic stargazing camping
+trip_](https://www.youtube.com/watch?v=sQVU5O6ScJI) shows a transparent-panelled
 geodesic dome with a bed and gear, a round hot tub, shared facilities and fossil
 displays, followed by cycling/walking footage and a waterfall. Daniel enters the hot
-tub and is the only identifiable foreground participant.
+tub and is the only foreground person shown.
 
 The upload remains in daylight and dusk throughout. It shows **no stars, night,
 sleep, companion, or romantic interaction**. That negative finding does not prove
@@ -474,8 +478,8 @@ booking, overnight stay or successful stargazing.
 ## From “camping trip” to car-living titles
 
 Three consecutive public listings created the car-camping mini-arc: the August 6
-stargazing title, August 7 *Living in my Tesla Model Y*, and August 8 *homeless in my
-car*. The chronology is firm; continuity is not. The files do not establish that the
+stargazing title, August 7 _Living in my Tesla Model Y_, and August 8 _homeless in my
+car_. The chronology is firm; continuity is not. The files do not establish that the
 same place or uninterrupted trip appears in all three, that the vehicle was legally
 Daniel's, or that he met a legal or ordinary definition of homelessness.
 
@@ -562,7 +566,7 @@ status or a precise vehicle model.
 
 ## What the long public streams add visually
 
-The August 8 *homeless in my car* copy was sampled across its complete **02:37:22**
+The August 8 _homeless in my car_ copy was sampled across its complete **02:37:22**
 duration with focused full-frame checks. Around **00:25:00**, a mattress, bedding and
 pillows fill the rear interior. Later sections show food, drinks and supplies, then a
 right-hand-drive cabin with visible Tesla branding, before the scene becomes dark.
@@ -581,7 +585,7 @@ housing claim, actual sleep, ownership or model.
   reviewState="primary-media-checked"
 />
 
-The August 10 *feeling sad and lonely* stream was likewise sampled across its complete
+The August 10 _feeling sad and lonely_ stream was likewise sampled across its complete
 **03:51:02** duration. It shows the open-hatch bedding and supplies, a portable
 single-burner stove, Daniel preparing and eating food, cabin views, dusk and a long,
 mostly static dark section. The activity is directly visible; the emotional title is
@@ -624,7 +628,7 @@ carefully bounded, still-unverified speech leads—not in the imagery.
   title="August 20 and 23 livestreams — full-duration visual sampling"
   href="https://www.youtube.com/watch?v=jaaoXdH6bxo"
   locator="Five-minute sampling across complete 04:27:50.034 and 02:43:58.894 public copies, plus exact candidate-frame checks"
-  evidence="One-person, dark, portrait-format car close-up throughout; no displayed document, platform notice, third party, stock/vector asset, or Bobby object"
+  evidence="Daniel alone in a dark, portrait-format car close-up throughout; no displayed document, platform notice, third party, stock/vector asset, or Bobby object"
   checked={true}
   reviewState="primary-media-checked"
 />
@@ -657,12 +661,15 @@ not to return while a relationship seemed likely to last, and that going live an
 speaking with viewers later provided temporary distraction during a difficult
 emotional period.
 
-<Aside type="caution" title="Sensitive self-account, not a diagnosis or relationship finding">
-  No partner is named. The wiki does not infer a diagnosis, verify a breakup, treat
-  “nine months” as an audited hiatus, or present livestreaming as treatment. These
-  passages show how Daniel explained his own motives in that stream. They need not be
-  forced into one exclusive cause: he separately emphasized consequences, enjoyment,
-  loneliness and social interaction.
+<Aside
+  type="caution"
+  title="Sensitive self-account, not a diagnosis or relationship finding"
+>
+  No partner is named. The wiki does not infer a diagnosis, verify a breakup,
+  treat “nine months” as an audited hiatus, or present livestreaming as
+  treatment. These passages show how Daniel explained his own motives in that
+  stream. They need not be forced into one exclusive cause: he separately
+  emphasized consequences, enjoyment, loneliness and social interaction.
 </Aside>
 
 <SourceCitation
@@ -678,7 +685,7 @@ emotional period.
 
 ### Housing-title and trip-continuity limits
 
-Two-model machine text near the beginning of *homeless in my car* materially narrows
+Two-model machine text near the beginning of _homeless in my car_ materially narrows
 the title. At **00:03:39–00:05:00**, Daniel appears to say that the main thing he
 missed was a good shower, that a hot shower was available, that he did not know how
 long it would be before he returned to a family home, and that the rear arrangement
@@ -720,7 +727,7 @@ uploads show one uninterrupted trip.
   copies and the eight public sources.
 - The exact hiatus boundaries and whether unpublished material filled the visible
   catalogue gap.
-- Whether *Garden Ritual* is an edit of *life update*; the presentation overlaps, but
+- Whether _Garden Ritual_ is an edit of _life update_; the presentation overlaps, but
   no sequence or audio fingerprint has established lineage.
 - Whether the three camping/car-labelled listings document one trip or several, and
   whether the planned dome stay, sleep or stargazing occurred off camera.
