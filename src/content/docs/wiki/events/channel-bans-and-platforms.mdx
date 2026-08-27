@@ -11,9 +11,9 @@ import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
 import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
 
 <VerificationBadge
-  reviewedAt="26 August 2026"
+  reviewedAt="27 August 2026"
   status="source-matched"
-  note="Current YouTube and Kick metadata was reconciled on 2026-08-25. Bounded public-stream platform passages have two-model machine-speech agreement but no supporting notices; the evidence does not establish a ban, restriction cause, rename date, or every remembered secondary channel."
+  note="YouTube and Kick metadata was reconciled on 2026-08-25, with a signed-out YouTube inventory refresh on 2026-08-27. Bounded public-stream platform passages have two-model machine-speech agreement but no supporting notices; the evidence does not establish a ban, restriction cause, rename date, or every remembered secondary channel."
 />
 
 This page follows **stable platform IDs before display names**. Handles, titles,
@@ -91,7 +91,7 @@ filled with a guessed private or deleted video.
   account had previously been difficult to find.
 </SourceCitation>
 
-## Visible channel inventory
+## Visible channel inventory — August 25
 
 The table below is a reproducible snapshot of every distinct card exposed by the
 Videos and Live tabs. **Titles are YouTube labels, not assertions that their wording
@@ -138,6 +138,36 @@ One current grid card illustrates why the item page wins over the grid: the Vide
 tab displayed **9:31** for *Nightshift at the Petrol Station*, while the watch page
 reported 381 seconds and the matched archived media runs about 381.18 seconds. The
 inventory therefore records **6:21** and flags the overlay as inconsistent.
+
+### August 27 refresh: one additional public livestream
+
+A second signed-out capture on August 27 exposed **25 distinct IDs** across the same
+Videos and Streams tabs: the prior 24 plus
+[`gPhrE99xwqI`](https://www.youtube.com/watch?v=gPhrE99xwqI). Its official watch-page
+metadata reported the title *I'M BACK*, publication at **2026-08-26T19:27:38Z**, a
+duration of **3:41:40**, and public playability. A subsequently retained public
+rendition measured **3:41:59.833**, while a later extractor observation reported
+**3:42:10**. The drift is disclosed as changing livestream-finalisation metadata,
+not silently resolved. This later observation resolves the earlier 25-versus-24
+display difference only for the August 27 snapshot; it does not identify what
+YouTube counted on August 25.
+
+The stream was subsequently retained and visually sampled, and one unreviewed
+machine-speech pass was indexed. Neither supplies a platform notice or changes the
+access-state finding, so the title remains a platform label rather than proof of a
+return or enforcement event. The channel Atom endpoint returned a 404 during the
+refresh. That response is preserved as a capture fact, not interpreted as a channel
+sanction or removal.
+
+<SourceCitation
+  sourceId="youtube-video-gPhrE99xwqI"
+  claimId="HIMR-PLATFORMS-0029"
+  title="I'M BACK"
+  href="https://www.youtube.com/watch?v=gPhrE99xwqI"
+  locator="Official watch metadata captured 2026-08-27: 13,300 seconds; retained public rendition probe: 13,319.833 seconds; later extractor observation: 13,330 seconds"
+  evidence="Stable video ID, title label, publication timestamp, channel placement, public playability and disclosed duration drift; later content sampling supplies no platform notice"
+  reviewState="source-matched"
+/>
 
 ## September 2021: a creator-removal account behind “nuke” shorthand
 

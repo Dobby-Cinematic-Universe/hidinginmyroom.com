@@ -1,0 +1,116 @@
+---
+title: Additional Archive & Account Leads
+description: A dated inventory of supplementary archives, historical account pages, fan mirrors, and unresolved source leads.
+sidebar:
+  order: 2.5
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+
+<VerificationBadge
+  status="source-matched"
+  reviewedAt="27 August 2026"
+  note="The listed endpoints and platform metadata were checked on 27 August 2026. Account ownership, completeness, and copied-content authenticity remain separate questions."
+/>
+
+This page records supplementary places where HIMR material may be found. It is a
+**discovery inventory**, not a declaration that every account belongs to Daniel or
+that every copy is complete and authentic. A working link establishes that the page
+was reachable when checked; it does not establish who controlled it when an item was
+published.
+
+<Aside type="caution" title="“Inactive” and “unreachable” are different states">
+  Several supplied links were described as inactive, but their endpoints still
+  responded on 27 August 2026. The table below records the observed web state
+  rather than inferring recent posting activity. Mutable counts and profile text
+  must be captured again before they are relied upon later.
+</Aside>
+
+## Historical creator-linked pages
+
+| Lead                                                                           | Observed public state on 27 August 2026                                                                                                                                                                                                                 | Safe use                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Hidinginmyroom Patreon](https://www.patreon.com/Hidinginmyroom)               | The reachable page displayed **“Daniel's Patreon”** and described its subject as vlogs and material about the page author's life.                                                                                                                       | Locate public post metadata and historical publishing leads. Paywalled material is not made public or treated as independently verified.                                                                                                     |
+| [rabbitlol on ComicFury](https://comicfury.com/profile.php?username=rabbitlol) | The profile displayed a 6 August 2015 registration date and 18 December 2018 “last seen” value. Its self-description names Daniel, names _hiding in my room_, and links exact YouTube channel ID `UC_yIF-9jOge6nNA0z-ScrBQ` plus the Patreon URL above. | This is a strong public self-link between the historical ComicFury profile, the main channel ID, and the Patreon page. It supports a creator-linked source family, not a legal-identity finding or the truth of autobiographical comic text. |
+| [StandardOil on DeviantArt](https://www.deviantart.com/standardoil)            | The supplied `http://standardoil.deviantart.com/` address redirected to this reachable profile, whose page title displayed **“StandardOil on DeviantArt.”**                                                                                             | Retain as a supplied historical-art lead. No checked public link from this profile to Daniel's channel or the ComicFury account was located, so ownership remains unresolved.                                                                |
+
+The ComicFury page also lists several webcomic projects and an externally hosted art
+collection. Those catalogue labels can help locate early creative-work records, but a
+comic title or synopsis is not evidence that its plot describes a real event.
+
+## Fan archives and commentary indexes
+
+These sources are useful for finding missing platform IDs, upload titles, dates, and
+candidate clips. They remain **secondary discovery sources** until each item is
+matched to an original upload, an archived raw file, or a complete reviewed repost.
+
+| Lead                                                                                                    | Observed public state on 27 August 2026                                                                                                                                          | Provenance boundary                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@hidinginmyroom1989 on TikTok](https://www.tiktok.com/@hidinginmyroom1989)                             | The page responded and its embedded public metadata exposed handle `hidinginmyroom1989`, display name **“Daniel Jason Lord,”** and 201 videos.                                   | Supplied as a **fan archive**. Its display name does not authenticate Daniel as the account holder, and TikTok copies are not assumed complete or unedited.                                                                |
+| [Daniel's Substack archive](https://daniellordhidinginmyroom.substack.com/archive)                      | The page responded and its metadata displayed “Archive — Daniel's Substack” and author “Daniel Jason Lord.”                                                                      | Supplied as a **fan archive**. Self-styled author metadata is not an account-to-channel ownership bridge and must not be cited as Daniel's first-person statement.                                                         |
+| [daniel's Substack archive](https://faeceskingdaniel.substack.com/archive)                              | The page responded and displayed similarly self-styled Daniel author metadata.                                                                                                   | Supplied as a **fan archive**; use post titles and embedded media only as leads to an underlying public source.                                                                                                            |
+| `https://hidinginmyroom.substackbrcom/archive`                                                          | The supplied hostname did not resolve. The unusual `substackbrcom` domain is retained exactly rather than silently “corrected.”                                                  | **Unresolved lead.** It should be retried only as supplied or after a maintainer records a separately sourced correction.                                                                                                  |
+| [HIMR Database on YouTube](https://www.youtube.com/@himrdatabase8358/)                                  | YouTube exposed channel ID `UCNPuIJlDZSYgCBvJnD4hSvg`, branding **HIMR Database**, and 25 currently enumerable videos. Titles include edited thematic series and commentary.     | Useful for finding passages and topic clusters. An edit or compilation is not a raw primary upload; its title is the editor's framing.                                                                                     |
+| [HIMR / Daniel Lord playlist](https://www.youtube.com/playlist?list=PLNE4LYAUmMNPN1W8p4lnn7AwWfMRGqebL) | YouTube identified playlist `PLNE4LYAUmMNPN1W8p4lnn7AwWfMRGqebL` as **HIMR/Daniel Lord**. The extractor exposed 200 entries and warned that 152 unavailable entries were hidden. | This is a mixed discovery map containing original platform IDs, reuploads, commentary, and unrelated-channel material—not one authenticated archive. Preserve playlist position and uploader for every imported candidate. |
+
+The two Substack URLs are deliberately not called official Daniel pages even though
+their HTML metadata uses his name. That classification follows the supplied
+fan-archive provenance and the absence of a checked link from Daniel's known channel
+or another authenticated account.
+
+## Reddit archive search
+
+The [r/HIMRFAM search for “Archive”](https://www.reddit.com/r/HIMRFAM/search/?q=Archive)
+is a useful, continuously changing discovery route. A current result also points to a
+[community archive inventory post](https://www.reddit.com/r/HIMRFAM/comments/1q2sk8g/new_himr_archive_update_and_reminder_of_other/).
+Neither the search page nor the post is a fixed manifest. Before ingesting a result,
+the project should preserve the post permalink, direct media URL, platform ID where
+available, retrieval time, bytes, and checksum. Assertions in post titles and
+comments remain community claims unless the linked media supports them.
+
+## Three additional Internet Archive containers
+
+The project captured the public Internet Archive metadata responses for these three
+items on 27 August 2026. Counts below include only files marked `source=original`
+whose names use a recognized video-container extension. They are file counts, not
+deduplicated recording counts.
+
+| Internet Archive item                                            | Item title in metadata                 | Original video files |
+| ---------------------------------------------------------------- | -------------------------------------- | -------------------: |
+| [`hidinginmyroom`](https://archive.org/details/hidinginmyroom)   | _Hiding In My Room Archive [COMPLETE]_ |                  977 |
+| [`hidinginmyroom2`](https://archive.org/details/hidinginmyroom2) | _Hiding In My Room Archive [Part 2]_   |                  203 |
+| [`hidinginmyroom3`](https://archive.org/details/hidinginmyroom3) | _Hiding In My Room Archive [Part 3]_   |                  228 |
+
+The word **“COMPLETE”** is an uploader-supplied item title, not an audit result. The
+items' own descriptions point to other archives and say the collections may not be
+complete. Their files can overlap the older `28766`, `69999`, `699992`, and `699994`
+containers, live YouTube, fan mirrors, or one another. Acquisition therefore starts
+with filename/platform-ID reconciliation and hashes; it does not count or download
+every container as a new video.
+
+## Tomo L channel lead
+
+The supplied [@tomol6417 YouTube address](https://www.youtube.com/@tomol6417) resolves
+to public channel ID `UCmLFDbW1DPXkdIRpVfC8Asw`, branded **Tomo L**. That branding is
+compatible with the `Tomo L` creator field on the separately preserved _Finally I Met
+Daniel_ Internet Archive item, but it is not sufficient to prove common upload
+control or that the channel holder is the woman the community calls Tomoko.
+
+One especially tempting title match does not survive the metadata check: the channel's current
+[_2018…Finally, I met him_ upload](https://www.youtube.com/watch?v=zfsxzCeQBnY) is an
+836-second 2018 video whose public description names another creator. It is not
+treated as a match to the 450.79-second, 2017-labelled _Finally I Met Daniel_
+response candidate. The [Tomoko source-trail page](/wiki/characters/tomoko/) keeps
+these records separate.
+
+## Intake rule for every lead
+
+1. Snapshot the public metadata response without rewriting the supplied URL.
+2. Extract stable platform IDs, uploader/channel IDs, title, duration, and publication
+   date as distinct metadata fields.
+3. Reconcile against the existing catalogue before downloading media.
+4. Mark copies as raw, reposted, edited, compilation, commentary, or unresolved.
+5. Use copied captions or fan prose only to locate the underlying source.
+6. Apply the [source and verification method](/wiki/archive/methodology/) before a
+   discovered claim enters an article.
