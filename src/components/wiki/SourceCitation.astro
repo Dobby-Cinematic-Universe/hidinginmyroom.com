@@ -38,7 +38,7 @@ const {
 
 const resolvedReviewState = reviewState ?? (checked ? 'primary-media-checked' : 'source-matched');
 const reviewLabels = {
-  'unverified-research-lead': 'unverified research lead; not evidence',
+  'unverified-research-lead': 'machine-generated; unreviewed',
   'source-matched': 'source matched; full media verification not claimed',
   'primary-media-checked': 'primary media checked',
   'community-media-checked': 'community repost reviewed',
@@ -50,6 +50,8 @@ const noticeLabels = {
   'disputed-allegation': 'Disputed allegation',
   'corroborated-allegation': 'Corroborated allegation',
 } as const;
+const machineWarning =
+  'Machine-generated and unreviewed; may be wrong; not a verified quotation.';
 if (notice && !warning?.trim()) {
   throw new Error(`SourceCitation ${sourceId}: allegation notices require warning text`);
 }
@@ -63,6 +65,12 @@ if (notice && !warning?.trim()) {
     </span>
   </div>
   <a href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+  {resolvedReviewState === 'unverified-research-lead' && (
+    <div class="source-citation__machine-warning">
+      <strong>Machine transcript warning</strong>
+      <span>{machineWarning}</span>
+    </div>
+  )}
   {notice && (
     <div class:list={['source-citation__notice', `source-citation__notice--${notice}`]}>
       <strong>{noticeLabels[notice]}</strong>
@@ -159,6 +167,25 @@ if (notice && !warning?.trim()) {
     background: color-mix(in srgb, #ec6d78 10%, transparent);
     font-size: 0.8rem;
     line-height: 1.45;
+  }
+
+  .source-citation__machine-warning {
+    display: grid;
+    gap: 0.22rem;
+    margin-top: 0.7rem;
+    border: 1px solid color-mix(in srgb, #e9a23b 58%, var(--sl-color-gray-5));
+    border-radius: 0.42rem;
+    padding: 0.62rem 0.72rem;
+    background: color-mix(in srgb, #e9a23b 10%, transparent);
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .source-citation__machine-warning strong {
+    color: #e9a23b;
+    font-size: 0.72rem;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
   }
 
   .source-citation__notice strong {
