@@ -5,9 +5,9 @@ sidebar:
   order: 7
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   reviewedAt="26 August 2026"
@@ -22,31 +22,34 @@ count of every doll mention inside unrelated recordings, and it does not use the
 archive's machine transcripts as evidence.
 
 <Aside type="danger" title="Adult-content and privacy caution">
-  These records concern adult products and include sexual, medical, relationship,
-  and third-party wording. One non-explicit, tightly cropped community image of a
-  partly covered adult object is reproduced below; no explicit image, intimate
-  material, private identity, or adult-profile link is included. The linked raw
-  videos may contain explicit discussion or imagery. A title that mentions a wife or
-  the “Hong Kong Guy” does not establish that person's identity, conduct, consent, or
-  response.
+  These records concern adult products and include sexual, medical,
+  relationship, and third-party wording. One non-explicit, tightly cropped
+  community image of a partly covered adult object is reproduced below; no
+  explicit image, intimate material, private identity, or adult-profile link is
+  included. The linked raw videos may contain explicit discussion or imagery. A
+  title that mentions a wife or the “Hong Kong Guy” does not establish that
+  person's identity, conduct, consent, or response.
 </Aside>
 
-<Aside type="caution" title="Creator titles are not verified events or diagnoses">
-  First-person wording such as “gave me a urinary tract infection,” “won't let me,”
-  “getting rid of,” and “broke up with” is retained only because it appears in an
-  exact archive title. The wiki has not verified a diagnosis, medical cause,
-  purchase, ownership, disposal, relationship event, or third party's role. No raw
-  audio was directly reviewed for this page.
+<Aside
+  type="caution"
+  title="Creator titles are not verified events or diagnoses"
+>
+  First-person wording such as “gave me a urinary tract infection,” “won't let
+  me,” “getting rid of,” and “broke up with” is retained only because it appears
+  in an exact archive title. The wiki has not verified a diagnosis, medical
+  cause, purchase, ownership, disposal, relationship event, or third party's
+  role. No raw audio was directly reviewed for this page.
 </Aside>
 
 ## Reconciled count
 
-| Measure | Result |
-| --- | ---: |
-| Exact phrase-matched transcript records | 7 |
-| Records with a matched raw-video URL | 7 |
-| Distinct matched raw-video URLs | 6 |
-| Transcript records in the duplicated mapping | 2 |
+| Measure                                      | Result |
+| -------------------------------------------- | -----: |
+| Exact phrase-matched transcript records      |      7 |
+| Records with a matched raw-video URL         |      7 |
+| Distinct matched raw-video URLs              |      6 |
+| Transcript records in the duplicated mapping |      2 |
 
 The difference is not a missing file. The records labelled May 20 and May 21, 2019
 both point to the same archived MP4 and the same platform-ID candidate,
@@ -60,7 +63,7 @@ Accordingly, this page counts it as **two transcript records but one linked vide
   sourceId="2019-05-20_2019-05-20-why-my-love-doll-is-better-than-a-real-woman"
   claimId="HIMR-DOLLS-0002"
   title="Duplicated May 2019 archive mapping"
-  href="https://himr-archive.pages.dev/transcripts/2019/2019-05-20-why-my-love-doll-is-better-than-a-real-woman.html"
+  href="https://archive.org/download/69999/20190520-Why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-5VwXO-4TNKk.mp4"
   locator="Manifest records dated 2019-05-20 and 2019-05-21; one shared raw-video URL"
   evidence="Record identities, displayed durations, shared URL, and platform-ID candidate only"
   reviewState="source-matched"
@@ -75,19 +78,19 @@ assert that either transcript date is the original publication date.
 
 ### 2019 records
 
-| Date label | Exact archive title | Sources | Mapping note |
-| --- | --- | --- | --- |
-| 2019-05-20 | *Why my love doll is better than a real woman* | [Transcript](https://himr-archive.pages.dev/transcripts/2019/2019-05-20-why-my-love-doll-is-better-than-a-real-woman.html) · [Raw video](https://archive.org/download/69999/20190521-why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-xENS8a4hrbo.mp4) | Shared mapping: `xENS8a4hrbo` |
-| 2019-05-21 | *why my love doll is better than a real woman* | [Transcript](https://himr-archive.pages.dev/transcripts/2019/2019-05-21-why-my-love-doll-is-better-than-a-real-woman.html) · [Same raw video](https://archive.org/download/69999/20190521-why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-xENS8a4hrbo.mp4) | Shared mapping: `xENS8a4hrbo` |
-| 2019-05-24 | *My love doll gave me a urinary tract infection* | [Transcript](https://himr-archive.pages.dev/transcripts/2019/2019-05-24-my-love-doll-gave-me-a-urinary-tract-infection.html) · [Raw video](https://archive.org/download/69999/20190524-My%20love%20doll%20gave%20me%20a%20urinary%20tract%20infection-knkbkLsitJg.mp4) | Distinct raw-video mapping |
-| 2019-07-25 | *My wife won t let me buy a life size doll* | [Transcript](https://himr-archive.pages.dev/transcripts/2019/2019-07-25-my-wife-won-t-let-me-buy-a-life-size-doll.html) · [Raw video](https://archive.org/download/69999/20190725-My%20wife%20won%27t%20let%20me%20buy%20a%20life%20size%20doll-lT3jgscLtzI.mp4) | Distinct raw-video mapping |
-| 2019-09-26 | *Getting rid of my love doll with the Hong Kong Guy* | [Transcript](https://himr-archive.pages.dev/transcripts/2019/2019-09-26-getting-rid-of-my-love-doll-with-the-hong-kong-guy.html) · [Raw video](https://archive.org/download/69999/20190926-Getting%20rid%20of%20my%20love%20doll%20with%20the%20Hong%20Kong%20Guy-rVVOOKn7jBU.mp4) | Distinct raw-video mapping |
+| Date label | Exact archive title                                  | Sources                                                                                                                                         | Mapping note                  |
+| ---------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| 2019-05-20 | _Why my love doll is better than a real woman_       | [Raw video](https://archive.org/download/69999/20190521-why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-xENS8a4hrbo.mp4)         | Shared mapping: `xENS8a4hrbo` |
+| 2019-05-21 | _why my love doll is better than a real woman_       | [Raw video](https://archive.org/download/69999/20190521-why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-xENS8a4hrbo.mp4)         | Shared mapping: `xENS8a4hrbo` |
+| 2019-05-24 | _My love doll gave me a urinary tract infection_     | [Raw video](https://archive.org/download/69999/20190524-My%20love%20doll%20gave%20me%20a%20urinary%20tract%20infection-knkbkLsitJg.mp4)         | Distinct raw-video mapping    |
+| 2019-07-25 | _My wife won t let me buy a life size doll_          | [Raw video](https://archive.org/download/69999/20190725-My%20wife%20won%27t%20let%20me%20buy%20a%20life%20size%20doll-lT3jgscLtzI.mp4)          | Distinct raw-video mapping    |
+| 2019-09-26 | _Getting rid of my love doll with the Hong Kong Guy_ | [Raw video](https://archive.org/download/69999/20190926-Getting%20rid%20of%20my%20love%20doll%20with%20the%20Hong%20Kong%20Guy-rVVOOKn7jBU.mp4) | Distinct raw-video mapping    |
 
 <SourceCitation
   sourceId="2019-05-20_2019-05-20-why-my-love-doll-is-better-than-a-real-woman"
   claimId="HIMR-DOLLS-0001"
   title="Love-doll title-match inventory"
-  href="https://himr-archive.pages.dev/transcripts/2019/2019-05-20-why-my-love-doll-is-better-than-a-real-woman.html"
+  href="https://archive.org/download/69999/20190520-Why%20my%20love%20doll%20is%20better%20than%20a%20real%20woman-5VwXO-4TNKk.mp4"
   locator="Seven exact phrase-matched manifest rows dated 2019-05-20 through 2023-08-31"
   evidence="Title wording, archive date labels, record identities, and raw-video mappings only"
   reviewState="source-matched"
@@ -103,7 +106,7 @@ independent support was reviewed.
   sourceId="2019-05-24_2019-05-24-my-love-doll-gave-me-a-urinary-tract-infection"
   claimId="HIMR-DOLLS-0003"
   title="Medical-causation wording in a creator title"
-  href="https://himr-archive.pages.dev/transcripts/2019/2019-05-24-my-love-doll-gave-me-a-urinary-tract-infection.html"
+  href="https://archive.org/download/69999/20190524-My%20love%20doll%20gave%20me%20a%20urinary%20tract%20infection-knkbkLsitJg.mp4"
   locator="Exact archive title and date label: 2019-05-24"
   evidence="Existence of the title label only; diagnosis, symptoms, and causation unchecked"
   reviewState="source-matched"
@@ -113,7 +116,7 @@ independent support was reviewed.
   sourceId="2019-07-25_2019-07-25-my-wife-won-t-let-me-buy-a-life-size-doll"
   claimId="HIMR-DOLLS-0004"
   title="Third-party wording in 2019 creator titles"
-  href="https://himr-archive.pages.dev/transcripts/2019/2019-07-25-my-wife-won-t-let-me-buy-a-life-size-doll.html"
+  href="https://archive.org/download/69999/20190725-My%20wife%20won%27t%20let%20me%20buy%20a%20life%20size%20doll-lT3jgscLtzI.mp4"
   locator="Exact archive titles dated 2019-07-25 and 2019-09-26"
   evidence="Title labels only; no third-party identity, action, or response verified"
   reviewState="source-matched"
@@ -121,16 +124,16 @@ independent support was reviewed.
 
 ### Later returns to the title theme
 
-| Date label | Exact archive title | Sources | Evidentiary scope |
-| --- | --- | --- | --- |
-| 2021-10-21 | *Picking up my new LOVE DOLL* | [Transcript](https://himr-archive.pages.dev/transcripts/2021/2021-10-21-picking-up-my-new-love-doll.html) · [Raw video](https://archive.org/download/699992/20211021-Picking%20up%20my%20new%20LOVE%20DOLL-s3u8F52KHeQ.mp4) | Pickup and “new” are title framing; acquisition and ownership unverified |
-| 2023-08-31 | *why I broke up with my Love Doll* | [Transcript](https://himr-archive.pages.dev/transcripts/2023/2023-08-31-why-i-broke-up-with-my-love-doll.html) · [Raw video](https://archive.org/download/699992/20230831-why%20I%20broke%20up%20with%20my%20Love%20Doll-CVdqoNHE2LI.mp4) | “Broke up” is anthropomorphic title framing; the underlying event is unverified |
+| Date label | Exact archive title                | Sources                                                                                                                  | Evidentiary scope                                                               |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| 2021-10-21 | _Picking up my new LOVE DOLL_      | [Raw video](https://archive.org/download/699992/20211021-Picking%20up%20my%20new%20LOVE%20DOLL-s3u8F52KHeQ.mp4)          | Pickup and “new” are title framing; acquisition and ownership unverified        |
+| 2023-08-31 | _why I broke up with my Love Doll_ | [Raw video](https://archive.org/download/699992/20230831-why%20I%20broke%20up%20with%20my%20Love%20Doll-CVdqoNHE2LI.mp4) | “Broke up” is anthropomorphic title framing; the underlying event is unverified |
 
 <SourceCitation
   sourceId="2021-10-21_2021-10-21-picking-up-my-new-love-doll"
   claimId="HIMR-DOLLS-0005"
   title="2021 and 2023 love-doll-labelled records"
-  href="https://himr-archive.pages.dev/transcripts/2021/2021-10-21-picking-up-my-new-love-doll.html"
+  href="https://archive.org/download/699992/20211021-Picking%20up%20my%20new%20LOVE%20DOLL-s3u8F52KHeQ.mp4"
   locator="Manifest rows dated 2021-10-21 and 2023-08-31"
   evidence="Two title labels and distinct raw-video mappings only; no shared-object inference"
   reviewState="source-matched"
@@ -201,10 +204,11 @@ is visible.
     loading="lazy"
   />
   <figcaption>
-    Non-explicit crop from the first of two Reddit gallery images. The crop retains
-    only the visible player area and omits chat and financial overlays; no object
-    pixels were retouched. The Bobby Brown association comes from the post title and
-    the second screenshot's on-screen chat, not from object recognition.
+    Non-explicit crop from the first of two Reddit gallery images. The crop
+    retains only the visible player area and omits chat and financial overlays;
+    no object pixels were retouched. The Bobby Brown association comes from the
+    post title and the second screenshot's on-screen chat, not from object
+    recognition.
   </figcaption>
 </figure>
 
@@ -234,16 +238,20 @@ The reviewed bytes were Reddit's embed-listed 1080-pixel JPEG renditions:
 
 ### 2026 disposal-status lead
 
-At **01:52:02–01:52:12** in [*why I quit
-YouTube*](https://www.youtube.com/watch?v=rKdcv4QvGig), targeted offline ASR renders
+At **01:52:02–01:52:12** in [_why I quit
+YouTube_](https://www.youtube.com/watch?v=rKdcv4QvGig), targeted offline ASR renders
 Daniel saying that the adult object he called **Bobby Brown** had been cut into pieces
 and disposed of.
 
-<Aside type="caution" title="Status self-report, not a verified disposal history">
-  The audio was not directly heard and the machine text is not quoted verbatim. The
-  passage does not reliably establish who cut or disposed of the object, when, by
-  what method, or whether it is the same object shown or discussed in any earlier
-  source. Relationship context and explicit surrounding material are omitted.
+<Aside
+  type="caution"
+  title="Status self-report, not a verified disposal history"
+>
+  The audio was not directly heard and the machine text is not quoted verbatim.
+  The passage does not reliably establish who cut or disposed of the object,
+  when, by what method, or whether it is the same object shown or discussed in
+  any earlier source. Relationship context and explicit surrounding material are
+  omitted.
 </Aside>
 
 <SourceCitation
@@ -286,11 +294,11 @@ Daniel invoking his older UTI story, saying it did not happen, denying that he g
 UTI from a love doll, and saying he made the story up for content.
 
 <Aside type="caution" title="Conflicting creator-controlled accounts">
-  This is a later self-disavowal, not medical evidence and not proof that the 2019
-  title or underlying event was false. Daniel does not name the old upload by its
-  exact title in this passage. The record therefore preserves the conflict: a 2019
-  creator title made the causation claim, while a 2026 creator statement appears to
-  retract the story.
+  This is a later self-disavowal, not medical evidence and not proof that the
+  2019 title or underlying event was false. Daniel does not name the old upload
+  by its exact title in this passage. The record therefore preserves the
+  conflict: a 2019 creator title made the causation claim, while a 2026 creator
+  statement appears to retract the story.
 </Aside>
 
 <SourceCitation
@@ -306,7 +314,7 @@ UTI from a love doll, and saying he made the story up for content.
 
 ## Boundary of the catalogue
 
-One January 10, 2019 manifest record is titled *sex toy review*. It is not included in
+One January 10, 2019 manifest record is titled _sex toy review_. It is not included in
 the seven-record total because its title does not identify the product as a doll. The
 record remains an adjacent research lead, but classifying it more narrowly would
 require a careful non-explicit raw-media review; the machine transcript is not enough.
@@ -315,7 +323,7 @@ require a careful non-explicit raw-media review; the machine transcript is not e
   sourceId="2019-01-10_2019-01-10-sex-toy-review"
   claimId="HIMR-DOLLS-0006"
   title="Adjacent generic sex-toy record"
-  href="https://himr-archive.pages.dev/transcripts/2019/2019-01-10-sex-toy-review.html"
+  href="https://archive.org/download/69999/20190110-sex%20toy%20review-Ck5oV1VU920.mp4"
   locator="Exact archive title and date label: 2019-01-10"
   evidence="Generic title label only; product type and contents unchecked"
   reviewState="source-matched"

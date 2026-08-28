@@ -5,10 +5,10 @@ sidebar:
   order: 13
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import ArchiveImage from "../../../../components/wiki/ArchiveImage.astro";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   reviewedAt="27 August 2026"
@@ -38,10 +38,10 @@ establish exactly when each handle or visibility setting changed.
 
 <Aside type="caution" title="Absence is not the same as a ban">
   A hidden channel, private upload, members-only upload, age restriction,
-  demonetization, copyright strike, livestream suspension, and channel termination
-  are different events. This page uses those labels only when the source identifies
-  the specific action. The cited primary evidence does not establish a YouTube
-  termination or ban for this channel.
+  demonetization, copyright strike, livestream suspension, and channel
+  termination are different events. This page uses those labels only when the
+  source identifies the specific action. The cited primary evidence does not
+  establish a YouTube termination or ban for this channel.
 </Aside>
 
 <ArchiveImage
@@ -60,17 +60,17 @@ establish exactly when each handle or visibility setting changed.
 
 Snapshot date: **August 25, 2026**
 
-| Field | YouTube metadata observed |
-| --- | --- |
-| Display name | Hiding in my room |
-| Handle | `@hidinginmyroom1111` |
-| Stable channel ID | `UC_yIF-9jOge6nNA0z-ScrBQ` |
-| Channel-feed timestamp | 2014-10-23T07:20:36Z |
-| Header display | 113K subscribers · 25 videos |
-| Visible Videos-tab cards | 19 distinct video IDs |
-| Visible Live-tab cards | 5 distinct video IDs |
-| Distinct visible cards across both tabs | 24 |
-| Non-member watch-page playability status | 23 public · 1 members-only |
+| Field                                    | YouTube metadata observed    |
+| ---------------------------------------- | ---------------------------- |
+| Display name                             | Hiding in my room            |
+| Handle                                   | `@hidinginmyroom1111`        |
+| Stable channel ID                        | `UC_yIF-9jOge6nNA0z-ScrBQ`   |
+| Channel-feed timestamp                   | 2014-10-23T07:20:36Z         |
+| Header display                           | 113K subscribers · 25 videos |
+| Visible Videos-tab cards                 | 19 distinct video IDs        |
+| Visible Live-tab cards                   | 5 distinct video IDs         |
+| Distinct visible cards across both tabs  | 24                           |
+| Non-member watch-page playability status | 23 public · 1 members-only   |
 
 Subscriber and view counts are rounded, mutable platform displays. More importantly,
 YouTube's header said **25 videos**, while the two content tabs exposed only **24
@@ -87,8 +87,8 @@ filled with a guessed private or deleted video.
   checked={false}
 >
   The 25-versus-24 discrepancy is preserved rather than normalized away. Channel
-  metadata verifies how YouTube presented the account at review time, not why the
-  account had previously been difficult to find.
+  metadata verifies how YouTube presented the account at review time, not why
+  the account had previously been difficult to find.
 </SourceCitation>
 
 ## Visible channel inventory — August 25
@@ -99,32 +99,32 @@ is true.** “Published” is the UTC conversion of each watch page's `publishDa
 metadata; it is not necessarily the recording date or event date. Durations come
 from each individual watch page rather than the channel-grid overlay.
 
-| Published (UTC) | Type | YouTube title label | Duration | Access at review | Manifest ID match |
-| --- | --- | --- | ---: | --- | --- |
-| 2026-08-23T00:56:42Z | Livestream | [Hiding in my room is live!](https://www.youtube.com/watch?v=UUqmpEOc5oc) | 2:43:59 | Public | — |
-| 2026-08-20T01:51:11Z | Livestream | [Hiding in my room is live!](https://www.youtube.com/watch?v=jaaoXdH6bxo) | 4:27:50 | Public | — |
-| 2026-08-10T22:15:02Z | Livestream | [feeling sad and lonely](https://www.youtube.com/watch?v=mWVSkRjM_Ew) | 3:51:02 | Public | — |
-| 2026-08-08T21:22:44Z | Livestream | [homeless in my car](https://www.youtube.com/watch?v=8AbFGYob9SU) | 2:37:22 | Public | — |
-| 2026-08-07T20:57:24Z | Video | [Living in my Tesla Model Y](https://www.youtube.com/watch?v=9SuUVFWzp-0) | 0:09:06 | Public | — |
-| 2026-08-06T19:51:04Z | Video | [Romantic stargazing camping trip](https://www.youtube.com/watch?v=sQVU5O6ScJI) | 0:08:22 | Public | — |
-| 2026-08-04T21:30:04Z | Video | [Cooking with Daniel - Garden Ritual](https://www.youtube.com/watch?v=DW2nBIWbey4) | 0:10:05 | Public | — |
-| 2026-07-30T22:28:18Z | Livestream | [why I quit YouTube](https://www.youtube.com/watch?v=rKdcv4QvGig) | 2:24:52 | Members only | — |
-| 2022-02-23T16:28:11Z | Video | [DO NOT BUY Elden Ring - VERY Disappointing](https://www.youtube.com/watch?v=w5c-gyrPOxA) | 0:08:54 | Public | Yes |
-| 2020-08-30T13:30:35Z | Video | [The Truth behind Chinese "Massage Parlours" in Japan](https://www.youtube.com/watch?v=UyjyB_vi8Ds) | 0:11:10 | Public | Yes |
-| 2020-03-14T15:22:43Z | Video | [Things I disliked about Living in South Korea](https://www.youtube.com/watch?v=s2OW-jRyFrw) | 0:11:43 | Public | Yes |
-| 2019-11-21T14:29:30Z | Video | [Exploring the biggest slum in Japan](https://www.youtube.com/watch?v=Y_WSINtSNkg) | 0:11:07 | Public | Yes |
-| 2019-10-15T13:54:20Z | Video | [Living in a Japanese Internet cafe](https://www.youtube.com/watch?v=_hSLqUgC4sY) | 0:10:16 | Public | Yes |
-| 2019-05-24T17:55:45Z | Video | [My love doll gave me a urinary tract infection](https://www.youtube.com/watch?v=knkbkLsitJg) | 0:13:15 | Public | Yes |
-| 2019-05-21T18:42:32Z | Video | [why my love doll is better than a real woman](https://www.youtube.com/watch?v=xENS8a4hrbo) | 0:15:33 | Public | Yes |
-| 2018-09-28T07:48:50Z | Video | [Why I Hated Living In England](https://www.youtube.com/watch?v=7cb-fE7yChU) | 0:13:25 | Public | Yes |
-| 2018-02-03T07:33:52Z | Video | [Japanese people are angry with me...](https://www.youtube.com/watch?v=Awg_cm2Zllk) | 0:10:18 | Public | Yes |
-| 2018-01-24T06:16:33Z | Video | [my thoughts on living in japan](https://www.youtube.com/watch?v=KiN6lKKUESs) | 0:10:04 | Public | Yes |
-| 2018-01-05T08:23:46Z | Video | [Why I Have No Friends](https://www.youtube.com/watch?v=WnbrbvmclHc) | 0:10:28 | Public | Yes |
-| 2017-12-12T16:14:55Z | Video | [why women LOVE me](https://www.youtube.com/watch?v=VmHwQdmhalA) | 0:10:02 | Public | Yes |
-| 2017-08-02T23:59:30Z | Video | [How my World of Warcraft addiction ruined my life.](https://www.youtube.com/watch?v=gGNgt_WXa_4) | 0:11:34 | Public | Yes |
-| 2017-03-17T16:54:29Z | Video | [Nightshift at the Petrol Station - Vlogging at work](https://www.youtube.com/watch?v=0frp1tHu7ek) | 0:06:21 | Public | Yes |
-| 2017-02-22T22:10:26Z | Video | [Why I hated teaching English in Japan](https://www.youtube.com/watch?v=92LgEG6NhUw) | 0:15:32 | Public | Yes |
-| 2016-12-21T21:51:28Z | Video | [my experience living in South Korea](https://www.youtube.com/watch?v=SlTpGmCrTxE) | 0:25:37 | Public | Yes |
+| Published (UTC)      | Type       | YouTube title label                                                                                 | Duration | Access at review | Manifest ID match |
+| -------------------- | ---------- | --------------------------------------------------------------------------------------------------- | -------: | ---------------- | ----------------- |
+| 2026-08-23T00:56:42Z | Livestream | [Hiding in my room is live!](https://www.youtube.com/watch?v=UUqmpEOc5oc)                           |  2:43:59 | Public           | —                 |
+| 2026-08-20T01:51:11Z | Livestream | [Hiding in my room is live!](https://www.youtube.com/watch?v=jaaoXdH6bxo)                           |  4:27:50 | Public           | —                 |
+| 2026-08-10T22:15:02Z | Livestream | [feeling sad and lonely](https://www.youtube.com/watch?v=mWVSkRjM_Ew)                               |  3:51:02 | Public           | —                 |
+| 2026-08-08T21:22:44Z | Livestream | [homeless in my car](https://www.youtube.com/watch?v=8AbFGYob9SU)                                   |  2:37:22 | Public           | —                 |
+| 2026-08-07T20:57:24Z | Video      | [Living in my Tesla Model Y](https://www.youtube.com/watch?v=9SuUVFWzp-0)                           |  0:09:06 | Public           | —                 |
+| 2026-08-06T19:51:04Z | Video      | [Romantic stargazing camping trip](https://www.youtube.com/watch?v=sQVU5O6ScJI)                     |  0:08:22 | Public           | —                 |
+| 2026-08-04T21:30:04Z | Video      | [Cooking with Daniel - Garden Ritual](https://www.youtube.com/watch?v=DW2nBIWbey4)                  |  0:10:05 | Public           | —                 |
+| 2026-07-30T22:28:18Z | Livestream | [why I quit YouTube](https://www.youtube.com/watch?v=rKdcv4QvGig)                                   |  2:24:52 | Members only     | —                 |
+| 2022-02-23T16:28:11Z | Video      | [DO NOT BUY Elden Ring - VERY Disappointing](https://www.youtube.com/watch?v=w5c-gyrPOxA)           |  0:08:54 | Public           | Yes               |
+| 2020-08-30T13:30:35Z | Video      | [The Truth behind Chinese "Massage Parlours" in Japan](https://www.youtube.com/watch?v=UyjyB_vi8Ds) |  0:11:10 | Public           | Yes               |
+| 2020-03-14T15:22:43Z | Video      | [Things I disliked about Living in South Korea](https://www.youtube.com/watch?v=s2OW-jRyFrw)        |  0:11:43 | Public           | Yes               |
+| 2019-11-21T14:29:30Z | Video      | [Exploring the biggest slum in Japan](https://www.youtube.com/watch?v=Y_WSINtSNkg)                  |  0:11:07 | Public           | Yes               |
+| 2019-10-15T13:54:20Z | Video      | [Living in a Japanese Internet cafe](https://www.youtube.com/watch?v=_hSLqUgC4sY)                   |  0:10:16 | Public           | Yes               |
+| 2019-05-24T17:55:45Z | Video      | [My love doll gave me a urinary tract infection](https://www.youtube.com/watch?v=knkbkLsitJg)       |  0:13:15 | Public           | Yes               |
+| 2019-05-21T18:42:32Z | Video      | [why my love doll is better than a real woman](https://www.youtube.com/watch?v=xENS8a4hrbo)         |  0:15:33 | Public           | Yes               |
+| 2018-09-28T07:48:50Z | Video      | [Why I Hated Living In England](https://www.youtube.com/watch?v=7cb-fE7yChU)                        |  0:13:25 | Public           | Yes               |
+| 2018-02-03T07:33:52Z | Video      | [Japanese people are angry with me...](https://www.youtube.com/watch?v=Awg_cm2Zllk)                 |  0:10:18 | Public           | Yes               |
+| 2018-01-24T06:16:33Z | Video      | [my thoughts on living in japan](https://www.youtube.com/watch?v=KiN6lKKUESs)                       |  0:10:04 | Public           | Yes               |
+| 2018-01-05T08:23:46Z | Video      | [Why I Have No Friends](https://www.youtube.com/watch?v=WnbrbvmclHc)                                |  0:10:28 | Public           | Yes               |
+| 2017-12-12T16:14:55Z | Video      | [why women LOVE me](https://www.youtube.com/watch?v=VmHwQdmhalA)                                    |  0:10:02 | Public           | Yes               |
+| 2017-08-02T23:59:30Z | Video      | [How my World of Warcraft addiction ruined my life.](https://www.youtube.com/watch?v=gGNgt_WXa_4)   |  0:11:34 | Public           | Yes               |
+| 2017-03-17T16:54:29Z | Video      | [Nightshift at the Petrol Station - Vlogging at work](https://www.youtube.com/watch?v=0frp1tHu7ek)  |  0:06:21 | Public           | Yes               |
+| 2017-02-22T22:10:26Z | Video      | [Why I hated teaching English in Japan](https://www.youtube.com/watch?v=92LgEG6NhUw)                |  0:15:32 | Public           | Yes               |
+| 2016-12-21T21:51:28Z | Video      | [my experience living in South Korea](https://www.youtube.com/watch?v=SlTpGmCrTxE)                  |  0:25:37 | Public           | Yes               |
 
 “Manifest ID match” means the visible YouTube ID occurs as a platform-ID candidate in
 the August 25 archive manifest, which reconciles metadata from Internet Archive items
@@ -135,7 +135,7 @@ IDs match; those 16 are the pre-2026 listings. None of the eight 2026 listings i
 the preserved archive snapshot.
 
 One current grid card illustrates why the item page wins over the grid: the Videos
-tab displayed **9:31** for *Nightshift at the Petrol Station*, while the watch page
+tab displayed **9:31** for _Nightshift at the Petrol Station_, while the watch page
 reported 381 seconds and the matched archived media runs about 381.18 seconds. The
 inventory therefore records **6:21** and flags the overlay as inconsistent.
 
@@ -144,13 +144,15 @@ inventory therefore records **6:21** and flags the overlay as inconsistent.
 A second signed-out capture on August 27 exposed **25 distinct IDs** across the same
 Videos and Streams tabs: the prior 24 plus
 [`gPhrE99xwqI`](https://www.youtube.com/watch?v=gPhrE99xwqI). Its official watch-page
-metadata reported the title *I'M BACK*, publication at **2026-08-26T19:27:38Z**, a
-duration of **3:41:40**, and public playability. A subsequently retained public
-rendition measured **3:41:59.833**, while a later extractor observation reported
-**3:42:10**. The drift is disclosed as changing livestream-finalisation metadata,
-not silently resolved. This later observation resolves the earlier 25-versus-24
-display difference only for the August 27 snapshot; it does not identify what
-YouTube counted on August 25.
+metadata reported the title _I'M BACK_ and public playability. A provisional
+`post_live` observation reported **2026-08-26T19:27:38Z** and **3:41:40**. After
+finalisation, signed-out metadata instead exposed a live/release timestamp of
+**2026-08-26T19:39:29Z**, an archive-upload date of **2026-08-27**, and a duration of
+**3:42:10**. The first retained rendition measured **3:41:59.833** and the finalized
+rendition measured **3:42:09.903**. These are preserved as different platform and
+media observations; the provisional timestamp is not presented as the actual live
+start. The later listing resolves the earlier 25-versus-24 display difference only
+for the August 27 snapshot; it does not identify what YouTube counted on August 25.
 
 The stream was subsequently retained and visually sampled, and one unreviewed
 machine-speech pass was indexed. Neither supplies a platform notice or changes the
@@ -164,14 +166,14 @@ sanction or removal.
   claimId="HIMR-PLATFORMS-0029"
   title="I'M BACK"
   href="https://www.youtube.com/watch?v=gPhrE99xwqI"
-  locator="Official watch metadata captured 2026-08-27: 13,300 seconds; retained public rendition probe: 13,319.833 seconds; later extractor observation: 13,330 seconds"
-  evidence="Stable video ID, title label, publication timestamp, channel placement, public playability and disclosed duration drift; later content sampling supplies no platform notice"
+  locator="Provisional post-live metadata: 2026-08-26T19:27:38Z and 13,300 seconds; finalized release timestamp: 2026-08-26T19:39:29Z; archive upload date: 2026-08-27; retained probes: 13,319.833 and 13,329.903 seconds"
+  evidence="Stable video ID, title label, live/release time, later archive-upload date, channel placement, public playability and disclosed finalisation drift; later content sampling supplies no platform notice"
   reviewState="source-matched"
 />
 
 ## September 2021: a creator-removal account behind “nuke” shorthand
 
-The archive preserves a raw video titled *why I m deleting my youtube channel*.
+The archive preserves a raw video titled _why I m deleting my youtube channel_.
 Independent `base.en` and `small.en` passes materially agree that Daniel opens by
 saying many videos had disappeared and that he had decided to remove the majority of
 his channel content. Later, the machine renderings agree that he described the work
@@ -182,12 +184,15 @@ copies or reposts elsewhere were outside his control.
 Nobody directly heard the audio during this review. Direct listening remains open
 in the maintainers' **2021 channel-removal audio-review queue**.
 
-<Aside type="caution" title="“Nuke” is community shorthand, not a platform result">
-  The supplied community timeline uses **nuke** for a large-scale channel clear-out.
-  The raw-backed source supports only Daniel's unverified account of his own 2021
-  removal process. It does not establish an exact upload count, permanent deletion,
-  a YouTube enforcement action, the later visibility state of every file, or that
-  every present catalogue gap came from this one episode.
+<Aside
+  type="caution"
+  title="“Nuke” is community shorthand, not a platform result"
+>
+  The supplied community timeline uses **nuke** for a large-scale channel
+  clear-out. The raw-backed source supports only Daniel's unverified account of
+  his own 2021 removal process. It does not establish an exact upload count,
+  permanent deletion, a YouTube enforcement action, the later visibility state
+  of every file, or that every present catalogue gap came from this one episode.
 </Aside>
 
 <SourceCitation
@@ -218,9 +223,10 @@ date, a platform action, or the community timeline's proposed employer-avoidance
 motive.
 
 <Aside type="caution" title="Reviewed repost, but not an original stream">
-  The downloaded complete rendition was 31,359,179 bytes, 302.42 seconds, and had
-  SHA-256 `509bead0a586b103b6e81ebeba40b1dcd97e65a63a23c5fcd1ba0f5628573f48`.
-  Its editing is obvious, authenticity was not independently established, and
+  The downloaded complete rendition was 31,359,179 bytes, 302.42 seconds, and
+  had SHA-256
+  `509bead0a586b103b6e81ebeba40b1dcd97e65a63a23c5fcd1ba0f5628573f48`. Its
+  editing is obvious, authenticity was not independently established, and
   unrelated financial and relationship snippets are excluded.
 </Aside>
 
@@ -242,7 +248,7 @@ The current platform metadata supports a gap in the **presently visible catalogu
 but does not establish its cause:
 
 - The current visible list jumps from a February 2022 upload to a members-only
-  livestream published July 30, 2026. That listing is titled *why I quit YouTube*,
+  livestream published July 30, 2026. That listing is titled _why I quit YouTube_,
   but its title is only a label and its contents were not available to a non-member.
 - Three public Videos-tab uploads followed on August 4, 6, and 7. Four public livestreams
   are visible from August 8 through August 23.
@@ -296,14 +302,14 @@ The current address supplied for review is
 [`kick.com/srggdgsbtsr`](https://kick.com/srggdgsbtsr). Kick's unauthenticated
 channel endpoint returned the following state on August 25, 2026:
 
-| Field | Observed value |
-| --- | --- |
-| Slug | `srggdgsbtsr` |
-| Channel ID | `968650` |
-| User ID | `1011132` |
-| Kick fields | `verified=true` · `is_banned=false` |
-| Followers | 2,095 |
-| Live at retrieval | No — `livestream=null` |
+| Field                  | Observed value                         |
+| ---------------------- | -------------------------------------- |
+| Slug                   | `srggdgsbtsr`                          |
+| Channel ID             | `968650`                               |
+| User ID                | `1011132`                              |
+| Kick fields            | `verified=true` · `is_banned=false`    |
+| Followers              | 2,095                                  |
+| Live at retrieval      | No — `livestream=null`                 |
 | Recent-category labels | Stocks · Chivalry 2 · Crypto & Trading |
 
 The `verified`, `is_banned`, follower, category, and live fields are Kick's mutable
@@ -320,9 +326,9 @@ account; `is_banned=false` does not reconstruct earlier enforcement; and
   evidence="Current platform metadata only; channel/user IDs, mutable state fields, follower display, live-state field, and recent-category labels"
   reviewState="source-matched"
 >
-  The dated research snapshot retains the selected fields and a SHA-256 of the full
-  response. The full body was not committed because it exposed a short-lived signed
-  playback URL even while the `livestream` field was null.
+  The dated research snapshot retains the selected fields and a SHA-256 of the
+  full response. The full body was not committed because it exposed a
+  short-lived signed playback URL even while the `livestream` field was null.
 </SourceCitation>
 
 ### No exposed VOD rows is not “all media deleted”
@@ -352,8 +358,8 @@ user-written titles.
   evidence="Current endpoint response only; no deletion history or cause"
   reviewState="source-matched"
 >
-  An empty list is a dated availability result, not evidence of how or why earlier
-  VODs became unavailable.
+  An empty list is a dated availability result, not evidence of how or why
+  earlier VODs became unavailable.
 </SourceCitation>
 
 <SourceCitation
@@ -365,8 +371,8 @@ user-written titles.
   evidence="Aggregate clip metadata only; clip contents and title claims unchecked"
   reviewState="source-matched"
 >
-  The surviving response disproves only the strongest version of “nothing remains on
-  Kick.” It does not prove a complete archive.
+  The surviving response disproves only the strongest version of “nothing
+  remains on Kick.” It does not prove a complete archive.
 </SourceCitation>
 
 ### The old Kick address
@@ -385,22 +391,23 @@ redirect to `srggdgsbtsr` or reveal an old channel ID.
   evidence="Current retrieval outcome only"
   reviewState="source-matched"
 >
-  The 404 cannot distinguish a rename, released slug, removal, suspension, ban, or a
-  bad historical recollection. No cause or change date is inferred.
+  The 404 cannot distinguish a rename, released slug, removal, suspension, ban,
+  or a bad historical recollection. No cause or change date is inferred.
 </SourceCitation>
 
 ### What the archive can date
 
 The transcript archive contains two adjacent public title records:
 
-| Archive date label | Exact title label | Raw-media status |
-| --- | --- | --- |
-| 2025-06-19 | [*i m quitting youtube (streaming on kick.com)*](https://himr-archive.pages.dev/transcripts/2025/2025-06-19-i-m-quitting-youtube-streaming-on-kick-com.html) | No matched raw video |
-| 2025-06-20 | [*i m leaving youtube!*](https://himr-archive.pages.dev/transcripts/2025/2025-06-20-i-m-leaving-youtube.html) | No matched raw video |
+| Archive date label | Exact title label                                                                                                                                                           | Raw-media status                        |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 2025-06-19         | [_i m quitting youtube (streaming on kick.com)_](https://archive.org/download/699994/20250619-i%27m%20quitting%20youtube%20%28streaming%20on%20kick.com%29--G4wOVD-64A.mp4) | Raw file reconciled; contents unchecked |
+| 2025-06-20         | [_i m leaving youtube!_](https://archive.org/download/699994/20250620-i%27m%20leaving%20youtube%21-vtBo2HY9SxI.mp4)                                                         | Raw file reconciled; contents unchecked |
 
-Both machine transcript records have implausible word-rate flags and no matched raw
-media. Their bodies are therefore not used to publish an earnings figure, partnership
-term, promise of exclusivity, or spoken motive. The titles document a June 2025
+Both legacy machine-transcript records have implausible word-rate flags. Raw files
+were later reconciled, but have not been listened to; their bodies are therefore not
+used to publish an earnings figure, partnership term, promise of exclusivity, or
+spoken motive. The titles document a June 2025
 YouTube-to-Kick **public narrative**; the July 2025 clip timestamps independently show
 that the current Kick channel ID later accumulated clip records.
 
@@ -408,20 +415,20 @@ that the current Kick channel ID later accumulated clip records.
   sourceId="2025-06-19_2025-06-19-i-m-quitting-youtube-streaming-on-kick-com"
   claimId="HIMR-PLATFORMS-0021"
   title="i m quitting youtube (streaming on kick.com)"
-  href="https://himr-archive.pages.dev/transcripts/2025/2025-06-19-i-m-quitting-youtube-streaming-on-kick-com.html"
-  locator="Archive title/date fields; no raw-video URL; five-second displayed duration and implausible word-rate flag"
+  href="https://archive.org/download/699994/20250619-i%27m%20quitting%20youtube%20%28streaming%20on%20kick.com%29--G4wOVD-64A.mp4"
+  locator="Archive title/date and recovered raw file; legacy five-second displayed duration and implausible word-rate flag remain unreliable"
   evidence="Title chronology only; transcript body and machine summary excluded"
   reviewState="source-matched"
 >
-  This source does not verify what was said in the missing media.
+  This source does not verify what was said in the unreviewed recovered media.
 </SourceCitation>
 
 <SourceCitation
   sourceId="2025-06-20_2025-06-20-i-m-leaving-youtube"
   claimId="HIMR-PLATFORMS-0021"
   title="i m leaving youtube!"
-  href="https://himr-archive.pages.dev/transcripts/2025/2025-06-20-i-m-leaving-youtube.html"
-  locator="Archive title/date fields; no raw-video URL; 32-second displayed duration and implausible word-rate flag"
+  href="https://archive.org/download/699994/20250620-i%27m%20leaving%20youtube%21-vtBo2HY9SxI.mp4"
+  locator="Archive title/date and recovered raw file; legacy 32-second displayed duration and implausible word-rate flag remain unreliable"
   evidence="Title chronology only; transcript body and machine summary excluded"
   reviewState="source-matched"
 >
@@ -458,8 +465,9 @@ by Cloudflare and contributed no extracted facts.
   evidence="Third-party historical name/handle mapping only"
   reviewState="source-matched"
 >
-  The tracker is used as a dated historical-label lead and reconciled against the
-  current official stable ID. It is not an authority on rename timing or ownership.
+  The tracker is used as a dated historical-label lead and reconciled against
+  the current official stable ID. It is not an authority on rename timing or
+  ownership.
 </SourceCitation>
 
 <SourceCitation
@@ -479,7 +487,7 @@ by Cloudflare and contributed no extracted facts.
 
 The requested spelling **Export Analysis Reviews** was not source-matched. The
 closest reproducible community record is a February 2, 2026 r/HIMRFAM post titled
-[*Expert Analysis Reviews UPDATE*](https://www.reddit.com/r/HIMRFAM/comments/1qtrthg/expert_analysis_reviews_update/).
+[_Expert Analysis Reviews UPDATE_](https://www.reddit.com/r/HIMRFAM/comments/1qtrthg/expert_analysis_reviews_update/).
 The reproducible evidence used here supplies no stable YouTube ID or official channel
 link. That makes the title useful as a vocabulary lead, but it cannot establish a
 takedown, account ownership, subject matter, or any identification with Daniel.
@@ -501,11 +509,11 @@ takedown, account ownership, subject matter, or any identification with Daniel.
 
 The archive does establish **Cooking with Daniel** as a recurring title label:
 
-- [*Cooking with Daniel LIVE - broccoli soup*](https://archive.org/download/69999/20190810-Cooking%20with%20Daniel%20LIVE%20-%20broccoli%20soup-_HSleJWUPVs.mp4)
+- [_Cooking with Daniel LIVE - broccoli soup_](https://archive.org/download/69999/20190810-Cooking%20with%20Daniel%20LIVE%20-%20broccoli%20soup-_HSleJWUPVs.mp4)
   (August 10, 2019; raw mapping present);
-- [*The end of Cooking with Daniel*](https://archive.org/download/69999/20200412-The%20end%20of%20Cooking%20with%20Daniel-ba_ndohzHq0.mp4)
+- [_The end of Cooking with Daniel_](https://archive.org/download/69999/20200412-The%20end%20of%20Cooking%20with%20Daniel-ba_ndohzHq0.mp4)
   (April 12, 2020; raw mapping present); and
-- [*Live Cooking With Daniel - Mystery Meal*](https://archive.org/download/699992/20210501-Live%20Cooking%20With%20Daniel%20-%20Mystery%20Meal-WX097iqMD-8.mp4)
+- [_Live Cooking With Daniel - Mystery Meal_](https://archive.org/download/699992/20210501-Live%20Cooking%20With%20Daniel%20-%20Mystery%20Meal-WX097iqMD-8.mp4)
   (May 1, 2021; raw mapping present).
 
 Those title records do **not** expose a separate channel ID. They prove recurring
@@ -522,17 +530,17 @@ every “second channel” reference points to one account.
   reviewState="source-matched"
 >
   Until a stable ID or official historical account capture is found, “cooking
-  series,” “second channel,” and “Expert Analysis Reviews” remain separate research
-  propositions.
+  series,” “second channel,” and “Expert Analysis Reviews” remain separate
+  research propositions.
 </SourceCitation>
 
 ## Community title labels (secondary)
 
-Reddit oEmbed reproducibly preserved two relevant post titles and IDs: [*It’s
+Reddit oEmbed reproducibly preserved two relevant post titles and IDs: [_It’s
 confirmed that Dannyboy has his videos set to private and not
-deleted*](https://www.reddit.com/r/HIMRFAM/comments/1jfn1kz/its_confirmed_that_dannyboy_has_his_videos_set_to/)
-and [*Did he deleted his YouTube
-channel?*](https://www.reddit.com/r/HIMRFAM/comments/1pjbl3g/did_he_deleted_his_youtube_channel/).
+deleted_](https://www.reddit.com/r/HIMRFAM/comments/1jfn1kz/its_confirmed_that_dannyboy_has_his_videos_set_to/)
+and [_Did he deleted his YouTube
+channel?_](https://www.reddit.com/r/HIMRFAM/comments/1pjbl3g/did_he_deleted_his_youtube_channel/).
 Matching official embed metadata records that the posts were created on March 20 and
 December 10, 2025, respectively. Those are post-creation dates, not dates of a channel
 change. The retained responses do not expose post bodies, replies, or supporting
@@ -547,7 +555,7 @@ deletion, or continuous absence.
 - Whether the visible-catalogue gap reflects a creator hiatus, changed visibility,
   removals, or some combination of states.
 - The twenty-fifth item implied by the current header count.
-- Direct human verification of the members-only *why I quit YouTube* stream. A
+- Direct human verification of the members-only _why I quit YouTube_ stream. A
   contributor-supplied copy has been analyzed locally without redistribution, and
   its warned offline-ASR title explanation is summarized on the
   [2026 Return page](/wiki/events/2026-return-and-car-camping/#machine-assisted-explanations-from-private-review-copies).

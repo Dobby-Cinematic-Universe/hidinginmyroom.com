@@ -5,10 +5,10 @@ sidebar:
   order: 3
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import ArchiveImage from "../../../../components/wiki/ArchiveImage.astro";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   status="source-matched"
@@ -27,23 +27,23 @@ letters and never identify it as Jason. Joining the two would turn separate,
 unchecked accounts into a false continuity.
 
 <Aside type="caution" title="A source label, not a second identity">
-  This page uses **Daniel** for the public creator and **Jason** only when describing
-  what a 2025 Reddit title, automatic-caption track, or later community title says.
-  It does not assert a legal name, diagnose a motive, or apply Jason to an unnamed
-  partner's account without a direct source.
+  This page uses **Daniel** for the public creator and **Jason** only when
+  describing what a 2025 Reddit title, automatic-caption track, or later
+  community title says. It does not assert a legal name, diagnose a motive, or
+  apply Jason to an unnamed partner's account without a direct source.
 </Aside>
 
 ## Evidence at a glance
 
-| Evidence layer | What it can establish |
-| --- | --- |
-| First-party titles | No Jason match in 2,227 archived titles or the 24-card dated visible-current inventory |
-| Human-checked first-party speech | None located in the reviewed set |
-| 2022 archive machine text | Unverified accounts of an unnamed dating alias; two candidates render it as four letters |
-| October 2025 Reddit title | An uploader alleges that Daniel said his name was Jason, alongside other profile claims |
-| Official Reddit automatic captions | Machine-text candidates around 02:01, 02:29, and 02:41–03:08; not heard speech |
-| November 2025 Reddit title | Later community use of Jason as a subject label |
-| July 2026 member-gated stream | Two local ASR passes render Daniel describing a Jason dating persona and changed stated age; still not directly heard |
+| Evidence layer                     | What it can establish                                                                                                 |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| First-party titles                 | No Jason match in 2,227 archived titles or the 24-card dated visible-current inventory                                |
+| Human-checked first-party speech   | None located in the reviewed set                                                                                      |
+| 2022 archive machine text          | Unverified accounts of an unnamed dating alias; two candidates render it as four letters                              |
+| October 2025 Reddit title          | An uploader alleges that Daniel said his name was Jason, alongside other profile claims                               |
+| Official Reddit automatic captions | Machine-text candidates around 02:01, 02:29, and 02:41–03:08; not heard speech                                        |
+| November 2025 Reddit title         | Later community use of Jason as a subject label                                                                       |
+| July 2026 member-gated stream      | Two local ASR passes render Daniel describing a Jason dating persona and changed stated age; still not directly heard |
 
 ## No first-party title names Jason
 
@@ -57,7 +57,7 @@ An exact, case-insensitive audit found zero **Jason** title matches in:
   sourceId="archive-source-manifest-2026-08-25"
   claimId="HIMR-JASON-0001"
   title="HIMR archive transcript catalogue"
-  href="https://himr-archive.pages.dev/transcripts/"
+  href="/corpus/"
   locator="All 2,227 transcript.title values in the normalized 2026-08-25 manifest; zero Jason matches"
   evidence="Bounded title audit only; spoken uses and unavailable material remain outside scope"
   reviewState="source-matched"
@@ -81,25 +81,25 @@ treated as interchangeable.
 
 Three raw-backed archive records contain related machine-text leads:
 
-| Source label | Candidate span | Conservative machine-text lead |
-| --- | --- | --- |
-| 16 July 2022 — *I'm Sick* | 01:30:17–01:30:47 | An apparent account of giving dating contacts an unnamed different name so searches would not lead to the creator's public material |
-| 25 October 2022 — *life update in thailand — week 2* | 02:22:23–02:22:43 | An apparent answer that the name supplied to the Thai-girlfriend-labelled participant had four letters |
-| 20 November 2022 — *moving in to new apartment with my girlfriend :-)* | 03:53:57–03:55:03 | Another apparent four-letter-alias account, followed by joking or garbled name examples |
+| Source label                                                           | Candidate span    | Conservative machine-text lead                                                                                                      |
+| ---------------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 16 July 2022 — _I'm Sick_                                              | 01:30:17–01:30:47 | An apparent account of giving dating contacts an unnamed different name so searches would not lead to the creator's public material |
+| 25 October 2022 — _life update in thailand — week 2_                   | 02:22:23–02:22:43 | An apparent answer that the name supplied to the Thai-girlfriend-labelled participant had four letters                              |
+| 20 November 2022 — _moving in to new apartment with my girlfriend :-)_ | 03:53:57–03:55:03 | Another apparent four-letter-alias account, followed by joking or garbled name examples                                             |
 
 <Aside type="danger" title="Unverified identity-concealment account">
   These are unchecked machine transcripts, not quotations from heard audio. They
-  may misrecognize names, merge chat prompts with Daniel's response, or lose joking
-  context. The alleged alias use, reason, other person's knowledge, and underlying
-  conduct are all unverified. No private person's identity should be sought from
-  these leads.
+  may misrecognize names, merge chat prompts with Daniel's response, or lose
+  joking context. The alleged alias use, reason, other person's knowledge, and
+  underlying conduct are all unverified. No private person's identity should be
+  sought from these leads.
 </Aside>
 
 <SourceCitation
   sourceId="2022-07-16_2022-07-16-i-m-sick"
   claimId="HIMR-JASON-0002"
   title="I'm Sick"
-  href="https://himr-archive.pages.dev/transcripts/2022/2022-07-16-i-m-sick.html"
+  href="https://archive.org/download/699992/20220716-I%27m%20Sick-BiEmSNde5bY.mp4"
   locator="Unchecked machine-transcript candidate at 01:30:17–01:30:47; matched raw video exists"
   evidence="Unverified generic alias-and-search-avoidance lead; no exact name or conduct accepted"
   reviewState="source-matched"
@@ -109,7 +109,7 @@ Three raw-backed archive records contain related machine-text leads:
   sourceId="2022-10-25_2022-10-25-life-update-in-thailand-week-2"
   claimId="HIMR-JASON-0002"
   title="life update in thailand — week 2"
-  href="https://himr-archive.pages.dev/transcripts/2022/2022-10-25-life-update-in-thailand-week-2.html"
+  href="https://archive.org/download/699992/20221025-life%20update%20in%20thailand%20-%20week%202-JNglXb1eKr0.mp4"
   locator="Unchecked machine-transcript candidate at 02:22:23–02:22:43"
   evidence="Unverified four-letter-alias lead; does not identify Jason or authenticate any account"
   reviewState="source-matched"
@@ -119,7 +119,7 @@ Three raw-backed archive records contain related machine-text leads:
   sourceId="2022-11-20_2022-11-20-moving-in-to-new-apartment-with-my-girlfriend"
   claimId="HIMR-JASON-0002"
   title="moving in to new apartment with my girlfriend :-)"
-  href="https://himr-archive.pages.dev/transcripts/2022/2022-11-20-moving-in-to-new-apartment-with-my-girlfriend.html"
+  href="https://archive.org/download/699992/20221120-moving%20in%20to%20new%20apartment%20with%20my%20girlfriend%20-%29-nRphwMOiryg.mp4"
   locator="Unchecked machine-transcript candidate at 03:53:57–03:55:03"
   evidence="Second four-letter-alias lead; nearby machine-rendered examples treated as jokes or transcription noise, not names"
   reviewState="source-matched"
@@ -149,11 +149,12 @@ The independent passes did **not** find “day trader” in the attached audio. 
 detail remains an uploader-title allegation only.
 
 <Aside type="danger" title="Unverified allegation — alias and profile details">
-  A Reddit title, official captions, and two offline-ASR passes attribute the Jason
-  alias and changed dating-profile details to Daniel. No reviewer directly perceived
-  the soundtrack, no authenticated profile or participant account is cited, and the
-  exact service, wording, motive, other person's knowledge, and underlying conduct
-  are not verified. This is not a crime or platform-policy finding.
+  A Reddit title, official captions, and two offline-ASR passes attribute the
+  Jason alias and changed dating-profile details to Daniel. No reviewer directly
+  perceived the soundtrack, no authenticated profile or participant account is
+  cited, and the exact service, wording, motive, other person's knowledge, and
+  underlying conduct are not verified. This is not a crime or platform-policy
+  finding.
 </Aside>
 
 <SourceCitation
@@ -229,20 +230,23 @@ name from one allegation even when the original audio remains unchecked.
 
 ## 2026: a later machine-rendered self-account
 
-A contributor-supplied, non-redistributed copy of the member-gated [*why I quit
-YouTube*](https://www.youtube.com/watch?v=rKdcv4QvGig) stream allowed two offline-ASR
+A contributor-supplied, non-redistributed copy of the member-gated [_why I quit
+YouTube_](https://www.youtube.com/watch?v=rKdcv4QvGig) stream allowed two offline-ASR
 passes over the relevant section. At **00:47:15–00:48:33**, both passes render Daniel
 describing a dating persona named **Jason**, aged 25, and presented as a professional
 day trader. The machine text then renders him saying that he changed his stated age
 by only a couple of years because he worried an age-and-name search would surface his
 Famous Birthdays page.
 
-<Aside type="danger" title="Unverified later self-account — not an authenticated profile">
-  The private copy is not redistributed, no reviewer directly heard its audio, and
-  no dating profile or participant account is supplied. This supports a stronger
-  **research lead about Daniel's later account**; it does not verify actual profile
-  fields, use with a particular person, motive, platform-rule evasion, a preferred
-  name, or legal identity.
+<Aside
+  type="danger"
+  title="Unverified later self-account — not an authenticated profile"
+>
+  The private copy is not redistributed, no reviewer directly heard its audio,
+  and no dating profile or participant account is supplied. This supports a
+  stronger **research lead about Daniel's later account**; it does not verify
+  actual profile fields, use with a particular person, motive, platform-rule
+  evasion, a preferred name, or legal identity.
 </Aside>
 
 <SourceCitation
@@ -257,8 +261,8 @@ Famous Birthdays page.
 
 ### August 26: Daniel's machine-rendered persona explanation
 
-At exactly **02:56:20.22–02:58:11.02** in the later public [*I'M
-BACK*](https://www.youtube.com/watch?v=gPhrE99xwqI) stream, one unreviewed Whisper
+At retained-rendition **02:56:20.22–02:58:23.26** in the later public [_I'M
+BACK_](https://www.youtube.com/watch?v=gPhrE99xwqI) stream, one unreviewed Whisper
 small.en pass renders Daniel responding to a chat reference to Jason. Using a tomato
 metaphor, he is machine-rendered saying that **Jason was still him**, but with what he
 called Daniel's bad parts removed. The pass then renders him characterising “Daniel”
@@ -266,19 +270,19 @@ as Jason with those parts retained and amplified for comedic effect.
 
 <Aside type="danger" title="One-pass persona framing—not identity verification">
   This is an unreviewed machine rendering of **Daniel's own explanation**, not a
-  verified quotation. The pass has no HIMR glossary, confidence calibration, human
-  correction, or direct listening. It helps document how Daniel apparently framed
-  Jason on that date; it does not authenticate a dating profile, prove what another
-  person was told, establish a stable preferred name, or create a second or legal
-  identity.
+  verified quotation. The pass has no HIMR glossary, confidence calibration,
+  human correction, or direct listening. It helps document how Daniel apparently
+  framed Jason on that date; it does not authenticate a dating profile, prove
+  what another person was told, establish a stable preferred name, or create a
+  second or legal identity.
 </Aside>
 
 <SourceCitation
   sourceId="youtube-video-gPhrE99xwqI-local-asr-jason-persona"
   claimId="HIMR-JASON-0008"
   title="I'M BACK — Jason persona explanation machine lead"
-  href="https://www.youtube.com/watch?v=gPhrE99xwqI&t=10580s"
-  locator="One unreviewed Whisper small.en pass at exactly 02:56:20.22–02:58:11.02"
+  href="https://www.youtube.com/watch?v=gPhrE99xwqI"
+  locator="Rendition-local navigation only; one unreviewed Whisper small.en pass at 02:56:20.22–02:58:23.26"
   evidence="Daniel's unverified machine-rendered self-framing of Jason as himself with selected traits removed and Daniel as an amplified comedic presentation; no profile, third-party disclosure, preference or identity fact corroborated"
   reviewState="unverified-research-lead"
   reviewedAt="27 August 2026"
@@ -318,7 +322,7 @@ knowledge of profile details.
 - Direct human listening to the complete 2025 Reddit audio, especially
   **01:50–02:10** and **02:20–03:15**.
 - Direct human listening to **00:47:00–00:49:00** in the 2026 member-gated stream.
-- Direct human listening to **02:56:20–02:58:12** in the August 26 public stream.
+- Direct human listening to **02:56:20–02:58:24** in the August 26 public stream.
 - Direct listening to the 2022 raw-video candidates with surrounding chat prompts.
 - Whether Jason was a profile field, an off-platform introduction, a joke, or a
   name used only in the one alleged interaction.

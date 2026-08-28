@@ -5,14 +5,14 @@ sidebar:
   order: 13.5
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   status="unverified"
   reviewedAt="27 August 2026"
-  note="Four debt-labelled archive records are source-matched at title level, but none has mapped raw media. The 2026 balances and repayment details come from two-model review of a private stream copy and one unreviewed machine pass over the later public August 26 stream; none is independently verified."
+  note="Four debt-labelled archive records are source-matched and now map to raw media, but their contents remain unchecked. The 2026 balances and repayment details come from two-model review of a private stream copy and one unreviewed machine pass over the later public August 26 stream; none is independently verified."
 />
 
 Daniel has made **debt** a recurring public topic. The surviving record is much
@@ -20,43 +20,45 @@ stronger at establishing that he published debt-themed titles than at establishi
 what he owed, to whom, under what terms, or whether he repaid it.
 
 <Aside type="caution" title="Self-reported finances, not audited accounts">
-  Every balance or repayment detail on this page is Daniel's attributed account. No
-  bank statement, credit report, loan agreement, creditor statement, or family-member
-  confirmation was reviewed. Figures should not be added together unless the source
-  clearly says they are separate and measured at the same date.
+  Every balance or repayment detail on this page is Daniel's attributed account.
+  No bank statement, credit report, loan agreement, creditor statement, or
+  family-member confirmation was reviewed. Figures should not be added together
+  unless the source clearly says they are separate and measured at the same
+  date.
 </Aside>
 
 ## Debt-labelled title chronology
 
-| Source label | Exact creator title | Evidence boundary |
-| --- | --- | --- |
-| 2023-12-04 | [*How i plan to pay off my debts - my Financial plan for 2024*](https://himr-archive.pages.dev/transcripts/2023/2023-12-04-how-i-plan-to-pay-off-my-debts-my-financial-plan-for-2024.html) | Plan wording only; no mapped raw video |
-| 2025-02-15 | [*update on my new life - new job and debt*](https://himr-archive.pages.dev/transcripts/2025/2025-02-15-update-on-my-new-life-new-job-and-debt.html) | Topic wording only; no mapped raw video |
-| 2025-02-16 | [*my debt is getting out of control*](https://himr-archive.pages.dev/transcripts/2025/2025-02-16-my-debt-is-getting-out-of-control.html) | Daniel's severity framing only; no mapped raw video |
-| 2025-02-27 | [*drowning in debt... life updates*](https://himr-archive.pages.dev/transcripts/2025/2025-02-27-drowning-in-debt-life-updates.html) | Metaphorical title framing only; no mapped raw video |
+| Source label | Exact creator title                                                                                                                                                                                                                           | Evidence boundary                                                   |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 2023-12-04   | [_How i plan to pay off my debts - my Financial plan for 2024_](https://archive.org/download/hidinginmyroom/%5B2023-12-04%5D%20How%20i%20plan%20to%20pay%20off%20my%20debts%20-%20my%20Financial%20plan%20for%202024%20%5BbqOO0cprz3A%5D.mp4) | Raw file mapped; plan wording only; contents unchecked              |
+| 2025-02-15   | [_update on my new life - new job and debt_](https://archive.org/download/hidinginmyroom3/%5B2025-02-15%5D%20update%20on%20my%20new%20life%20-%20new%20job%20and%20debt%20%5BjGtOxt17NNU%5D.mp4)                                              | Raw file mapped; topic wording only; contents unchecked             |
+| 2025-02-16   | [_my debt is getting out of control_](https://archive.org/download/hidinginmyroom3/%5B2025-02-16%5D%20my%20debt%20is%20getting%20out%20of%20control%20%5BRUwiPL7imes%5D.mp4)                                                                  | Raw file mapped; Daniel's severity framing only; contents unchecked |
+| 2025-02-27   | [_drowning in debt... life updates_](https://archive.org/download/hidinginmyroom3/%5B2025-02-27%5D%20drowning%20in%20debt...%20life%20updates%20%5BwOSTFfT2280%5D.mp4)                                                                        | Raw file mapped; metaphorical title only; contents unchecked        |
 
 <SourceCitation
   sourceId="2023-12-04_2023-12-04-how-i-plan-to-pay-off-my-debts-my-financial-plan-for-2024"
   claimId="HIMR-DEBT-0001"
   title="Debt-labelled archive title chronology"
-  href="https://himr-archive.pages.dev/transcripts/2023/2023-12-04-how-i-plan-to-pay-off-my-debts-my-financial-plan-for-2024.html"
-  locator="Four transcript-only records dated 2023-12-04 through 2025-02-27; none has a mapped raw-video URL"
+  href="https://archive.org/download/hidinginmyroom/%5B2023-12-04%5D%20How%20i%20plan%20to%20pay%20off%20my%20debts%20-%20my%20Financial%20plan%20for%202024%20%5BbqOO0cprz3A%5D.mp4"
+  locator="Four legacy-index records dated 2023-12-04 through 2025-02-27; raw MP4s reconciled 2026-08-27 but contents not reviewed"
   evidence="Recurring creator title framing only; balances, creditors, terms, repayment, and financial condition unverified"
   reviewState="source-matched"
 />
 
 <Aside type="note" title="Why this article does not use a debt image yet">
-  None of the four debt-labelled archive records has mapped raw video, and the later
-  figures come from a private source copy the contributor asked not to publicize. A
-  generic portrait would be decorative rather than evidence, while a screenshot of
-  machine text could imply that a balance had been verified. A source-specific image
-  can be added if relevant public media is recovered and directly checked.
+  Public raw files are now mapped for the four debt-labelled records, but no
+  relevant frame has been directly checked. The later figures come from a
+  private source copy the contributor asked not to publicize. A generic portrait
+  would be decorative rather than evidence, while a screenshot of machine text
+  could imply that a balance had been verified. A source-specific image can be
+  added after a relevant public segment is directly reviewed.
 </Aside>
 
 ## July 2026 account
 
-The member-gated [*why I quit
-YouTube*](https://www.youtube.com/watch?v=rKdcv4QvGig) stream contains a later
+The member-gated [_why I quit
+YouTube_](https://www.youtube.com/watch?v=rKdcv4QvGig) stream contains a later
 machine-speech account of current debt and repayment. The exact, cross-checked figures
 and the separate amount Daniel attributes to his mother are documented below.
 
@@ -73,10 +75,14 @@ therefore: **Daniel appears to say he planned a £1,000 payment to his mother an
 stated a £22,700 debt balance; it is likely, but not explicit, that the entire balance
 was mother debt.**
 
-<Aside type="danger" title="Do not flatten likely context into a confirmed £22,700 family loan">
-  No payment, balance, creditor, or loan term was independently verified. “End of the
-  week” is retained as Daniel's relative timing rather than converted into a calendar
-  deadline, and nothing here supports an inference about his mother's finances.
+<Aside
+  type="danger"
+  title="Do not flatten likely context into a confirmed £22,700 family loan"
+>
+  No payment, balance, creditor, or loan term was independently verified. “End
+  of the week” is retained as Daniel's relative timing rather than converted
+  into a calendar deadline, and nothing here supports an inference about his
+  mother's finances.
 </Aside>
 
 <SourceCitation
@@ -95,11 +101,11 @@ Daniel's machine-rendered explanation says the balance had not fallen because of
 recent charges. Both models agree on three figures:
 
 | Daniel's attributed category | Machine-rendered amount |
-| --- | ---: |
-| Council-related charge | £350 |
-| Tyre expense | £240 |
-| Browser-extension charge | £150 |
-| **Listed total** | **£740** |
+| ---------------------------- | ----------------------: |
+| Council-related charge       |                    £350 |
+| Tyre expense                 |                    £240 |
+| Browser-extension charge     |                    £150 |
+| **Listed total**             |                **£740** |
 
 He then characterizes the setback as roughly **£600**. The page does not silently
 reconcile £740 with £600: he may have rounded, meant a subtotal, misstated a figure,
@@ -140,12 +146,13 @@ that the earlier account was false.
 <Aside type="danger" title="One unreviewed machine pass—not audited finances">
   The later public [*I'M BACK*](https://www.youtube.com/watch?v=gPhrE99xwqI)
   stream has only one raw Whisper small.en rendering. It has no HIMR glossary,
-  confidence calibration, human correction, or direct listening. The figures below
-  are therefore an unverified machine rendering of **Daniel's own later account**.
-  They are useful as a dated chronology, not as verified balances or quotations.
+  confidence calibration, human correction, or direct listening. The figures
+  below are therefore an unverified machine rendering of **Daniel's own later
+  account**. They are useful as a dated chronology, not as verified balances or
+  quotations.
 </Aside>
 
-At exactly **01:12:00–01:15:52.56**, the one-pass output renders Daniel giving this
+At retained-rendition **01:12:00–01:15:52.56**, the one-pass output renders Daniel giving this
 sequence about money he said he owed his mother, covered here under the public
 **Cammie** label:
 
@@ -168,8 +175,8 @@ confirmation was reviewed.
   sourceId="youtube-video-gPhrE99xwqI-local-asr-mother-debt"
   claimId="HIMR-DEBT-0005"
   title="I'M BACK — later mother-debt chronology"
-  href="https://www.youtube.com/watch?v=gPhrE99xwqI&t=4320s"
-  locator="One unreviewed Whisper small.en pass at exactly 01:12:00–01:15:52.56"
+  href="https://www.youtube.com/watch?v=gPhrE99xwqI"
+  locator="Rendition-local navigation only; one unreviewed Whisper small.en pass at 01:12:00–01:15:52.56"
   evidence="Daniel's unverified machine-rendered £21,700 current balance, £1,800 intended payment, £19,900 projected balance, earlier £17,000, £5,000 Tesla-related loan, conflicting £24,800/£24,700 peak, roughly £3,000 repaid and no-bank-debt account; nothing financially corroborated"
   reviewState="unverified-research-lead"
   reviewedAt="27 August 2026"
@@ -187,8 +194,8 @@ page](/wiki/events/tax-labelled-records/#august-2026-a-conflicting-later-self-ac
   sourceId="youtube-video-gPhrE99xwqI-local-asr-debt-tax"
   claimId="HIMR-DEBT-0006"
   title="I'M BACK — tax-and-Tesla debt explanation"
-  href="https://www.youtube.com/watch?v=gPhrE99xwqI&t=7650s"
-  locator="One unreviewed Whisper small.en pass at exactly 02:07:30.50–02:09:06.34"
+  href="https://www.youtube.com/watch?v=gPhrE99xwqI"
+  locator="Rendition-local navigation only; one unreviewed Whisper small.en pass at 02:07:30.50–02:09:06.34"
   evidence="Daniel's unverified machine-rendered tax-and-Tesla explanation, including internally conflicting £15,000/£10,000 fine figures and an approximately £7,000 unpaid amount; no tax, loan or payment record checked"
   reviewState="unverified-research-lead"
   reviewedAt="27 August 2026"

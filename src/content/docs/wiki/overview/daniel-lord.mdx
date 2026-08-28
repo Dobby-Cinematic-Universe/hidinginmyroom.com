@@ -12,8 +12,8 @@ import VerificationBadge from "../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="26 August 2026"
-  note="The public name, current channel identity, archive coverage, and pictured sources were reconciled on August 25, 2026. This is not an independently verified private biography."
+  reviewedAt="27 August 2026"
+  note="The public name, current channel identity, archive coverage, and pictured sources were reconciled through August 27, 2026. This is not an independently verified private biography."
 />
 
 **Daniel Lord** is the public name used for the creator documented by this wiki. His
@@ -42,15 +42,16 @@ as permission to compile private identifying information.
 
 ## What the primary record establishes
 
-| Field                      | Narrow, source-supported description                                                                    |
-| -------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Public creator name        | Daniel; “Daniel Lord” occurs in an archived title                                                       |
-| Current channel            | **Hiding in my room**, stable channel ID `UC_yIF-9jOge6nNA0z-ScrBQ`                                     |
-| Current handle             | `@hidinginmyroom1111`, observed August 25, 2026                                                         |
-| Channel metadata           | The official Atom feed reports a channel-level timestamp of October 23, 2014                            |
-| Preserved historical index | 2,227 transcript records labeled from 2015 through 2025                                                 |
-| Raw-video reconciliation   | 2,043 indexed records have an Internet Archive video URL; 184 do not                                    |
-| Current visible catalogue  | 24 distinct Videos- and Live-tab IDs were exposed to a non-member review; YouTube's header displayed 25 |
+| Field                       | Narrow, source-supported description                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Public creator name         | Daniel; “Daniel Lord” occurs in an archived title                                                                        |
+| Current channel             | **Hiding in my room**, stable channel ID `UC_yIF-9jOge6nNA0z-ScrBQ`                                                      |
+| Current handle              | `@hidinginmyroom1111`, observed August 25, 2026                                                                          |
+| Channel metadata            | The official Atom feed reports a channel-level timestamp of October 23, 2014                                             |
+| Preserved historical index  | 2,227 transcript records labelled from 2015 through 2025                                                                 |
+| August 25 raw-video audit   | 2,043 indexed rows carried an Internet Archive video URL; 184 did not in that frozen export                              |
+| Supplemental reconciliation | Additional raw files, including cited 2024–2025 records, were mapped on August 27; contents remain separately reviewable |
+| Current visible catalogue   | 25 distinct Videos- and Streams-tab IDs were exposed to a signed-out review after the August 27 refresh                  |
 
 The 2014 feed timestamp is a YouTube metadata field, not proof that every present
 video—or the present branding—dates from 2014. Likewise, transcript dates and
@@ -61,24 +62,54 @@ stronger date basis.
   sourceId="youtube-channel-UC_yIF-9jOge6nNA0z-ScrBQ"
   title="Hiding in my room — official YouTube channel"
   href="https://www.youtube.com/@hidinginmyroom1111"
-  locator="Channel header, Videos tab, Live tab, channel metadata, and official Atom feed; reviewed August 25, 2026"
+  locator="Channel header, Videos tab, Streams tab, and 25 watch-page identities; refreshed August 27, 2026"
   evidence="Current channel name, handle, stable ID, displayed counts, visible item IDs, and channel-feed timestamp only"
 >
   See the [channel and platform audit](/wiki/events/channel-bans-and-platforms/)
-  for the complete 24-item inventory and the unresolved difference from
-  YouTube's displayed count of 25.
+  for the original 24-item snapshot, the former display-count mismatch, and the
+  later 25-item refresh.
 </SourceCitation>
 
 <SourceCitation
   sourceId="archive-snapshot-2026-08-25"
-  title="HIMR transcript archive index"
-  href="https://himr-archive.pages.dev/data/index.js"
+  title="Retained HIMR transcript-index snapshot"
+  href="/wiki/archive/methodology/#current-archive-audit"
   locator="2,227 normalized records reconciled with Internet Archive items 69999 and 699992"
   evidence="Record titles, date labels, transcript URLs, and presence or absence of matched raw-video URLs"
 >
   Machine transcripts and generated summaries are discovery aids. Their
   narrative wording is not biographical evidence.
 </SourceCitation>
+
+## Early creator-linked pages
+
+A public account chain extends the creator record beyond YouTube. The historical
+[`rabbitlol` ComicFury profile](https://comicfury.com/profile.php?username=rabbitlol)
+introduces its author as Daniel, names _hiding in my room_, and links the exact main
+channel ID plus [Daniel's Patreon](https://www.patreon.com/Hidinginmyroom). The live
+[`StandardOil` DeviantArt profile](https://www.deviantart.com/standardoil) links that
+exact ComicFury profile. Together these are strong public account-family links for
+Daniel's 2015-era comics, art, and game-development trail. They do not prove a legal
+identity or make every comic and journal entry autobiographical.
+
+One StandardOil journal links YouTube ID `TEQwB8lHENk`, now private on YouTube but
+preserved under the same terminal ID in Internet Archive item `69999`. ComicFury also
+links `-5yKGW8SKeY`, which remains unavailable and absent from the sealed
+Archive.org inventory. The [additional source-leads
+inventory](/wiki/archive/additional-source-leads/) records the seven ComicFury slugs,
+Patreon sitemap boundary, and exact missing-media status.
+
+<SourceCitation
+  sourceId="creator-account-family-rabbitlol-standardoil"
+  claimId="HIMR-DANIEL-0003"
+  title="rabbitlol / StandardOil public account chain"
+  href="https://comicfury.com/profile.php?username=rabbitlol"
+  locator="ComicFury About/profile links to channel UC_yIF-9jOge6nNA0z-ScrBQ and Patreon; StandardOil profile links back to this exact ComicFury URL; checked 2026-08-27"
+  evidence="Creator-linked historical account family and media-discovery trail only; no legal-identity or autobiographical-content finding"
+  checked={true}
+  reviewState="source-matched"
+  reviewedAt="27 August 2026"
+/>
 
 ## The public body of work
 

@@ -5,9 +5,9 @@ sidebar:
   order: 9
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
-import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
   status="source-matched"
@@ -17,15 +17,17 @@ import VerificationBadge from '../../../../components/wiki/VerificationBadge.ast
 
 “Blood Bucket” is a public viewer handle that became part of Daniel's April 2024
 Japan-stream chronology. The narrow fact is unusually clear: the archive itself has
-an April 9 record titled *Dinner and Owl Cafe with Blood Bucket*. That verifies the
+an April 9 record titled _Dinner and Owl Cafe with Blood Bucket_. That verifies the
 handle's use in a creator-supplied public title. It does **not** verify a legal name,
 home address, nationality, private biography, or every story told around the person.
 
-<Aside type="caution" title="Eight transcripts, zero mapped videos">
-  All eight core records have a transcript page but a null video URL and the archive
-  flag `missing_video_url`. Their generated text and summaries can map the story's
-  shape, but they cannot establish exact words, speakers, edits, or events. This page
-  therefore separates title facts from machine-text leads throughout.
+<Aside type="caution" title="Raw files recovered; contents still unchecked">
+  The August 25 legacy index gave all eight core records a null video URL and
+  the flag `missing_video_url`. The supplemental Internet Archive inventory
+  reconciled on August 27 now maps a raw MP4 candidate for every row. None of
+  those long files has been directly listened to for this page, so the old
+  generated text still cannot establish exact words, speakers, edits, or events.
+  This page therefore separates title facts from machine-text leads throughout.
 </Aside>
 
 ## The public-name fact
@@ -39,7 +41,7 @@ person is inferred by the archive's generated summaries, not proven by the title
   sourceId="2024-04-09_2024-04-09-dinner-and-owl-cafe-with-blood-bucket"
   claimId="HIMR-BLOOD-BUCKET-0002"
   title="Dinner and Owl Cafe with Blood Bucket"
-  href="https://himr-archive.pages.dev/transcripts/2024/2024-04-09-dinner-and-owl-cafe-with-blood-bucket.html"
+  href="https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4"
   locator="Archive title and date label: 2024-04-09; displayed duration 06:58:11"
   evidence="Creator-supplied title verifies public handle usage only; no underlying outing or identity claim"
   reviewState="source-matched"
@@ -48,8 +50,8 @@ person is inferred by the archive's generated summaries, not proven by the title
 ### Searching the initials “BB”
 
 An exact, case-insensitive search of all **2,227 archive title fields** finds no
-standalone `BB`; it finds one full-name title, *Dinner and Owl Cafe with Blood
-Bucket*. Searching the generated summaries produces seven `BB` hits, but five are
+standalone `BB`; it finds one full-name title, _Dinner and Owl Cafe with Blood
+Bucket_. Searching the generated summaries produces seven `BB` hits, but five are
 unrelated references to BB guns or pellets. Only two 2024 summaries place `BB` next
 to the full Blood Bucket handle. This is why the wiki does not treat every historical
 `BB` search result as a person reference.
@@ -58,7 +60,7 @@ to the full Blood Bucket handle. This is why the wiki does not treat every histo
   sourceId="blood-bucket-bb-corpus-audit-2026-08-25"
   claimId="HIMR-BLOOD-BUCKET-0005"
   title="HIMR archive index — BB terminology audit"
-  href="https://himr-archive.pages.dev/data/index.js"
+  href="/wiki/archive/methodology/#current-archive-audit"
   locator="2,227 title fields and generated-summary fields; exact standalone BB search"
   evidence="Zero BB titles; one Blood Bucket title; seven generated-summary BB hits split between five gun/pellet uses and two Blood Bucket candidates"
   reviewState="source-matched"
@@ -68,22 +70,22 @@ The strongest abbreviation lead is the unchecked April 4 machine transcript. Wit
 one record it renders the full handle near 00:08:04, `BB` near 00:07:23 and 00:46:33,
 and other alternating uses later in the text. That makes **BB a useful search alias
 for Blood Bucket in the 2024 cluster**, but it is still not verified speech because
-the raw stream is missing.
+the newly recovered raw stream has not been listened to.
 
 <Aside type="caution" title="Unverified BB abbreviation lead">
-  The same generated transcript appears to alternate between Blood Bucket and BB,
-  but no listener can check the wording, speakers, chat/TTS boundaries, or edits from
-  the current archive. Use BB only where nearby context independently anchors the full
-  handle. Public search also exposed hostile and invasive subreddit speculation; none
-  of that material was adopted as biography.
+  The same generated transcript appears to alternate between Blood Bucket and
+  BB, but no reviewer has yet checked the recovered audio for wording, speakers,
+  chat/TTS boundaries, or edits. Use BB only where nearby context independently
+  anchors the full handle. Public search also exposed hostile and invasive
+  subreddit speculation; none of that material was adopted as biography.
 </Aside>
 
 <SourceCitation
   sourceId="2024-04-04_2024-04-04-staying-at-my-viewers-house"
   claimId="HIMR-BLOOD-BUCKET-0006"
   title="Staying at my viewers house — BB abbreviation lead"
-  href="https://himr-archive.pages.dev/transcripts/2024/2024-04-04-staying-at-my-viewers-house.html"
-  locator="Unchecked generated text near 00:07:23, 00:08:04, and 00:46:33; no mapped raw media"
+  href="https://archive.org/download/hidinginmyroom/Staying%20at%20my%20viewers%20house%20%5BQA8bpJbBEKA%5D.mp4"
+  locator="Unchecked generated text near 00:07:23, 00:08:04, and 00:46:33; raw MP4 reconciled 2026-08-27 but audio not reviewed"
   evidence="Candidate Blood Bucket / BB alternation for search terminology only; not verified speech or identity evidence"
   reviewState="unverified-research-lead"
 />
@@ -94,72 +96,77 @@ The table keeps the records in source-label order. “Machine link” means the 
 does not name Blood Bucket, but generated transcript text or its summary appears to
 connect the record to that handle. Those links are research leads, not corroboration.
 
-| Date | Exact archive title | Displayed duration | What is actually established |
-| --- | --- | ---: | --- |
-| 10 February | [*hello new stream chatting about life*](https://himr-archive.pages.dev/transcripts/2024/2024-02-10-hello-new-stream-chatting-about-life.html) | 04:21:54 | The record exists; machine text proposes a future Japan housing arrangement. The title names no person. |
-| 22 March | [*japanese woman came to my hotel room*](https://himr-archive.pages.dev/transcripts/2024/2024-03-22-japanese-woman-came-to-my-hotel-room.html) | 03:48:49 | The generic, creator-supplied title exists. Its nationality and visit framing are not independently proven, and the Blood Bucket link is machine-derived. |
-| 4 April | [*Staying at my viewers house*](https://himr-archive.pages.dev/transcripts/2024/2024-04-04-staying-at-my-viewers-house.html) | 02:22:59 | The generic title exists; the generated text supplies the proposed handle origin described below. |
-| 5 April | [*walking to Japanese Sun Tower (21km walkathon)*](https://himr-archive.pages.dev/transcripts/2024/2024-04-05-walking-to-japanese-sun-tower-21km-walkathon.html) | 11:49:40 | The walkathon title and duration exist. The generated summary links the later portion to the viewer's home. |
-| 9 April | [*Dinner and Owl Cafe with Blood Bucket*](https://himr-archive.pages.dev/transcripts/2024/2024-04-09-dinner-and-owl-cafe-with-blood-bucket.html) | 06:58:11 | **Direct title fact:** the public handle appears in the source title. The dinner and outing remain creator framing, not independently checked events. |
-| 11 April | [*Cooking dinner for her*](https://himr-archive.pages.dev/transcripts/2024/2024-04-11-cooking-dinner-for-her.html) | 10:30:05 | One of two separate April 11 records; only generated text links “her” to Blood Bucket. |
-| 11 April | [*Japanese Woman let me come inside her house!*](https://himr-archive.pages.dev/transcripts/2024/2024-04-11-japanese-woman-let-me-come-inside-her-house.html) | 00:13:46 | A second, shorter April 11 record. The title is generic and sensationalized; generated text makes the handle link. |
-| 14 April | [*Exploring Kyoto*](https://himr-archive.pages.dev/transcripts/2024/2024-04-14-exploring-kyoto.html) | 11:39:28 | The Kyoto title exists; a later Blood Bucket visit is found only in generated text and summary. |
+| Date        | Exact archive title                                                                                                                                                                    | Displayed duration | What is actually established                                                                                                                              |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10 February | [_hello new stream chatting about life_](https://archive.org/download/hidinginmyroom/hello%20new%20stream%20chatting%20about%20life%20%5BFBitR95T73k%5D.mp4)                           |           04:21:54 | The record exists; machine text proposes a future Japan housing arrangement. The title names no person.                                                   |
+| 22 March    | [_japanese woman came to my hotel room_](https://archive.org/download/hidinginmyroom/japanese%20woman%20came%20to%20my%20hotel%20room%20%5BQFRiGoeRbis%5D.mp4)                         |           03:48:49 | The generic, creator-supplied title exists. Its nationality and visit framing are not independently proven, and the Blood Bucket link is machine-derived. |
+| 4 April     | [_Staying at my viewers house_](https://archive.org/download/hidinginmyroom/Staying%20at%20my%20viewers%20house%20%5BQA8bpJbBEKA%5D.mp4)                                               |           02:22:59 | The generic title exists; the generated text supplies the proposed handle origin described below.                                                         |
+| 5 April     | [_walking to Japanese Sun Tower (21km walkathon)_](https://archive.org/download/hidinginmyroom/walking%20to%20Japanese%20Sun%20Tower%20%2821km%20walkathon%29%20%5BbLLuzNREUQ8%5D.mp4) |           11:49:40 | The walkathon title and duration exist. The generated summary links the later portion to the viewer's home.                                               |
+| 9 April     | [_Dinner and Owl Cafe with Blood Bucket_](https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4)                          |           06:58:11 | **Direct title fact:** the public handle appears in the source title. The dinner and outing remain creator framing, not independently checked events.     |
+| 11 April    | [_Cooking dinner for her_](https://archive.org/download/hidinginmyroom/Cooking%20dinner%20for%20her%20%5BPJBFnY1cVt8%5D.mp4)                                                           |           10:30:05 | One of two separate April 11 records; only generated text links “her” to Blood Bucket.                                                                    |
+| 11 April    | [_Japanese Woman let me come inside her house!_](https://archive.org/download/hidinginmyroom/Japanese%20Woman%20let%20me%20come%20inside%20her%20house%21%20%5BnDlsd1OJMnA%5D.mp4)     |           00:13:46 | A second, shorter April 11 record. The title is generic and sensationalized; generated text makes the handle link.                                        |
+| 14 April    | [_Exploring Kyoto_](https://archive.org/download/hidinginmyroom/Exploring%20Kyoto%20%5B8TAr1xDfgyE%5D.mp4)                                                                             |           11:39:28 | The Kyoto title exists; a later Blood Bucket visit is found only in generated text and summary.                                                           |
 
 <SourceCitation
   sourceId="2024-02-10_2024-02-10-hello-new-stream-chatting-about-life"
   claimId="HIMR-BLOOD-BUCKET-0001"
   title="Blood Bucket 2024 chronology — first retained record"
-  href="https://himr-archive.pages.dev/transcripts/2024/2024-02-10-hello-new-stream-chatting-about-life.html"
+  href="https://archive.org/download/hidinginmyroom/hello%20new%20stream%20chatting%20about%20life%20%5BFBitR95T73k%5D.mp4"
   locator="Eight source-label dates from 2024-02-10 through 2024-04-14"
-  evidence="Archive titles, durations, and missing-video flags only; the ledger retains all eight source IDs"
+  evidence="Archive titles, displayed durations, and eight newly reconciled raw-file identities; stream contents remain unchecked"
   reviewState="source-matched"
 />
 
 ### Why the two April 11 rows are not duplicates
 
 They share a date label but have different titles and very different displayed
-durations: `10:30:05` versus `00:13:46`. With no raw media or stable platform IDs,
-the archive does not let us prove whether the short item is an excerpt of the long
+durations: `10:30:05` versus `00:13:46`. Because the old index had neither raw media
+nor stable platform IDs, it did not let us prove whether the short item was an excerpt of the long
 stream, a separately uploaded segment, or independent footage. They remain two
-records but not two independent confirmations of any event.
+records but not two independent confirmations of any event. The filenames now expose
+different stable platform IDs (`PJBFnY1cVt8` and `nDlsd1OJMnA`), which establishes
+separate upload identities but still does not establish how their footage relates.
 
 ## Where the nickname reportedly came from
 
 The April 4 machine transcript contains the strongest origin lead. At `00:08:04`,
 its text renders a question about where the Blood Bucket name came from. At
 `00:08:15–00:08:23`, it renders an answer connecting the handle to the prom scene in
-*Carrie*, in which a bucket of pig's blood is dropped on Carrie.
+_Carrie_, in which a bucket of pig's blood is dropped on Carrie.
 
 <Aside type="caution" title="Unverified machine-transcript account">
-  This is a paraphrase of generated text, not a quotation accepted from the audio.
-  The page has no raw-video link, no reliable speaker labels, and no independent
-  response from the handle's user. The archive's machine summary repeats the same
-  account, but a summary derived from one transcript is not a second source.
+  This is a paraphrase of generated text, not a quotation accepted from the
+  audio. A raw-video link is now available, but it has not been listened to and
+  the legacy text has no reliable speaker labels. There is no independent
+  response from the handle's user. The archive's machine summary repeats the
+  same account, but a summary derived from one transcript is not a second
+  source.
 </Aside>
 
 <SourceCitation
   sourceId="2024-04-04_2024-04-04-staying-at-my-viewers-house"
   title="Staying at my viewers house"
-  href="https://himr-archive.pages.dev/transcripts/2024/2024-04-04-staying-at-my-viewers-house.html"
+  href="https://archive.org/download/hidinginmyroom/Staying%20at%20my%20viewers%20house%20%5BQA8bpJbBEKA%5D.mp4"
   locator="Unchecked machine-text lead at 00:08:04–00:08:23"
-  evidence="Proposed Carrie nickname-origin account only; no raw media, exact quotation, or speaker attribution accepted"
+  evidence="Proposed Carrie nickname-origin account only; recovered raw media not yet listened to, and no exact quotation or speaker attribution accepted"
   reviewState="source-matched"
 />
 
 This is currently the most plausible documented explanation of the handle, but its
-status is **reported in machine text**, not fact. If the original stream is recovered,
-a human reviewer should listen across the entire exchange before upgrading it.
+status is **reported in machine text**, not fact. A human reviewer should listen
+across the entire recovered exchange before upgrading it.
 
 ## Later mentions do not complete the biography
 
-The generated transcripts for *update on my new life — new job and debt* (15
-February 2025) and *confusing and weird day* (3 March 2025) contain later Blood Bucket
+The generated transcripts for _update on my new life — new job and debt_ (15
+February 2025) and _confusing and weird day_ (3 March 2025) contain later Blood Bucket
 search hits. The first appears to recall visiting the house during the Japan streams;
 the second appears inside a longer retelling and includes a proposed description of
 the connection as an internet friendship rather than dating.
 
-Neither is publishable as verified speech. Both records have no mapped video and are
-flagged at roughly **600 displayed words per minute**, an implausible rate suggesting
+Neither is publishable as verified speech. Both now have mapped raw candidates, but
+their legacy rows are flagged at roughly **600 displayed words per minute**, an
+implausible rate suggesting
 that their timing or transcript structure may be unreliable. The March passage also
 contains private-name/address-like text and claims about other people; those details
 are deliberately excluded here.
@@ -167,8 +174,8 @@ are deliberately excluded here.
 <SourceCitation
   sourceId="2025-02-15_2025-02-15-update-on-my-new-life-new-job-and-debt"
   title="update on my new life — new job and debt"
-  href="https://himr-archive.pages.dev/transcripts/2025/2025-02-15-update-on-my-new-life-new-job-and-debt.html"
-  locator="Machine-text search hit near displayed 00:29:15; missing video; 600.05 displayed words/minute"
+  href="https://archive.org/download/hidinginmyroom3/%5B2025-02-15%5D%20update%20on%20my%20new%20life%20-%20new%20job%20and%20debt%20%5BjGtOxt17NNU%5D.mp4"
+  locator="Machine-text search hit near displayed 00:29:15; raw MP4 reconciled 2026-08-27 but unreviewed; 600.05 displayed words/minute"
   evidence="Later-mention lead only; no exact speech or visit claim accepted"
   reviewState="source-matched"
 />
@@ -176,8 +183,8 @@ are deliberately excluded here.
 <SourceCitation
   sourceId="2025-03-03_2025-03-03-confusing-and-weird-day"
   title="confusing and weird day"
-  href="https://himr-archive.pages.dev/transcripts/2025/2025-03-03-confusing-and-weird-day.html"
-  locator="Machine-text search hits near displayed 00:30:24–00:30:58; missing video; 600.03 displayed words/minute"
+  href="https://archive.org/download/hidinginmyroom3/%5B2025-03-03%5D%20confusing%20and%20weird%20day%20%5BnFFD4uUGXtc%5D.mp4"
+  locator="Machine-text search hits near displayed 00:30:24–00:30:58; raw MP4 reconciled 2026-08-27 but unreviewed; 600.03 displayed words/minute"
   evidence="Later-retelling lead only; private identifiers and relationship framing not accepted"
   reviewState="source-matched"
 />
@@ -206,7 +213,7 @@ Blood Bucket, chat, or text-to-speech, and it cannot verify the exact age or wor
   sourceId="2024-03-22_2024-03-22-japanese-woman-came-to-my-hotel-room"
   claimId="HIMR-BLOOD-BUCKET-0007"
   title="japanese woman came to my hotel room — age-framing leads"
-  href="https://himr-archive.pages.dev/transcripts/2024/2024-03-22-japanese-woman-came-to-my-hotel-room.html"
+  href="https://archive.org/download/hidinginmyroom/japanese%20woman%20came%20to%20my%20hotel%20room%20%5BQFRiGoeRbis%5D.mp4"
   locator="Unchecked generated text at 00:07:11, 00:10:19, and 00:20:39–00:21:11; related 2024-04-05 lead at 11:33:11–11:34:59"
   evidence="Machine-text origin for the community age framing only; no verified age, kinship, speaker, or quotation"
   reviewState="unverified-research-lead"
@@ -239,14 +246,18 @@ his own encounter allegation. The entire available video-only rendition was visu
 reviewed, but its audio could not be directly heard in this review and no face is
 visible. The automatic captions therefore remain a machine lead—not accepted speech.
 
-<Aside type="danger" title="Contested intimate allegation — not established fact">
-  The defensible summary is: a second-hand community account alleges an encounter;
-  a later repost presents Daniel as making the same allegation; and that repost also
-  reports a denial attributed to BB. No authenticated first-party statement from
-  Blood Bucket was located, and the source-presented speaker questions whether the
-  denial account was really hers. The encounter, exact age, timing, private messages,
-  and either party's complete position remain unverified. Graphic Discord claims and
-  hostile age-based insults are not reproduced here.
+<Aside
+  type="danger"
+  title="Contested intimate allegation — not established fact"
+>
+  The defensible summary is: a second-hand community account alleges an
+  encounter; a later repost presents Daniel as making the same allegation; and
+  that repost also reports a denial attributed to BB. No authenticated
+  first-party statement from Blood Bucket was located, and the source-presented
+  speaker questions whether the denial account was really hers. The encounter,
+  exact age, timing, private messages, and either party's complete position
+  remain unverified. Graphic Discord claims and hostile age-based insults are
+  not reproduced here.
 </Aside>
 
 <SourceCitation
@@ -261,8 +272,8 @@ visible. The automatic captions therefore remain a machine lead—not accepted s
 
 ### 2026 machine-speech follow-up
 
-At approximately **01:29:57–01:30:08** in [*why I quit
-YouTube*](https://www.youtube.com/watch?v=rKdcv4QvGig), two offline-ASR models render
+At approximately **01:29:57–01:30:08** in [_why I quit
+YouTube_](https://www.youtube.com/watch?v=rKdcv4QvGig), two offline-ASR models render
 Daniel saying that Blood Bucket had not contacted him but briefly appeared in one of
 his recent streams and said hello. The apparent tension may turn on what time period
 or kind of contact he meant; the short passage does not resolve it.
@@ -283,8 +294,8 @@ unnecessary commentary about a private person's looks.
 
 #### August 26: “didn't date BB” is a narrower denial
 
-At exactly **02:26:55.78–02:27:06.22** in the later public [*I'M
-BACK*](https://www.youtube.com/watch?v=gPhrE99xwqI) stream, one unreviewed Whisper
+At retained-rendition **02:26:55.78–02:27:06.22** in the later public [_I'M
+BACK_](https://www.youtube.com/watch?v=gPhrE99xwqI) stream, one unreviewed Whisper
 small.en pass renders Daniel asking whether he had dated BB and answering in the
 negative. That is Daniel's machine-rendered **dating denial**, not a denial of every
 meeting or of the separate intimate allegation. It therefore neither verifies nor
@@ -298,8 +309,8 @@ support for the community “granny” label.
   sourceId="youtube-video-gPhrE99xwqI-local-asr-bb-dating-denial"
   claimId="HIMR-BLOOD-BUCKET-0011"
   title="I'M BACK — BB dating-denial machine lead"
-  href="https://www.youtube.com/watch?v=gPhrE99xwqI&t=8815s"
-  locator="One unreviewed Whisper small.en pass at exactly 02:26:55.78–02:27:06.22"
+  href="https://www.youtube.com/watch?v=gPhrE99xwqI"
+  locator="Rendition-local navigation only; one unreviewed Whisper small.en pass at 02:26:55.78–02:27:06.22"
   evidence="Daniel's unverified machine-rendered denial that he dated BB; no broader denial, relationship fact, encounter fact, speaker-heard quotation or third-party position established"
   reviewState="unverified-research-lead"
   reviewedAt="27 August 2026"
@@ -307,20 +318,21 @@ support for the community “granny” label.
 
 ## Why there is no portrait here
 
-No directly reviewable raw image or video is mapped to these records. Publishing a
-guessed social-media image, a machine-selected face, or an illustration of a real
-viewer would imply an identification the evidence does not support. A future image
-should come only from recovered public stream footage or another openly published,
-context-preserved source—and should be captioned as a public appearance, never proof
-of private identity.
+Raw video is now mapped, but no frame has been directly reviewed and identity-checked
+for this article. Publishing a guessed social-media image, an unchecked
+machine-selected face, or an illustration of a real viewer would imply an
+identification the evidence does not support. A future image should come only from
+reviewed public stream footage or another openly published, context-preserved
+source—and should be captioned as a public appearance, never proof of private identity.
 
 ## Fact, report, and unknown
 
-- **Source fact:** eight transcript records form the February–April 2024 research
-  cluster, and all eight lack mapped raw media.
-- **Source fact:** *Dinner and Owl Cafe with Blood Bucket* directly uses the handle
+- **Source fact:** eight legacy transcript records form the February–April 2024
+  research cluster; supplemental archive reconciliation now maps a candidate raw MP4
+  to all eight, but their contents remain unchecked.
+- **Source fact:** _Dinner and Owl Cafe with Blood Bucket_ directly uses the handle
   in its April 9 title.
-- **Unverified report:** generated April 4 text attributes the handle to *Carrie*'s
+- **Unverified report:** generated April 4 text attributes the handle to _Carrie_'s
   prom-bucket scene.
 - **Unverified age framing:** generated March–April 2024 text supplies the
   grandmother / mother-aged / 52 wording that likely feeds the community “granny”
