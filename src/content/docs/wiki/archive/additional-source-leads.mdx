@@ -33,7 +33,7 @@ published.
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Hidinginmyroom Patreon](https://www.patreon.com/Hidinginmyroom)               | Public metadata identified campaign `363999`, vanity `Hidinginmyroom`, and title **“Daniel's Patreon \| vlogs and stuff about my life.”** Its sitemap exposed 136 stable post URLs spanning 2016–2022.                                                  | Locate public post metadata and historical publishing leads. The sitemap count is not a count of accessible posts; paywalled material is not acquired, made public, or treated as independently verified.                                    |
 | [rabbitlol on ComicFury](https://comicfury.com/profile.php?username=rabbitlol) | The profile displayed a 6 August 2015 registration date and 18 December 2018 “last seen” value. Its self-description names Daniel, names _hiding in my room_, and links exact YouTube channel ID `UC_yIF-9jOge6nNA0z-ScrBQ` plus the Patreon URL above. | This is a strong public self-link between the historical ComicFury profile, the main channel ID, and the Patreon page. It supports a creator-linked source family, not a legal-identity finding or the truth of autobiographical comic text. |
-| [StandardOil on DeviantArt](https://www.deviantart.com/standardoil)            | The supplied `http://standardoil.deviantart.com/` address redirected to this live profile. Its public profile links the exact `rabbitlol` ComicFury page, and one journal links archived YouTube ID `TEQwB8lHENk`.                                      | The reciprocal public link makes StandardOil part of the same creator-linked account family. It does not authenticate a legal identity or establish that every artwork, journal, or comic describes a real event.                            |
+| [StandardOil on DeviantArt](https://www.deviantart.com/standardoil)            | The supplied `http://standardoil.deviantart.com/` address redirected to a reachable profile titled **StandardOil on DeviantArt**. No checked public link from that profile to the `rabbitlol` page or Daniel's main channel was located.                  | Retain it as a supplied discovery lead. A matching-looking public profile does not establish ownership or membership in the creator-linked account family.                                                                                   |
 
 The ComicFury page lists seven webcomic slugs: `theshoplifter`, `wheresmyparcel`,
 `hazelsplanetofice`, `Myintrovertedworld`, `Anotherboringnightshift`,
@@ -42,12 +42,6 @@ early creative-work records, but a comic title or synopsis is not evidence that 
 plot describes a real event. Its Shop Lifter material links YouTube ID
 `-5yKGW8SKeY`; that video is presently unavailable and has not been found in the
 sealed Archive.org inventory, so it remains an explicit missing-media lead.
-
-The DeviantArt journal's `TEQwB8lHENk` link is more tractable. The original YouTube
-watch ID is currently private, while Internet Archive item `69999` preserves a
-133.82-second file bearing that exact terminal ID and the title _My zombie game i
-made on Xcode 7 for iOS app store made on macbook pro!_. This is a stable-ID archive
-bridge, not yet a byte comparison with the inaccessible YouTube original.
 
 ## Fan archives and commentary indexes
 
@@ -79,19 +73,42 @@ caption metadata, duration, and size should therefore be ingested before any med
 transfer; author display names are not speaker authentication.
 
 The corrected Hidinginmyroom archive currently exposes six distinct post paths:
-four year-labelled pages for 2016–2019 and two separately titled 2015 pages. Those
-page labels are discovery metadata, not proof that either 2015 page is complete or
-that every dated claim is accurate.
+four year-labelled pages for 2016–2019 and two separately titled 2015 pages. One is a
+[public Substack video post](https://hidinginmyroom.substack.com/p/2015-oct-05-riding-the-heathrow-pod)
+with post ID `199163716`. Its public metadata names upload
+`20151005-riding the Heathrow pod network the future is here !-woEdz1DmhPg.mp4`,
+reports a 489.34-second video and 50,748,841-byte primary upload, and exposes an
+extracted-audio endpoint plus machine captions. The filename, byte-count report, and
+duration are strong match-candidate evidence for the already catalogued Archive.org
+MP4 with the same terminal YouTube ID and byte count, but byte identity is not asserted
+without hashing the served Substack media. This post is a new mirror-source locator,
+not a newly discovered underlying recording.
+
+The other five posts embed versioned Datawrapper tables:
+[`ymT0s/3`](https://datawrapper.dwcdn.net/ymT0s/3/),
+[`F9ksK/1`](https://datawrapper.dwcdn.net/F9ksK/1/),
+[`VEIPi/1`](https://datawrapper.dwcdn.net/VEIPi/1/),
+[`Ut256/3`](https://datawrapper.dwcdn.net/Ut256/3/), and
+[`5IBIm/2`](https://datawrapper.dwcdn.net/5IBIm/2/). Their underlying CSVs contained
+32, 118, 215, 139, and 361 rows respectively: **865 Archive.org links in total**.
+Every one of those exact URLs was already present as a canonical or historical URL in
+the private source catalogue, so this correction revealed no new raw-video locator.
+The tables' NotebookLM-labelled `TL;DR` text remains unreviewed secondary material;
+it is useful for topic routing but cannot support an event or quotation until the
+linked raw video is checked. The page labels likewise do not prove that either 2015
+page is complete or that every date or summary is accurate.
 
 A sealed, credential-free flat-list capture of the three YouTube leads above retained
 **267 occurrences representing 267 distinct stable video IDs**: 25 from HIMR Database,
 200 from the mixed playlist, and 42 from Tomo L. There were no repeated IDs among
 those three lists. Twenty-two IDs already existed in the private catalogue, leaving
-245 candidate sources for a later reviewed import. Exactly 152 playlist entries
-exposed a stable ID but no title, duration, view count, or uploader metadata; those
-fields remain null rather than being inferred from thumbnails or the playlist warning.
-No media was downloaded, and the inventory itself authorizes neither acquisition nor
-publication.
+245 new discovery-only source candidates. Those candidates have now been admitted to
+the private catalogue with the original inventory provenance; the other 22 were
+deduplicated by stable ID. Exactly 152 playlist entries exposed a stable ID but no
+title, duration, view count, or uploader metadata; those fields remain null rather
+than being inferred from thumbnails or the playlist warning. The intake downloaded
+no media and created no identity, relationship, content-review, or publication
+decision.
 
 ## Reddit archive search
 

@@ -11,9 +11,9 @@ import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 
 <VerificationBadge
-  reviewedAt="27 August 2026"
+  reviewedAt="28 August 2026"
   status="source-matched"
-  note="YouTube and Kick metadata was reconciled on 2026-08-25, with a signed-out YouTube inventory refresh on 2026-08-27. Bounded public-stream platform passages have two-model machine-speech agreement but no supporting notices; the evidence does not establish a ban, restriction cause, rename date, or every remembered secondary channel."
+  note="YouTube and Kick metadata was reconciled on 2026-08-25, with a signed-out YouTube inventory refresh on 2026-08-27. The July 17 platform passage has a direct bounded public-source small.en pass, and the July 19 social-account passages have direct two-model machine agreement but no supporting notices; the evidence does not establish a ban, restriction cause, rename date, or every remembered secondary channel."
 />
 
 This page follows **stable platform IDs before display names**. Handles, titles,
@@ -168,6 +168,136 @@ sanction or removal.
   href="https://www.youtube.com/watch?v=gPhrE99xwqI"
   locator="Provisional post-live metadata: 2026-08-26T19:27:38Z and 13,300 seconds; finalized release timestamp: 2026-08-26T19:39:29Z; archive upload date: 2026-08-27; retained probes: 13,319.833 and 13,329.903 seconds"
   evidence="Stable video ID, title label, live/release time, later archive-upload date, channel placement, public playability and disclosed finalisation drift; later content sampling supplies no platform notice"
+  reviewState="source-matched"
+/>
+
+### Two July listings no longer exposed on the public channel grid
+
+Public metadata indexes recover two earlier 2026 video IDs that were absent from the
+August 25 and August 27 signed-out channel grids. Find YouTube Video's Filmot result
+maps both IDs to the present main-channel stable ID
+`UC_yIF-9jOge6nNA0z-ScrBQ`:
+
+| Indexed date label | Video ID        | Indexed title label                 | Public archive duration |
+| ------------------ | --------------- | ----------------------------------- | ----------------------: |
+| 2026-07-17         | `-tqBDUcWYzk`    | _Hiding in my room is live_         |             10,547.04 s |
+| 2026-07-19         | `uI1kiEZgxio`    | _Hiding in my room is live!_        |              6,550.50 s |
+
+The date fields are **index/archive labels**, not independently established stream
+start times. Internet Archive item metadata preserves correspondingly named original
+files, but its item-level channel subjects do not assign every file to a channel.
+The stable-ID bridge comes from the separate Filmot metadata record.
+
+Speaker labels in the machine summaries follow that stable-channel source context
+and a sparse public-source review: one midpoint frame from each of the fourteen cited
+claim windows showed one visually consistent solo presenter and no visible guest.
+This is **not** face or voice recognition, a legal-identity decision, or proof that no
+off-camera or unsampled speaker appears elsewhere in either stream.
+
+An exploratory direct bounded machine-speech pass over the provider-hash-verified
+public `-tqBDUcWYzk` archive source
+also renders the speaker at approximately **00:16:37–00:16:45** answering that this
+was not a new channel, but the same channel. Nobody directly heard that passage in
+this review, so it is only a corroborating self-report lead. The Filmot stable-ID
+record—not the machine wording—is the basis for the channel mapping above.
+
+<SourceCitation
+  sourceId="2026-07-17--tqBDUcWYzk-same-channel-machine-lead"
+  claimId="HIMR-PLATFORMS-0035"
+  title="Hiding in my room is live — same-channel machine lead"
+  href="https://archive.org/download/699994/20260717-Hiding%20in%20my%20room%20is%20live--tqBDUcWYzk.mp4"
+  locator="Direct bounded public-source offline ASR at approximately 00:16:37–00:16:45"
+  evidence="Unverified machine rendering of a same-channel self-report; no direct listening and not the stable-ID identity key"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="28 August 2026"
+/>
+
+The July 19 ID also has a contemporaneous community bridge: a retained r/HIMRFAM
+Atom entry published at **2026-07-19T07:47:49Z** links directly to
+`youtube.com/live/uI1kiEZgxio`. A second entry eight minutes later calls it the
+“first live stream since he is back.” That phrase remains community wording; it
+does not establish when the stream started, whether another stream occurred first,
+or what “back” meant. At the August 27 review, the official watch page called
+`uI1kiEZgxio` **Private video**, while `-tqBDUcWYzk` returned **This video is
+unavailable**. Neither current result reveals why its listing disappeared.
+
+Four short public Reddit videos posted after the July 19 link were also compared
+directly against the two provider-hash-verified public archive files. Public-source
+machine-text anchors and raw Chromaprint comparison place three in `-tqBDUcWYzk` and
+one in `uI1kiEZgxio`:
+
+| Reddit post | Public clip ID       | Matched source   | Approximate raw anchor | Whole-window similarity |
+| ----------- | -------------------- | ---------------- | ---------------------: | ----------------------: |
+| [`1v0l36c`](https://www.reddit.com/r/HIMRFAM/comments/1v0l36c/) | `kwy3e4uunudh1` | `-tqBDUcWYzk` | 00:03:11 | 0.602 |
+| [`1v0ksph`](https://www.reddit.com/r/HIMRFAM/comments/1v0ksph/) | `692clab6rudh1` | `-tqBDUcWYzk` | 00:08:03 | 0.633 |
+| [`1v0ljeh`](https://www.reddit.com/r/HIMRFAM/comments/1v0ljeh/) | `l1zfr6k7tudh1` | `-tqBDUcWYzk` | 00:12:04 | 0.928 |
+| [`1v0lkpm`](https://www.reddit.com/r/HIMRFAM/comments/1v0lkpm/) | `jg3b2ifef3eh1` | `uI1kiEZgxio` | 00:19:11 | 0.723 |
+
+The copies include edits, so the raw anchors—not end-to-end timing—are the useful
+result. This mapping establishes where those public excerpts came from; it does not
+adopt their user-written post titles or prove the alleged July 18 date.
+
+<SourceCitation
+  sourceId="reddit-july-2026-public-clip-source-mapping"
+  claimId="HIMR-PLATFORMS-0036"
+  title="r/HIMRFAM July 19 public clips — source reconciliation"
+  href="https://www.reddit.com/r/HIMRFAM/new/.rss?limit=100"
+  locator="Retained Atom posts 1v0l36c, 1v0ksph, 1v0ljeh, and 1v0lkpm; raw-source anchors approximately 00:03:11, 00:08:03, 00:12:04, and 00:19:11"
+  evidence="Public clip/direct provider-raw Chromaprint comparison plus public-source machine-text anchors; edited-copy caveat retained"
+  checked={false}
+  reviewState="source-matched"
+  reviewedAt="28 August 2026"
+/>
+
+The July 19-labelled raw source also supplies a bounded social-account snapshot.
+Direct bounded **Whisper small.en** and **Whisper base.en** public-source passes materially
+agree in rendering Daniel:
+
+- around **00:07:15–00:07:34**, considering bringing social accounts back or making
+  a new Instagram;
+- around **00:40:36–00:40:44**, answering a Discord question by saying he had deleted
+  something he called his and describing a spin-off server to which people had
+  moved; and
+- around **00:43:51–00:44:01**, answering an Instagram question by saying that he did
+  not have one.
+
+These are time-bounded, machine-only self-reports. The preceding viewer question is
+not proof that every social account had been deleted. The ambiguous possessive
+reference is not expanded into a Discord account or server, and “spin-off” does not
+establish ownership, control, membership, a complete migration, or continuity with
+either Discord invitation linked from the homepage. The Instagram statements do not
+prove deletion, a rename, continuous control, or the absence of private accounts.
+
+<SourceCitation
+  sourceId="internet-archive-699994-uI1kiEZgxio-socials-asr"
+  claimId="HIMR-PLATFORMS-0037"
+  title="Hiding in my room is live! — July 19-labelled social-account leads"
+  href="https://archive.org/download/699994/20260719-Hiding%20in%20my%20room%20is%20live%21-uI1kiEZgxio.webm"
+  locator="Archive filename/search label 2026-07-19; direct bounded public-source two-model material agreement at approximately 00:07:15–00:07:34, 00:40:36–00:40:44 and 00:43:51–00:44:01"
+  evidence="Daniel's unverified machine-rendered new-Instagram contemplation, time-bounded no-Instagram answer, and ambiguous deleted-mine/spin-off-Discord account; no platform history or present server continuity independently established"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="28 August 2026"
+/>
+
+<SourceCitation
+  sourceId="findyoutubevideo-filmot--tqBDUcWYzk"
+  claimId="HIMR-PLATFORMS-0030"
+  title="Find YouTube Video metadata result — -tqBDUcWYzk"
+  href="https://findyoutubevideo.thetechrobo.ca/api/v5/youtube/-tqBDUcWYzk?includeRaw=true"
+  locator="Filmot metadata: upload-date label 2026-07-17; title Hiding in my room is live; channel ID UC_yIF-9jOge6nNA0z-ScrBQ; checked 2026-08-27"
+  evidence="Third-party metadata bridge to the stable main-channel ID; date/title fields are labels, not an independently verified stream start"
+  reviewState="source-matched"
+/>
+
+<SourceCitation
+  sourceId="findyoutubevideo-filmot-uI1kiEZgxio"
+  claimId="HIMR-PLATFORMS-0031"
+  title="Find YouTube Video metadata result — uI1kiEZgxio"
+  href="https://findyoutubevideo.thetechrobo.ca/api/v5/youtube/uI1kiEZgxio?includeRaw=true"
+  locator="Filmot metadata: upload-date label 2026-07-19; duration 6,551 seconds; title Hiding in my room is live!; channel ID UC_yIF-9jOge6nNA0z-ScrBQ; checked 2026-08-27"
+  evidence="Third-party metadata bridge corroborated by a contemporaneous Reddit outbound link and 6,550.50-second Internet Archive file metadata"
   reviewState="source-matched"
 />
 
@@ -438,6 +568,75 @@ that the current Kick channel ID later accumulated clip records.
 
 ## Rebrands and remembered secondary channels
 
+### Supplied historical IDs and the former Instagram handle
+
+The newly supplied stable channel ID
+[`UCDKvKA8Ew6gzPOoYOGMWdTg`](https://www.youtube.com/channel/UCDKvKA8Ew6gzPOoYOGMWdTg)
+now produces YouTube's official error **This channel does not exist**, and its
+official Atom endpoint returns HTTP 404. A retained [December 9, 2025 community
+post](https://www.reddit.com/r/HIMRFAM/comments/1pia2ob/) directly labels that ID
+**Drawing In My Room**, with the aliases “lord of gaming” and “abroad in thailand,”
+and calls it deleted. That is a useful historical-name lead, not an authenticated
+ownership record or evidence of who removed it, when, or why. No first-party
+historical page capture tying this stable ID to Daniel was located in the no-auth
+review.
+
+<SourceCitation
+  sourceId="youtube-channel-UCDKvKA8Ew6gzPOoYOGMWdTg-2026-08-27"
+  claimId="HIMR-PLATFORMS-0032"
+  title="Supplied historical YouTube stable ID"
+  href="https://www.youtube.com/channel/UCDKvKA8Ew6gzPOoYOGMWdTg"
+  locator="Official channel response: This channel does not exist; official Atom endpoint HTTP 404; checked 2026-08-27"
+  evidence="Current platform state only; retained Reddit post 1pia2ob supplies the historical names as community attribution"
+  reviewState="source-matched"
+>
+  The current error is consistent with an unavailable endpoint, but it does not by
+  itself prove deletion, ownership, deletion date, or cause.
+</SourceCitation>
+
+There is a stronger, though still third-party, account-description bridge for the
+former Instagram handle
+[`@rabbitsatemyfamily`](https://www.instagram.com/rabbitsatemyfamily/). A live
+third-party Callmart directory/copy links to the main YouTube stable ID
+`UC_yIF-9jOge6nNA0z-ScrBQ/about`, labels its text as coming from that channel's
+About page, and reproduces a channel description containing the exact Instagram
+URL. Its own `og:updated_time` page field is **2019-05-20T00:55:54Z**; that is not
+evidence of when the description was captured. At the August 27 review,
+Instagram's public profile-data endpoint returned HTTP 200 with `{"status":"ok"}`
+but no profile object for that username. That current result means only that no
+public profile record was returned; it does not prove deletion, availability for
+reuse, or continuous control of the handle.
+
+<SourceCitation
+  sourceId="callmart-y6541-main-channel-description"
+  claimId="HIMR-PLATFORMS-0033"
+  title="hiding in my room — third-party channel-description copy"
+  href="https://callmart.app/youtuber/y6541"
+  locator="Page links UC_yIF-9jOge6nNA0z-ScrBQ/about; description marked as from the YouTube About page; exact rabbitsatemyfamily URL; og:updated_time page field 2019-05-20T00:55:54Z, not treated as capture time"
+  evidence="Live third-party directory/copy of main-channel description text; its og:updated_time is not treated as capture time; current Instagram lookup returned no public profile record"
+  reviewState="source-matched"
+/>
+
+A separate historical stable ID,
+[`UCtjRF3IINokbvJTz6XqPgWg`](https://www.youtube.com/channel/UCtjRF3IINokbvJTz6XqPgWg),
+currently produces YouTube's **This channel is not available** error. Public Filmot
+metadata identifies _Drawing my sad life_ (`pu-xHnP_mwQ`) as a 2019 upload on the
+main stable channel, and a same-title Rutube copy reproduces its outbound-link block,
+including `@rabbitsatemyfamily` and the full `UCtj…` URL under **SECOND CHANNEL**.
+Because the full description survives on a third-party copy rather than a captured
+first-party watch page, this is retained as a historical second-channel lead, not a
+claim of continuous ownership. It is not merged with `UCDKv…`.
+
+<SourceCitation
+  sourceId="drawing-my-sad-life-rutube-copied-description"
+  claimId="HIMR-PLATFORMS-0034"
+  title="Drawing my sad life — copied historical description"
+  href="https://rutube.ru/video/fa43e2d14790fe081967a13eb6cfa4e3/"
+  locator="Same title and outbound-link block as pu-xHnP_mwQ; full Instagram URL and UCtjRF3IINokbvJTz6XqPgWg listed under SECOND CHANNEL; checked 2026-08-27"
+  evidence="Third-party copied-description bridge, cross-checked against Filmot metadata for the original video ID and main-channel ID"
+  reviewState="unverified-research-lead"
+/>
+
 ### Expert Zone Reviews: the main channel under an older label
 
 The strongest name bridge is based on YouTube's stable ID, not a similar-looking
@@ -565,6 +764,12 @@ deletion, or continuous absence.
   the first response's continuation cursor.
 - A stable channel ID or official historical capture for Expert Analysis Reviews;
   no evidence currently joins it to Expert Zone Reviews or Cooking with Daniel.
+- A first-party historical ownership bridge for `UCDKvKA8Ew6gzPOoYOGMWdTg`,
+  including when or why its current non-existent state began.
+- A first-party historical page preserving the `UCtjRF3IINokbvJTz6XqPgWg`
+  second-channel description, and any rename or availability history for that ID.
+- Whether `@rabbitsatemyfamily` was deleted, renamed, or released, and when its
+  present no-public-profile result began.
 
 The current channel is mutable evidence. Future reviews should retain this dated
 snapshot and record additions, removals, access changes, and title changes as new
