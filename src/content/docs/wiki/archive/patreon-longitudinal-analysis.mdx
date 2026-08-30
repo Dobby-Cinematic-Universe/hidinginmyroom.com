@@ -1,0 +1,410 @@
+---
+title: Patreon Longitudinal Analysis
+description: A post-body analysis of Daniel's 2016–2022 Patreon, including its character-role and event maps, creator strategy, corrections, and evidentiary limits.
+sidebar:
+  order: 4.5
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+
+<VerificationBadge
+  status="source-matched"
+  reviewedAt="29 August 2026"
+  note="All 136 retained Patreon records were audited and all 135 available bodies were re-read. The analysis uses paraphrases of access-controlled writing, separates post time from event time, and does not publish locked images, embeds, executables, private names, or identifying locations."
+/>
+
+This page asks a different question from the [Patreon Source
+Catalogue](/wiki/archive/patreon-source-catalog/). The catalogue answers **what records
+exist and where they route**. This analysis asks **how Daniel used Patreon over time,
+what patterns recur across posts, and where his own writing corrects or complicates
+the public-video record**.
+
+Access labels follow the catalogue: **P** means the complete body was visible signed
+out on the review date, **L** means only public metadata was visible and any body
+reading comes from the private preservation copy, and **A** means the body is absent.
+
+<Aside type="danger" title="A creator-written corpus is not independent corroboration">
+  The retained bodies establish what Daniel wrote. Repetition across his posts does
+  not turn a claim into a verified event, authenticate another person's words, prove
+  platform action, or validate his audience and income figures. Private names,
+  intimate third-party detail, medical detail, addresses, and locked media remain
+  excluded even when they occur in the preservation copy.
+</Aside>
+
+## Corpus shape and edit-state caveat
+
+The preservation set contains **136 exact post-ID matches** against the public
+Patreon sitemap. It retains 135 full-body records; post `23468829` retains its title,
+metadata, and a short teaser but no full body. After HTML tags and repeated whitespace
+are normalized, **122 records contain non-empty author-written body text**, totalling
+approximately **32,591 words**. The other full-body records are mostly image, link, or
+embed entries whose body field is empty or extremely short; “full-body record” does
+not mean “long essay.” Teaser text is not included in the body-word count.
+
+| Publication year | Posts | Non-empty normalized bodies | Approximate normalized body words |
+| --- | ---: | ---: | ---: |
+| 2016 | 8 | 8 | 660 |
+| 2017 | 51 | 39 | 5,247 |
+| 2018 | 46 | 45 | 17,090 |
+| 2019 | 25 | 24 | 7,488 |
+| 2020 | 2 | 2 | 553 |
+| 2021 | 0 | 0 | 0 |
+| 2022 | 4 | 4 | 1,553 |
+| **Total** | **136** | **122** | **32,591** |
+
+These word counts are reproducibility aids, not measures of importance. A short image
+caption may supply a useful date or role, while a long diary entry may remain entirely
+one-sided.
+
+The format mix makes the editorial turn visible:
+
+| Year | Image | Text | Link | Video embed |
+| --- | ---: | ---: | ---: | ---: |
+| 2016 | 7 | 0 | 0 | 1 |
+| 2017 | 32 | 7 | 12 | 0 |
+| 2018 | 2 | 44 | 0 | 0 |
+| 2019 | 1 | 15 | 5 | 4 |
+| 2020 | 0 | 1 | 1 | 0 |
+| 2021 | 0 | 0 | 0 | 0 |
+| 2022 | 0 | 3 | 0 | 1 |
+
+Thus the 2017 “scrapbook” description is not just thematic: 32 of that year's 51
+records carry Patreon's image-post type. In 2018, 44 of 46 are text posts, matching
+the shift toward diary-like relationship, platform, travel, and creator-strategy
+updates. Publication was also bursty: 44 of the 51 posts in 2017 arrived between
+April and August, while 36 of the 46 posts in 2018 arrived from January through June.
+These are publication patterns, not evidence that the underlying life events were
+equally concentrated.
+
+The metadata also records **31 posts with a `last_edited_at` value later than
+`published_at`**. Most edits were close to publication, but several were much later:
+the October 2, 2016 drawing-timelapse post shows an edit roughly 108 days later; six
+April–May 2017 records were edited again around May 8; and the December 27, 2017
+relationship/income post was edited about 25 days later. The preservation copy
+contains the later retained body, not a version-by-version diff. It must not be
+treated as proof of the exact wording visible on publication day.
+
+<SourceCitation
+  sourceId="patreon-retained-corpus-longitudinal-audit-2026-08-29"
+  claimId="HIMR-PATREON-0001"
+  title="Daniel's Patreon — retained corpus and public-ID reconciliation"
+  href="https://www.patreon.com/Hidinginmyroom"
+  locator="136 retained records reconciled to 136 public sitemap IDs; publication, edit, type, and normalized-body audit completed 2026-08-29"
+  evidence="Corpus shape, retained edit metadata, and text-preservation coverage only; no post claim, original publication wording, access licence, or attachment truth established"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Patreon changed function several times
+
+The record is not one continuous diary. It has distinct editorial phases:
+
+| Phase | Anchor records | What Daniel used Patreon for |
+| --- | --- | --- |
+| October 2016: webcomic launch | [`6905765`](https://www.patreon.com/Hidinginmyroom/posts/drawing-6905765) **L**; [`6926651`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-1-6926651) **P** | Drawing-process videos, finished comic pages, author notes, and a paid/no-ad route alongside the public ComicFury copy. The comic mixed fictional characters with claimed night-shift inspiration. |
+| April–August 2017: retrospective scrapbook | [`9315679`](https://www.patreon.com/Hidinginmyroom/posts/2014-ex-japanese-9315679) **L** through [`14033039`](https://www.patreon.com/Hidinginmyroom/posts/feeding-her-14033039) **L** | Old travel, relationship, family, and artwork posts. On June 26 Daniel explicitly described redirecting the campaign toward artwork, with public low-resolution viewing and paid high-resolution/process material. |
+| September–December 2017: platform fallback and private diary | [`14408113`](https://www.patreon.com/Hidinginmyroom/posts/twitch-14408113) **P**; [`14922710`](https://www.patreon.com/Hidinginmyroom/posts/thanks-14922710) **P**; [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865) **L**; [`16077206`](https://www.patreon.com/Hidinginmyroom/posts/recent-thoughts-16077206) **L** | Twitch routing, planned paid dating blogs, livestream links, creator-income anxiety, and relationship thoughts Daniel said he did not want to put in a public video. |
+| 2018: sustained backchannel | [`16155970`](https://www.patreon.com/Hidinginmyroom/posts/im-fucking-idiot-16155970) **L** through [`23383037`](https://www.patreon.com/Hidinginmyroom/posts/lengths-people-23383037) **L** | Long relationship and platform updates, claimed channel analytics, travel planning, archived-stream rewards, and increasingly explicit concern that private material might reach his partner or critics. |
+| 2019: bereavement, stream archive, and channel reassessment | [`24041648`](https://www.patreon.com/Hidinginmyroom/posts/bad-news-24041648) **L** through [`31054106`](https://www.patreon.com/Hidinginmyroom/posts/bonus-footage-i-31054106) **L** | Family-loss writing, retrospective videos, Patreon-only stream access, creator-led deletion and recovery, and extended concern about channel decline. Sensitive family material remains summarized only at role level. |
+| 2020: sparse check-ins | [`33579818`](https://www.patreon.com/Hidinginmyroom/posts/limited-budget-33579818) **L**; [`36935788`](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788) **L** | One external challenge link and one long travel/relationship/channel update. There are no retained 2021 post IDs. |
+| January 2022: game-development reboot | [`60626337`](https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337) **P** through [`61583236`](https://www.patreon.com/Hidinginmyroom/posts/version-1-6-big-61583236) **L** | Daniel explicitly called this a Patreon reboot and used it for a GameMaker-based HIMR game, version notes, executable attachments, and a game-focused reward tier. No executable was run for this analysis. |
+
+The phase boundaries describe publication patterns. They do not prove that Daniel
+stopped drawing, dating, travelling, streaming, or developing software between posts.
+
+<SourceCitation
+  sourceId="patreon-editorial-phase-sequence-2016-2022"
+  claimId="HIMR-PATREON-0002"
+  title="Patreon editorial phase sequence"
+  href="https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337"
+  locator="Retained posts 6905765–61583236; 2016-10-02 through 2022-01-24 UTC; access states and complete inventory in the Patreon Source Catalogue"
+  evidence="Longitudinal change in post subjects and Daniel's two creator-written campaign-reboot statements only; no continuous life chronology or unposted-activity inference"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Character and event map at a glance
+
+The Patreon corpus adds many labels that are easy to miss in a video-title index.
+They are best treated as **role clusters**, not a count of unique people: one person
+may receive several labels, one generic label may refer to several people, and one
+post may mention multiple distinct roles. The [source catalogue's thematic
+map](/wiki/archive/patreon-source-catalog/#thematic-event-and-character-routing-map)
+retains every exact post route.
+
+### People, public figures, and fictional roles
+
+| Group | Roles present in the Patreon writing | Canonical route and boundary |
+| --- | --- | --- |
+| Earlier partners and social circles | A 2011–2014 guesthouse/near-marriage Japanese-former-partner cluster; a separate first in-person Japanese-girlfriend role; a withheld-name online first-girlfriend role; Korean and French former-girlfriend roles; a separate Korean man; a Taiwanese crush and social groups; and a single-mother former-girlfriend role. | [Retrospective partner and social-role map](/wiki/events/relationship-dramas/#patreon-retrospectives-earlier-partner-and-social-roles). These are Daniel's labels and recollections, not participant identities or verified relationships. |
+| 2017–2020 relationship and encounter roles | Tomoko callback, Iranian Girl, Kyoto Girl, generic girlfriend/wife, Australian Guy, an explicitly separate partly invented “Australian catfish” persona, an unnamed Japanese man Daniel labels bisexual, unnamed October meetings, German/Turkish/English travel contacts, an anonymous stranger, and Mila. | [Relationships & Dating](/wiki/events/relationship-dramas/), [Short-Term Encounters](/wiki/events/short-term-encounters/#what-the-retained-patreon-writing-adds), the [Japanese-man received-act source cluster](/wiki/events/short-term-encounters/#japanese-man-bisexual-guy-label-and-the-received-act-connection), [Australian Guy](/wiki/characters/australian-guy/), [Turkish Girl](/wiki/characters/turkish-girl/), and [Mila](/wiki/characters/mila/). “Bisexual” is Daniel's description, not an orientation finding. Plans, non-meetings, aggregate statements, and continuing relationships remain distinct. |
+| Creators, commentators, and guests | That Japanese Man Yuta, Tkyosam, David Bond, TerryTV, Gentleman Reviews, Chris Broad, Joey / The Anime Man, Elvis The Alien, Sam, and an unnamed friend. | [Creators & Guests](/wiki/characters/friends-and-guests/#patreon-creator-comment-claims-yuta-and-tkyosam). Most are Daniel-reported comments, contact, comparisons, or proposed meetings—not collaborations or authenticated responses. |
+| Family and animals | Father, mother, sister, cousins and other extended-family roles; Toffee and unnamed cats. | [Father](/wiki/characters/father/#patreon-crisis-to-funeral-sequence), [Daniel's Mother](/wiki/characters/daniels-mother/#patreon-family-trip-role-continuity), [Sabrina / Sister](/wiki/characters/sabrina/#patreon-family-trip-role-continuity), and [Pets & Aquariums](/wiki/characters/pets-and-aquariums/). Private family histories and generic cat references are not merged into biographies. |
+| Artwork and webcomic cast | The male boss and three young women in _Another Boring Night Shift_; cave girl and guardian giant; Ice Cream Girl; bird-town girl and bird people; cave figure, ogre, girl and small figures; and World of Warcraft character Typhus. | [Fictional, artwork, and game characters](/wiki/archive/patreon-source-catalog/#fictional-artwork-and-game-characters). These are fictionalized or artwork roles, even where Daniel says a workplace inspired the comic. |
+| HIMR game cast | Daniel as player avatar, a companion, enemies, quest givers, petrol-station customers, and “Baby Daniels.” | [Version 1.6 game-project epilogue](/wiki/eras/kent-maidstone-era/#epilogue-the-2022-himr-game-project). Patch-note claims and the supplied screenshot do not prove every mechanic functioned. |
+
+First-name-only supporters, advisers, school contacts, and other low-context private
+people remain withheld. Their inclusion would add identifying detail without making
+the public HIMR history clearer.
+
+### Event arcs beyond short-term encounters
+
+| Source/publication window | Event arc found in Patreon | What it does—and does not—establish |
+| --- | --- | --- |
+| 2016–2017 | Webcomic launch, night-shift inspiration, drawing/process rewards, artwork reset, and a Patreon recollection developed into a World of Warcraft video concept. | Creator process and publication strategy; not proof of the fictionalized workplace incidents or benefit delivery. |
+| Retrospective 2010–2014, published in 2017 | Early Osaka and South Korea stays, family/social outings, a 2011 guesthouse recollection, a 2014 cohabitation/near-marriage cluster, and separate 2012/2014 Korea labels. | Daniel's retrospective chronology; not travel, lease, immigration, relationship, or photograph-date records. |
+| Published May–July 2017; reposted March 2019; encounter date unknown | Two locked captions claim that an unnamed Japanese man Daniel describes as bisexual performed oral sex on him. A 2019 post directly links a 2017 video preserved under both a general “Gay Experience” title and an explicit received-act title, while saying Daniel wondered what would have happened had he said yes to sex with the man. | The 2017 video and 2019 repost are one exact source narrative; the recurring captioned role is a contextual connection, not an authenticated-person or every-record event merge. The records do not verify the act, explain the counterfactual, establish consent circumstances, establish either person's orientation, identify the man, or date an encounter. The same-day `CbfZ3sEywC4` embed remains only a possible companion. |
+| September 2017–2019 | Twitch fallback, Patreon-only livestream and dating-blog plans, demonetization/strike accounts, the suspicious-login scare followed by Daniel's Streamlabs correction, creator-led deletions, and paid stream archives. | Platform and creator-strategy claims. Platform action and hacking are not independently established. |
+| January–December 2018 | Generic-partner diary, marriage/reconciliation labels, Malaysia planning and travel claims, a park interval, hotel-to-hotel lodging, preparation of a new place, and monitoring/doxxing/redistribution allegations. | A dated Daniel-authored sequence. It establishes no legal status, participant conduct, address, tenancy, monitoring, leak, or doxxing event. |
+| August–December 2018 | Chris Broad contact and possible-meeting account, Daniel-reported October nonmeeting, and a later school-themed record whose body is absent. | A proposed meeting and Daniel's later nonmeeting report—not a verified contact, meeting, rejection, or motive. |
+| January–March 2019 | Daniel's father crisis-to-funeral account, including approximate death- and funeral-date leads. | A near-contemporaneous first-party sequence with sensitive details minimized; no civil, medical, passenger, or service record. |
+| April 2019–May 2020 | Germany/Turkish/English travel reassessment, Patreon stream-access rewards, creator-performance anxiety, Sam outing, a Korea-to-England return account, and the Mila transition during the pandemic. | Daniel's travel, guest, relationship, and channel account; not independent event, border, legal-status, or participant corroboration. |
+| January 2022 | GameMaker reboot and versions 1.0, 1.1, and 1.6, with controls, combat/economy, companion, quest, save/load, computer, petrol-station, and planned dream/house systems. | Daniel's patch notes plus one contributor-supplied Version 1.6 screenshot; no executable was run and feature operation remains unverified. |
+
+These rows organize the record; they do not turn publication order into a continuous
+life chronology. Exact posts, P/L/A states, and post-level caveats remain in the
+[Patreon Source Catalogue](/wiki/archive/patreon-source-catalog/).
+
+## Creative-project archaeology
+
+The earliest bodies document a small creator funnel rather than a simple paid image
+feed. On October 2, 2016, Daniel proposed posting drawing-process videos publicly and
+finished webcomic pages on Patreon. Two days later, the first _Another Boring Night
+Shift_ page described a $2 route for later pages and a free, ad-supported ComicFury
+mirror with fewer author comments and less interaction. In June 2017 he explicitly
+reset the campaign toward artwork: public low-resolution posts, with high-resolution
+files and process videos reserved for paying patrons. These are plans and offer
+descriptions; the retained posts do not establish how consistently benefits were
+delivered or how many people used either route.
+
+The bodies also preserve a useful production bridge. On July 29, 2017, the caption to
+[_Skiing trip_](https://www.patreon.com/Hidinginmyroom/posts/skiing-trip-13478158)
+ends with two possible video ideas and says the World of Warcraft addiction story
+should come first. Four days later, the public archive dates
+[_How my World of Warcraft addiction ruined my
+life_](https://www.youtube.com/watch?v=gGNgt_WXa_4) to August 2. The sequence is
+evidence that at least one Patreon recollection became a public-video concept; it
+does not show whether the final video followed the proposed account word for word.
+
+<SourceCitation
+  sourceId="patreon-creative-project-funnel-2016-2017"
+  claimId="HIMR-PATREON-0007"
+  title="Webcomic, artwork, and public-video development sequence"
+  href="https://www.patreon.com/Hidinginmyroom/posts/skiing-trip-13478158"
+  locator="Posts 6905765, 6926651, 12132573, and 13478158; 2016-10-02 through 2017-07-29 UTC; compared with public video gGNgt_WXa_4 dated 2017-08-02T23:59:30Z"
+  evidence="Daniel's creator plans, offer descriptions, and proposed World of Warcraft video idea, plus the later public title/date; no benefit-delivery, audience, script-identity, or event-truth finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Controlled disclosure—and its failure modes
+
+Daniel repeatedly presented Patreon as a space between a fully public channel and a
+private diary:
+
+- In December 2017, he said he would previously have discussed his relationship
+  doubts in a video but did not want his girlfriend to find them.
+- In May 2018, he called Patreon the only remaining place where he could express
+  himself fully while describing tension between his marriage and the channel.
+- In June 2018, he proposed a **$3 archived-livestream reward**, yet said he would not
+  include one long stream because someone might download and repost remarks he did
+  not want his wife to hear.
+- The October 27, 2018 public title alleged that his wife was monitoring several
+  platforms and possibly Patreon. The public body supports his lodging account, not
+  the monitoring allegation.
+- In December 2018, Daniel alleged that a subreddit user had pledged specifically to
+  redistribute Patreon-only material. No alleged redistributor response or platform
+  record is in the corpus.
+
+Patreon therefore served simultaneously as **diary, paywall, backup channel, stream
+archive, and audience product**. The source itself documents Daniel's awareness that
+those roles conflicted: access control could reduce an audience, but could not
+guarantee secrecy once a patron received the material.
+
+<SourceCitation
+  sourceId="patreon-controlled-disclosure-sequence-2017-2018"
+  claimId="HIMR-PATREON-0003"
+  title="Patreon controlled-disclosure sequence"
+  href="https://www.patreon.com/Hidinginmyroom/posts/recent-thoughts-16077206"
+  locator="Posts 16077206, 18935501, 19766907, 22324322, and 23383037; 2017-12-27 through 2018-12-17 UTC; all access L except public-body post 22324322"
+  evidence="Daniel's changing private-expression, partner-discovery, paid-archive, monitoring, and alleged-redistribution accounts; no partner, patron, Reddit, leak, or platform response verified"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="Monitoring and redistribution are Daniel's allegations. The sequence documents his publication choices and fears, not another person's conduct."
+  reviewedAt="29 August 2026"
+/>
+
+## Performance, partial invention, and per-record truth status
+
+The bodies provide unusually direct evidence that HIMR mixed autobiography with
+performance. They do **not** justify calling the entire channel fictional:
+
+- A January 3, 2018 post about an old skit says Daniel was influenced by acted sketch
+  channels and still sometimes used a little acting to make videos more interesting.
+- On January 21, Daniel says a named **“Australian catfish”** story had been made up
+  for views but was “half true.” The exact mixture is not resolved. That story persona
+  remains separate from the [Australian Guy](/wiki/characters/australian-guy/), whom
+  other Patreon posts present as an unnamed man in Daniel's account. Those later
+  Patreon repetitions are all Daniel's writing and do not independently corroborate
+  the narrative.
+- On February 1, Daniel describes _Why I hate living in Japan_ as beginning from
+  genuine complaints and becoming increasingly absurd or sarcastic during filming.
+  This supports mixed framing for that video, not a finding about Japan or every rant.
+- In April, while worrying that relationship stability would reduce views, Daniel
+  says he could invent another argument but did not intend to fabricate one or provoke
+  his wife for content.
+- In February 2019, he says he made a relationship-labelled livestream private after
+  viewers criticized the title as clickbait.
+
+The reliable editorial rule is **claim by claim**: a creator admission can qualify a
+specific story or production method, but it cannot retroactively mark every event as
+staged—or make an admitted “half true” story factual.
+
+<SourceCitation
+  sourceId="patreon-performance-and-invention-sequence-2018-2019"
+  claimId="HIMR-PATREON-0004"
+  title="Patreon performance, partial-invention, and clickbait self-accounts"
+  href="https://www.patreon.com/Hidinginmyroom/posts/well-that-just-16524132"
+  locator="Posts 16199311, 16524132, 16730782, 18154223, and 24678880; 2018-01-03 through 2019-02-13 UTC; access L"
+  evidence="Daniel's access-controlled self-accounts of occasional acting, a partly invented story, mixed serious/sarcastic framing, refusal to invent a later argument, and a privatized clickbait-labelled stream; no global fiction or authenticity finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## The audience–drama–income feedback loop
+
+Across 2017–2020, Daniel repeatedly interpreted channel metrics through the amount of
+relationship, travel, sexual, or conflict material available. The figures below are
+his unaudited snapshots; apparent consistency is not independent corroboration.
+
+| Post | Daniel's claimed snapshot | What he inferred at the time |
+| --- | --- | --- |
+| [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865), 2017-11-13 **L** | About **$20** advertising revenue per video at a peak; monthly estimate first **$537**, then **$539** before a claimed fall to **$370**; remembered livestream peaks of 130 on YouTube and 72 on Twitch versus roughly 40 later. | Demonetization delays, repetition, fewer donations, and audience fatigue threatened his hoped-for exit from retail work. The two near-identical monthly peak figures are preserved as an internal discrepancy, not normalized. |
+| [`16730782`](https://www.patreon.com/Hidinginmyroom/posts/this-is-amazing-16730782) and [`16828535`](https://www.patreon.com/Hidinginmyroom/posts/japanese-hate-16828535), 2018-02 **L** | Claimed roughly 45,000 and later 110,000 views around the Japan-rant surge. | He speculated that strong negative wording in a title drew attention. No analytics or recommendation-system record is supplied. |
+| [`18735121`](https://www.patreon.com/Hidinginmyroom/posts/age-restricted-18735121), 2018-05-11 **L** | Recent uploads below 20,000; earlier 6,000-subscriber/4,000-view performance described as enough income; claimed former peaks above 50,000. | He linked a two-month surge to one breakout video and looked for a longer-term fallback. This post also explicitly explains **cereal** as substitute sexual vocabulary. |
+| [`18935501`](https://www.patreon.com/Hidinginmyroom/posts/current-with-18935501), 2018-05-21 **L** | Said roughly 4,000 views per video would be financially sufficient. | He framed relationship stability as reducing story material and considered continuity, renewed unpredictability, or a new format. |
+| [`22978329`](https://www.patreon.com/Hidinginmyroom/posts/lets-freak-out-22978329), 2018-11-28 **L** | Claimed wife-related uploads around 20,000 and a newer upload at 7,000 after 20 hours. | He explicitly compared the anxiety with his November 2017 post and considered simultaneous Twitch/YouTube streaming after a strike expired. |
+| [`28047708`](https://www.patreon.com/Hidinginmyroom/posts/life-update-28047708), 2019-07-01 **L** | Compared reunion, relationship-title, illustrated, and ordinary uploads using figures from about 3,000 to above 70,000. | He treated sexual/relationship framing as the strongest short-term draw, while saying he preferred the craft of illustrated videos. |
+| [`29036873`](https://www.patreon.com/Hidinginmyroom/posts/complete-and-29036873), 2019-08-09 **L** | Claimed 1,200 views after three hours on a new upload and 7,000 after a day on the previous one; said he deleted the new upload. | He described a perceived choice between clickbait/drama and channel decline. The deletion and cause remain his account. |
+| [`36935788`](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788), 2020-05-09 **L** | Claimed 30,000-plus performance during a Mila-labelled period and difficulty reaching 20,000 later. | He again linked travel, a partner's appearances, and conflict with attention, while pandemic restrictions limited those formats. |
+
+This sequence is stronger evidence of **Daniel's recurring decision model** than of
+the metrics themselves: he repeatedly understood attention as volatile, associated
+drama with revenue, and evaluated relationships and formats partly through their
+content value. The Patreon record also shows him resisting that logic at times,
+including his stated refusal to manufacture a new argument.
+
+<SourceCitation
+  sourceId="patreon-audience-drama-income-feedback-loop-2017-2020"
+  claimId="HIMR-PATREON-0005"
+  title="Patreon audience, drama, and income self-account sequence"
+  href="https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865"
+  locator="Posts 15360865, 16730782, 16828535, 18735121, 18935501, 22978329, 28047708, 29036873, and 36935788; 2017-11-13 through 2020-05-09 UTC; access L"
+  evidence="Daniel's dated metrics, creator-anxiety, format-choice, and causal interpretations only; no analytics, payout, audience, partner-effect, platform-effect, or net-income verification"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Self-corrections and contradictions worth preserving
+
+| Sequence | First account | Later qualification | Publication rule |
+| --- | --- | --- | --- |
+| Suspected account compromise | Posts `16579629` and `16594859` describe Daniel's alarm over an unfamiliar login and speculate about hacking. | Post `18154223` says a new occurrence coincided with Streamlabs authorization and that Streamlabs was probably the explanation. | Record a **fear followed by Daniel's correction**, not a hacking event. |
+| “Australian catfish” story | Post `16524132` says the story was invented for views. | The same sentence calls it partly true without separating elements. | Treat the persona/story as mixed or unresolved, not wholly true or wholly fictional; do not merge it with Australian Guy. |
+| Japan-rant framing | Post `16730782` describes a serious starting complaint. | Daniel says the production became increasingly absurd or sarcastic as he continued. | Attribute the mixed framing to Daniel; do not treat either “serious” or “satire” as a complete description by itself. |
+| Start of phone-based digital art | Post `6941289` says Daniel began using a Samsung Note 3 and S Pen for digital art in 2013. | Post `12132573` dates starting digital art with the same tools to 2014. | Preserve **2013/2014** as an internal date discrepancy; do not silently choose one. |
+| Relationship labels | Posts move rapidly among girlfriend, wife, breakup, reconciliation, and separation wording. | Later posts often revise plans or describe a new status, but rarely preserve the other person's account. | Date each Daniel-used label. Never infer legal status or identify every generic partner as Chihiro. |
+| Travel planning versus travel | The 2018 Malaysia posts begin with planning and equipment choices. | A later body says Daniel was on an island and expected to return to Japan. | A coherent first-person sequence is still not passenger, border, lodging, or exact-location evidence. |
+| Game date recollection | Patreon metadata dates the public game run January 2–24, 2022. | A 2026 Discord callback casually calls it “2021 pre AI times.” | Keep the public Patreon dates; retain 2021 only as imprecise retrospective wording. |
+
+The correction pattern matters because the archive contains many emotionally written,
+near-real-time posts. A later self-correction is not automatically true either, but it
+is evidence against repeating the earlier interpretation without qualification.
+
+<SourceCitation
+  sourceId="patreon-digital-art-start-date-discrepancy"
+  claimId="HIMR-PATREON-0008"
+  title="Conflicting Samsung Note 3 digital-art recollections"
+  href="https://www.patreon.com/Hidinginmyroom/posts/ice-cream-girl-12132573"
+  locator="Posts 6941289 (published 2016-10-06) and 12132573 (published 2017-06-26); access L and P respectively"
+  evidence="Daniel's conflicting 2013 and 2014 recollections about beginning phone-based digital art only; no device-purchase or artwork-creation date independently verified"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Campaign and reward-object archaeology
+
+Retained campaign metadata places creation and publication of campaign ID `363999`
+on **May 12, 2016**, months before the earliest surviving post. The captured reward
+objects mix much older creation timestamps with later publication timestamps and
+current labels:
+
+| Captured reward label | Amount in retained metadata | Object created | Object published | Safe interpretation |
+| --- | ---: | --- | --- | --- |
+| Level 1 Daniel | $1 | 2016-11-23 | 2022-01-02 | An old reward object present in the captured campaign state. Its captured description cannot reconstruct every earlier version. |
+| Early access to my game | $3 | 2017-04-27 | 2022-01-03 | The object predates the 2022 game posts by years, so the current game label was likely applied to a reused reward object. This is an inference, not preserved tier-version history. |
+| paintings | $150 | 2017-05-08 | 2022-01-02 | The label fits the 2017 art phase, but the later publication timestamp prevents a simple continuous-availability claim. |
+| Free | $0 | 2023-10-12 | 2023-10-12 | A later campaign object outside the 2016–2022 post sequence. |
+
+The tier table is a warning against reading current labels backward. Patreon object
+IDs can persist while names, descriptions, prices, publication state, and benefits
+change. Historical posts about a “$3 reward” are therefore not silently assigned to
+the captured 2022 game tier without a dated tier snapshot.
+
+<SourceCitation
+  sourceId="patreon-campaign-reward-object-audit-2026-08-29"
+  claimId="HIMR-PATREON-0006"
+  title="Daniel's Patreon — campaign and retained reward metadata"
+  href="https://www.patreon.com/Hidinginmyroom"
+  locator="Campaign ID 363999 and four retained reward objects; metadata reviewed 2026-08-29"
+  evidence="Captured object IDs, labels, amounts, creation and publication timestamps only; no complete tier-version history, continuous availability, subscriber count, benefit delivery, or purchase finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## What the deeper pass changes elsewhere in the wiki
+
+The post-body pass supplies several canonical corrections and additions:
+
+- [Cereal Euphemism](/wiki/events/cereal-euphemism/) now treats Daniel's meaning as
+  established for two written Patreon contexts, while keeping the first spoken use
+  and all other applications contextual.
+- [Channel & Platform History](/wiki/events/channel-bans-and-platforms/) preserves the
+  suspicious-login sequence as fear followed by a Streamlabs correction and maps the
+  Patreon-to-stream-archive cycle.
+- [Creator Work & Income](/wiki/events/work-and-income-claims/) carries the broader
+  unaudited audience/revenue chronology without treating Daniel's explanations as
+  analytics.
+- [Relationships & Dating](/wiki/events/relationship-dramas/) preserves rapidly
+  changing labels, the earlier partner/social-role map, and Daniel's
+  channel-versus-partner framing without adopting his claims about another person's
+  behavior.
+- [Short-Term Encounters](/wiki/events/short-term-encounters/) now separates Daniel's
+  claimed meetings from plans, explicit non-meetings, aggregate retrospectives, and
+  longer relationship arcs; it also maps an exact Patreon-to-archive video ID without
+  treating the encounter title as proof.
+- [Australian Guy](/wiki/characters/australian-guy/) now keeps the partly invented
+  “Australian catfish” story persona separate from Daniel's later account of an
+  unnamed Australian man.
+- [Creators & Guests](/wiki/characters/friends-and-guests/) distinguishes a proposed
+  Chris Broad meeting from Daniel's later account that October passed without contact.
+- [Pets & Aquariums](/wiki/characters/pets-and-aquariums/) preserves one Toffee-named
+  context without assigning three generic cat references to Toffee or a later pet;
+  [Love Dolls](/wiki/events/love-dolls/) similarly keeps the 2018–2019 purchase
+  sequence separate from later objects.
+- [Daniel's Father](/wiki/characters/father/#patreon-crisis-to-funeral-sequence)
+  now carries the minimized January–March 2019 crisis-to-funeral sequence, while the
+  mother and sister pages retain only family-role continuity from the 2018 travel
+  posts.
+- [Community Figures](/wiki/characters/community-and-trolls/) records Daniel's 2018
+  redistribution and doxxing allegations—and his bounded general self-description—as
+  claims, without exposing the private details or identifying an alleged participant.
+- The [Japan](/wiki/eras/japan-era/), [Thailand](/wiki/eras/thailand-era/), and [game
+  project](/wiki/eras/kent-maidstone-era/#epilogue-the-2022-himr-game-project) pages
+  retain the corresponding travel and development claims with date and access limits.
+
+The complete post-by-post locator, person-role map, and **P/L/A** access key remain in
+the [Patreon Source Catalogue](/wiki/archive/patreon-source-catalog/). This page is an
+interpretive layer, not a replacement for that inventory.

@@ -1,0 +1,408 @@
+---
+title: Discord Source Map
+description: A publication-safe map of the supplied 2026 Discord exports, including a 331-file media audit and machine-transcription boundary.
+sidebar:
+  order: 5
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+
+<VerificationBadge
+  status="source-matched"
+  reviewedAt="29 August 2026"
+  note="The two supplied exports were reconciled by message ID; all 331 attachment sources resolved during review, visual media was inspected, and all 101 voice files received two offline ASR passes. This verifies source coverage and bounded visible content—not legal identity, autobiographical claims, machine-rendered speech, continuous video action, or missing participants' accounts."
+/>
+
+This page routes the HIMR-relevant material in the supplied Discord preservation set.
+It is an **account-authored source map**, not a transcript, identity finding, or
+independent chronology. After the identity section, “Daniel said” is shorthand for
+“the exported account, which later identified itself as Daniel, said.”
+
+<Aside type="danger" title="Publication and privacy boundary">
+  Message permalinks and bounded paraphrases remain the default. One independently
+  reviewed, Pushkin-captioned cat image is reproduced on the pets page under the
+  contributor's public-source representation; its metadata was stripped and no
+  signed attachment URL is exposed. No other supplied image, audio, video, profile
+  identifier, plate, home, live location, employer clue, private-party identifier,
+  file hash, or media metadata is reproduced. An attachment beside a self-identifying
+  message is merely account-presented media, not biometric evidence. Allegations and
+  boasts below establish only that the account made the claim.
+</Aside>
+
+## Coverage snapshot
+
+| Measure | Result |
+| --- | ---: |
+| Supplied exports | 2 |
+| Unique messages after ID reconciliation | 3,273 |
+| Channels represented | 5 |
+| Message-time range (UTC) | 2026-07-20 through 2026-08-29 |
+| Messages containing text | 2,943 |
+| Attachments recorded | 331 |
+| Distinct exported authors | 1 |
+
+Text and attachment counts are not mutually exclusive: a message can contain both.
+Timestamps below are Discord posting times, not proof of when a described event
+happened.
+
+### Attachment audit
+
+| Attachment kind | Files | Review treatment |
+| --- | ---: | --- |
+| JPEG | 200 | Complete images visually inspected |
+| OGG voice message | 101 | Decoded and run through separate base.en and small.en speech-recognition passes; no direct human listening available |
+| MP4 | 16 | Multi-frame sheets visually inspected; this is not continuous playback or soundtrack review |
+| GIF | 12 | First frames inspected; motion not treated as fully reviewed |
+| PNG | 1 | Complete image visually inspected |
+| WebP | 1 | Complete image visually inspected |
+| **Total** | **331** | All attachment sources resolved during the dated review |
+
+Resolution during one review does not prove long-term availability, public-channel
+status, authorship, or entitlement to mirror every file. Visual inspection found
+many faces, screens, vehicles, and location-bearing scenes that remain unpublished.
+The 101 voice messages are useful search material, but both passes are machine output:
+agreement can justify a cautious transcription lead, never a verified quotation or
+speaker identity. Selected, publication-safe transcriptions are documented below.
+
+<SourceCitation
+  sourceId="discord-attachment-corpus-audit-2026-08-29"
+  claimId="HIMR-DISCORD-0004"
+  title="Supplied Discord attachment corpus — dated audit"
+  href="https://discord.com/channels/821188728318984252"
+  locator="331 attachments across the two reconciled exports: 200 JPEG, 101 OGG, 16 MP4, 12 GIF, 1 PNG, and 1 WebP; sources resolved and bounded review completed 2026-08-29"
+  evidence="Attachment inventory, dated resolution, still/first-frame and multi-frame visual review, and dual-ASR coverage only; no universal public-access, authorship, licence, continuous-action, heard-speech, speaker-identity, or event-truth finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+The one-author export does not preserve the surrounding conversation reliably. It
+cannot show most prompts, replies, objections, reactions, moderation context,
+edits, deletions, or the other people’s versions of events. Channel labels and role
+context are also unavailable. Silence in the export is never treated as agreement.
+
+## Account self-identification sequence
+
+<Aside type="caution" title="Voice rows are not human transcripts">
+  **Machine-generated and unreviewed; may be wrong; not a verified quotation.**
+  Two-model agreement on the short voice lines below does not authenticate the
+  speaker or upgrade the account's identity claim.
+</Aside>
+
+| Posted (UTC) | Public message locator | What the exported account did | Evidentiary limit |
+| --- | --- | --- | --- |
+| 2026-07-20 19:28:53.711 | [Denial](https://discord.com/channels/821188728318984252/915403788343468053/1528846179205513258) | Denied being Daniel | Direct message text; no identity conclusion |
+| 2026-07-21 08:34:51.749 | [Repeated denial](https://discord.com/channels/821188728318984252/915403788343468053/1529043974352797706) | Again denied being Daniel | Direct message text; surrounding prompts absent |
+| 2026-07-22 20:42:54.578 | [Further denial](https://discord.com/channels/821188728318984252/915403788343468053/1529589581282803887) | Again denied being Daniel | Direct message text; surrounding prompts absent |
+| 2026-07-24 20:21:45.021 | [Text self-identification](https://discord.com/channels/821188728318984252/915404050785247242/1530309032106266706) | Identified itself as Daniel | Account self-identification, not legal-identity proof |
+| 2026-07-24 20:22:30.963 | [Adjacent attachment message](https://discord.com/channels/821188728318984252/915404050785247242/1530309224800845994) | Posted a directly reviewed, partial and blurred face image 45.942 seconds later | Visible content and adjacency only; media is not reproduced or used for face matching |
+| 2026-07-26 19:36:40.428 | [Voice message A](https://discord.com/channels/821188728318984252/915403788343468053/1531022463952097401) | Both offline ASR passes render: “Hello Ollie, it's Daniel.” | Machine-only transcript; no human listening or voice match |
+| 2026-07-26 19:38:00.891 | [Voice message B](https://discord.com/channels/821188728318984252/915403788343468053/1531022801438507219) | Both offline ASR passes render: “Hello Alex, it's Daniel here.” | Machine-only transcript; no human listening or voice match |
+
+The sequence supports describing the account as **self-identifying as Daniel after
+earlier denials**. It does not prove who controlled the account at every point, why
+the denials occurred, or that the attached image and voice belonged to the same
+person.
+
+<SourceCitation
+  sourceId="discord-account-self-id-text-2026-07-24"
+  title="Discord text self-identification"
+  href="https://discord.com/channels/821188728318984252/915404050785247242/1530309032106266706"
+  locator="2026-07-24T20:21:45.021Z; adjacent attachment posted at 2026-07-24T20:22:30.963Z"
+  evidence="Contradictory account-authored identity statements, the adjacent image's bounded visible content, and 45.942-second adjacency only; no biometric, legal-identity, continuous-control, or media-authenticity finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-account-self-id-voice-2026-07-26"
+  claimId="HIMR-DISCORD-0001"
+  title="Discord voice self-identification lead"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1531022463952097401"
+  locator="Voice messages posted 2026-07-26T19:36:40.428Z (3.84 seconds) and 2026-07-26T19:38:00.891Z (4.24 seconds); independent base.en and small.en passes materially agree"
+  evidence="Two machine-rendered account self-identifications only; no direct human listening, speaker comparison, biometric match, legal identity, or continuous-control finding"
+  reviewState="unverified-research-lead"
+  reviewedAt="29 August 2026"
+/>
+
+### Selected machine voice transcriptions
+
+<Aside type="caution" title="Machine-generated and unreviewed">
+  **Machine-generated and unreviewed; may be wrong; not a verified quotation.** No
+  available reviewer could directly listen to these OGG files. The exact short lines
+  above are published only because two different offline models agree materially;
+  model agreement is not human verification or a voiceprint match. Longer audio is
+  minimized to paraphrase where exact wording, private setting, or third-party detail
+  is unnecessary.
+</Aside>
+
+Two longer August 22 voice messages materially extend text-only topics without
+establishing the underlying claims:
+
+- In a **37.22-second** [voice
+  message](https://discord.com/channels/821188728318984252/915403788343468053/1540820965808803901),
+  both ASR passes render the account contrasting what it described as an abrasive
+  online presentation with a nicer offline self. This is the account's broad persona
+  claim, not proof that a particular incident was staged or that its offline conduct
+  matched the description.
+- In a **19.00-second** [voice
+  message](https://discord.com/channels/821188728318984252/915403788343468053/1540830448714907668),
+  both passes render the account responding angrily to criticism by saying it had
+  worked a minimum-wage job during the YouTube absence. Private housing and location
+  wording is omitted. No employer, dates, wage record, or third-party response is
+  present.
+
+<SourceCitation
+  sourceId="discord-online-offline-persona-voice-asr-2026-08-22"
+  claimId="HIMR-DISCORD-0002"
+  title="Discord online/offline persona voice lead"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1540820965808803901"
+  locator="Posted 2026-08-22T20:32:25.318Z; 37.22 seconds; separate base.en and small.en passes materially agree; no direct human listening"
+  evidence="Machine-rendered self-characterization attributed to the exported account only; no verified speech, staged-event inference, offline-conduct finding, or speaker identity"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-minimum-wage-absence-voice-asr-2026-08-22"
+  claimId="HIMR-DISCORD-0003"
+  title="Discord YouTube-absence work voice lead"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1540830448714907668"
+  locator="Posted 2026-08-22T21:10:06.219Z; 19.00 seconds; separate base.en and small.en passes materially agree; no direct human listening"
+  evidence="Machine-rendered minimum-wage-work-during-absence claim attributed to the exported account only; private location omitted and no verified speech, employer, dates, pay, housing, or speaker identity"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="29 August 2026"
+/>
+
+## Event routing: return, car camping, relationships, and Jason
+
+| Cluster | Discord locators | What can safely be mapped | Route and limits |
+| --- | --- | --- | --- |
+| Return to streaming | [26 Jul restriction](https://discord.com/channels/821188728318984252/915403876612587590/1530944730811076748), [“Weedys orders”](https://discord.com/channels/821188728318984252/915403788343468053/1530946918803574936), [27 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531421184204472571), [28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531556848208183297), [30 Jul “back”](https://discord.com/channels/821188728318984252/915403788343468053/1532285181300445245), [7 Aug](https://discord.com/channels/821188728318984252/915403876612587590/1535389711127027712), [12 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1537212111435071628), [28 Aug motive](https://discord.com/channels/821188728318984252/915403788343468053/1542862714789953627), [deletion account](https://discord.com/channels/821188728318984252/915403788343468053/1542862772033953932), [“truce” account](https://discord.com/channels/821188728318984252/915403788343468053/1542872247952347166) | The account discussed resuming videos and streams, an approximately nine-month absence, changing motivation, and a former partner’s alleged influence on deletion and continued streaming. The July 26 pair directly applies its Weedy label to the claimed streaming restriction; the August 28 messages use only “gf” or pronouns. | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/) and [Weed Girl](/wiki/characters/weed-girl/). Motives, instructions, agreement, and the partner’s wishes are one-sided self-reports; the wider girlfriend route to Weedy is community-attributed. |
+| Mobile-streaming setup | [26 Jul order claim](https://discord.com/channels/821188728318984252/915403876612587590/1531040479980945520), [stated test plan](https://discord.com/channels/821188728318984252/915403876612587590/1531041612476715148), [4 Aug stream result](https://discord.com/channels/821188728318984252/915403876612587590/1534296973325373540), [service assessment](https://discord.com/channels/821188728318984252/915403876612587590/1534297407045505215) | The account said it ordered Starlink to test streaming and later said both a stream and the service went well. | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/). No receipt, device identifier, network measurement, campsite, or independent stream-quality evidence is present. |
+| Car-camping sequence | [3 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1533908912380579870), [7 Aug](https://discord.com/channels/821188728318984252/915403876612587590/1535262689746751519), [9 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1536067234227691620), [11 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1536811999567159436), [17 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1538806096356057128), [18 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1539329292364943370), [29 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1543380147367977071) | A progression from proposing car living to repeatedly describing car camping, two weeks in a Tesla, and continued vehicle living. | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/). Housing status, duration, ownership, and live location remain unverified; location detail is withheld. |
+| Woodland/campsite proposal | [29 Aug image message](https://discord.com/channels/821188728318984252/915403788343468053/1543382596686315521), [purchase statement](https://discord.com/channels/821188728318984252/915403788343468053/1543382612243128460), [structure ideas](https://discord.com/channels/821188728318984252/915403788343468053/1543383099730034709), [campsite idea](https://discord.com/channels/821188728318984252/915403788343468053/1543383447639433226) | The account proposed buying unidentified woodland, mentioned fanciful structures, and floated operating a low-cost campsite. | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/). The adjacent image is not reproduced or used to expose a listing or location; no purchase, permission, finance, construction, or business plan is established. |
+| Car-equipment safety incident | [25 Aug near-fire claim](https://discord.com/channels/821188728318984252/915403788343468053/1541719057990942720), [blocked-fan explanation](https://discord.com/channels/821188728318984252/915403788343468053/1541719094854684742) | The account said a mini-fridge nearly caught fire after falling and blocking its fan. | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/). No damage, ignition, device condition, or safe remedy was independently checked; this is not equipment advice. |
+| Breakup account | [29 Jul: over](https://discord.com/channels/821188728318984252/915403788343468053/1532109914019725432), [duration](https://discord.com/channels/821188728318984252/915403788343468053/1532110083155169443), [channel discovery](https://discord.com/channels/821188728318984252/915403788343468053/1532110201262702733), [prior breakup timing](https://discord.com/channels/821188728318984252/915403788343468053/1532110529227784202), [30 Jul compression](https://discord.com/channels/821188728318984252/915403788343468053/1532285172110856193) | On 29 July the account said the relationship had already ended for another reason before the former partner found the channel; on 30 July it compressed the story into discovery followed by being dumped. | [Relationship Dramas](/wiki/events/relationship-dramas/) and [Weed Girl](/wiki/characters/weed-girl/). Community discussion generally maps this unnamed recent-former-partner role to Weedy, but none of these five messages names her; the internal chronology conflict and absent partner account are retained. |
+| Reluctance to discuss former partner | [31 Jul A](https://discord.com/channels/821188728318984252/915403788343468053/1532846138473054329), [B](https://discord.com/channels/821188728318984252/915403788343468053/1532846347257123137), [C](https://discord.com/channels/821188728318984252/915403788343468053/1532848207464235050) | The account said it would avoid discussing former partners because one might post publicly. | [Relationship Dramas](/wiki/events/relationship-dramas/) and [Weed Girl](/wiki/characters/weed-girl/). Community discussion groups this with the same dispute, but the messages do not name Weedy; this is a stated concern, not evidence of a threat or response. |
+| Breakup aftermath and recent-relationship retelling | [9 Aug low-mood account](https://discord.com/channels/821188728318984252/915403788343468053/1535951487472107541), [12 Aug Weedy closure](https://discord.com/channels/821188728318984252/915403788343468053/1537212020498235504), [19 Aug follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1539555750152765440), [22 Aug recent relationship](https://discord.com/channels/821188728318984252/915403788343468053/1540748400058826762), [being-dumped account](https://discord.com/channels/821188728318984252/915403788343468053/1540749078885961899), [left-everyone account](https://discord.com/channels/821188728318984252/915403788343468053/1540750636176511036) | The account twice attributed a prior low mood to the breakup, called the Weedy drama over between those statements, and later described the recent relationship as an exception in which it hid or performed a version of itself. It said it was dumped, then wrote that it had “left every single one of them.” | [Relationship Dramas](/wiki/events/relationship-dramas/) and [Weed Girl](/wiki/characters/weed-girl/). Do not infer a diagnosis or choose who ended the relationship: the prompts and other account are absent, and only the August 12 message names Weedy. |
+| “Jason” alias and dating | [Spanish Girl, 28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531718918396448838), [31 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532691423202377759), [12 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1537215827487629423), [29 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1543380387906986084), [Keith, 31 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532691352196743179) | The account said Spanish Girl and Keith still believed it was “Jason,” while discussing possible meetings and an outdated account of its living arrangements. | [Jason & Dating Aliases](/wiki/events/jason-and-dating-aliases/). Neither person’s own words are present; no meeting or deception consequence is established. |
+
+## Event routing: finance, work, platforms, vehicles, and legal self-account
+
+| Cluster | Discord locators | Account-authored claim map | Route and limits |
+| --- | --- | --- | --- |
+| Debt and repayment | [22 Jul plan](https://discord.com/channels/821188728318984252/915403788343468053/1529589291821563944), [3 Aug payment](https://discord.com/channels/821188728318984252/915403788343468053/1533899344397336658), [18 Aug balance](https://discord.com/channels/821188728318984252/915403788343468053/1539372331913453578), [26 Aug update](https://discord.com/channels/821188728318984252/915403788343468053/1542094917717721158), [27 Aug hypothetical sale](https://discord.com/channels/821188728318984252/915403945080406076/1542564009444778054) | The account gave changing debt, repayment, family-loan, and possible stock-sale accounts. | [Debt & Repayment Claims](/wiki/events/debt-and-repayment-claims/). No statements, creditor records, or family response are present. Sensitive payment detail is omitted. |
+| Inheritance correction | [20 Aug correction](https://discord.com/channels/821188728318984252/915403788343468053/1540100560106029218), [replacement claim](https://discord.com/channels/821188728318984252/915403788343468053/1540100685792681995) | The account rejected a larger community-repeated inheritance figure and supplied a smaller one. | [Work & Income Claims](/wiki/events/work-and-income-claims/). Neither amount is verified by estate records. |
+| Employment | [31 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532844503155741034), [taxi-licence idea](https://discord.com/channels/821188728318984252/915403788343468053/1532844824636686386), [7 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1535390575329550399), [22 Aug voice](https://discord.com/channels/821188728318984252/915403788343468053/1540830448714907668), [29 Aug secrecy](https://discord.com/channels/821188728318984252/915403788343468053/1543381443206709278), [earnings claim](https://discord.com/channels/821188728318984252/915403788343468053/1543381998377111633) | The account described work in joking or ambiguous terms, floated getting a taxi licence, later machine-rendered minimum-wage work during the absence, withheld the job, and made an unsupported monthly-earnings claim. | [Work & Income Claims](/wiki/events/work-and-income-claims/). No employer, workplace, schedule, or location is published; the job descriptions may be jokes. |
+| Creator income | [9 Aug stream](https://discord.com/channels/821188728318984252/915403876612587590/1535946972811497524), [17 Aug tax-return claim](https://discord.com/channels/821188728318984252/915403788343468053/1538811422585393152), [20 Aug views/earnings](https://discord.com/channels/821188728318984252/915403876612587590/1540027644391854241) | The account made claims about stream income, a tax return, lifetime views, and creator earnings. | [Work & Income Claims](/wiki/events/work-and-income-claims/) and [Tax-labelled Records](/wiki/events/tax-labelled-records/). No tax document, payout record, or analytics panel is present. |
+| HIMR game callback | [29 Aug Patreon reference](https://discord.com/channels/821188728318984252/915403788343468053/1543369966852513832), [coding-memory remark](https://discord.com/channels/821188728318984252/915403788343468053/1543370081659256932), [rough “2021” label](https://discord.com/channels/821188728318984252/915403788343468053/1543370121312210964), [AI remark](https://discord.com/channels/821188728318984252/915403788343468053/1543370154455474258) | The account said the older game remained on Patreon, believed it should still work, described the project as pre-generative-AI work, and said it no longer remembered how to code. | [Kent & Maidstone](/wiki/eras/kent-maidstone-era/#august-2026-discord-retrospective). The public posts are dated January 2022, so the casual “2021” label does not replace their dates; no build was run and the AI remark is hypothetical. |
+| Stocks and crypto | [10 Aug sale](https://discord.com/channels/821188728318984252/915403945080406076/1536390523525406852), [breakeven](https://discord.com/channels/821188728318984252/915403945080406076/1536390737338302586), [20 Aug remaining funds](https://discord.com/channels/821188728318984252/915403788343468053/1540100811055431811), [25 Aug crypto timing](https://discord.com/channels/821188728318984252/915403945080406076/1541735639060578405) | The account described a named-stock sale, breakeven framing, remnants of platform earnings, and a crypto plan. | [Stock Market & Crypto](/wiki/events/stock-market-and-crypto/). These are not financial records or advice. |
+| OnlyFans | [27 Aug sale claim](https://discord.com/channels/821188728318984252/915403788343468053/1542569619942801610), [identity regret](https://discord.com/channels/821188728318984252/915403788343468053/1542569732866187295), [total claim](https://discord.com/channels/821188728318984252/915403788343468053/1542577659761131651), [29 Aug ambiguous deletion status](https://discord.com/channels/821188728318984252/915403788343468053/1543334827128922355), [hypothetical van-life plan](https://discord.com/channels/821188728318984252/915403788343468053/1543335287613161502) | The account said it sold a video, regretted being identifiable in it, gave an earnings total, and later floated a paid van-life return while referring ambiguously to a pending deletion. | [OnlyFans](/wiki/events/onlyfans/). No intimate content or customer/payment detail is reproduced; the claims and future plan lack platform or financial records. |
+| Stream persona and platforms | [22 Aug “act”](https://discord.com/channels/821188728318984252/915403788343468053/1540757664307609620), [follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1540758237408788510), [voice self-description](https://discord.com/channels/821188728318984252/915403788343468053/1540820965808803901) | The account described the stream persona as an act and, in machine output, characterized itself differently offline. | [Channel Bans & Platforms](/wiki/events/channel-bans-and-platforms/). This does not resolve whether any particular conduct was staged. |
+| Social-media conflict | [29 Jul circulating-video claim](https://discord.com/channels/821188728318984252/915403788343468053/1531975416548556881), [hostile-comment report](https://discord.com/channels/821188728318984252/915403788343468053/1532086103916548096), [deleted-account regret](https://discord.com/channels/821188728318984252/915403788343468053/1532110715433910413) | The account said a video was circulating on TikTok, reported serious sexualized name-calling in comments, rejected the label, and separately regretted deleting an Instagram account. | [Channel Bans & Platforms](/wiki/events/channel-bans-and-platforms/). The video, comments, and commenters are not in the export; no linked profile or third-party identifier is reproduced. |
+| Driving and vehicles | [25 Jul overtaking account](https://discord.com/channels/821188728318984252/915403876612587590/1530630425939021944), [31 Jul camera/course voice](https://discord.com/channels/821188728318984252/915403788343468053/1532853289622962328), [20 Aug roadside exchange](https://discord.com/channels/821188728318984252/915403788343468053/1540053230514475029), [apology](https://discord.com/channels/821188728318984252/915403788343468053/1540056484124168233), [vehicle-acquisition timing claim](https://discord.com/channels/821188728318984252/915403788343468053/1540087511446192139), [21 Aug parking-photo claim](https://discord.com/channels/821188728318984252/915403788343468053/1540411507979059370), [repetition voice](https://discord.com/channels/821188728318984252/915403788343468053/1540408501749289051), [23 Aug near-miss claim](https://discord.com/channels/821188728318984252/915403788343468053/1541013183190532247), [24 Aug anti-context joke](https://discord.com/channels/821188728318984252/915403788343468053/1541500042563821659) | The account described aggressive overtaking, a camera/course, a confrontation over speed, parking disputes, a near miss, and when it said it acquired the Tesla; it later joked that a roof-cutting remark would be misreported as a plan. | [Vehicles & Crashes](/wiki/events/vehicles-and-crashes/). Traffic conduct, speed, course, acquisition year, ownership, and other people’s actions or words are unverified. The roof remark is explicitly contextualized as a joke, not a plan. |
+| Arrest/order self-account | [31 Jul solicitor voice](https://discord.com/channels/821188728318984252/915403788343468053/1532849241175752905), [custody voice](https://discord.com/channels/821188728318984252/915403788343468053/1532849676322082817), [police timing](https://discord.com/channels/821188728318984252/915403788343468053/1532852922038091929), [clips shown](https://discord.com/channels/821188728318984252/915403788343468053/1532854987363848352), [family/court distinction](https://discord.com/channels/821188728318984252/915403788343468053/1532856279842820226), [livestream question](https://discord.com/channels/821188728318984252/915403788343468053/1532856559682719826), [threatening-clip account](https://discord.com/channels/821188728318984252/915403788343468053/1532857486611054744) | The account described arrest, a holding cell, release, solicitor advice, clips shown by police, and a civil/family-court process distinct from a criminal case. | [Civil-order Source Clips](/wiki/events/civil-order-source-clips/). Charges, order text, dates, legal outcome, and the other parties’ accounts are absent; graphic wording is omitted. |
+| Troll-attributed incidents | [31 Jul voice A](https://discord.com/channels/821188728318984252/915403788343468053/1532862607114113186), [voice B](https://discord.com/channels/821188728318984252/915403788343468053/1532862708163018793) | Machine output renders the account blaming trolls for unwanted visitors, police contact, and a false vehicle-sale listing, and linking this to a move. | [Community & Trolls](/wiki/characters/community-and-trolls/). No report, visitor account, listing, or causal corroboration is present. |
+
+Voice-message rows in this table are machine leads, even where a linked text message
+also exists. **Machine-generated and unreviewed; may be wrong; not a verified
+quotation.**
+
+## Regional retrospectives
+
+On 22 August, several voice messages machine-render the account inviting questions
+about older material and explaining departures from its Japan marriage and Thailand
+relationship as personal unhappiness, boredom, and perceived alternatives:
+[Japan/Thailand lead A](https://discord.com/channels/821188728318984252/915403788343468053/1540819508246351882),
+[B](https://discord.com/channels/821188728318984252/915403788343468053/1540820124766838794),
+and [C](https://discord.com/channels/821188728318984252/915403788343468053/1540822185596424282).
+They are retrospective self-explanations, not the former partners’ accounts or
+independent reasons for the moves. See [Japan Era](/wiki/eras/japan-era/),
+[Thailand Era](/wiki/eras/thailand-era/), and
+[Thai Girlfriend](/wiki/characters/thai-girlfriend/).
+
+<SourceCitation
+  sourceId="discord-regional-retrospective-voice-2026-08-22"
+  title="Discord regional-retrospective voice lead"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1540819508246351882"
+  locator="Three voice messages beginning 2026-08-22T20:26:37.808Z"
+  evidence="Machine-rendered first-person explanations for older Japan and Thailand departures only; former partners' accounts and independent corroboration absent"
+  reviewState="unverified-research-lead"
+  reviewedAt="29 August 2026"
+/>
+
+## Controversial claims and denials
+
+<Aside type="danger" title="Unverified, one-sided material">
+  Every item in this section is included because the account made a relevant claim,
+  denial, or boast—not because the underlying allegation or conduct is established.
+  The exports omit the accusers’ or named people’s messages and any meaningful
+  response. No police record, court record, platform record, financial record, or
+  other corroboration was supplied. Graphic wording and identifying detail are
+  deliberately omitted.
+</Aside>
+
+| Issue | Direct account-text locators | Publication-safe account of the record |
+| --- | --- | --- |
+| Hidden-channel allegation framing | [27 Jul denial/mocking response](https://discord.com/channels/821188728318984252/915403788343468053/1531411343440216155), [generic legal-style paste](https://discord.com/channels/821188728318984252/915403788343468053/1531413896110411816), [29 Jul former-partner claim](https://discord.com/channels/821188728318984252/915403788343468053/1532120302106968157), [deception framing](https://discord.com/channels/821188728318984252/915403788343468053/1532122445157498960) | The account denied a sexual-assault framing and described the dispute instead as deception about a hidden YouTube identity/channel. The underlying allegation, accuser’s wording, former partner’s response, and factual circumstances are absent. A pasted generic legal-style answer is not independent evidence. |
+| Turkish Girl denial | [28 Jul denial A](https://discord.com/channels/821188728318984252/915403788343468053/1531724811766599820), [B](https://discord.com/channels/821188728318984252/915403788343468053/1531724985503322294), [29 Jul text denial](https://discord.com/channels/821188728318984252/915403788343468053/1531929180546142258), [voice defence](https://discord.com/channels/821188728318984252/915403788343468053/1531928267819581541) | The account said Turkish Girl had not characterized an encounter as assault and separately denied rape. Her account and the original allegation are absent. The voice defence is machine-only, and no inference about consent can be drawn from the account’s description. |
+| Threat/damage family anecdote | [15 Aug threat claim](https://discord.com/channels/821188728318984252/915403788343468053/1538167747261763717), [police-call account](https://discord.com/channels/821188728318984252/915403788343468053/1538167797484486706), [vehicle-damage claim](https://discord.com/channels/821188728318984252/915403788343468053/1538168003559170058), [streaming-nearby claim](https://discord.com/channels/821188728318984252/915403788343468053/1538168035008057465) | The account alleged that unnamed third parties had threatened its father and that one had damaged a spouse’s car, while saying it was streaming nearby. No event date, report, footage, named party, family account, or response is present. |
+| Overlapping-girlfriends allegation | [20 Aug relationship denial](https://discord.com/channels/821188728318984252/915403788343468053/1540086076163629156), [housing denial](https://discord.com/channels/821188728318984252/915403788343468053/1540086275049263194) | The account denied having simultaneous girlfriends and denied maintaining two relationship homes at once, saying the relationships were consecutive. Community discussion generally groups the controversy with Weedy, but the messages name neither relationship role; the allegation source, dates, tenancy evidence, and partners’ accounts are absent. |
+| Kick “botting” boast | [29 Aug claim](https://discord.com/channels/821188728318984252/915403945080406076/1543260938524827718), [defiance](https://discord.com/channels/821188728318984252/915403945080406076/1543260973828145211), [platform criticism](https://discord.com/channels/821188728318984252/915403945080406076/1543261029000286288) | The account claimed it had earned money through what it called Kick “botting” and expressed defiance about it. No analytics, payout, platform finding, method, or independent context verifies the boast. |
+| Vxiiduu police-log remark | [26 Aug remark](https://discord.com/channels/821188728318984252/915403788343468053/1542110154386968576), [follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1542110189019332669), [joking continuation](https://discord.com/channels/821188728318984252/915403788343468053/1542110326282264586) | The account made an unverified police-log remark about the pseudonym “Vxiiduu,” then used joking language. There is no log, incident description, response, identity bridge, or evidence the remark was more than banter. |
+
+<SourceCitation
+  sourceId="discord-hidden-channel-assault-framing-denial-2026-07"
+  title="Discord hidden-channel allegation denial"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1532122445157498960"
+  locator="Account-text cluster posted 2026-07-27 and 2026-07-29 UTC"
+  evidence="Existence of the account's denial and hidden-channel/deception framing only; underlying allegation, accuser wording, former-partner response, and event facts absent"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="Do not state that an assault, false accusation, or deception occurred. The export preserves only one account's denial and framing."
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-turkish-girl-denial-2026-07"
+  title="Discord Turkish Girl denial"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1531929180546142258"
+  locator="Text denial posted 2026-07-29T07:39:38.510Z; related voice account posted 2026-07-29T07:36:00.899Z and remains machine-only"
+  evidence="Existence of the account's denial only; no finding about the encounter, consent, the other person's description, or the allegation's origin"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="Do not convert either the allegation or Daniel-attributed denial into fact. The other person's account and corroborating evidence are absent."
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-overlap-denial-2026-08-20"
+  title="Discord overlapping-relationships denial"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1540086076163629156"
+  locator="Two text messages beginning 2026-08-20T19:52:13.973Z"
+  evidence="Existence and wording of the account's denial only; community routing to the Weedy controversy is not identification of either role, and relationship dates, housing records, allegation source, and partners' accounts are absent"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="The export does not establish either overlapping or consecutive relationships or identify either unnamed role as Weedy; report only the denial and the qualified community route."
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-family-threat-damage-anecdote-2026-08-15"
+  title="Discord family threat/damage anecdote"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1538167747261763717"
+  locator="Four account-text messages beginning 2026-08-15T12:49:28.722Z"
+  evidence="Existence of the account's anecdote only; event date, report, footage, identities, family account, and alleged third parties' response absent"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="Do not state that a threat, vehicle damage, police call, or related livestream occurred. The account supplied an uncorroborated anecdote about unnamed people."
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-kick-botting-boast-2026-08-29"
+  title="Discord Kick botting boast"
+  href="https://discord.com/channels/821188728318984252/915403945080406076/1543260938524827718"
+  locator="Account-text cluster beginning 2026-08-29T14:08:00.146Z"
+  evidence="Existence of an account-authored boast and platform criticism only; conduct, method, earnings, policy breach, and platform response unverified"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="Do not state that botting, fraud, or a platform violation occurred. No platform or financial corroboration is present."
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="discord-vxiiduu-police-log-remark-2026-08-26"
+  title="Discord Vxiiduu police-log remark"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1542110154386968576"
+  locator="Account-text cluster beginning 2026-08-26T09:55:11.827Z"
+  evidence="Existence of the account's police-log remark and joking follow-up only; no log, incident, identity bridge, context, or named person's response"
+  reviewState="source-matched"
+  notice="unverified-allegation"
+  warning="This may be banter. Do not imply criminality, police involvement, or a real-world identity for Vxiiduu."
+  reviewedAt="29 August 2026"
+/>
+
+## Character and person-label map
+
+Labels are preserved only where they help route an existing HIMR topic. They are
+not legal names or proof that similarly named people across platforms are the same
+person.
+
+| Label | Discord locators and account-authored context | Safe routing decision |
+| --- | --- | --- |
+| Spanish Girl | [28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531718918396448838), [31 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532691423202377759), [12 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1537215827487629423), [29 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1543380387906986084): possible meeting, “Jason” belief, and an outdated living-arrangement story. | [Spanish Girl](/wiki/characters/spanish-girl/) and [Jason aliases](/wiki/events/jason-and-dating-aliases/). One-sided; no meeting or location established. |
+| Van Girl | [18 Aug “new girl”](https://discord.com/channels/821188728318984252/915403788343468053/1539345377629835344), [19 Aug number](https://discord.com/channels/821188728318984252/915403788343468053/1539714030971658352), [21 Aug camping plan](https://discord.com/channels/821188728318984252/915403788343468053/1540428429349101660), [22 Aug spots](https://discord.com/channels/821188728318984252/915403788343468053/1540744675340587170), [24 Aug privacy concern](https://discord.com/channels/821188728318984252/915403788343468053/1541497528686485677), [29 Aug “combining” remark](https://discord.com/channels/821188728318984252/915403945080406076/1543249063254818866). | [Van Girl](/wiki/characters/van-girl/) and [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/). “New girl” is not merged with Van Girl solely by proximity, and the later “combining” remark does not prove that Van Girl and Spanish Girl are the same person; no contact or campsite detail is published. |
+| Pia | [27 Jul analogy](https://discord.com/channels/821188728318984252/915403788343468053/1531415247821209610), [7 Aug “friends” claim](https://discord.com/channels/821188728318984252/915403876612587590/1535397387214917673), [24 Aug greeting](https://discord.com/channels/821188728318984252/915403788343468053/1541376290135867412). | [Pia](/wiki/characters/pia/). The relationship label is Daniel-attributed and not Pia’s statement. |
+| Chihiro / KC | [27 Jul story-view claim](https://discord.com/channels/821188728318984252/915403876612587590/1531254890591031499), [opinion prompt](https://discord.com/channels/821188728318984252/915403788343468053/1531412490720776232), [28 Jul streaming claim](https://discord.com/channels/821188728318984252/915403788343468053/1531559896955355156), [29 Jul no-reply claim](https://discord.com/channels/821188728318984252/915403788343468053/1532111736470241410). | [Chihiro](/wiki/characters/chihiro/). “KC” is retained as the account’s label; no reply or account-control evidence is present. |
+| Turkish Girl | [28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531724811766599820), [29 Jul denial](https://discord.com/channels/821188728318984252/915403788343468053/1531929180546142258). | [Turkish Girl](/wiki/characters/turkish-girl/). See the warned controversy record; her account is absent and graphic detail is excluded. |
+| Sunny | [29 Jul cinema recollection](https://discord.com/channels/821188728318984252/915403788343468053/1532091822447263784). | [Sunny](/wiki/characters/sunny/). A passing recollection only; no date or shared account. |
+| Weedy | [26 Jul streaming restriction](https://discord.com/channels/821188728318984252/915403876612587590/1530944730811076748), [“Weedys orders”](https://discord.com/channels/821188728318984252/915403788343468053/1530946918803574936), [28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531556807955189820), [later 28 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531741377002471495), [12 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1537212020498235504): the account attributed a streaming restriction to Weedy, wanted distance, and called drama over. | [Weed Girl](/wiki/characters/weed-girl/). Community discussion cross-routes the nearby anonymous breakup and denial chronology here, but those messages do not name her. Context, an incoming instruction, and Weedy’s own messages are missing; no reason, fault, identity continuity, or mutual agreement is inferred. |
+| Crypt | [23 Jul greeting](https://discord.com/channels/821188728318984252/915403788343468053/1529726492014284830), [28 Aug greeting](https://discord.com/channels/821188728318984252/915404050785247242/1542943751515668720). | [Cryptcutie5](/wiki/characters/cryptcutie5/). Greetings alone do not establish account ownership or a substantive event. |
+| Blood Bucket | [1 Aug passing mention](https://discord.com/channels/821188728318984252/915403788343468053/1533197530840694958). | [Blood Bucket](/wiki/characters/blood-bucket/). One mention; no new biography or event. |
+| Mila | [29 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532094486212120707), [31 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532706490174013481), [29 Aug callback](https://discord.com/channels/821188728318984252/915403945080406076/1543261833136181269). | [Mila](/wiki/characters/mila/). Passing references and an old-story riff only; no new Mila event. |
+| AJ | [24 Jul greeting](https://discord.com/channels/821188728318984252/915404050785247242/1530310148256563230), [29 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1531915514316587082), [18 Aug van-life mention](https://discord.com/channels/821188728318984252/915403788343468053/1539348004245479475), [invitation](https://discord.com/channels/821188728318984252/915403788343468053/1539359931809931274). | [Friends & Guests](/wiki/characters/friends-and-guests/). No account, identity, visit, or relationship bridge is established. |
+| Keith | [28 Jul dream](https://discord.com/channels/821188728318984252/915403788343468053/1531558752564543680), [29 Jul car mention](https://discord.com/channels/821188728318984252/915403788343468053/1531981445080289390), [31 Jul “Jason” belief](https://discord.com/channels/821188728318984252/915403788343468053/1532691352196743179), [8 Aug looked-for claim](https://discord.com/channels/821188728318984252/915403788343468053/1535546571268300840). | [Friends & Guests](/wiki/characters/friends-and-guests/) and [Jason aliases](/wiki/events/jason-and-dating-aliases/). No real-world identity or response. |
+| Robi / Ken / Connor | [Robi, 29 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532069468568682658), [Robi, 30 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1532446097170104330), [Ken, 14 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1537723069068476426), [Connor, 22 Jul](https://discord.com/channels/821188728318984252/915403788343468053/1529476482018054296). | [Friends & Guests](/wiki/characters/friends-and-guests/). Greetings, a quietness remark, and a passing restaurant anecdote; the labels are not merged with public figures. |
+| Ollie / Alex / Polly | [Ollie voice](https://discord.com/channels/821188728318984252/915403788343468053/1531022463952097401), [Alex voice](https://discord.com/channels/821188728318984252/915403788343468053/1531022801438507219), [Polly voice](https://discord.com/channels/821188728318984252/915403788343468053/1531023207409389759). | Machine-rendered addressees only. No replies, accounts, relationship labels, or identity bridges; Polly’s message is not a self-identification. |
+| Vxiiduu | [26 Aug remark](https://discord.com/channels/821188728318984252/915403788343468053/1542110154386968576). | Pseudonym only. See the warned controversy record; no police involvement or real-world identity is established. |
+| Ice | [21 Aug persona remark](https://discord.com/channels/821188728318984252/915403788343468053/1540413272132427836), [follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1540413567101051001). | The account said “Ice” had seen through its polite offline presentation. The label is ambiguous and is not bridged to Ice Poseidon or any real-world person. |
+| Eris / Mishi / Cheese Ring | [Eris, 19 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1539668463574974655), [Mishi](https://discord.com/channels/821188728318984252/915403788343468053/1539668526309318716), [Cheese Ring, 6 Aug](https://discord.com/channels/821188728318984252/915403876612587590/1535030698791141497). | Thin old-community callbacks only. No event, account ownership, identity bridge, or reply can be established. |
+| Car-park woman (“Karen”) | [20 Aug account of exchange](https://discord.com/channels/821188728318984252/915403788343468053/1540053230514475029), [account-applied meme label](https://discord.com/channels/821188728318984252/915403788343468053/1540056905156665515), [21 Aug follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1540408145258745937), [23 Aug follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1541130325629866094). | A private passer-by in the [Vehicles & Crashes](/wiki/events/vehicles-and-crashes/) cluster. “Karen” is the account’s disparaging meme label, not a name. Her identity, words, and location are not published. |
+| Pushkin | [5 Aug attachment](https://discord.com/channels/821188728318984252/915403788343468053/1534485831111413832), [caption](https://discord.com/channels/821188728318984252/915403788343468053/1534485842427383888). | [Pets & Aquariums](/wiki/characters/pets-and-aquariums/). The directly reviewed cat image is reproduced there with metadata stripped and its 2.698-second adjacent label; no ownership, health, cross-upload identity, or location inference. |
+| Unidentified outdoor dog | [6 Aug attachment](https://discord.com/channels/821188728318984252/915403788343468053/1534997463574909140), [caption](https://discord.com/channels/821188728318984252/915403788343468053/1534997481085997107), [encounter joke](https://discord.com/channels/821188728318984252/915403788343468053/1534998089398489138). | [Pets & Aquariums](/wiki/characters/pets-and-aquariums/). An encounter, not evidence of ownership; the attachment and location remain unpublished. |
+| Mother and father | [Mother-related return reference](https://discord.com/channels/821188728318984252/915403788343468053/1532288930018492578), [family memory](https://discord.com/channels/821188728318984252/915403788343468053/1537919523179724810), [father grief voice](https://discord.com/channels/821188728318984252/915403788343468053/1541557456465825842), [father caring text](https://discord.com/channels/821188728318984252/915403788343468053/1541567801599467653). | [Daniel’s Mother](/wiki/characters/daniels-mother/) and [Father](/wiki/characters/father/). Family recollections are one-sided; home, movement, health, and financial specifics are withheld. The grief voice is machine-only. |
+| Other family | Passing references to a sister, uncles, grandmother, and another relative. | Category mapped, but first-party identifiers and sensitive family detail are omitted because the messages add no independently useful event. |
+| Incidental or unresolved people | Several first-name-only people, chat addressees, campsite passers-by, and passing creator/public-figure references occur without enough context. One “Ice” label is ambiguous. | Not promoted to character entries and not bridged to known creators. Private first names, handles, locations, contact clues, fictional/media characters, and irrelevant celebrity mentions are intentionally not reproduced. |
+
+## Current topics and callbacks
+
+| Callback | Discord locator | Editorial treatment |
+| --- | --- | --- |
+| Wheat-field account and cereal callback | [11 Aug non-graphic act claim](https://discord.com/channels/821188728318984252/915403788343468053/1536630038399553556), [nudity claim](https://discord.com/channels/821188728318984252/915403788343468053/1536630112563232788), [later cereal remark](https://discord.com/channels/821188728318984252/915403788343468053/1536691629233143829) | The account claimed a newly dated episode involving nudity and a private sexual act in a field; the later cereal line is treated as a callback. Route to [Cereal Euphemism](/wiki/events/cereal-euphemism/). No graphic detail, location, witness, or corroboration is published. |
+| Mila/hole riff | [29 Aug A](https://discord.com/channels/821188728318984252/915403945080406076/1543261608124485693), [B](https://discord.com/channels/821188728318984252/915403945080406076/1543261833136181269) | Route to [Hole Digging](/wiki/events/hole-digging/) and [Mila](/wiki/characters/mila/); joking present-tense discussion does not redocument the old story. |
+| Scent self-description | [27 Aug](https://discord.com/channels/821188728318984252/915403788343468053/1542537277467660298), [follow-up](https://discord.com/channels/821188728318984252/915403788343468053/1542537370455515227) | Route to [Fetish & Scent Self-descriptions](/wiki/events/fetish-and-scent-self-descriptions/); only the non-graphic self-description is mapped. |
+| Love-doll references | Discord contains graphic old-story callbacks. | Route to the better-contextualized [Love Dolls](/wiki/events/love-dolls/) page; the Discord wording and media are not republished because they add no safe chronology. |
+| Self-assessment | [24 Aug voice A](https://discord.com/channels/821188728318984252/915403788343468053/1541554670814896128), [voice B](https://discord.com/channels/821188728318984252/915403788343468053/1541555347632955472) | Machine output renders mechanistic self-explanations about sympathy. This is not a diagnosis and is not used to assign a condition. |
+| Distress and diagnostic speculation | [9 Aug autism attribution](https://discord.com/channels/821188728318984252/915403788343468053/1536069959308943531), [19 Aug alarming vehicle/cliff remark](https://discord.com/channels/821188728318984252/915403788343468053/1539727566867275857), [25 Aug hardship remark](https://discord.com/channels/821188728318984252/915403788343468053/1541921183006462023), [26 Aug loneliness/depression self-assessment](https://discord.com/channels/821188728318984252/915403788343468053/1542094498782248990) | These are historical account statements, not a diagnosis, clinical record, or basis to infer intent. The cliff remark is not quoted or sensationalized; missing inbound context prevents a reliable risk assessment. |
+| Wicca, spells, and pagan claims | [1 Aug study claim](https://discord.com/channels/821188728318984252/915403788343468053/1533002584544120932), [4 Aug spell suggestion](https://discord.com/channels/821188728318984252/915403788343468053/1534316012185452554), [7 Aug paid-spellcaster mention](https://discord.com/channels/821188728318984252/915403876612587590/1535395807728242819), [29 Aug Yule claim](https://discord.com/channels/821188728318984252/915403945080406076/1543258387251204096), [polemical historical claim](https://discord.com/channels/821188728318984252/915403945080406076/1543258779880263740) | The account said it was studying Wicca, mentioned a love spell and a paid spellcaster, said it had observed Yule, and made polemical claims about British religious history. This maps context for [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/); it does not prove a ritual, purchase, belief continuity, or the historical claims. |
+
+## Explicit exclusions and reuse rules
+
+- A final message-by-message topic and entity pass found no additional
+  publication-worthy HIMR event cluster outside the routes above. Unrouted material
+  consists of everyday food, shopping, weather, campsite and device logistics;
+  unrelated film, game, music, celebrity, religion, politics, and general-opinion
+  chat (the HIMR game callback is routed above);
+  greetings and contextless reactions; graphic sexual jokes; and private
+  first-name-only or transient-person references. Those categories are omitted for
+  irrelevance, missing context, or privacy—not silently converted into biography.
+- One of the 331 attachments—the reviewed Pushkin-captioned cat image—is mirrored on
+  the pets page under the contributor's public-source representation. The other 330
+  remain unembedded. Public message permalinks alone do not grant a licence to mirror
+  image, audio, or video payloads.
+- Machine-rendered voice remains unverified even where the two offline passes agree
+  and a selected transcription is published. **Machine-generated and unreviewed;
+  may be wrong; not a verified quotation.** No voiceprint, face match, or other
+  biometric conclusion is made.
+- Private locations, travel routes, homes, workplaces, plates, contacts, family
+  health and finances, and third-party intimate detail are omitted even when an
+  exported message gestures toward them.
+- One 28 July discussion describes alleged sexual conduct by an unnamed former
+  partner and disputes how it should be labelled. It is not linked or summarized
+  further because the export lacks that person’s account and publication would
+  expose third-party intimate detail; this omission is not a finding about consent
+  or truth.
+- The export contains no useful first-party Twitch, Patreon, Twitter, or historical
+  username statement. Those account links need separate public-source evidence;
+  this page does not backfill them from silence.
+- A Discord claim may be used to show that the account made a claim on a given date.
+  It must not be cited as proof that an allegation, relationship, income, debt,
+  platform violation, arrest outcome, move, or meeting occurred.
+
+For the wiki’s broader evidence rules, see [Methodology](/wiki/archive/methodology/)
+and [Research Dossiers](/wiki/archive/research-dossiers/).

@@ -1,0 +1,546 @@
+---
+title: Patreon Source Catalogue
+description: A publication-safe metadata and source map for the reconciled Hidinginmyroom Patreon archive.
+sidebar:
+  order: 4
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
+import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+
+<VerificationBadge
+  status="source-matched"
+  reviewedAt="29 August 2026"
+  note="All 136 retained post IDs were reconciled to Daniel's public Patreon sitemap, and every available retained body was reviewed. This verifies source identity, body coverage, and what Daniel wrote—not attachments, embeds, access history, or autobiographical claims."
+/>
+
+This catalogue records publication-safe **metadata and narrowly attributed source
+readings** for the acquired _Hidinginmyroom — Daniel's Patreon_ preservation set. It
+publishes aggregate counts, public post locators, and limited claim summaries; it does
+not publish the downloaded corpus or reproduce locked post bodies.
+
+For the corpus-wide findings—the 2016–2022 editorial phases, edit-state caveat,
+creator-strategy pattern, corrections, and campaign-object history—see the
+[Patreon Longitudinal Analysis](/wiki/archive/patreon-longitudinal-analysis/). This
+page remains the post-level locator and access-state catalogue.
+
+<Aside type="danger" title="Private archive boundary">
+  Post bodies, downloaded assets, raw API JSON, status caches, and raw or signed
+  media URLs remain private. They must not be linked, copied, or treated as a
+  public mirror. Patreon access fields—including paid, viewable, pledge, and
+  entitlement flags—describe a particular record or session. **They are not proof
+  that a post was public, free, or lawfully redistributable.** An authenticated
+  download is not evidence of public access either.
+</Aside>
+
+## Reconciliation snapshot
+
+Snapshot reviewed: **29 August 2026**
+
+| Measure | Result |
+| --- | ---: |
+| Public Patreon sitemap post IDs | 136 |
+| Retained source-record IDs | 136 |
+| Exact ID matches | 136 |
+| Earliest `published_at` value (UTC) | 2016-10-02 |
+| Latest `published_at` value (UTC) | 2022-01-24 |
+| Records without a complete preserved body | 1 |
+
+The single full-body exception is post ID **`23468829`**. Its public sitemap title and
+locator are included in the complete inventory below, but the ID match and public
+metadata do not reconstruct the absent preserved body.
+
+The second-pass review read all 135 available retained bodies. Of the 136 total
+records, 122 contain non-empty normalized author writing; short or empty image,
+link, and embed bodies account for the rest. That review does not imply that every
+attachment or external target was opened, nor that Daniel's writing was verified as
+fact.
+
+The UTC range comes from the retained Patreon `published_at` fields. It is a
+publication-metadata range, not a claim about when any described event happened.
+
+### Posts by publication year
+
+| Year | Post IDs |
+| --- | ---: |
+| 2016 | 8 |
+| 2017 | 51 |
+| 2018 | 46 |
+| 2019 | 25 |
+| 2020 | 2 |
+| 2021 | 0 |
+| 2022 | 4 |
+| **Total** | **136** |
+
+### Posts by Patreon type label
+
+| Retained `post_type` | Count |
+| --- | ---: |
+| Text (`text_only`) | 70 |
+| Image (`image_file`) | 42 |
+| Link | 18 |
+| Video embed | 6 |
+| **Total** | **136** |
+
+These are Patreon type labels, not a content review. In particular, a `link` or
+`video_embed` record does not establish that the external target still exists, is
+complete, or can be republished.
+
+## Downloader preservation result
+
+| Downloader outcome | Records |
+| --- | ---: |
+| Completed without a recorded downloader error | 112 |
+| Partial result with an external-embed retrieval error | 24 |
+| **Total** | **136** |
+
+The 24 partial results correspond to the **18 link** and **6 video-embed** records.
+“Partial” describes the downloader outcome: it does not erase the matched Patreon
+metadata, and it does not mean the external content was preserved. Conversely,
+“without a recorded downloader error” is not a completeness, authenticity, access,
+or rights finding.
+
+Comments were explicitly excluded from the downloader configuration. No Patreon
+comment body is included in, reviewed for, or represented by this catalogue.
+
+## Selected account-link records
+
+Only three records are singled out because they preserve useful creator-published
+account links. Their Patreon pages are the canonical public locators. The complete
+bodies of posts `14408113` and `14922710` were visible in a signed-out check on August
+29; post `16379179` exposed its title and date but not its body. That third link claim
+therefore comes from the non-redistributed private preservation copy and is labelled
+accordingly.
+
+| Published (UTC) | Post ID and public Patreon page | Patreon type | Narrow evidentiary scope |
+| --- | --- | --- | --- |
+| 2017-09-16 | [`14408113` — _Twitch_](https://www.patreon.com/Hidinginmyroom/posts/twitch-14408113) | Text | The public author-written post links the historical Twitch address `hidinginmyroom`. This is a first-party link, not a stable-ID capture, rename date, or current-control finding. |
+| 2017-10-18 | [`14922710` — _Thanks :)_](https://www.patreon.com/Hidinginmyroom/posts/thanks-14922710) | Text | The public author-written post identifies `danielhimr` as the intended streaming address. Its platform-enforcement explanation remains a self-report, not independent proof. |
+| 2018-01-13 | [`16379179` — _A return to streaming_](https://www.patreon.com/Hidinginmyroom/posts/return-to-16379179) | Text | The privately retained first-party body links YouTube channel ID `UCtjRF3IINokbvJTz6XqPgWg` and describes an intended streaming use. The body was access-controlled in the signed-out review; it does not prove continuous control or why the channel is now unavailable. |
+
+<SourceCitation
+  sourceId="patreon-post-14408113-account-link"
+  title="Twitch"
+  href="https://www.patreon.com/Hidinginmyroom/posts/twitch-14408113"
+  locator="Post 14408113; published 2017-09-16T17:10:44Z"
+  evidence="Creator-published historical Twitch address and stated fallback plan only; no stable Twitch ID, rename date, test-stream result, or YouTube outcome established"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="patreon-post-14922710-account-link"
+  title="Thanks :)"
+  href="https://www.patreon.com/Hidinginmyroom/posts/thanks-14922710"
+  locator="Post 14922710; published 2017-10-18T03:58:47Z"
+  evidence="Creator-published danielhimr streaming address and attributed platform plan only; no enforcement event or appeal result independently established"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="patreon-post-16379179-account-link"
+  title="A return to streaming"
+  href="https://www.patreon.com/Hidinginmyroom/posts/return-to-16379179"
+  locator="Post 16379179; published 2018-01-13T10:18:22Z; account-link passage reviewed in a private preservation copy; signed-out API exposed no body on 2026-08-29"
+  evidence="Access-controlled first-party historical channel link and intended streaming use only; body not redistributed, and no present control, complete name history, or unavailability cause established"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## The four 2022 game records
+
+These are the final four sitemap entries and the only records with 2022
+`published_at` values. Their titles can catalogue a game-development sequence, but
+title wording is not proof that a build was complete, functional, safe, released,
+or used by anyone. The three access-controlled version bodies were reviewed in the
+private preservation copy and are paraphrased below; no executable or embedded video
+was opened for this catalogue. A contributor-supplied Version 1.6 screenshot is
+separately reviewed on the [Kent & Maidstone game-project
+epilogue](/wiki/eras/kent-maidstone-era/#epilogue-the-2022-himr-game-project).
+
+| Published (UTC) | Post ID and public Patreon page | Patreon type | Publication-safe reading |
+| --- | --- | --- | --- |
+| 2022-01-02 | [`60626337` — _Developing my own Game - The beginning_](https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337) | Video embed | The visible page contains an author-attributed development account. It remains a self-report; the embed was not reviewed. |
+| 2022-01-03 | [`60678758` — _HIMR The Game: Version 1.0 (Windows version)_](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-0-60678758) | Text | **L:** Daniel's retained body gives the initial controls and small in-game combat economy. No build-quality, distribution, or safety finding. |
+| 2022-01-10 | [`60979863` — _HIMR the game Version 1.1_](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-1-60979863) | Text | **L:** Daniel's retained patch notes describe health, a companion, enemy/weapon changes, bugs, and planned Japan, petrol-station, and tape systems. These mechanics were not tested. |
+| 2022-01-24 | [`61583236` — _Version 1.6 BIG UPDATES_](https://www.patreon.com/Hidinginmyroom/posts/version-1-6-big-61583236) | Text | **L:** Daniel's retained patch notes describe save/load, quests, a computer/economy, petrol-station and companion systems, respawn rules, and future dream/house work. A supplied screenshot is contributor-identified as this version; no process-to-file hash was captured. |
+
+<SourceCitation
+  sourceId="patreon-post-60626337-game-self-report"
+  title="Developing my own Game - The beginning"
+  href="https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337"
+  locator="Post 60626337; published 2022-01-02T11:55:18Z"
+  evidence="Public title/date and creator-attributed game-development self-report only; embedded media, code, builds, and later outcomes not reviewed"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Public reconciliation sources
+
+Patreon's public campaign page displayed **136 posts** at review time. Its public
+sitemap exposed the same 136 stable post URLs under 2016, 2017, 2018, 2019, 2020,
+and 2022 headings; there was no 2021 heading or entry. The exact per-year and
+per-type totals above were calculated from the matched local metadata records rather
+than inferred from page layout.
+
+<SourceCitation
+  sourceId="patreon-campaign-363999-2026-08-29"
+  title="Daniel's Patreon"
+  href="https://www.patreon.com/Hidinginmyroom"
+  locator="Public campaign page for vanity Hidinginmyroom; checked 2026-08-29"
+  evidence="Public campaign identity and mutable displayed 136-post total only; no post-level access, completeness, or redistribution finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+<SourceCitation
+  sourceId="patreon-campaign-363999-sitemap-2026-08-29"
+  title="Daniel's Patreon — public sitemap"
+  href="https://www.patreon.com/Hidinginmyroom/sitemap"
+  locator="All public sitemap entries under the 2016, 2017, 2018, 2019, 2020, and 2022 headings; checked 2026-08-29"
+  evidence="Post URL identities, title labels, calendar labels, and sitemap coverage only; no body access, truth-of-title, event-date, or public/free-access finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+## Thematic event and character routing map
+
+This section maps the Patreon records that add a distinct HIMR-relevant event,
+person-role, creator reference, fictional character, or correction. It is a research
+route, not a second biography and not a finding that a title or first-person account
+is true.
+
+### Access boundary
+
+| Key | Body state at the 29 August 2026 signed-out review | Permitted reading here |
+| --- | --- | --- |
+| **P** | The complete author-written body surfaced signed out. | A narrowly paraphrased first-party account may be used, subject to ordinary verification and privacy limits. |
+| **L** | The public page exposed metadata, but not the complete body. | The title/date are public metadata. Any body-derived statement below comes only from the private preservation copy and is explicitly attributed to Daniel. |
+| **A** | A public post record exists, but the preservation copy has no full body. | Metadata only; do not infer missing content. |
+
+The ten **P** records are `6926651`, `12132573`, `12184415`, `12424445`,
+`12704962`, `12990510`, `14408113`, `14922710`, `22324322`, and `60626337`.
+Post `23468829` is **A**; the other 125 records are **L**. These letters describe a
+dated body-access check, not ownership, a reuse licence, or proof that an attachment
+or external embed was public.
+
+<Aside type="danger" title="Claims about other people remain claims">
+  Daniel's Patreon writing is a first-party source for what Daniel published, not
+  independent proof of another person's conduct, identity, private messages,
+  relationship status, or response. No authenticated response from the unnamed
+  partner, forum users, alleged redistributor, or Chris Broad was located inside this
+  bounded Patreon preservation set. That absence is not proof that no response exists
+  elsewhere. Private names, graphic or intimate detail, medical detail, addresses,
+  and other identifying location information are omitted.
+</Aside>
+
+### Relationship and partner labels
+
+These routes preserve Daniel's changing labels without treating adjacent posts as one
+verified relationship. In particular, a generic **girlfriend** or **wife** is not
+silently identified as Chihiro, and the locked-only first name of an online former
+girlfriend is withheld.
+
+Some posts occur in more than one row because Daniel mentions several roles in one
+body. That reuse is not corroboration and does not join the roles: post `12990510`
+mentions several retrospective partners, while `25902646` mentions both an online
+former-girlfriend role and distinct 2019 travel contacts. “First online” and “first
+in-person” are separate qualifiers, not a contradiction or identity bridge.
+
+| Person-role or sequence | Exact Patreon routes | Publication-safe boundary and wiki route |
+| --- | --- | --- |
+| 2014 / near-marriage / “last Japanese girlfriend” cluster | [`9315679`](https://www.patreon.com/Hidinginmyroom/posts/2014-ex-japanese-9315679), 2017-04-27 **L**; [`9379616`](https://www.patreon.com/Hidinginmyroom/posts/2014-ex-japanese-9379616), 2017-04-27 **L**; [`9577685`](https://www.patreon.com/Hidinginmyroom/posts/unedited-version-9577685), 2017-04-29 **L**; [`12919204`](https://www.patreon.com/Hidinginmyroom/posts/oita-to-beppu-12919204), 2017-07-12 **L**; [`12990510`](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510), 2017-07-15 **P** | Daniel uses several retrospective labels that strongly suggest a cluster, but the records do not prove that every label denotes one person. The public record supports only a compact attributed history; health, intimate, appearance, and private-photo detail is excluded. Route to [Relationships & Dating](/wiki/events/relationship-dramas/). |
+| Generic girlfriend, breakup, and joint-outing labels | [`9318670`](https://www.patreon.com/Hidinginmyroom/posts/i-dont-think-my-9318670), 2017-04-27 **L**; [`9835164`](https://www.patreon.com/Hidinginmyroom/posts/i-may-have-my-9835164), 2017-05-02 **L**; [`11384880`](https://www.patreon.com/Hidinginmyroom/posts/breaking-up-11384880), 2017-05-26 **L**; [`17796312`](https://www.patreon.com/Hidinginmyroom/posts/unsuccessful-17796312), 2018-03-27 **L**; [`28458051`](https://www.patreon.com/Hidinginmyroom/posts/takoyaki-with-my-28458051), 2019-07-18 **L**; [`28679202`](https://www.patreon.com/Hidinginmyroom/posts/walking-around-28679202), 2019-07-27 **L** | Public titles establish unnamed relationship, breakup, restaurant, or livestream labels only. They do not prove pregnancy, relationship continuity, a partner identity, or the event implications of the wording. |
+| First in-person Japanese girlfriend | [`12705161`](https://www.patreon.com/Hidinginmyroom/posts/date-with-my-12705161), 2017-07-08 **L**; [`12990510`](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510), 2017-07-15 **P**; [`16931501`](https://www.patreon.com/Hidinginmyroom/posts/going-out-is-16931501), 2018-02-11 **L** | A creator-used role associated with his 2010 Japan recollections. It must not be merged with the distinct online former-girlfriend role below. |
+| Withheld-name online first-girlfriend role | [`13807453`](https://www.patreon.com/Hidinginmyroom/posts/18-year-old-13807453), 2017-08-11 **L**; [`25902646`](https://www.patreon.com/Hidinginmyroom/posts/quiet-day-25902646), 2019-04-05 **L**; [`26358613`](https://www.patreon.com/Hidinginmyroom/posts/i-dont-want-to-26358613), 2019-04-25 **L** | Daniel names a private former contact in the locked bodies, describes an approximately two-year online relationship without an in-person meeting, and later uses it in a self-reflection about attachment. The name and breakup detail are not needed for the public wiki. |
+| Korean former-girlfriend and Korean-man roles | [`11243397`](https://www.patreon.com/Hidinginmyroom/posts/surrounded-by-11243397), 2017-05-17 **L**; [`11540730`](https://www.patreon.com/Hidinginmyroom/posts/being-hugged-by-11540730), 2017-06-02 **L**; [`11789785`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-ex-11789785), 2017-06-17 **L**; [`12021814`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-in-12021814), 2017-06-24 **L**; [`12333878`](https://www.patreon.com/Hidinginmyroom/posts/at-airport-in-12333878), 2017-07-01 **L**; [`12990510`](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510), 2017-07-15 **P**; [`14033039`](https://www.patreon.com/Hidinginmyroom/posts/feeding-her-14033039), 2017-08-24 **L** | The recurring former-girlfriend role and the separate Korean-man photo label are not one identity. The former girlfriend is not automatically the same person as every Korean-girl-labelled archive title. |
+| French former-girlfriend and a separate Japanese-man role Daniel labels bisexual | [`11282590`](https://www.patreon.com/Hidinginmyroom/posts/french-ex-on-and-11282590), 2017-05-20 **L**; [`11283194`](https://www.patreon.com/Hidinginmyroom/posts/blowjob-unedited-11283194), 2017-05-20 **L**; [`13132089`](https://www.patreon.com/Hidinginmyroom/posts/me-in-korea-2012-13132089), 2017-07-19 **L**; [`13344792`](https://www.patreon.com/Hidinginmyroom/posts/french-13344792), 2017-07-25 **L**; [`25739362`](https://www.patreon.com/Hidinginmyroom/posts/my-gay-with-guy-25739362), 2019-03-30 **L** | Posts `11282590`, `13132089`, and `13344792` repeat a French-former-girlfriend role. The first and third also distinguish an unnamed Japanese man, call him bisexual, and claim that he performed oral sex on Daniel. Post `25739362` directly targets the 2017 `M4PdbuE-m44` archive file and says Daniel wondered what would have happened had he said yes to sex with the man. That post-to-file bridge is exact; the association between its Japanese-Guy story and the recurring captioned role is contextual, not an authenticated participant match. Same-day embed `11283194` uses a different ID, `CbfZ3sEywC4`, and is only a possible companion. The [received-act source cluster](/wiki/events/short-term-encounters/#japanese-man-bisexual-guy-label-and-the-received-act-connection) documents the exact, contextual, and unresolved bridges. These are Daniel's labels and one-sided claims; the private man's identity and orientation, Daniel's orientation, consent, conduct, appearance, and family detail are not established. |
+| Taiwanese crush and Taiwanese social groups | [`11149303`](https://www.patreon.com/Hidinginmyroom/posts/karaoke-with-11149303), 2017-05-12 **L**; [`13899717`](https://www.patreon.com/Hidinginmyroom/posts/lunch-with-13899717), 2017-08-17 **L**; [`16288139`](https://www.patreon.com/Hidinginmyroom/posts/bowling-old-16288139), 2018-01-08 **L**; [`16521989`](https://www.patreon.com/Hidinginmyroom/posts/just-short-old-16521989), 2018-01-21 **L** | The bodies distinguish unnamed friend groups from a person Daniel calls a crush or “the Taiwanese girl.” Likely continuity is not identity proof, and no biography is warranted. |
+| Iranian-girl and Kyoto-girl roles | [`14033039`](https://www.patreon.com/Hidinginmyroom/posts/feeding-her-14033039), 2017-08-24 **L**; [`17007133`](https://www.patreon.com/Hidinginmyroom/posts/me-and-kyoto-17007133), 2018-02-15 **L** | One-off private-person labels. Their minimized [outing and one-off-meeting accounts](/wiki/events/short-term-encounters/#what-the-retained-patreon-writing-adds) are now retained as Daniel's claims, with the Iranian-Girl property-damage allegation conspicuously unverified and the Kyoto role kept separate from Tomoko. No image, private place, participant statement, or identity profile is published. |
+| Tomoko reference | [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865), 2017-11-13 **L**; [`17007133`](https://www.patreon.com/Hidinginmyroom/posts/me-and-kyoto-17007133), 2018-02-15 **L** | Daniel refers to the earlier “Tomoko” sequence and says he concealed another meeting. The locked material adds no necessary identity finding. Route to the bounded [Tomoko source trail](/wiki/characters/tomoko/). |
+| Australian Guy and a distinct story persona | [`16524132`](https://www.patreon.com/Hidinginmyroom/posts/well-that-just-16524132), 2018-01-21 **L**; [`17233889`](https://www.patreon.com/Hidinginmyroom/posts/emotional-day-17233889), 2018-02-28 **L**; [`17389411`](https://www.patreon.com/Hidinginmyroom/posts/i-think-going-to-17389411), 2018-03-06 **L**; [`17875376`](https://www.patreon.com/Hidinginmyroom/posts/first-argument-17875376), 2018-03-31 **L** | Three posts contain Daniel's claims about an unnamed Australian man and private messages; those details are not republished. The January body separately calls a named “Australian catfish” story partly invented, so that persona is not merged with the [Australian Guy](/wiki/characters/australian-guy/). |
+| Generic wife / partner conflict and reconciliation sequence | [`16707031`](https://www.patreon.com/Hidinginmyroom/posts/this-is-getting-16707031), 2018-01-31 **L**; [`17028534`](https://www.patreon.com/Hidinginmyroom/posts/mid-day-naps-17028534), 2018-02-16 **L**; [`17490053`](https://www.patreon.com/Hidinginmyroom/posts/here-we-go-17490053), 2018-03-11 **L**; [`17796312`](https://www.patreon.com/Hidinginmyroom/posts/unsuccessful-17796312), 2018-03-27 **L**; [`17875376`](https://www.patreon.com/Hidinginmyroom/posts/first-argument-17875376), 2018-03-31 **L**; [`17921729`](https://www.patreon.com/Hidinginmyroom/posts/nearly-lost-it-17921729), 2018-04-02 **L**; [`18600316`](https://www.patreon.com/Hidinginmyroom/posts/from-loneliness-18600316), 2018-05-04 **L**; [`19541468`](https://www.patreon.com/Hidinginmyroom/posts/night-in-park-19541468), 2018-06-19 **L**; [`22324322`](https://www.patreon.com/Hidinginmyroom/posts/sorry-i-havent-i-22324322), 2018-10-27 **P**; [`22381930`](https://www.patreon.com/Hidinginmyroom/posts/back-with-my-now-22381930), 2018-10-30 **L**; [`24678880`](https://www.patreon.com/Hidinginmyroom/posts/my-wife-is-going-24678880), 2019-02-13 **L**; [`25601953`](https://www.patreon.com/Hidinginmyroom/posts/loneliness-25601953), 2019-03-24 **L**; [`28047708`](https://www.patreon.com/Hidinginmyroom/posts/life-update-28047708), 2019-07-01 **L**; [`28458051`](https://www.patreon.com/Hidinginmyroom/posts/takoyaki-with-my-28458051), 2019-07-18 **L**; [`28679202`](https://www.patreon.com/Hidinginmyroom/posts/walking-around-28679202), 2019-07-27 **L** | This is a sequence of Daniel's relationship labels, fears, self-criticism, and changing accounts—not a verified account of the unnamed partner. Private recording/message claims are not reproduced. The October 27 title alleges platform monitoring by his wife; its P body safely adds only Daniel's hotel-to-hotel and longer-term-lodging account. No partner response is present in this set. Route to [Relationships & Dating](/wiki/events/relationship-dramas/) and keep the generic role separate from [Chihiro](/wiki/characters/chihiro/). |
+| Single-mother former-girlfriend role | [`17796312`](https://www.patreon.com/Hidinginmyroom/posts/unsuccessful-17796312), 2018-03-27 **L**; [`17921729`](https://www.patreon.com/Hidinginmyroom/posts/nearly-lost-it-17921729), 2018-04-02 **L** | Daniel retrospectively describes transport help and a respected channel-privacy request. The role is not automatically merged with the later archive title _My experience dating a Japanese single mother_. Route to the [retrospective role map](/wiki/events/relationship-dramas/#patreon-retrospectives-earlier-partner-and-social-roles), not a private-person profile. |
+| German-girl, Turkish-Girl, and prospective English-date roles | [`25902646`](https://www.patreon.com/Hidinginmyroom/posts/quiet-day-25902646), 2019-04-05 **L**; [`26358613`](https://www.patreon.com/Hidinginmyroom/posts/i-dont-want-to-26358613), 2019-04-25 **L** | Daniel distinguishes several private contacts while reassessing travel for meetings. The [encounter map](/wiki/events/short-term-encounters/#what-the-retained-patreon-writing-adds) classifies the English meeting as unrealized, the German role as a planned meeting Daniel says fell through while leaving any earlier in-person status unresolved, and the Turkish meeting as the only one explicitly described in the April 25 post. The roles are unnamed and not joined to later people; [Turkish Girl](/wiki/characters/turkish-girl/) retains the fuller route. |
+| Mila | [`36935788`](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788), 2020-05-09 **L** | Daniel names Mila in a post-divorce update and attributes a short stay and continued contact to the relationship. The locked post does not resolve every same-name source or authenticate Mila's account. Route to [Mila](/wiki/characters/mila/). |
+
+### Creators, acquaintances, and audience references
+
+| Label | Exact Patreon routes | Bounded reading |
+| --- | --- | --- |
+| That Japanese Man Yuta and Tkyosam | [`16828535`](https://www.patreon.com/Hidinginmyroom/posts/japanese-hate-16828535), 2018-02-06 **L**; [`16931501`](https://www.patreon.com/Hidinginmyroom/posts/going-out-is-16931501), 2018-02-11 **L** | Daniel says each creator left a comment. These are comment claims, not collaborations, endorsements, or authenticated quotations. |
+| TerryTV and Gentleman Reviews | [`17567672`](https://www.patreon.com/Hidinginmyroom/posts/im-really-scared-17567672), 2018-03-15 **L** | Daniel claims TerryTV responded to a Gentleman Reviews upload and describes the platform reaction. The [platform page](/wiki/events/channel-bans-and-platforms/#gentleman-reviews-first-party-ownership-claim-stable-id-missing) uses only Daniel's ownership/deletion account; mass-report causation and enforcement remain unverified. |
+| David Bond | [`17389411`](https://www.patreon.com/Hidinginmyroom/posts/i-think-going-to-17389411), 2018-03-06 **L**; [`18935501`](https://www.patreon.com/Hidinginmyroom/posts/current-with-18935501), 2018-05-21 **L** | One asserted prior meeting and one comparison in private relationship context. Neither supports a guest profile or collaboration finding. |
+| Chris Broad / Abroad in Japan and Joey / The Anime Man | [`20932874`](https://www.patreon.com/Hidinginmyroom/posts/had-little-chat-20932874), 2018-08-23 **L**; [`22381930`](https://www.patreon.com/Hidinginmyroom/posts/back-with-my-now-22381930), 2018-10-30 **L**; [`23468829`](https://www.patreon.com/Hidinginmyroom/posts/i-went-to-school-23468829), 2018-12-21 **A** | Daniel claims private contact, mutual primary-school recognition, concern about location disclosure, removal of his own video, and discussion of a possible meeting; Joey appears only through Daniel's account of that alleged exchange. No Broad-authenticated response is in this set, location detail is omitted, and the December post body is absent. Route to [Creators & Guests](/wiki/characters/friends-and-guests/). |
+| Elvis The Alien and “Asian Onision” response | [`23834572`](https://www.patreon.com/Hidinginmyroom/posts/dont-really-like-23834572), 2019-01-08 **L** | Daniel responds to Elvis's coverage, rejects the label in the title, and offers a self-critical comparison with Onision. This is Daniel's response to a public label, not a diagnosis or proof that the compared conduct occurred. Elvis has a separately checked [public source trail](/wiki/characters/friends-and-guests/#elvis-the-alien-videos-responses-and-an-on-camera-meeting). |
+| Comparison-only creator names | [`16971019`](https://www.patreon.com/Hidinginmyroom/posts/theyre-plotting-16971019), 2018-02-13 **L**; [`23834572`](https://www.patreon.com/Hidinginmyroom/posts/dont-really-like-23834572), 2019-01-08 **L**; [`28047708`](https://www.patreon.com/Hidinginmyroom/posts/life-update-28047708), 2019-07-01 **L** | PewDiePie is hypothetical comparison; Ben Deen, FunForLouis, Jim Chapman, Toby Turner, Keemstar, RiceGum, Jake Paul, Logan Paul, and iDubbbz are examples; Tosh.0 is a claimed social-media share. None is treated as a contact, guest, or endorsement. |
+| Sam and unnamed friend | [`31054106`](https://www.patreon.com/Hidinginmyroom/posts/bonus-footage-i-31054106), 2019-10-26 **L** | Public title metadata names Sam; the locked body describes a social outing and links unreviewed footage. This is a title-level guest lead only, not an identification or relationship finding. |
+
+Locked bodies also contain first-name-only supporters, a school acquaintance, and
+unnamed friends or business contacts. They are not needed to understand the public
+record, so their labels and private communications are withheld.
+
+### Family and pets
+
+| Role | Exact Patreon routes | Bounded reading and wiki route |
+| --- | --- | --- |
+| Father | [`12990510`](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510), 2017-07-15 **P**; [`13478158`](https://www.patreon.com/Hidinginmyroom/posts/skiing-trip-13478158), 2017-07-29 **L**; [`19195043`](https://www.patreon.com/Hidinginmyroom/posts/island-life-19195043), 2018-06-02 **L**; [`24041648`](https://www.patreon.com/Hidinginmyroom/posts/bad-news-24041648), 2019-01-17 **L**; [`24203051`](https://www.patreon.com/Hidinginmyroom/posts/rollercoaster-of-24203051), 2019-01-24 **L**; [`24439173`](https://www.patreon.com/Hidinginmyroom/posts/everything-is-24439173), 2019-02-03 **L**; [`24587441`](https://www.patreon.com/Hidinginmyroom/posts/thoughts-on-my-24587441), 2019-02-09 **L**; [`24720226`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-dad-24720226), 2019-02-15 **L**; [`24809383`](https://www.patreon.com/Hidinginmyroom/posts/not-up-to-much-24809383), 2019-02-19 **L**; [`25303901`](https://www.patreon.com/Hidinginmyroom/posts/funeral-is-25303901), 2019-03-11 **L**; [`25601953`](https://www.patreon.com/Hidinginmyroom/posts/loneliness-25601953), 2019-03-24 **L** | The public post associates Daniel's father with a laptop for an early Japan trip. The locked sequence contains family memories and bereavement writing. Only the proportionate attributed crisis-to-funeral chronology, date window, and creator-removal history are used on the [Father](/wiki/characters/father/) and [platform](/wiki/events/channel-bans-and-platforms/#a-february-2019-account-of-an-earlier-creator-led-purge) pages; medical, diet, inheritance, funeral, ashes, and private-belongings detail remains excluded. |
+| Mother, sister, and extended family | [`11216416`](https://www.patreon.com/Hidinginmyroom/posts/2012-cousins-11216416), 2017-05-15 **L**; [`12021814`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-in-12021814), 2017-06-24 **L**; [`13664498`](https://www.patreon.com/Hidinginmyroom/posts/my-cousins-13664498), 2017-08-04 **L**; [`18212709`](https://www.patreon.com/Hidinginmyroom/posts/malaysia-trip-18212709), 2018-04-16 **L**; [`19195043`](https://www.patreon.com/Hidinginmyroom/posts/island-life-19195043), 2018-06-02 **L**; [`25303901`](https://www.patreon.com/Hidinginmyroom/posts/funeral-is-25303901), 2019-03-11 **L** | These posts establish only recurring family-role labels and Daniel's travel/funeral context. Private family histories, health, finances, exact locations, and third-party circumstances are omitted. Existing public-source profiles remain the authority for [Daniel's Mother](/wiki/characters/daniels-mother/) and [Sabrina / Sister](/wiki/characters/sabrina/). |
+| Toffee and unnamed cats | [`16521989`](https://www.patreon.com/Hidinginmyroom/posts/just-short-old-16521989), 2018-01-21 **L**; [`16691051`](https://www.patreon.com/Hidinginmyroom/posts/accepted-on-16691051), 2018-01-30 **L**; [`22624769`](https://www.patreon.com/Hidinginmyroom/posts/weird-dream-22624769), 2018-11-10 **L**; [`25902646`](https://www.patreon.com/Hidinginmyroom/posts/quiet-day-25902646), 2019-04-05 **L** | The dream post names Toffee; other posts mention one or more unnamed cats. They are not automatically assigned to Toffee or another pet. Route to [Pets & Aquariums](/wiki/characters/pets-and-aquariums/). |
+
+### Fictional, artwork, and game characters
+
+| Character or project label | Exact Patreon routes | Fiction / reality boundary |
+| --- | --- | --- |
+| _Another boring night shift_ cast | [`6926651`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-1-6926651), 2016-10-04 **P**; [`6948142`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-2-6948142), 2016-10-07 **L**; [`6948176`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-3-6948176), 2016-10-07 **L**; [`6948203`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-4-6948203), 2016-10-07 **L**; [`6980237`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-5-6980237), 2016-10-11 **L** | The public page calls the comic inspired by a recent night-shift job and past events. A male boss and three young women are fictionalized characters; the locked author notes do not identify the real boss or independently verify a workplace incident. |
+| Cave girl and guardian giant | [`6941289`](https://www.patreon.com/Hidinginmyroom/posts/crying-in-cave-6941289), 2016-10-06 **L** | An optional fictional scenario for a drawing. Abuse and graphic fantasy detail is omitted; the girl is not Daniel or a real private person. |
+| Ice cream girl | [`12132573`](https://www.patreon.com/Hidinginmyroom/posts/ice-cream-girl-12132573), 2017-06-26 **P** | Public author description of a fictional girl in an underwater-bedroom art concept. |
+| Room-concept artwork | [`6927182`](https://www.patreon.com/Hidinginmyroom/posts/cozy-room-6927182), 2016-10-05 **L**; [`12184415`](https://www.patreon.com/Hidinginmyroom/posts/cosy-room-12184415), 2017-06-27 **P** | Two artwork records with similar room labels. Similar titles do not by themselves prove that they are one image or version; the public body describes an art-competition entry, not a residence. |
+| Bird-town girl and bird people | [`12468199`](https://www.patreon.com/Hidinginmyroom/posts/failed-drawing-1-12468199), 2017-07-04 **L**; [`12480538`](https://www.patreon.com/Hidinginmyroom/posts/bird-town-12480538), 2017-07-05 **L** | Locked artwork/process records; generic fictional roles only. |
+| Cave figure, cave ogre, girl, and small figures | [`12424445`](https://www.patreon.com/Hidinginmyroom/posts/hiding-in-cave-12424445), 2017-07-02 **P**; [`12704962`](https://www.patreon.com/Hidinginmyroom/posts/cave-ogre-and-12704962), 2017-07-08 **P** | Public art labels. “Homeless” in the first body describes the illustrated subject; it is not evidence about Daniel's housing. |
+| World of Warcraft character “Typhus” | [`13478158`](https://www.patreon.com/Hidinginmyroom/posts/skiing-trip-13478158), 2017-07-29 **L** | Daniel says he chose the name for a game character during a childhood recollection. It is not a HIMR biographical person. |
+| HIMR game avatar and channel-character plan | [`60626337`](https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337), 2022-01-02 **P** | Public body says the player would control Daniel through channel-referential levels and characters. It names no additional real participant. |
+| Game version labels, companion, enemies, quest givers, customers, and “Baby Daniels” | [`60678758`](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-0-60678758), 2022-01-03 **L**; [`60979863`](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-1-60979863), 2022-01-10 **L**; [`61583236`](https://www.patreon.com/Hidinginmyroom/posts/version-1-6-big-61583236), 2022-01-24 **L** | Daniel's locked notes describe these fictional roles and mechanics. They are game characters and claimed patch features, not real people or proof that every system worked. The [game-project epilogue](/wiki/eras/kent-maidstone-era/#epilogue-the-2022-himr-game-project) carries the fuller paraphrase and screenshot boundary. |
+
+### Platform history, corrections, and access policy
+
+<Aside type="danger" title="Unverified platform and third-party allegations">
+  The table below records Daniel's claims about mass reporting, forum reposting,
+  immigration reports, and redistribution. No platform notice, forum-user response,
+  alleged redistributor response, or independent causation evidence is contained in
+  this Patreon set. Those claims must remain attributed to Daniel and must not be
+  rewritten as events that the named or unnamed third parties actually caused.
+</Aside>
+
+| Event sequence | Exact Patreon routes | What the records support |
+| --- | --- | --- |
+| Twitch fallback and `danielhimr` address | [`14408113`](https://www.patreon.com/Hidinginmyroom/posts/twitch-14408113), 2017-09-16 **P**; [`14922710`](https://www.patreon.com/Hidinginmyroom/posts/thanks-14922710), 2017-10-18 **P** | Daniel published two historical Twitch addresses while describing YouTube livestream problems. The current stable-ID reconciliation is on [Channel, Platform & Rebrand History](/wiki/events/channel-bans-and-platforms/#two-twitch-addresses-in-2017-patreon-posts). |
+| Demonetization, strike, and livestream accounts | [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865), 2017-11-13 **L**; [`16155970`](https://www.patreon.com/Hidinginmyroom/posts/im-fucking-idiot-16155970), 2018-01-01 **L**; [`17567672`](https://www.patreon.com/Hidinginmyroom/posts/im-really-scared-17567672), 2018-03-15 **L**; [`18735121`](https://www.patreon.com/Hidinginmyroom/posts/age-restricted-18735121), 2018-05-11 **L**; [`22381930`](https://www.patreon.com/Hidinginmyroom/posts/back-with-my-now-22381930), 2018-10-30 **L** | Daniel describes demonetization, restrictions, strikes, appeals, and suspensions across different channels. These are not platform notices. Graphic content is reduced to a non-graphic rules context, and mass-report causation remains an allegation. |
+| Other-channel streaming link | [`16379179`](https://www.patreon.com/Hidinginmyroom/posts/return-to-16379179), 2018-01-13 **L** | Daniel links stable YouTube channel ID `UCtjRF3IINokbvJTz6XqPgWg` and describes intended streaming use. This is an ownership/use claim at that date, not continuous control or an explanation for current unavailability. |
+| Suspected login followed by a correction | [`16579629`](https://www.patreon.com/Hidinginmyroom/posts/suspicious-16579629), 2018-01-24 **L**; [`16594859`](https://www.patreon.com/Hidinginmyroom/posts/some-updates-16594859), 2018-01-25 **L**; [`18154223`](https://www.patreon.com/Hidinginmyroom/posts/update-on-18154223), 2018-04-13 **L** | Daniel initially feared an unknown login, then wrote that Streamlabs authorization probably explained it. The sequence documents his correction; it does not establish hacking. Account-security specifics are omitted. |
+| Satirical-video framing and forum reaction | [`16730782`](https://www.patreon.com/Hidinginmyroom/posts/this-is-amazing-16730782), 2018-02-01 **L**; [`16828535`](https://www.patreon.com/Hidinginmyroom/posts/japanese-hate-16828535), 2018-02-06 **L**; [`16971019`](https://www.patreon.com/Hidinginmyroom/posts/theyre-plotting-16971019), 2018-02-13 **L** | Daniel says _Why I hate living in Japan_ shifted from seriousness into absurdity/sarcasm, then claims it was reposted to an anti-foreigner forum and that forum users reported him to immigration. The creative-framing statement is his own; the forum, reporting, legal, and causation claims are unverified allegations with no forum-user response in this set. |
+| Earlier hate-comment and cyberbullying links | [`10564438`](https://www.patreon.com/Hidinginmyroom/posts/hate-comments-10564438), 2017-05-05 **L**; [`11224331`](https://www.patreon.com/Hidinginmyroom/posts/cyberbullying-11224331), 2017-05-16 **L** | The retained Patreon bodies add no narrative beyond external-link records. The public titles are topic labels, not proof of harassment, a perpetrator, harm, or the linked media's contents. |
+| Patreon stream tier, archive links, and alleged redistribution | [`19766907`](https://www.patreon.com/Hidinginmyroom/posts/new-reward-for-3-19766907), 2018-06-30 **L**; [`23383037`](https://www.patreon.com/Hidinginmyroom/posts/lengths-people-23383037), 2018-12-17 **L**; [`26385274`](https://www.patreon.com/Hidinginmyroom/posts/new-reward-live-26385274), 2019-04-26 **L**; [`26532567`](https://www.patreon.com/Hidinginmyroom/posts/new-cape-and-26532567), 2019-05-02 **L**; [`28901561`](https://www.patreon.com/Hidinginmyroom/posts/access-to-live-i-28901561), 2019-08-04 **L**; [`30348467`](https://www.patreon.com/Hidinginmyroom/posts/airbnb-stream-30348467), 2019-09-30 **L** | Daniel describes archived or past streams as a Patreon reward and later alleges that a subreddit user pledged in order to redistribute Patreon material. Other entries are access/source locators only. This supports his access-plan and allegation, not a person's identity, a leak, motive, Reddit response, or the external videos' contents. |
+| Creator-led deletion and later archive recovery | [`24720226`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-dad-24720226), 2019-02-15 **L** | Daniel says he removed videos in early 2018 out of fear of strikes and later recovered some files from a third-party archive. The [platform page](/wiki/events/channel-bans-and-platforms/#a-february-2019-account-of-an-earlier-creator-led-purge) keeps this separate from a platform deletion log. |
+| Bullying-themed video moved to Patreon | [`28213315`](https://www.patreon.com/Hidinginmyroom/posts/patreon-only-my-28213315), 2019-07-08 **L** | Daniel says demonetization led him to put the video on Patreon. The external video was not reviewed here, and no bullying event is verified from the Patreon link. |
+
+### Work, travel, and housing routes
+
+| Topic | Exact Patreon routes | Bounded reading and destination |
+| --- | --- | --- |
+| Webcomic and night-shift bridge | [`6905765`](https://www.patreon.com/Hidinginmyroom/posts/drawing-6905765), 2016-10-02 **L**; [`6926651`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-1-6926651), 2016-10-04 **P**; [`6948142`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-2-6948142), 2016-10-07 **L**; [`6980237`](https://www.patreon.com/Hidinginmyroom/posts/another-boring-5-6980237), 2016-10-11 **L** | Daniel publicly calls the comic inspired by a recent new night-shift job and past events. Locked author notes mix fiction with workplace inspiration; they do not verify a boss's or customer's conduct. Route to [Work & Income Claims](/wiki/events/work-and-income-claims/). |
+| Older game, skit, and self-archive links | [`10719015`](https://www.patreon.com/Hidinginmyroom/posts/monkey-island-is-10719015), 2017-05-08 **L**; [`16199311`](https://www.patreon.com/Hidinginmyroom/posts/my-most-video-16199311), 2018-01-03 **L**; [`16362660`](https://www.patreon.com/Hidinginmyroom/posts/really-old-video-16362660), 2018-01-12 **L** | External-link and retrospective creative records. Daniel describes an old skit and changes in his presentation; the external videos were not reviewed here, and sexuality, gender-expression, accent, or identity inferences are excluded. |
+| Lawson, YouTube/translation, camera, and Shutterstock | [`11331288`](https://www.patreon.com/Hidinginmyroom/posts/working-at-11331288), 2017-05-23 **L**; [`16077206`](https://www.patreon.com/Hidinginmyroom/posts/recent-thoughts-16077206), 2017-12-27 **L**; [`16500944`](https://www.patreon.com/Hidinginmyroom/posts/thoughts-on-g5x-16500944), 2018-01-20 **L**; [`16691051`](https://www.patreon.com/Hidinginmyroom/posts/accepted-on-16691051), 2018-01-30 **L** | A Lawson work title, Daniel's statement that YouTube and translation were online jobs, an equipment review, and his claim that eight stock images were accepted. These do not establish job dates, income, sales, sponsorship, or audited accounts. |
+| Cost, budget, and income-topic labels | [`11131113`](https://www.patreon.com/Hidinginmyroom/posts/2-week-trip-to-11131113), 2017-05-11 **L**; [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865), 2017-11-13 **L**; [`22978329`](https://www.patreon.com/Hidinginmyroom/posts/lets-freak-out-22978329), 2018-11-28 **L**; [`33579818`](https://www.patreon.com/Hidinginmyroom/posts/limited-budget-33579818), 2020-01-30 **L** | The trip-cost and food-budget entries are link/topic labels. The other bodies contain Daniel's unaudited creator-revenue and view concerns. Selected historical creator metrics are published as attributed figures in the [longitudinal analysis](/wiki/archive/patreon-longitudinal-analysis/#the-audiencedramaincome-feedback-loop); none establishes actual earnings, affordability, or a financial outcome. |
+| Early Japan and Korea recollections | [`10323546`](https://www.patreon.com/Hidinginmyroom/posts/studying-korean-10323546), 2017-05-04 **L**; [`11616138`](https://www.patreon.com/Hidinginmyroom/posts/i-used-to-have-11616138), 2017-06-07 **L**; [`12021814`](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-in-12021814), 2017-06-24 **L**; [`12990510`](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510), 2017-07-15 **P**; [`13132089`](https://www.patreon.com/Hidinginmyroom/posts/me-in-korea-2012-13132089), 2017-07-19 **L** | Daniel places himself in Osaka around 2010, Korea in 2012/2014-labelled recollections, and a five-month room stay on the first Japan trip; a separate body describes Japan as an escape and social-life setting. These remain retrospective self-reports, not residence or immigration records. Route to the [Japan Era](/wiki/eras/japan-era/). |
+| 2017 guesthouse / apartment streams | [`15442242`](https://www.patreon.com/Hidinginmyroom/posts/last-live-stream-15442242), 2017-11-19 **L**; [`15456992`](https://www.patreon.com/Hidinginmyroom/posts/japanese-snacks-15456992), 2017-11-20 **L**; [`15509432`](https://www.patreon.com/Hidinginmyroom/posts/another-15509432), 2017-11-23 **L** | Source locators for external livestreams. The Patreon bodies and unreviewed targets do not independently establish a move, lease, address, or complete stream history. |
+| 2018 Malaysia trip sequence | [`18212709`](https://www.patreon.com/Hidinginmyroom/posts/malaysia-trip-18212709), 2018-04-16 **L**; [`18311158`](https://www.patreon.com/Hidinginmyroom/posts/malaysia-18311158), 2018-04-21 **L**; [`19195043`](https://www.patreon.com/Hidinginmyroom/posts/island-life-19195043), 2018-06-02 **L** | Daniel moves from family-trip planning and packing to an island/on-trip account and expected return to Japan. Visa, private itinerary, and exact-location detail is excluded. This is a 2018 prelude to the later [Southeast Asia chronology](/wiki/eras/thailand-era/). |
+| Hotel-to-hotel and Airbnb labels | [`22324322`](https://www.patreon.com/Hidinginmyroom/posts/sorry-i-havent-i-22324322), 2018-10-27 **P**; [`30348467`](https://www.patreon.com/Hidinginmyroom/posts/airbnb-stream-30348467), 2019-09-30 **L** | Daniel publicly wrote that he was moving between hotels and seeking something longer term. The later post is an Airbnb stream-access label only. Neither establishes an address, homelessness, tenancy, or continuous housing state. |
+| Park as temporary space, not a housing finding | [`19541468`](https://www.patreon.com/Hidinginmyroom/posts/night-in-park-19541468), 2018-06-19 **L** | Daniel says he spent several hours in a park during a relationship conflict. The locked account does not support homelessness, an overnight stay, a named park, or the truth of his claims about the partner. |
+| 2020 Korea-to-England update | [`36935788`](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788), 2020-05-09 **L** | Daniel says that after divorce he moved to Korea, left after roughly a month because of the pandemic, and returned to England and the family home. This is his retrospective travel/housing account, not border, residence, divorce, or public-health documentation. |
+
+### Channel strategy and sensitive self-claims
+
+<Aside type="danger" title="Unverified allegations and absent responses">
+  The wife-monitoring, doxxing, leak, school-recognition, and private-contact claims
+  below are Daniel's title labels or first-person accounts. No authenticated response
+  from the partner, alleged doxxer or redistributor, or Chris Broad appears in this
+  Patreon set, and no independent school or correspondence record was reviewed. No
+  address, private message, or suspected private identity is published.
+</Aside>
+
+| Theme | Exact Patreon routes | Publication-safe interpretation |
+| --- | --- | --- |
+| Recurring view and creator-work anxiety | [`15360865`](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865), 2017-11-13 **L**; [`16730782`](https://www.patreon.com/Hidinginmyroom/posts/this-is-amazing-16730782), 2018-02-01 **L**; [`18935501`](https://www.patreon.com/Hidinginmyroom/posts/current-with-18935501), 2018-05-21 **L**; [`22978329`](https://www.patreon.com/Hidinginmyroom/posts/lets-freak-out-22978329), 2018-11-28 **L**; [`29036873`](https://www.patreon.com/Hidinginmyroom/posts/complete-and-29036873), 2019-08-09 **L**; [`36935788`](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788), 2020-05-09 **L** | Daniel repeatedly links channel performance to drama, relationships, travel, title strategy, and his own perceived entertainment value. This is a longitudinal self-assessment, not audited analytics or proof of causation. Selected dated figures are retained only as Daniel's claims; unnecessary partner and private financial detail is omitted. |
+| Wife-spying title and unstable-housing body | [`22324322`](https://www.patreon.com/Hidinginmyroom/posts/sorry-i-havent-i-22324322), 2018-10-27 **P** | The title is Daniel's allegation that his wife monitored Discord, Twitter, and perhaps Patreon. The body independently supports only his own hotel-to-hotel account. No partner response is preserved here, so the allegation is not adopted as fact. |
+| Doxxing and Patreon-leak allegations | [`23363862`](https://www.patreon.com/Hidinginmyroom/posts/sick-twisted-are-23363862), 2018-12-16 **L**; [`23383037`](https://www.patreon.com/Hidinginmyroom/posts/lengths-people-23383037), 2018-12-17 **L** | The first is a doxxing-themed title and external-video locator; the second is Daniel's allegation that a subreddit user paid to redistribute private posts. No address, suspected identity, private media URL, or unverified motive is reproduced. |
+| Chris Broad contact and school claim | [`20932874`](https://www.patreon.com/Hidinginmyroom/posts/had-little-chat-20932874), 2018-08-23 **L**; [`23468829`](https://www.patreon.com/Hidinginmyroom/posts/i-went-to-school-23468829), 2018-12-21 **A** | Daniel claims school recognition and private contact; the later body is absent. The wiki may report only Daniel's claim with a conspicuous response/corroboration limit, never the private location detail. |
+| “Asian Onision” label response | [`23834572`](https://www.patreon.com/Hidinginmyroom/posts/dont-really-like-23834572), 2019-01-08 **L** | Daniel discusses an existing public comparison and his own oversharing/defensiveness. The label is not a diagnosis, verified equivalence, or permission to adopt every allegation mentioned in the body. |
+| Adult and encounter labels | [`11282590`](https://www.patreon.com/Hidinginmyroom/posts/french-ex-on-and-11282590), 2017-05-20 **L**; [`11283194`](https://www.patreon.com/Hidinginmyroom/posts/blowjob-unedited-11283194), 2017-05-20 **L**; [`11362484`](https://www.patreon.com/Hidinginmyroom/posts/selling-panties-11362484), 2017-05-25 **L**; [`13344792`](https://www.patreon.com/Hidinginmyroom/posts/french-13344792), 2017-07-25 **L**; [`23260572`](https://www.patreon.com/Hidinginmyroom/posts/i-finally-caved-23260572), 2018-12-11 **L**; [`23304815`](https://www.patreon.com/Hidinginmyroom/posts/that-time-when-i-23304815), 2018-12-13 **L**; [`23888472`](https://www.patreon.com/Hidinginmyroom/posts/i-bought-sex-toy-23888472), 2019-01-10 **L**; [`25601953`](https://www.patreon.com/Hidinginmyroom/posts/loneliness-25601953), 2019-03-24 **L**; [`25739362`](https://www.patreon.com/Hidinginmyroom/posts/my-gay-with-guy-25739362), 2019-03-30 **L**; [`26358613`](https://www.patreon.com/Hidinginmyroom/posts/i-dont-want-to-26358613), 2019-04-25 **L** | The [encounter page](/wiki/events/short-term-encounters/#what-the-retained-patreon-writing-adds) separates Daniel's locked-caption claims, title or embed records, an anonymous-stranger account, an exact `23304815`-to-`Cv-aYDnFffc` video bridge, and a travel reassessment. Its [Japanese-man source cluster](/wiki/events/short-term-encounters/#japanese-man-bisexual-guy-label-and-the-received-act-connection) deduplicates the byte-identical `M4PdbuE-m44` title aliases, connects the 2019 direct archive target to the received-act narrative, and keeps the different `CbfZ3sEywC4` embed unresolved. Graphic detail, private-person identification, orientation inference, and consent or conduct findings remain excluded. Object-only posts route separately to [Love Dolls](/wiki/events/love-dolls/). |
+| Identity-themed external title | [`11565467`](https://www.patreon.com/Hidinginmyroom/posts/half-white-half-11565467), 2017-06-04 **L** | The body adds no public narrative beyond an external-link record. The title is not used to assign ethnicity, race, ancestry, or identity to Daniel or anyone else. |
+| Wellbeing wording and diagnostic question | [`17120283`](https://www.patreon.com/Hidinginmyroom/posts/starting-to-feel-17120283), 2018-02-21 **L**; [`18073039`](https://www.patreon.com/Hidinginmyroom/posts/mood-swings-18073039), 2018-04-09 **L**; [`25601953`](https://www.patreon.com/Hidinginmyroom/posts/loneliness-25601953), 2019-03-24 **L**; [`25902646`](https://www.patreon.com/Hidinginmyroom/posts/quiet-day-25902646), 2019-04-05 **L**; [`26570529`](https://www.patreon.com/Hidinginmyroom/posts/am-sociopath-26570529), 2019-05-03 **L** | These are Daniel's illness, mood, or loneliness self-descriptions and a diagnostic question in a stream title. Medical specifics are omitted, and none supports a diagnosis, symptom finding, or mental-health label. The external stream was not reviewed. |
+
+Across every route above, bodies, downloaded images, executables, embeds, raw JSON,
+comments, and signed URLs remain outside the public wiki. The complete inventory below
+exists so a researcher can locate the public metadata record without treating the
+private preservation set as a public mirror.
+
+## Complete post-locator inventory
+
+The tables below route **all 136 reconciled post IDs**. Titles are reproduced as
+creator/platform labels, including awkward or controversial wording; a title does
+not verify the event or claim it describes. A link may expose only metadata or a
+preview when opened signed out. Image, link, and video-embed labels describe Patreon
+record types—not media that this wiki downloaded or republished.
+
+### 2016
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2016-10-02 | [6905765 — *drawing timelapse!*](https://www.patreon.com/Hidinginmyroom/posts/drawing-6905765) | Video embed |
+| 2016-10-04 | [6926651 — *Another boring night shift - Page 1*](https://www.patreon.com/Hidinginmyroom/posts/another-boring-1-6926651) | Image |
+| 2016-10-05 | [6927182 — *Cozy room*](https://www.patreon.com/Hidinginmyroom/posts/cozy-room-6927182) | Image |
+| 2016-10-06 | [6941289 — *Crying in a cave*](https://www.patreon.com/Hidinginmyroom/posts/crying-in-cave-6941289) | Image |
+| 2016-10-07 | [6948142 — *Another boring night shift - page 2*](https://www.patreon.com/Hidinginmyroom/posts/another-boring-2-6948142) | Image |
+| 2016-10-07 | [6948176 — *Another boring night shift - page 3*](https://www.patreon.com/Hidinginmyroom/posts/another-boring-3-6948176) | Image |
+| 2016-10-07 | [6948203 — *Another boring night shift - page 4*](https://www.patreon.com/Hidinginmyroom/posts/another-boring-4-6948203) | Image |
+| 2016-10-11 | [6980237 — *Another boring night shift - page 5*](https://www.patreon.com/Hidinginmyroom/posts/another-boring-5-6980237) | Image |
+
+### 2017
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2017-04-27 | [9315679 — *2014 - ex Japanese girlfriend*](https://www.patreon.com/Hidinginmyroom/posts/2014-ex-japanese-9315679) | Image |
+| 2017-04-27 | [9318670 — *I don't think my girlfriend's face is attractive - unedited*](https://www.patreon.com/Hidinginmyroom/posts/i-dont-think-my-9318670) | Link |
+| 2017-04-27 | [9379616 — *2014 ex Japanese girlfriend*](https://www.patreon.com/Hidinginmyroom/posts/2014-ex-japanese-9379616) | Image |
+| 2017-04-29 | [9577685 — *Unedited version of "nearly got married"*](https://www.patreon.com/Hidinginmyroom/posts/unedited-version-9577685) | Link |
+| 2017-04-29 | [9577703 — *Lol i found a pic of me*](https://www.patreon.com/Hidinginmyroom/posts/lol-i-found-pic-9577703) | Image |
+| 2017-05-02 | [9835164 — *I may have impregnated my girlfriend unedited*](https://www.patreon.com/Hidinginmyroom/posts/i-may-have-my-9835164) | Link |
+| 2017-05-04 | [10323546 — *Studying Korean*](https://www.patreon.com/Hidinginmyroom/posts/studying-korean-10323546) | Image |
+| 2017-05-05 | [10564438 — *Hate comments*](https://www.patreon.com/Hidinginmyroom/posts/hate-comments-10564438) | Link |
+| 2017-05-08 | [10696724 — *18 year old me*](https://www.patreon.com/Hidinginmyroom/posts/18-year-old-me-10696724) | Image |
+| 2017-05-08 | [10719015 — *Monkey island is awesome*](https://www.patreon.com/Hidinginmyroom/posts/monkey-island-is-10719015) | Link |
+| 2017-05-10 | [11082513 — *Confusing photo*](https://www.patreon.com/Hidinginmyroom/posts/confusing-photo-11082513) | Image |
+| 2017-05-11 | [11131113 — *2 week trip to japan cost*](https://www.patreon.com/Hidinginmyroom/posts/2-week-trip-to-11131113) | Link |
+| 2017-05-12 | [11149303 — *Karaoke with taiwanese people*](https://www.patreon.com/Hidinginmyroom/posts/karaoke-with-11149303) | Image |
+| 2017-05-15 | [11216416 — *2012 cousin's wedding*](https://www.patreon.com/Hidinginmyroom/posts/2012-cousins-11216416) | Image |
+| 2017-05-16 | [11224331 — *Cyberbullying unedited*](https://www.patreon.com/Hidinginmyroom/posts/cyberbullying-11224331) | Link |
+| 2017-05-17 | [11243397 — *Surrounded by ladies*](https://www.patreon.com/Hidinginmyroom/posts/surrounded-by-11243397) | Image |
+| 2017-05-20 | [11282590 — *French ex girlfriend on the right and japanese bisexual guy on my left*](https://www.patreon.com/Hidinginmyroom/posts/french-ex-on-and-11282590) | Image |
+| 2017-05-20 | [11283194 — *The blowjob. unedited*](https://www.patreon.com/Hidinginmyroom/posts/blowjob-unedited-11283194) | Link |
+| 2017-05-23 | [11331288 — *Working at lawson*](https://www.patreon.com/Hidinginmyroom/posts/working-at-11331288) | Image |
+| 2017-05-25 | [11362484 — *Selling panties unedited version*](https://www.patreon.com/Hidinginmyroom/posts/selling-panties-11362484) | Link |
+| 2017-05-26 | [11384880 — *Breaking up unedited*](https://www.patreon.com/Hidinginmyroom/posts/breaking-up-11384880) | Link |
+| 2017-06-02 | [11540730 — *Being hugged by a korean guy*](https://www.patreon.com/Hidinginmyroom/posts/being-hugged-by-11540730) | Image |
+| 2017-06-04 | [11565467 — *half white half asian unedited*](https://www.patreon.com/Hidinginmyroom/posts/half-white-half-11565467) | Link |
+| 2017-06-07 | [11616138 — *I used to have a social life.*](https://www.patreon.com/Hidinginmyroom/posts/i-used-to-have-11616138) | Image |
+| 2017-06-11 | [11683086 — *Old pic with long hair*](https://www.patreon.com/Hidinginmyroom/posts/old-pic-with-11683086) | Image |
+| 2017-06-17 | [11789785 — *Me and my ex korean girlfriend*](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-ex-11789785) | Image |
+| 2017-06-24 | [12021814 — *Me and my cousins in south korea*](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-in-12021814) | Image |
+| 2017-06-26 | [12132573 — *Ice cream girl*](https://www.patreon.com/Hidinginmyroom/posts/ice-cream-girl-12132573) | Image |
+| 2017-06-27 | [12184415 — *Cosy room*](https://www.patreon.com/Hidinginmyroom/posts/cosy-room-12184415) | Image |
+| 2017-07-01 | [12333878 — *At the airport in korea*](https://www.patreon.com/Hidinginmyroom/posts/at-airport-in-12333878) | Image |
+| 2017-07-02 | [12424445 — *Hiding in a cave*](https://www.patreon.com/Hidinginmyroom/posts/hiding-in-cave-12424445) | Image |
+| 2017-07-04 | [12468199 — *Failed drawing #1*](https://www.patreon.com/Hidinginmyroom/posts/failed-drawing-1-12468199) | Image |
+| 2017-07-05 | [12480538 — *Bird town drawing process*](https://www.patreon.com/Hidinginmyroom/posts/bird-town-12480538) | Link |
+| 2017-07-08 | [12704962 — *Cave ogre and the girl - first encounter*](https://www.patreon.com/Hidinginmyroom/posts/cave-ogre-and-12704962) | Image |
+| 2017-07-08 | [12705161 — *Date with my first girlfriend*](https://www.patreon.com/Hidinginmyroom/posts/date-with-my-12705161) | Image |
+| 2017-07-12 | [12919204 — *Oita to beppu walk*](https://www.patreon.com/Hidinginmyroom/posts/oita-to-beppu-12919204) | Image |
+| 2017-07-15 | [12990510 — *Room i stayed in during first trip to japan*](https://www.patreon.com/Hidinginmyroom/posts/room-i-stayed-in-12990510) | Image |
+| 2017-07-19 | [13132089 — *Me in korea 2012*](https://www.patreon.com/Hidinginmyroom/posts/me-in-korea-2012-13132089) | Image |
+| 2017-07-25 | [13344792 — *French girlfriend*](https://www.patreon.com/Hidinginmyroom/posts/french-13344792) | Image |
+| 2017-07-29 | [13478158 — *Skiing trip*](https://www.patreon.com/Hidinginmyroom/posts/skiing-trip-13478158) | Image |
+| 2017-08-04 | [13664498 — *My cousins*](https://www.patreon.com/Hidinginmyroom/posts/my-cousins-13664498) | Image |
+| 2017-08-11 | [13807453 — *18 year old daniel*](https://www.patreon.com/Hidinginmyroom/posts/18-year-old-13807453) | Image |
+| 2017-08-17 | [13899717 — *Lunch with taiwanese friends*](https://www.patreon.com/Hidinginmyroom/posts/lunch-with-13899717) | Image |
+| 2017-08-24 | [14033039 — *Feeding her a banana*](https://www.patreon.com/Hidinginmyroom/posts/feeding-her-14033039) | Image |
+| 2017-09-16 | [14408113 — *Twitch*](https://www.patreon.com/Hidinginmyroom/posts/twitch-14408113) | Text |
+| 2017-10-18 | [14922710 — *Thanks :)*](https://www.patreon.com/Hidinginmyroom/posts/thanks-14922710) | Text |
+| 2017-11-13 | [15360865 — *Is this the beginning of the end.*](https://www.patreon.com/Hidinginmyroom/posts/is-this-of-end-15360865) | Text |
+| 2017-11-19 | [15442242 — *Last live stream in the guesthouse*](https://www.patreon.com/Hidinginmyroom/posts/last-live-stream-15442242) | Text |
+| 2017-11-20 | [15456992 — *Japanese snacks and apartment tour live stream*](https://www.patreon.com/Hidinginmyroom/posts/japanese-snacks-15456992) | Text |
+| 2017-11-23 | [15509432 — *Another livestream*](https://www.patreon.com/Hidinginmyroom/posts/another-15509432) | Text |
+| 2017-12-27 | [16077206 — *Recent thoughts on this*](https://www.patreon.com/Hidinginmyroom/posts/recent-thoughts-16077206) | Text |
+
+### 2018
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2018-01-01 | [16155970 — *I’m a fucking idiot*](https://www.patreon.com/Hidinginmyroom/posts/im-fucking-idiot-16155970) | Text |
+| 2018-01-03 | [16199311 — *My most embarassing video ever*](https://www.patreon.com/Hidinginmyroom/posts/my-most-video-16199311) | Text |
+| 2018-01-08 | [16288139 — *Bowling - old video*](https://www.patreon.com/Hidinginmyroom/posts/bowling-old-16288139) | Text |
+| 2018-01-12 | [16362660 — *A really old video of mine!*](https://www.patreon.com/Hidinginmyroom/posts/really-old-video-16362660) | Text |
+| 2018-01-13 | [16379179 — *A return to streaming*](https://www.patreon.com/Hidinginmyroom/posts/return-to-16379179) | Text |
+| 2018-01-20 | [16500944 — *Thoughts on the canon g5x*](https://www.patreon.com/Hidinginmyroom/posts/thoughts-on-g5x-16500944) | Text |
+| 2018-01-21 | [16521989 — *Just a short old video of me messing around with my cats*](https://www.patreon.com/Hidinginmyroom/posts/just-short-old-16521989) | Text |
+| 2018-01-21 | [16524132 — *Well that just happened*](https://www.patreon.com/Hidinginmyroom/posts/well-that-just-16524132) | Text |
+| 2018-01-24 | [16579629 — *Suspicious activity*](https://www.patreon.com/Hidinginmyroom/posts/suspicious-16579629) | Text |
+| 2018-01-25 | [16594859 — *Some updates*](https://www.patreon.com/Hidinginmyroom/posts/some-updates-16594859) | Text |
+| 2018-01-30 | [16691051 — *Accepted on shutterstock*](https://www.patreon.com/Hidinginmyroom/posts/accepted-on-16691051) | Text |
+| 2018-01-31 | [16707031 — *This is getting tedious...*](https://www.patreon.com/Hidinginmyroom/posts/this-is-getting-16707031) | Text |
+| 2018-02-01 | [16730782 — *THIS IS AMAZING*](https://www.patreon.com/Hidinginmyroom/posts/this-is-amazing-16730782) | Text |
+| 2018-02-06 | [16828535 — *Japanese hate comments*](https://www.patreon.com/Hidinginmyroom/posts/japanese-hate-16828535) | Text |
+| 2018-02-11 | [16931501 — *Going out is tiring...*](https://www.patreon.com/Hidinginmyroom/posts/going-out-is-16931501) | Text |
+| 2018-02-13 | [16971019 — *They’re plotting against me...*](https://www.patreon.com/Hidinginmyroom/posts/theyre-plotting-16971019) | Text |
+| 2018-02-15 | [17007133 — *Me and the kyoto girl*](https://www.patreon.com/Hidinginmyroom/posts/me-and-kyoto-17007133) | Image |
+| 2018-02-16 | [17028534 — *Mid day naps...*](https://www.patreon.com/Hidinginmyroom/posts/mid-day-naps-17028534) | Text |
+| 2018-02-21 | [17120283 — *Starting to feel better now*](https://www.patreon.com/Hidinginmyroom/posts/starting-to-feel-17120283) | Text |
+| 2018-02-28 | [17233889 — *An emotional day*](https://www.patreon.com/Hidinginmyroom/posts/emotional-day-17233889) | Text |
+| 2018-03-06 | [17389411 — *I think everything’s going to be okay with us*](https://www.patreon.com/Hidinginmyroom/posts/i-think-going-to-17389411) | Text |
+| 2018-03-11 | [17490053 — *Here we go...*](https://www.patreon.com/Hidinginmyroom/posts/here-we-go-17490053) | Text |
+| 2018-03-15 | [17567672 — *I’m really scared right now*](https://www.patreon.com/Hidinginmyroom/posts/im-really-scared-17567672) | Text |
+| 2018-03-27 | [17796312 — *Unsuccessful date yesterday*](https://www.patreon.com/Hidinginmyroom/posts/unsuccessful-17796312) | Text |
+| 2018-03-31 | [17875376 — *First argument after getting married*](https://www.patreon.com/Hidinginmyroom/posts/first-argument-17875376) | Text |
+| 2018-04-02 | [17921729 — *Nearly lost it*](https://www.patreon.com/Hidinginmyroom/posts/nearly-lost-it-17921729) | Text |
+| 2018-04-09 | [18073039 — *Mood swings*](https://www.patreon.com/Hidinginmyroom/posts/mood-swings-18073039) | Text |
+| 2018-04-13 | [18154223 — *An update on the hacking situation*](https://www.patreon.com/Hidinginmyroom/posts/update-on-18154223) | Text |
+| 2018-04-16 | [18212709 — *The malaysia trip*](https://www.patreon.com/Hidinginmyroom/posts/malaysia-trip-18212709) | Text |
+| 2018-04-21 | [18311158 — *Malaysia preparations.*](https://www.patreon.com/Hidinginmyroom/posts/malaysia-18311158) | Text |
+| 2018-05-04 | [18600316 — *From loneliness to boredom*](https://www.patreon.com/Hidinginmyroom/posts/from-loneliness-18600316) | Text |
+| 2018-05-11 | [18735121 — *Age restricted and sex videos*](https://www.patreon.com/Hidinginmyroom/posts/age-restricted-18735121) | Text |
+| 2018-05-21 | [18935501 — *Current frustrations with the channel*](https://www.patreon.com/Hidinginmyroom/posts/current-with-18935501) | Text |
+| 2018-06-02 | [19195043 — *Island life*](https://www.patreon.com/Hidinginmyroom/posts/island-life-19195043) | Text |
+| 2018-06-19 | [19541468 — *A night in the park*](https://www.patreon.com/Hidinginmyroom/posts/night-in-park-19541468) | Text |
+| 2018-06-30 | [19766907 — *New reward for $3 donators - archived live streams*](https://www.patreon.com/Hidinginmyroom/posts/new-reward-for-3-19766907) | Text |
+| 2018-08-23 | [20932874 — *had a little chat with chris broad*](https://www.patreon.com/Hidinginmyroom/posts/had-little-chat-20932874) | Text |
+| 2018-10-27 | [22324322 — *Sorry I haven’t been writing posts. I just don’t feel like I have a safe place to express myself anymore :( my wife is spying on me on every platform. Discord, Twitter. Maybe even here.*](https://www.patreon.com/Hidinginmyroom/posts/sorry-i-havent-i-22324322) | Text |
+| 2018-10-30 | [22381930 — *back with my wife now*](https://www.patreon.com/Hidinginmyroom/posts/back-with-my-now-22381930) | Text |
+| 2018-11-10 | [22624769 — *Weird dream*](https://www.patreon.com/Hidinginmyroom/posts/weird-dream-22624769) | Image |
+| 2018-11-28 | [22978329 — *let's freak out about views again!*](https://www.patreon.com/Hidinginmyroom/posts/lets-freak-out-22978329) | Text |
+| 2018-12-11 | [23260572 — *I finally caved and decided to purchase a real size asscheeks + torso adult toy.*](https://www.patreon.com/Hidinginmyroom/posts/i-finally-caved-23260572) | Text |
+| 2018-12-13 | [23304815 — *that time when i had sex on the floor with a japanese lady - Patreon ONLY video*](https://www.patreon.com/Hidinginmyroom/posts/that-time-when-i-23304815) | Text |
+| 2018-12-16 | [23363862 — *sick, twisted people are doxing my new home address on reddit - Patreon ONLY video*](https://www.patreon.com/Hidinginmyroom/posts/sick-twisted-are-23363862) | Text |
+| 2018-12-17 | [23383037 — *the lengths people go to*](https://www.patreon.com/Hidinginmyroom/posts/lengths-people-23383037) | Text |
+| 2018-12-21 | [23468829 — *i went to school with chris broad - top secret video.*](https://www.patreon.com/Hidinginmyroom/posts/i-went-to-school-23468829) | Text |
+
+### 2019
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2019-01-08 | [23834572 — *don't really like being called the asian onision.*](https://www.patreon.com/Hidinginmyroom/posts/dont-really-like-23834572) | Text |
+| 2019-01-10 | [23888472 — *i bought a sex toy*](https://www.patreon.com/Hidinginmyroom/posts/i-bought-sex-toy-23888472) | Text |
+| 2019-01-17 | [24041648 — *bad news*](https://www.patreon.com/Hidinginmyroom/posts/bad-news-24041648) | Text |
+| 2019-01-24 | [24203051 — *Rollercoaster of emotions*](https://www.patreon.com/Hidinginmyroom/posts/rollercoaster-of-24203051) | Text |
+| 2019-02-03 | [24439173 — *Everything is stressful right now*](https://www.patreon.com/Hidinginmyroom/posts/everything-is-24439173) | Text |
+| 2019-02-09 | [24587441 — *Thoughts on my dad*](https://www.patreon.com/Hidinginmyroom/posts/thoughts-on-my-24587441) | Text |
+| 2019-02-13 | [24678880 — *My wife is going back to japan livestream.*](https://www.patreon.com/Hidinginmyroom/posts/my-wife-is-going-24678880) | Text |
+| 2019-02-15 | [24720226 — *me and my dad cutting down a tree*](https://www.patreon.com/Hidinginmyroom/posts/me-and-my-dad-24720226) | Text |
+| 2019-02-19 | [24809383 — *Not up to much right now*](https://www.patreon.com/Hidinginmyroom/posts/not-up-to-much-24809383) | Text |
+| 2019-03-11 | [25303901 — *Funeral is tomorrow*](https://www.patreon.com/Hidinginmyroom/posts/funeral-is-25303901) | Text |
+| 2019-03-24 | [25601953 — *Loneliness*](https://www.patreon.com/Hidinginmyroom/posts/loneliness-25601953) | Text |
+| 2019-03-30 | [25739362 — *My gay experience with a Japanese guy*](https://www.patreon.com/Hidinginmyroom/posts/my-gay-with-guy-25739362) | Image |
+| 2019-04-05 | [25902646 — *A quiet day*](https://www.patreon.com/Hidinginmyroom/posts/quiet-day-25902646) | Text |
+| 2019-04-25 | [26358613 — *I don’t want to travel for sex anymore*](https://www.patreon.com/Hidinginmyroom/posts/i-dont-want-to-26358613) | Text |
+| 2019-04-26 | [26385274 — *New reward - Live stream access*](https://www.patreon.com/Hidinginmyroom/posts/new-reward-live-26385274) | Video embed |
+| 2019-05-02 | [26532567 — *new cape and hairshaving - past live stream*](https://www.patreon.com/Hidinginmyroom/posts/new-cape-and-26532567) | Link |
+| 2019-05-03 | [26570529 — *Am a sociopath? Full stream*](https://www.patreon.com/Hidinginmyroom/posts/am-sociopath-26570529) | Video embed |
+| 2019-07-01 | [28047708 — *Life update*](https://www.patreon.com/Hidinginmyroom/posts/life-update-28047708) | Text |
+| 2019-07-08 | [28213315 — *Patreon only video - my experiences getting bullied at school*](https://www.patreon.com/Hidinginmyroom/posts/patreon-only-my-28213315) | Link |
+| 2019-07-18 | [28458051 — *Takoyaki with my wife*](https://www.patreon.com/Hidinginmyroom/posts/takoyaki-with-my-28458051) | Link |
+| 2019-07-27 | [28679202 — *walking around osaka in the rain*](https://www.patreon.com/Hidinginmyroom/posts/walking-around-28679202) | Link |
+| 2019-08-04 | [28901561 — *Access to the live stream where I inbox my new montior*](https://www.patreon.com/Hidinginmyroom/posts/access-to-live-i-28901561) | Video embed |
+| 2019-08-09 | [29036873 — *complete and utter nightmare*](https://www.patreon.com/Hidinginmyroom/posts/complete-and-29036873) | Text |
+| 2019-09-30 | [30348467 — *Airbnb stream access*](https://www.patreon.com/Hidinginmyroom/posts/airbnb-stream-30348467) | Video embed |
+| 2019-10-26 | [31054106 — *Bonus footage from when I met sam and his friend*](https://www.patreon.com/Hidinginmyroom/posts/bonus-footage-i-31054106) | Link |
+
+### 2020
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2020-01-30 | [33579818 — *Limited budget food challenge vi*](https://www.patreon.com/Hidinginmyroom/posts/limited-budget-33579818) | Link |
+| 2020-05-09 | [36935788 — *Hi guys whats up*](https://www.patreon.com/Hidinginmyroom/posts/hi-guys-whats-up-36935788) | Text |
+
+### 2022
+
+| Date (UTC) | Public Patreon locator | Type |
+| --- | --- | --- |
+| 2022-01-02 | [60626337 — *Developing my own Game - The beginning*](https://www.patreon.com/Hidinginmyroom/posts/developing-my-60626337) | Video embed |
+| 2022-01-03 | [60678758 — *HIMR The Game: Version 1.0 (Windows version)*](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-0-60678758) | Text |
+| 2022-01-10 | [60979863 — *HIMR the game Version 1.1*](https://www.patreon.com/Hidinginmyroom/posts/himr-game-1-1-60979863) | Text |
+| 2022-01-24 | [61583236 — *Version 1.6 BIG UPDATES*](https://www.patreon.com/Hidinginmyroom/posts/version-1-6-big-61583236) | Text |
+
+Researchers using a body-derived claim must retain its access state and apply the
+wiki's normal [source and verification method](/wiki/archive/methodology/). The
+inventory itself establishes post identity, date, title, and Patreon type only.
