@@ -12,8 +12,8 @@ import VerificationBadge from "../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="27 August 2026"
-  note="The public name, current channel identity, archive coverage, and pictured sources were reconciled through August 27, 2026. This is not an independently verified private biography."
+  reviewedAt="29 August 2026"
+  note="The public name, current channel identity, creator-linked Patreon/Twitch/Twitter metadata, a public-claimed Discord self-identification sequence, archive coverage, and pictured sources were reconciled through August 29, 2026. This is not an independently verified private biography or a biometric identity finding."
 />
 
 **Daniel Lord** is the public name used for the creator documented by this wiki. His
@@ -52,11 +52,15 @@ as permission to compile private identifying information.
 | August 25 raw-video audit   | 2,043 indexed rows carried an Internet Archive video URL; 184 did not in that frozen export                              |
 | Supplemental reconciliation | Additional raw files, including cited 2024–2025 records, were mapped on August 27; contents remain separately reviewable |
 | Current visible catalogue   | 25 distinct Videos- and Streams-tab IDs were exposed to a signed-out review after the August 27 refresh                  |
+| Creator-linked Twitch       | `danielhimr`, stable Twitch user ID `123566307`; Twitch's last-broadcast field is dated August 7, 2023                    |
+| Former Twitter label        | `@rabbitlol666`, linked by Patreon creator metadata; the current X endpoint returned 404 on August 29, 2026               |
+| Discord account trail       | One public-claimed account denied being Daniel three times, then self-identified on July 24; this is not biometric proof |
 
 The 2014 feed timestamp is a YouTube metadata field, not proof that every present
-video—or the present branding—dates from 2014. Likewise, transcript dates and
-Internet Archive filenames are sorting labels unless a dedicated page establishes a
-stronger date basis.
+video—or the present branding—dates from 2014. The Twitch value is a platform
+last-broadcast field, not an all-platform activity history. Likewise, transcript
+dates and Internet Archive filenames are sorting labels unless a dedicated page
+establishes a stronger date basis.
 
 <SourceCitation
   sourceId="youtube-channel-UC_yIF-9jOge6nNA0z-ScrBQ"
@@ -81,7 +85,7 @@ stronger date basis.
   narrative wording is not biographical evidence.
 </SourceCitation>
 
-## Early creator-linked pages
+## Creator-linked pages and platform IDs
 
 A public creator-linked page extends the source record beyond YouTube. The historical
 [`rabbitlol` ComicFury profile](https://comicfury.com/profile.php?username=rabbitlol)
@@ -90,6 +94,33 @@ channel ID plus [Daniel's Patreon](https://www.patreon.com/Hidinginmyroom). That
 strong public self-link for Daniel's historical comics and project trail, but it does
 not prove a legal identity or make every comic entry autobiographical.
 
+Patreon's current public creator record adds a stronger ID-level account bridge. User
+`3291181` and campaign `363999` are displayed as **Daniel's Patreon** at vanity
+`Hidinginmyroom`; the same record links the established main YouTube channel ID,
+Twitch user ID `123566307` at [`danielhimr`](https://www.twitch.tv/danielhimr), and
+legacy Twitter label `Rabbitlol666`. At the August 29 review, Twitch's exact
+last-broadcast timestamp was **2023-08-07T06:26:00.017403Z**. The former Twitter URL
+redirected to X and returned 404.
+
+These fields source-match a creator-linked account family, not a private or legal
+identity. They also do not supply handle-change dates. In particular, the ComicFury
+name `rabbitlol` and former Twitter name `rabbitlol666` remain distinct identifiers;
+their shared `rabbit` stem is not the evidence joining either page to HIMR. The
+[platform audit](/wiki/events/channel-bans-and-platforms/#patreon-account-bridge-twitch-and-the-former-twitter-label)
+records the stable IDs, two 2017 Twitch links, current old-slug mismatch, and exact
+access-state limits.
+
+<SourceCitation
+  sourceId="patreon-user-3291181-account-bridge-2026-08-29"
+  claimId="HIMR-DANIEL-0006"
+  title="Daniel's Patreon — public creator metadata"
+  href="https://www.patreon.com/api/user/3291181?include=campaign"
+  locator="User 3291181 and included campaign 363999; no-auth JSON retrieved 2026-08-29"
+  evidence="Creator-linked Patreon, main-YouTube, Twitch-ID, and former-Twitter metadata only; no legal identity, handle-change date, or continuous-control finding"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
 The supplied [`StandardOil` DeviantArt profile](https://www.deviantart.com/standardoil)
 is reachable, but no checked public bridge from that profile to Daniel's main channel
 or the `rabbitlol` profile has been located. Its ownership therefore remains an
@@ -97,7 +128,11 @@ unresolved source lead rather than part of the verified account family. ComicFur
 also links `-5yKGW8SKeY`, which remains unavailable and absent from the sealed
 Archive.org inventory. The [additional source-leads
 inventory](/wiki/archive/additional-source-leads/) records the seven ComicFury slugs,
-Patreon sitemap boundary, and exact missing-media status.
+Patreon sitemap boundary, and exact missing-media status. The separate [Patreon Source
+Catalogue](/wiki/archive/patreon-source-catalog/) records the publication-safe
+metadata and exact role/event routes without reproducing post bodies or downloaded
+assets; the [longitudinal analysis](/wiki/archive/patreon-longitudinal-analysis/#character-and-event-map-at-a-glance)
+provides the compact character and event map.
 
 <SourceCitation
   sourceId="comicfury-rabbitlol-2026-08-27"
@@ -110,6 +145,59 @@ Patreon sitemap boundary, and exact missing-media status.
   reviewState="source-matched"
   reviewedAt="27 August 2026"
 />
+
+### July 2026 Discord self-identification sequence
+
+A contributor-supplied export from a Discord server the contributor identifies as
+public contains **only one account's outgoing messages**. It therefore preserves what
+that account posted, but not the incoming messages, resolved replies, reactions,
+roles, edit history, or full conversational context.
+
+The account denied being Daniel on [July
+20](https://discord.com/channels/821188728318984252/915403788343468053/1528846179205513258),
+[July
+21](https://discord.com/channels/821188728318984252/915403788343468053/1529043974352797706),
+and [July
+22](https://discord.com/channels/821188728318984252/915403788343468053/1529589581282803887).
+On [July
+24](https://discord.com/channels/821188728318984252/915404050785247242/1530309032106266706)
+it instead posted **“It's Daniel.”** A public image-attachment
+[message](https://discord.com/channels/821188728318984252/915404050785247242/1530309224800845994)
+followed about 46 seconds later. The image is not reproduced here. The contributor
+regards that sequence, together with later voice messages, as confirmation; the
+wiki records the narrower finding that **the account first denied and then asserted
+the Daniel identity**.
+
+<SourceCitation
+  sourceId="discord-account-denial-self-identification-2026-07"
+  claimId="HIMR-DANIEL-0007"
+  title="Public-claimed Discord message — July 24 self-identification"
+  href="https://discord.com/channels/821188728318984252/915404050785247242/1530309032106266706"
+  locator="Denials: messages 1528846179205513258 (2026-07-20T19:28:53.711Z), 1529043974352797706 (2026-07-21T08:34:51.749Z), and 1529589581282803887 (2026-07-22T20:42:54.578Z); self-identification: 1530309032106266706 (2026-07-24T20:21:45.021Z); image attachment: 1530309224800845994 at 20:22:30.963Z"
+  evidence="One account's contradictory denial-to-self-identification sequence and an adjacent public-claimed image post; no motive, account-control history, independent real-person authentication, or biometric conclusion"
+  reviewState="source-matched"
+  reviewedAt="29 August 2026"
+/>
+
+Two July 26 voice-attachment messages are machine-rendered as direct Daniel
+self-introductions. Nobody conducting this wiki pass directly listened to those
+attachments, and no face or voice comparison was performed. They are therefore
+additional **account self-identification leads**, not voice-biometric confirmation.
+
+<SourceCitation
+  sourceId="discord-voice-self-identification-2026-07-26"
+  claimId="HIMR-DANIEL-0008"
+  title="Public-claimed Discord voice-message self-identification leads"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1531022463952097401"
+  locator="Messages 1531022463952097401 and 1531022801438507219 on 2026-07-26; temporary discovery ASR only; attachments not redistributed"
+  evidence="Machine-rendered account self-introductions only; audio not directly heard, speakers and addressed accounts not independently authenticated, and no biometric comparison"
+  reviewState="unverified-research-lead"
+  reviewedAt="29 August 2026"
+/>
+
+The complete [Discord Source Map](/wiki/archive/discord-source-map/) routes the
+account's July–August 2026 character references, event claims, controversies,
+denials, and missing-context limits without mirroring the export or its media.
 
 ## The public body of work
 
@@ -125,15 +213,16 @@ records describe the same off-camera event or person.
 | Recurring Japan-labelled material                      | [Japan Era](/wiki/eras/japan-era/), [Chihiro](/wiki/characters/chihiro/), [Turkish Girl](/wiki/characters/turkish-girl/), and the [July 2019 Ice Poseidon response](/wiki/events/japanese-schoolgirl-comments/) source boundary |
 | UK returns, movement, and delivery labels              | [UK Delivery & Travel Era](/wiki/eras/uk-delivery-courier-era/)                                                                                                                                                                 |
 | Malaysia, Thailand, and Vietnam labels                 | [Thailand & Southeast Asia Era](/wiki/eras/thailand-era/) and [Faster / Thai-girlfriend-labelled records](/wiki/characters/thai-girlfriend/)                                                                                    |
-| Presently visible and separately located 2026 material | [2026 Return, Car Camping & Life Update](/wiki/events/2026-return-and-car-camping/) and the dated [Channel & Platform History](/wiki/events/channel-bans-and-platforms/)                                                        |
+| Presently visible and separately located 2026 material | [2026 Return, Car Camping & Life Update](/wiki/events/2026-return-and-car-camping/), the dated [Channel & Platform History](/wiki/events/channel-bans-and-platforms/), and the [Discord Source Map](/wiki/archive/discord-source-map/) |
 | Full year-by-year coverage                             | [Master Timeline](/wiki/overview/timeline/)                                                                                                                                                                                     |
 
 ### Browse people and relationship labels
 
 The [Relationships & Dating Timeline](/wiki/events/relationship-dramas/) is the
 safest chronological route. The [Short-Term Encounters](/wiki/events/short-term-encounters/)
-catalogue separately records adult and dating titles without treating them as a list
-of verified encounters.
+catalogue separately records adult and dating titles alongside minimized,
+Daniel-attributed Patreon accounts of meetings, non-meetings, and anonymous roles,
+without treating them as a list of verified encounters.
 
 | Public or community label | What the linked page is for                                                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -142,11 +231,12 @@ of verified encounters.
 | Tomoko                    | [The October 2017 first-meeting source family, an unverified two-ASR name bridge, and a separately preserved response candidate](/wiki/characters/tomoko/)               |
 | Mila                      | [A checked Q&A appearance, same-name limits, and an unresolved frustration-label boundary](/wiki/characters/mila/)                                                       |
 | “Spanish girl”            | [A current friend label with unverified location-nondisclosure, travel-time, and UK-residence claims](/wiki/characters/spanish-girl/)                                    |
+| Van Girl                  | [A six-message August 2026 Discord chronology reconciled with a later public-stream machine lead, with meetings, plans, identity, and location unresolved](/wiki/characters/van-girl/) |
 | Cryptcutie5               | [A public Shy/Cryptcutie5 branding cluster, two warned 2026 travel/visit machine-speech leads, and warned Canada/Discord/OnlyFans claims](/wiki/characters/cryptcutie5/) |
 | Pia                       | [A checked 2020 creator-edited association and 2022 stream-chat usage, with identity and intimate-story limits](/wiki/characters/pia/)                                   |
 | Fast / Faster             | [Community terminology and the 2022–2024 Thai-girlfriend-labelled record](/wiki/characters/thai-girlfriend/)                                                             |
 | Sunny / “Loggy”           | [Sunny-named archive records, nickname origin, checked community media, and warned allegations](/wiki/characters/sunny/)                                                 |
-| Weed Girl / “Weedy”       | [A later community label and u/ItsWeedy's public self-identification, without independently authenticating the account holder](/wiki/characters/weed-girl/)              |
+| Weed Girl / “Weedy”       | [A later community label, u/ItsWeedy's public self-identification, and a qualified community route from the 2026 recent-former-partner arc—without authenticating the account holder or unnamed Discord roles](/wiki/characters/weed-girl/)              |
 | Blood Bucket / BB         | [A public viewer handle, bounded initials search, nickname-origin lead, and warned contested “granny” / encounter claims](/wiki/characters/blood-bucket/)                |
 | “Jason”                   | [A reported, context-specific 2025 dating alias and separate unnamed 2022 machine-text leads](/wiki/events/jason-and-dating-aliases/)                                    |
 

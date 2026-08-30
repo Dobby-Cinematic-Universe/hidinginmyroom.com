@@ -11,8 +11,8 @@ import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="27 August 2026"
-  note="The legacy transcript inventory was reconciled on August 25, 2026. Additional Internet Archive containers were reconciled on August 27, repairing cited raw-media links without upgrading any content-review status."
+  reviewedAt="29 August 2026"
+  note="The legacy transcript inventory was reconciled on August 25, 2026. Additional Internet Archive containers were reconciled on August 27, repairing cited raw-media links without upgrading any content-review status. Access-controlled Patreon bodies and a contributor-supplied author-only Discord export were added as separately labelled source layers on August 29."
 />
 
 The HIMR Wiki uses transcripts to **find** evidence, not as evidence by default. A
@@ -66,6 +66,18 @@ commentary indexes, and unresolved URLs observed on 27 August 2026. Inclusion in
 inventory means only that a lead was supplied or its public endpoint was observed. It
 does not authenticate account ownership, completeness, or copied-content accuracy.
 
+Two newer source layers remain deliberately separate. The [Patreon Source
+Catalogue](/wiki/archive/patreon-source-catalog/) distinguishes public metadata,
+signed-out bodies, and access-controlled bodies retained privately; a locked
+first-party body can establish what Daniel wrote, but it is paraphrased rather than
+copied and cannot verify the event he described. The complete available-body review
+and its corpus-wide limitations are documented separately in the [Patreon
+Longitudinal Analysis](/wiki/archive/patreon-longitudinal-analysis/). The [Discord Source
+Map](/wiki/archive/discord-source-map/) uses a contributor-supplied author-only export
+from channels represented as public. It can establish the exported account's posted
+text and message IDs, but missing replies and participants prevent it from becoming
+an independent event chronology or identity proof.
+
 ## Evidence ladder
 
 | Material                                  | How the wiki uses it                                                                           |
@@ -75,6 +87,8 @@ does not authenticate account ownership, completeness, or copied-content accurac
 | Machine transcript                        | Locate a likely passage; never treat it as evidence, fact, or a quotation                      |
 | Title or filename                         | Describe the archive label, not the truth of the title or date                                 |
 | First-party statement                     | Attribute the statement to its author                                                          |
+| Access-controlled first-party written body | Paraphrase what the author claimed while retaining its locked state; never mirror the body or assets |
+| Author-only public-channel message export | Map what the exported account posted; never infer missing replies, agreement, identity, or event truth |
 | Independent reliable record               | Corroborate only the facts within that record's scope                                          |
 | Reviewed public community image or repost | Establish only what the complete preserved copy appears to show or say, with provenance limits |
 | Other community post or wiki              | Establish community usage, record an attributed allegation, or generate a research lead        |
@@ -190,5 +204,15 @@ a wording review only under the two-warning rule above. It is never enough to ma
 speech or underlying event verified. Material that fails rights, privacy, sensitivity,
 identity, or coordinate review—including sexualized claims involving a minor, leaked
 intimate material, or doxxing—remains private regardless of disclaimer.
+
+A public post or Discord message permalink is a source locator, not by itself a
+licence to copy an attached image, audio, video, signed delivery URL, or
+access-controlled body. Locked Patreon media remains private. A contributor has
+represented the supplied Discord attachments as public and permitted their use, but
+only individually reviewed, editorially necessary copies may be published; private
+third-party, intimate, identifying-location, and doxxing material remains excluded.
+For this review, that process admitted one metadata-stripped, Pushkin-captioned cat
+image and no Discord audio or video payloads. Selected audio wording remains clearly
+labelled machine transcription because no reviewer directly heard it.
 
 The complete contributor rules are maintained in the repository's editorial policy.

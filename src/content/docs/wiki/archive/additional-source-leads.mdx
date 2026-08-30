@@ -10,8 +10,8 @@ import VerificationBadge from "../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="27 August 2026"
-  note="The listed endpoints and platform metadata were checked on 27 August 2026. Account ownership, completeness, and copied-content authenticity remain separate questions."
+  reviewedAt="29 August 2026"
+  note="The original lead inventory was checked on 27 August 2026; Patreon, Twitch, X, and the private-export boundary were reconciled on 29 August. Account ownership, completeness, access state, and copied-content authenticity remain separate questions."
 />
 
 This page records supplementary places where HIMR material may be found. It is a
@@ -22,18 +22,44 @@ published.
 
 <Aside type="caution" title="“Inactive” and “unreachable” are different states">
   Several supplied links were described as inactive, but their endpoints still
-  responded on 27 August 2026. The table below records the observed web state
-  rather than inferring recent posting activity. Mutable counts and profile text
-  must be captured again before they are relied upon later.
+  responded when checked. Others now return an error while separate historical
+  metadata survives. The table below records each dated web state rather than
+  inferring recent posting activity, deletion, or continuous control. Mutable
+  counts and profile text must be captured again before later use.
 </Aside>
 
 ## Historical creator-linked pages
 
-| Lead                                                                           | Observed public state on 27 August 2026                                                                                                                                                                                                                 | Safe use                                                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Hidinginmyroom Patreon](https://www.patreon.com/Hidinginmyroom)               | Public metadata identified campaign `363999`, vanity `Hidinginmyroom`, and title **“Daniel's Patreon \| vlogs and stuff about my life.”** Its sitemap exposed 136 stable post URLs spanning 2016–2022.                                                  | Locate public post metadata and historical publishing leads. The sitemap count is not a count of accessible posts; paywalled material is not acquired, made public, or treated as independently verified.                                    |
-| [rabbitlol on ComicFury](https://comicfury.com/profile.php?username=rabbitlol) | The profile displayed a 6 August 2015 registration date and 18 December 2018 “last seen” value. Its self-description names Daniel, names _hiding in my room_, and links exact YouTube channel ID `UC_yIF-9jOge6nNA0z-ScrBQ` plus the Patreon URL above. | This is a strong public self-link between the historical ComicFury profile, the main channel ID, and the Patreon page. It supports a creator-linked source family, not a legal-identity finding or the truth of autobiographical comic text. |
-| [StandardOil on DeviantArt](https://www.deviantart.com/standardoil)            | The supplied `http://standardoil.deviantart.com/` address redirected to a reachable profile titled **StandardOil on DeviantArt**. No checked public link from that profile to the `rabbitlol` page or Daniel's main channel was located.                  | Retain it as a supplied discovery lead. A matching-looking public profile does not establish ownership or membership in the creator-linked account family.                                                                                   |
+| Lead                                                                           | Dated source state                                                                                                                                                                                                                                                                                        | Safe use                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Hidinginmyroom Patreon](https://www.patreon.com/Hidinginmyroom)               | Public metadata identified campaign `363999`, user `3291181`, vanity `Hidinginmyroom`, and title **“Daniel's Patreon \| vlogs and stuff about my life.”** Its sitemap and the private metadata reconciliation both identify 136 post IDs spanning 2016–2022. The creator record links the exact main YouTube ID, Twitch ID `123566307`, and legacy Twitter label `Rabbitlol666`. | Use the public post IDs and metadata as source locators. The private export is excluded from Git and is not redistributed. Sitemap/API presence does not prove that a body or asset is presently public, complete, safe, or independently verified. |
+| [danielhimr on Twitch](https://www.twitch.tv/danielhimr)                       | On 29 August 2026, Twitch mapped this login to stable user ID `123566307`, the same ID in Patreon metadata. Its exact last-broadcast field was `2023-08-07T06:26:00.017403Z`; it was not live at retrieval.                                                                                              | Source-match the account and dated Twitch state. The last-broadcast field is not a complete cross-platform activity history, and mutable counts or title labels do not verify off-platform events.                                             |
+| [Former Twitter/X handle @rabbitlol666](https://x.com/rabbitlol666)            | Patreon records `Rabbitlol666`, while a historical copy of the main YouTube About text links the exact Twitter URL. On 29 August 2026 the Twitter URL redirected to X and ended at HTTP 404.                                                                                                                   | Treat `@rabbitlol666` as a former creator-linked handle. Do not infer whether it was deleted, suspended, renamed, or released, and do not merge it with the separate ComicFury name `rabbitlol` merely from spelling.                             |
+| [rabbitlol on ComicFury](https://comicfury.com/profile.php?username=rabbitlol) | The profile displayed a 6 August 2015 registration date and 18 December 2018 “last seen” value. Its self-description names Daniel, names _hiding in my room_, and links exact YouTube channel ID `UC_yIF-9jOge6nNA0z-ScrBQ` plus the Patreon URL above.                                                     | This is a strong public self-link between the historical ComicFury profile, the main channel ID, and the Patreon page. It supports a creator-linked source family, not a legal-identity finding or the truth of autobiographical comic text. |
+| [StandardOil on DeviantArt](https://www.deviantart.com/standardoil)            | The supplied `http://standardoil.deviantart.com/` address redirected to a reachable profile titled **StandardOil on DeviantArt**. No checked public link from that profile to the `rabbitlol` page or Daniel's main channel was located.                                                                      | Retain it as a supplied discovery lead. A matching-looking public profile does not establish ownership or membership in the creator-linked account family.                                                                                   |
+
+The [Patreon Source Catalogue](/wiki/archive/patreon-source-catalog/) records the
+expanded preservation audit: 136 post IDs from October 2016 through January 2022,
+grouped into 70 text, 42 image, 18 link, and 6 video-embed records. All 135 available
+bodies were reviewed, but access-controlled writing is only selectively paraphrased;
+the catalogue does not publish bodies, comments, downloaded media, signed URLs, or
+executable attachments. Those counts describe source records and API type labels—not
+136 public or independently verified narratives.
+
+## Contributor-supplied Discord export
+
+Two local export files contain **3,273 unique outgoing messages** from one account
+across five channels, dated July 20 through August 29, 2026 UTC. The export includes
+2,943 messages containing text and 331 attached files, but omits incoming messages, resolved
+replies, reactions, roles, edit history, deleted context, and usable channel names.
+The contributor represents the underlying channels and attached photos and voice
+messages as public. The raw export and attachments remain excluded from publication;
+the wiki exposes only minimized paraphrases and canonical Discord message permalinks.
+
+The [Discord Source Map](/wiki/archive/discord-source-map/) records the account's
+denial-to-self-identification sequence, events, controversies, denials, and character
+references. The counts establish the supplied dataset's shape, not the identity of a
+speaker, the truth of an off-platform event, or agreement by an absent participant.
 
 The ComicFury page lists seven webcomic slugs: `theshoplifter`, `wheresmyparcel`,
 `hazelsplanetofice`, `Myintrovertedworld`, `Anotherboringnightshift`,
