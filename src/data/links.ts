@@ -53,6 +53,15 @@ export const officialLinks: SiteLink[] = [
 
 export const communityLinks: SiteLink[] = [
   {
+    label: 'Discussion forum',
+    handle: 'HIMR Forum',
+    description: 'A dedicated community forum for Daniel Lord and Hiding In My Room discussion.',
+    href: 'https://forum.hidinginmyroom.com/',
+    mark: 'F',
+    tone: 'signal',
+    note: 'New forum',
+  },
+  {
     label: 'Primary subreddit',
     handle: 'r/HIMRFAM2',
     description: 'The main Reddit hub for current HIMR posts and community discussion.',
@@ -98,6 +107,5 @@ export const communityLinks: SiteLink[] = [
     mark: '<>',
     tone: 'cool',
     note: 'Site repository',
-    wide: true,
   },
 ];
