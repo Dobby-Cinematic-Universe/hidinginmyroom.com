@@ -84,7 +84,7 @@ export const communityLinks: SiteLink[] = [
     handle: 'HIMR community server',
     description:
       'Daniel is a member as notdaniel0594_05557, user ID 1528841527022059661.',
-    href: 'https://discord.gg/X58d8hhxgU',
+    href: 'https://discord.gg/hgBhC5gNPU',
     mark: '#',
     tone: 'signal',
     note: 'Daniel is a member',
