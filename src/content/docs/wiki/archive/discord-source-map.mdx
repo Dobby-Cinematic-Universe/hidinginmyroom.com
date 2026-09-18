@@ -1,6 +1,6 @@
 ---
 title: Discord Source Map
-description: A publication-safe map of the supplied 2026 Discord exports, including a 331-file media audit and machine-transcription boundary.
+description: A publication-safe map of three supplied Discord exports, with 5,170 unique messages, dated attachment reviews and limits on account claims.
 sidebar:
   order: 5
 ---
@@ -11,8 +11,8 @@ import VerificationBadge from "../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="29 August 2026"
-  note="The two supplied exports were reconciled by message ID; all 331 attachment sources resolved during review, visual media was inspected, and all 101 voice files received two offline ASR passes. This verifies source coverage and bounded visible content—not legal identity, autobiographical claims, machine-rendered speech, continuous video action, or missing participants' accounts."
+  reviewedAt="18 September 2026 (UTC)"
+  note="Three supplied exports now contain 5,170 unique messages and 469 attachments. The September 18-labelled package adds 1,897 messages through September 17 and 138 retained attachments. Its text was compared with existing stream coverage; sampled visuals and machine audio text were reviewed within the limits below. Account control, autobiographical claims, speech and missing participants' accounts remain unverified. The August 29 audit is preserved as a historical snapshot."
 />
 
 This page routes the HIMR-relevant material in the supplied Discord preservation set.
@@ -31,7 +31,57 @@ independent chronology. After the identity section, “Daniel said” is shortha
   boasts below establish only that the account made the claim.
 </Aside>
 
-## Coverage snapshot
+## September 18-labelled export
+
+The newest filename is dated **September 18**, but its messages run from
+**August 30, 07:00:20.992 UTC to September 17, 21:26:55.544 UTC**. The last
+message precedes the September 17 livestream; this is not a post-stream reaction
+set. Message-ID reconciliation found **1,897 new messages with no overlap** with
+the two August 29 exports. The combined preservation set contains **5,170 unique
+messages**, **4,703 text-containing messages**, **469 attachments**, five channels
+and one exported author. These are export counts, not a complete server history.
+
+All **1,760 text-containing messages** in the new package were read. All **138
+attachments** resolved and were retained privately: **85 JPEGs, 14 GIFs, 16 MP4s
+and 23 OGG voice messages**. Visual review covered 147 reduced-resolution samples:
+the complete frame of each JPEG, the first frame of each GIF, and three frames
+per MP4. All 39 audio-bearing files received a machine-transcription pass, whose
+output was reviewed as search material. There was no human listening, continuous
+video review, speaker authentication or independent verification of screenshots.
+No attachment from this new package is reproduced here, and no new narrative
+claim relies on machine-rendered speech.
+
+<SourceCitation
+  sourceId="discord-export-audit-2026-09-18"
+  claimId="HIMR-DISCORD-0005"
+  title="Supplied September 18-labelled Discord export — coverage and deduplication audit"
+  href="https://discord.com/channels/821188728318984252"
+  locator="Supplied author-only JSON labelled 2026-09-18; 1,897 distinct message IDs from 1543515704098164857 through 1550256766636396608 by posting time; 138 attachments retained; 147 visual samples; 23 OGG and 16 MP4 audio tracks processed with CPU whisper.cpp v1.8.7 small.en, four threads, no glossary; review 18 September UTC"
+  evidence="Direct export inventory and bounded review coverage only; 5,170 messages and 469 attachments across three reconciled exports, not complete server coverage, heard speech, identity, transaction, event-truth or public-access verification"
+  checked={false}
+  reviewState="source-matched"
+  reviewedAt="18 September 2026 (UTC)"
+/>
+
+### Distinct additions, not another stream summary
+
+| Topic | What the new text contributes | Article |
+| --- | --- | --- |
+| Borrowing and repayment | An earlier differently rounded borrowing account; a fortnightly plan and doubt about the November target | [Debt & Repayment Claims](/wiki/events/debt-and-repayment-claims/#august-30september-15-discord-clarifications) |
+| Housing | A claimed September 13 viewing enquiry, not a confirmed move | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/#september-13-claimed-house-viewing-enquiry) |
+| Work | A denial of monetary compensation, with missing-prompt limitations | [Work & Income Claims](/wiki/events/work-and-income-claims/#september-13-discord-no-pay-qualification) |
+| Trading | Typed Nebius wording and September 8–9 posting dates for the already-covered profit account | [Stock Market & Crypto](/wiki/events/stock-market-and-crypto/#september-89-discord-written-name-and-posting-chronology) |
+| Van Girl | A September 10 proposed meeting before the later decision to stop pursuing contact | [Van Girl](/wiki/characters/van-girl/#september-10-another-proposed-meeting) |
+| Tax | A specific expense allegation as reported and denied by the account | [Tax-labelled Records](/wiki/events/tax-labelled-records/#september-15-discord-disputed-expense-claim) |
+| Jason | An explicitly named Weedy reference, not a bridge to unnamed partners elsewhere | [Jason & Dating Aliases](/wiki/events/jason-and-dating-aliases/#september-4-discord-named-weedy-reference) |
+
+Repeated balances, earnings, car-living complaints, Starlink cancellation ideas and
+general relationship arguments are not new events merely because they recur on
+Discord. Screenshots are not independent financial corroboration. Missing prompts
+also prevent safely assigning every pronoun, joke or bare figure to a person or
+event. The account self-identification and privacy limits below still apply.
+
+## August 29 coverage snapshot
 
 | Measure | Result |
 | --- | ---: |
@@ -52,7 +102,7 @@ happened.
 | Attachment kind | Files | Review treatment |
 | --- | ---: | --- |
 | JPEG | 200 | Complete images visually inspected |
-| OGG voice message | 101 | Decoded and run through separate base.en and small.en speech-recognition passes; no direct human listening available |
+| OGG voice message | 101 | Decoded and run through two separate speech-recognition passes; no direct human listening available |
 | MP4 | 16 | Multi-frame sheets visually inspected; this is not continuous playback or soundtrack review |
 | GIF | 12 | First frames inspected; motion not treated as fully reviewed |
 | PNG | 1 | Complete image visually inspected |
