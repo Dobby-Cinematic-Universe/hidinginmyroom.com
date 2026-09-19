@@ -49,12 +49,12 @@ export async function questionKey(env,{question,mode}){
 }
 export async function retrieve(env,question){
   // Keep the whole retrieval phase bounded below the browser's 60-second timeout.
-  // Exact-question successes are cached by PilotBudget; do not reuse upstream
-  // similarity-cache misses or answers belonging to merely similar questions.
+  // Use near-identical similarity caching first; retry empty responses uncached.
+  // Exact-question successes are also cached by PilotBudget for five minutes.
   const end=Date.now()+30000;
   for(let attempt=0;attempt<2;attempt++){
     if(attempt)await new Promise(resolve=>setTimeout(resolve,750));
-    const found=await deadline(env.AI_SEARCH.get(env.INSTANCE).search({messages:[{role:'user',content:question}],ai_search_options:{cache:{enabled:false},retrieval:{retrieval_type:'hybrid',max_num_results:6,return_on_failure:false},query_rewrite:{enabled:false}}}),Math.min(20000,Math.max(1,end-Date.now())));
+    const found=await deadline(env.AI_SEARCH.get(env.INSTANCE).search({messages:[{role:'user',content:question}],ai_search_options:{cache:{enabled:attempt===0,cache_threshold:'super_strict_match'},retrieval:{retrieval_type:'hybrid',max_num_results:6,return_on_failure:false},query_rewrite:{enabled:false}}}),Math.min(20000,Math.max(1,end-Date.now())));
     if(!found||!Array.isArray(found.chunks))throw Error('Malformed retrieval response');
     if(found.errors&&(Array.isArray(found.errors)?found.errors.length:Object.keys(found.errors).length))throw Error('Provider retrieval failed');
     const allowed=found.chunks.filter(c=>c&&typeof c.text==='string'&&c.text.trim()&&typeof c.item?.key==='string'&&c.item.key
