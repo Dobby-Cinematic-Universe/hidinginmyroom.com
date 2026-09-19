@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/local-window-catalog-admission-v1.json",
+  "title": "HIMR private local-window catalog admission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "importer_version",
+    "catalog_package_version",
+    "observed_at",
+    "import_batch_id",
+    "result_sha256",
+    "result_byte_count",
+    "acquisition_result_sha256",
+    "acquisition_import_sha256",
+    "acquisition_import_batch_id",
+    "acquisition_processing_run_id",
+    "admission_processing_run_id",
+    "run_semantics",
+    "parent_media_id",
+    "source_id",
+    "window",
+    "time_mapping",
+    "artifacts",
+    "asr_work_order_inputs",
+    "statistics",
+    "safety"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "status": { "enum": ["validated", "admitted"] },
+    "importer_version": { "const": "local-window-catalog-bridge/1" },
+    "catalog_package_version": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "observed_at": { "$ref": "#/$defs/zonedTime" },
+    "import_batch_id": { "$ref": "#/$defs/identifier" },
+    "result_sha256": { "$ref": "#/$defs/sha256" },
+    "result_byte_count": { "type": "integer", "minimum": 1 },
+    "acquisition_result_sha256": { "$ref": "#/$defs/sha256" },
+    "acquisition_import_sha256": { "$ref": "#/$defs/sha256" },
+    "acquisition_import_batch_id": { "$ref": "#/$defs/identifier" },
+    "acquisition_processing_run_id": { "$ref": "#/$defs/identifier" },
+    "admission_processing_run_id": { "$ref": "#/$defs/identifier" },
+    "run_semantics": { "const": "catalog_admission_verification_not_extraction_execution" },
+    "parent_media_id": { "$ref": "#/$defs/mediaId" },
+    "source_id": { "$ref": "#/$defs/identifier" },
+    "window": { "$ref": "#/$defs/window" },
+    "time_mapping": { "$ref": "#/$defs/timeMapping" },
+    "artifacts": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "asr_work_order_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/asrInput" }
+    },
+    "statistics": { "$ref": "#/$defs/statistics" },
+    "safety": { "$ref": "#/$defs/safety" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "mediaId": {
+      "type": "string",
+      "pattern": "^media_sha256_[0-9a-f]{64}$"
+    },
+    "zonedTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_id", "ordinal", "start_ms", "end_ms", "boundary", "is_partial_tail"],
+      "properties": {
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "boundary": { "const": "half_open" },
+        "is_partial_tail": { "type": "boolean" }
+      }
+    },
+    "timeMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary",
+        "source_start_ms",
+        "source_end_ms",
+        "artifact_zero_maps_to_source_ms",
+        "coordinate_precision",
+        "extraction_method",
+        "byte_exact_source_fragment"
+      ],
+      "properties": {
+        "boundary": { "const": "half_open" },
+        "source_start_ms": { "type": "integer", "minimum": 0 },
+        "source_end_ms": { "type": "integer", "minimum": 1 },
+        "artifact_zero_maps_to_source_ms": { "type": "integer", "minimum": 0 },
+        "coordinate_precision": { "const": "integer_millisecond_contract" },
+        "extraction_method": { "const": "ffmpeg_accurate_seek_transcode" },
+        "byte_exact_source_fragment": { "const": false }
+      }
+    },
+    "renditionContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "rendition_id"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "rendition_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_kind",
+        "media_id",
+        "path",
+        "sha256",
+        "byte_count",
+        "duration_ms",
+        "visibility",
+        "rendition_contexts"
+      ],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "artifact_kind": {
+          "enum": [
+            "window_audio_16khz_mono_flac",
+            "window_low_resolution_cfr_proxy"
+          ]
+        },
+        "media_id": { "$ref": "#/$defs/mediaId" },
+        "path": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "duration_ms": { "type": "integer", "minimum": 1 },
+        "visibility": { "const": "private" },
+        "rendition_contexts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/renditionContext" }
+        }
+      }
+    },
+    "asrProducerInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "media_id", "artifact_id", "parent_processing_run_id"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "media_id": { "$ref": "#/$defs/mediaId" },
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "parent_processing_run_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "asrWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset_ms", "duration_ms"],
+      "properties": {
+        "offset_ms": { "const": 0 },
+        "duration_ms": { "type": "null" }
+      }
+    },
+    "asrInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input",
+        "catalog_context",
+        "window",
+        "source_time_mapping",
+        "boundary_calibration_state"
+      ],
+      "properties": {
+        "input": { "$ref": "#/$defs/asrProducerInput" },
+        "catalog_context": { "$ref": "#/$defs/renditionContext" },
+        "window": { "$ref": "#/$defs/asrWindow" },
+        "source_time_mapping": { "$ref": "#/$defs/timeMapping" },
+        "boundary_calibration_state": { "const": "not_calibrated" }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "processing_runs",
+        "run_inputs",
+        "media_objects",
+        "media_locations",
+        "media_derivations",
+        "artifacts",
+        "renditions",
+        "timeline_map_spans",
+        "publication_decisions",
+        "identity_claims"
+      ],
+      "properties": {
+        "processing_runs": { "const": 1 },
+        "run_inputs": { "const": 2 },
+        "media_objects": { "const": 2 },
+        "media_locations": { "const": 2 },
+        "media_derivations": { "const": 2 },
+        "artifacts": { "const": 2 },
+        "renditions": { "type": "integer", "minimum": 2 },
+        "timeline_map_spans": { "type": "integer", "minimum": 2 },
+        "publication_decisions": { "const": 0 },
+        "identity_claims": { "const": 0 }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "publication_authority",
+        "identity_authority",
+        "network_access_performed",
+        "credentials_used",
+        "producer_extraction_time_known",
+        "source_boundary_calibrated"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "publication_authority": { "const": "none" },
+        "identity_authority": { "const": "none" },
+        "network_access_performed": { "const": false },
+        "credentials_used": { "const": false },
+        "producer_extraction_time_known": { "const": false },
+        "source_boundary_calibrated": { "const": false }
+      }
+    }
+  }
+}

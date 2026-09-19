@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from autonomous_controller.cli import main
+from autonomous_controller.companion_supervisor import (
+    emit_supervisor_error,
+    emit_supervisor_result,
+    maybe_supervise_run,
+)
+
+
+if __name__ == "__main__":
+    try:
+        supervised = maybe_supervise_run(sys.argv[1:])
+        if supervised is None:
+            raise SystemExit(main())
+        returncode, result = supervised
+        emit_supervisor_result(returncode, result)
+        raise SystemExit(returncode)
+    except SystemExit:
+        raise
+    except Exception as error:
+        raise SystemExit(emit_supervisor_error(error))

@@ -1,0 +1,495 @@
+---
+import type { CorpusFacets } from '../../lib/corpus/types';
+import { knownSpeakerLabel } from '../../lib/corpus/presentation.mjs';
+
+interface Props {
+  recordCount: number;
+  facets: CorpusFacets;
+  recordingLevel?: boolean;
+}
+
+const { recordCount, facets, recordingLevel = false } = Astro.props;
+---
+
+<section
+  class="corpus-search"
+  aria-labelledby="corpus-search-title"
+  data-corpus-search
+  data-record-count={recordCount}
+  data-recording-level={String(recordingLevel)}
+>
+  <div class="corpus-search__heading">
+    <div>
+      <p class="corpus-eyebrow">Independent search index</p>
+      <h2 id="corpus-search-title">{recordingLevel ? 'Search recording transcripts' : 'Search transcript segments'}</h2>
+    </div>
+    <span class="corpus-badge">{recordCount.toLocaleString('en-US')} {recordingLevel ? 'recording transcripts' : 'indexed segments'}</span>
+  </div>
+
+  {recordingLevel && <p>Search covers whole transcripts. Open a result and use “Find in transcript” to locate a passage. Speaker filters select recordings containing that label; matching words may belong to another speaker.</p>}
+  <form class="corpus-search__form" data-search-form>
+    <div class="corpus-search__query">
+      <label for="corpus-query">Words or phrase</label>
+      <input
+        id="corpus-query"
+        name="q"
+        type="search"
+        placeholder="Search the public transcript corpus"
+        autocomplete="off"
+        disabled={recordCount === 0}
+      />
+      <button type="submit" disabled={recordCount === 0}>Search</button>
+      <button type="reset" disabled={recordCount === 0}>Clear search &amp; filters</button>
+    </div>
+
+    <details class="corpus-search__filters">
+      <summary>Filter results</summary>
+      <div class="corpus-search__filter-grid">
+        <label>
+          Platform
+          <select name="platform" disabled={recordCount === 0}>
+            <option value="">All platforms</option>
+            {facets.platforms.map((value) => <option value={value}>{value}</option>)}
+          </select>
+        </label>
+        <label>
+          Year
+          <select name="year" disabled={recordCount === 0}>
+            <option value="">All years</option>
+            {facets.years.map((value) => <option value={value}>{value}</option>)}
+          </select>
+        </label>
+        <label>
+          Language
+          <select name="language" disabled={recordCount === 0}>
+            <option value="">All languages</option>
+            {facets.languages.map((value) => <option value={value}>{value}</option>)}
+          </select>
+        </label>
+        <label>
+          Speaker label
+          <select name="speaker" disabled={recordCount === 0}>
+            <option value="">All speakers</option>
+            {facets.speakers.filter((value) => knownSpeakerLabel(value)).map((value) => <option value={value}>{value}</option>)}
+          </select>
+        </label>
+      </div>
+    </details>
+  </form>
+
+  <p class="corpus-search__status" data-search-status role="status" aria-live="polite">
+    {
+      recordCount === 0
+        ? 'No transcript segments have been published in this release yet.'
+        : 'Enter a phrase or choose one or more filters.'
+    }
+  </p>
+  <ol class="corpus-search__results" data-search-results aria-label="Transcript search results"></ol>
+  <button class="corpus-search__more" type="button" data-load-more hidden>Load more results</button>
+
+  <noscript>
+    <p class="corpus-search__noscript">
+      Corpus search requires JavaScript, but every published recording remains available in the
+      static recording list below.
+    </p>
+  </noscript>
+</section>
+
+<script is:inline>
+  (() => {
+    const pageSize = 20;
+    const transcriptDisclaimers = Object.freeze({
+      machine_generated_unreviewed_not_verified_quotation_v1:
+        'Machine-generated and unreviewed; may be wrong; not a verified quotation.',
+      disputed_transcript_not_verified_quotation_v1:
+        'This transcript is disputed; it may be wrong and is not a verified quotation.',
+      reviewed_transcript_not_fact_checked_v1:
+        'This transcript was reviewed for wording; it is not fact-checked and is not proof that a claim is true.',
+    });
+    const filterKeys = [
+      'platform',
+      'year',
+      'language',
+      'speaker',
+    ];
+
+    for (const root of document.querySelectorAll('[data-corpus-search]')) {
+      const recordCount = Number(root.dataset.recordCount || 0);
+      if (!recordCount) continue;
+
+      const form = root.querySelector('[data-search-form]');
+      const results = root.querySelector('[data-search-results]');
+      const status = root.querySelector('[data-search-status]');
+      const loadMore = root.querySelector('[data-load-more]');
+      if (!(form instanceof HTMLFormElement) || !results || !status || !loadMore) continue;
+
+      let resultHandles = [];
+      let renderedCount = 0;
+      let searchGeneration = 0;
+      let pagefindPromise;
+      let activeQuery = '';
+
+      const loadPagefind = () => {
+        pagefindPromise ??= fetch('/corpus/search-manifest.json', { cache: 'no-cache' }).then(
+          async (response) => {
+            if (!response.ok) throw new Error(`Corpus search manifest returned ${response.status}.`);
+            const manifest = await response.json();
+            const paths = Array.isArray(manifest.indexes)
+              ? manifest.indexes.map((entry) => entry?.path)
+              : [manifest.index_path || '/corpus/pagefind/'];
+            const declaredCount = Array.isArray(manifest.indexes)
+              ? manifest.indexes.reduce(
+                  (total, entry) =>
+                    total + (Number.isInteger(entry?.record_count) ? entry.record_count : NaN),
+                  0,
+                )
+              : manifest.record_count;
+            if (
+              paths.length === 0 ||
+              new Set(paths).size !== paths.length ||
+              !Number.isInteger(declaredCount) ||
+              declaredCount !== recordCount ||
+              paths.some((value) =>
+                typeof value !== 'string' ||
+                !/^\/corpus\/pagefind\/(?:[0-9]{5}\/)?$/.test(value)
+              )
+            ) {
+              throw new Error('Corpus search manifest contains an unsafe index path.');
+            }
+            return Promise.all(
+              paths.map(async (indexPath) => {
+                const pagefind = await import(`${indexPath}pagefind.js`);
+                // Custom record URLs already include /corpus/. Pagefind otherwise
+                // derives /corpus/ from its nested bundle and prepends it again.
+                await pagefind.options({ baseUrl: '/' });
+                await pagefind.init();
+                return pagefind;
+              }),
+            );
+          },
+        );
+        return pagefindPromise;
+      };
+
+      const appendSafeExcerpt = (target, excerpt) => {
+        const parsed = new DOMParser().parseFromString(`<body>${excerpt || ''}</body>`, 'text/html');
+        const appendNode = (node, parent) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            parent.append(document.createTextNode(node.textContent || ''));
+            return;
+          }
+          if (!(node instanceof Element)) return;
+          const destination = node.tagName === 'MARK' ? document.createElement('mark') : parent;
+          if (destination !== parent) parent.append(destination);
+          for (const child of node.childNodes) appendNode(child, destination);
+        };
+        for (const child of parsed.body.childNodes) appendNode(child, target);
+      };
+
+      const renderBatch = async (generation) => {
+        const nextHandles = resultHandles.slice(renderedCount, renderedCount + pageSize);
+        const loaded = await Promise.all(nextHandles.map((handle) => handle.data()));
+        if (generation !== searchGeneration) return;
+
+        for (const data of loaded) {
+          const disclaimerCode = data.meta?.transcript_disclaimer_code;
+          const disclaimerText = typeof disclaimerCode === 'string'
+            ? transcriptDisclaimers[disclaimerCode]
+            : undefined;
+          if (!disclaimerText) {
+            console.error('Corpus search result omitted because its transcript disclaimer is invalid.');
+            continue;
+          }
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          const title = document.createElement('strong');
+          const detail = document.createElement('span');
+          const excerpt = document.createElement('p');
+          const disclaimer = document.createElement('small');
+
+          link.href = typeof data.url === 'string' && data.url.startsWith('/corpus/')
+            ? data.url
+            : '/corpus/';
+          const query = activeQuery;
+          if(link.pathname.startsWith('/corpus/videos/')) {
+            const target=new URL(link.href);
+            // Pagefind stems words: carry its actual highlighted term when available.
+            const marked=new DOMParser().parseFromString(data.excerpt||'','text/html').querySelector('mark')?.textContent;
+            if(query) target.searchParams.set('find',marked||query);
+            // Whole-recording indexes contain a first-segment anchor, not the match's time.
+            if(root.dataset.recordingLevel==='true'){target.searchParams.delete('t');target.hash='transcript-reading';}
+            else if(!target.hash) target.hash='transcript-reading';
+            link.href=target.href;
+          }
+          title.textContent = data.meta?.title || 'Untitled recording';
+          detail.textContent = [
+            root.dataset.recordingLevel==='true' ? null : data.meta?.timestamp,
+            data.meta?.display_speaker_label,
+          ].filter(Boolean).join(' · ');
+          appendSafeExcerpt(excerpt, data.excerpt);
+          disclaimer.className = 'corpus-search__disclaimer';
+          disclaimer.textContent = disclaimerText;
+
+          link.append(title, detail, excerpt, disclaimer);
+          item.append(link);
+          results.append(item);
+        }
+
+        renderedCount += loaded.length;
+        loadMore.hidden = renderedCount >= resultHandles.length;
+      };
+
+      const performSearch = async () => {
+        const generation = ++searchGeneration;
+        const formData = new FormData(form);
+        const query = String(formData.get('q') || '').trim();
+        activeQuery=query;
+        const filters = {};
+        for (const key of filterKeys) {
+          const value = String(formData.get(key) || '').trim();
+          if (value) filters[key] = value;
+        }
+
+        results.replaceChildren();
+        resultHandles = [];
+        renderedCount = 0;
+        loadMore.hidden = true;
+
+        const url = new URL(window.location.href);
+        for (const key of ['q', ...filterKeys]) url.searchParams.delete(key);
+        if (query) url.searchParams.set('q', query);
+        for (const [key, value] of Object.entries(filters)) url.searchParams.set(key, value);
+        history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+
+        if (!query && Object.keys(filters).length === 0) {
+          status.textContent = 'Enter a phrase or choose one or more filters.';
+          return;
+        }
+
+        status.textContent = 'Searching the transcript corpus…';
+        try {
+          const indexes = await loadPagefind();
+          const responses = await Promise.all(
+            indexes.map((pagefind) => pagefind.search(query || null, { filters })),
+          );
+          if (generation !== searchGeneration) return;
+          resultHandles = responses
+            .flatMap((response) => response.results)
+            .sort(
+              (left, right) =>
+                (Number(right.score) || 0) - (Number(left.score) || 0) ||
+                String(left.id || '').localeCompare(String(right.id || '')),
+            );
+          status.textContent = `${resultHandles.length.toLocaleString()} result${
+            resultHandles.length === 1 ? '' : 's'
+          } found.`;
+          await renderBatch(generation);
+
+          const url = new URL(window.location.href);
+          for (const key of ['q', ...filterKeys]) url.searchParams.delete(key);
+          if (query) url.searchParams.set('q', query);
+          for (const [key, value] of Object.entries(filters)) url.searchParams.set(key, value);
+          history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+        } catch (error) {
+          console.error('Corpus search failed.', error);
+          status.textContent = 'The corpus index could not be loaded. Try reloading this page.';
+        }
+      };
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        void performSearch();
+      });
+      form.addEventListener('change', (event) => {
+        if (event.target instanceof HTMLSelectElement) void performSearch();
+      });
+      form.addEventListener('reset', () => setTimeout(() => void performSearch(),0));
+      loadMore.addEventListener('click', async () => {
+        loadMore.disabled=true;
+        try { await renderBatch(searchGeneration); } catch { status.textContent='More results could not be loaded. Try again.'; }
+        finally { loadMore.disabled=false; }
+      });
+
+      const initial = new URLSearchParams(window.location.search);
+      let hasInitialSearch = false;
+      for (const [key, value] of initial) {
+        const control = form.elements.namedItem(key);
+        if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement) {
+          control.value = value;
+          if (value) hasInitialSearch = true;
+        }
+      }
+      if (hasInitialSearch) void performSearch();
+      if(filterKeys.some(key=>initial.get(key))) root.querySelector('.corpus-search__filters').open=true;
+    }
+  })();
+</script>
+
+<style is:global>
+  .corpus-search {
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.6rem;
+    background: var(--corpus-panel);
+  }
+
+  .corpus-search__heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .corpus-search h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .corpus-search__query {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.55rem;
+  }
+
+  .corpus-search__query label {
+    grid-column: 1 / -1;
+  }
+
+  .corpus-search label,
+  .corpus-search__filters summary {
+    color: var(--corpus-muted);
+    font-size: 0.82rem;
+    font-weight: 750;
+  }
+
+  .corpus-search input,
+  .corpus-search select,
+  .corpus-search button {
+    min-height: 2.75rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.35rem;
+    color: var(--corpus-text);
+    background: var(--corpus-bg);
+    font: inherit;
+  }
+
+  .corpus-search input,
+  .corpus-search select {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .corpus-search button {
+    padding: 0.55rem 1rem;
+    color: var(--corpus-bg);
+    background: var(--corpus-accent);
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .corpus-search button:disabled,
+  .corpus-search input:disabled,
+  .corpus-search select:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .corpus-search__filters {
+    margin-top: 0.85rem;
+  }
+
+  .corpus-search__filters summary {
+    width: max-content;
+    cursor: pointer;
+  }
+
+  .corpus-search__filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .corpus-search__filter-grid label {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .corpus-search__status,
+  .corpus-search__noscript {
+    margin: 1rem 0 0;
+    color: var(--corpus-muted);
+    font-size: 0.9rem;
+  }
+
+  .corpus-search__results {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .corpus-search__results li {
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.4rem;
+    background: var(--corpus-bg);
+  }
+
+  .corpus-search__results a {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.85rem 1rem;
+    color: var(--corpus-text);
+    text-decoration: none;
+  }
+
+  .corpus-search__results a:hover {
+    background: var(--corpus-panel-strong);
+  }
+
+  .corpus-search__results span {
+    color: var(--corpus-accent);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.76rem;
+  }
+
+  .corpus-search__results p {
+    margin: 0;
+    color: var(--corpus-muted);
+    font-size: 0.92rem;
+  }
+
+  .corpus-search__disclaimer {
+    color: var(--corpus-warning);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .corpus-search__results mark {
+    color: var(--corpus-bg);
+    background: var(--corpus-warning);
+  }
+
+  .corpus-search__more {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 36rem) {
+    .corpus-search__heading,
+    .corpus-search__query {
+      align-items: stretch;
+      grid-template-columns: 1fr;
+    }
+
+    .corpus-search__heading {
+      flex-direction: column;
+    }
+
+    .corpus-search__query label {
+      grid-column: auto;
+    }
+  }
+</style>

@@ -8,6 +8,11 @@
 /coverage/
 *.tsbuildinfo
 *.log
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -26,9 +31,16 @@ pnpm-debug.log*
 # public/, while evidence bundles remain in the private research workspace.
 /research/
 /scripts/research/
+/corpus/.venv/
+/corpus/*.sqlite
+/corpus/*.sqlite-*
+/corpus/private/
+/corpus/work/
+/corpus/artifacts/
 
 # Local source videos, audio, captures, and analysis workspaces
 /vidspublic/
+/vidsprivate/
 /media-analysis/
 /analysis/
 /captures/
@@ -67,3 +79,4 @@ Thumbs.db
 *~
 *.swp
 *.swo
+**/.wrangler/

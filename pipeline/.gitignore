@@ -1,0 +1,17 @@
+/.test-work/
+/.test-*/
+/.work/
+/outputs/
+__pycache__/
+*.pyc
+*.mp4
+*.mkv
+*.mov
+*.webm
+*.wav
+*.flac
+*.m4a
+*.mp3
+*.bin
+*.ggml
+*.gguf

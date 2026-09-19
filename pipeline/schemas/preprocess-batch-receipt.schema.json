@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/preprocess-batch-receipt-v1.json",
+  "title": "Immutable private media-preprocess batch item receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_kind", "bundle_id", "bundle_manifest_sha256", "ordinal", "entry_id", "job_id", "work_order", "acquisition_result", "source_media", "preprocess_result", "artifacts", "safety", "receipt_id", "receipt_sha256"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "receipt_kind": { "const": "completed_private_media_preprocess_batch_item" },
+    "bundle_id": { "type": "string", "pattern": "^ppbatch_[0-9a-f]{32}$" },
+    "bundle_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "ordinal": { "type": "integer", "minimum": 1, "maximum": 128 },
+    "entry_id": { "type": "string", "pattern": "^pbe_[0-9a-f]{32}$" },
+    "job_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "work_order": { "$ref": "#/$defs/work_order" },
+    "acquisition_result": { "$ref": "#/$defs/acquisition_result" },
+    "source_media": { "$ref": "#/$defs/source_media" },
+    "handling_boundary": { "$ref": "#/$defs/handling_boundary" },
+    "preprocess_result": { "$ref": "#/$defs/preprocess_result" },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "safety": { "$ref": "#/$defs/receipt_safety" },
+    "receipt_id": { "type": "string", "pattern": "^ppreceipt_[0-9a-f]{32}$" },
+    "receipt_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "path": { "type": "string", "pattern": "^/", "minLength": 1, "maxLength": 16384 },
+    "uri": { "type": "string", "pattern": "^file:///", "minLength": 8, "maxLength": 16400 },
+    "timestamp": { "type": "string", "format": "date-time", "minLength": 1, "maxLength": 100 },
+    "work_order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^work-orders/[0-9]{6}\\.json$", "maxLength": 256 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 262144 }
+      }
+    },
+    "acquisition_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "job_id", "work_order_sha256", "completed_at"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "job_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" },
+        "completed_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "source_media": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "media_id", "sha256", "byte_count", "duration_ms", "first_cataloged_at"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 9223372036854775807 },
+        "duration_ms": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 0, "maximum": 9223372036854775807 }
+          ]
+        },
+        "first_cataloged_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "handling_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_scope", "publication_disposition", "publication_authority", "basis"],
+      "properties": {
+        "storage_scope": { "const": "private_canonical_cache" },
+        "publication_disposition": { "enum": ["no_publication_authority", "never_publish"] },
+        "publication_authority": { "const": "none" },
+        "basis": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "private_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "platform", "source_kind", "native_id", "access_state"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "platform": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "source_kind": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "native_id": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "access_state": { "const": "unknown" }
+      }
+    },
+    "private_acquisition_seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_root", "receipt_path", "receipt_sha256", "receipt_byte_count", "plan_sha256", "validated_at", "result_physical_sha256", "result_canonical_sha256", "work_order_sha256", "media_id", "media_sha256", "media_byte_count", "source", "source_byte_identity_claimed"],
+      "properties": {
+        "artifact_root": { "$ref": "#/$defs/path" },
+        "receipt_path": { "$ref": "#/$defs/path" },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "receipt_byte_count": { "type": "integer", "minimum": 1, "maximum": 33554432 },
+        "plan_sha256": { "$ref": "#/$defs/sha256" },
+        "validated_at": { "$ref": "#/$defs/timestamp" },
+        "result_physical_sha256": { "$ref": "#/$defs/sha256" },
+        "result_canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" },
+        "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+        "media_sha256": { "$ref": "#/$defs/sha256" },
+        "media_byte_count": { "type": "integer", "minimum": 1, "maximum": 9223372036854775807 },
+        "source": { "$ref": "#/$defs/private_source" },
+        "source_byte_identity_claimed": { "const": false }
+      }
+    },
+    "handling_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["handling_policy", "private_acquisition_seal"],
+      "properties": {
+        "handling_policy": { "$ref": "#/$defs/handling_policy" },
+        "private_acquisition_seal": { "$ref": "#/$defs/private_acquisition_seal" }
+      }
+    },
+    "preprocess_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "processing_run_id", "recipe_sha256", "reuse_mode"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "processing_run_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+        "recipe_sha256": { "$ref": "#/$defs/sha256" },
+        "reuse_mode": { "enum": ["none", "verified_prior_result"] }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "artifact_kind", "path", "storage_uri", "sha256", "byte_count", "media_kind", "mime_type"],
+      "properties": {
+        "artifact_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "artifact_kind": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "path": { "$ref": "#/$defs/path" },
+        "storage_uri": { "$ref": "#/$defs/uri" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 9223372036854775807 },
+        "media_kind": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "mime_type": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1, "maxLength": 256 }
+          ]
+        }
+      }
+    },
+    "receipt_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "network_allowed", "credentials_allowed", "publication_authority", "identity_claims_allowed", "source_bytes_preserved", "automatic_catalog_admission", "network_access_performed", "publication_performed", "exact_validation_completed"],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "credentials_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_claims_allowed": { "const": false },
+        "source_bytes_preserved": { "const": true },
+        "automatic_catalog_admission": { "const": false },
+        "private_acquisition_seal_required": { "const": true },
+        "handling_policy_propagation_required": { "const": true },
+        "network_access_performed": { "const": false },
+        "publication_performed": { "const": false },
+        "exact_validation_completed": { "const": true }
+      }
+    }
+  }
+}

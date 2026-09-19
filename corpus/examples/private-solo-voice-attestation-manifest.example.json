@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "manifest_id": "fictional-solo-voice-manifest-001",
+  "created_at": "2026-01-02T12:10:00Z",
+  "authorized_by": "fictional-private-catalog-operator",
+  "basis": "Fictional example only; every ID must resolve in a separately reviewed private catalog.",
+  "subjects": [
+    {
+      "solo_voice_subject_id": "solo_voice_subject_fictional_aster_001",
+      "entity_id": "entity_fictional_aster",
+      "source_id": "source_fictional_audio_001",
+      "recording_id": "recording_fictional_audio_001",
+      "rendition_id": "rendition_fictional_audio_001",
+      "media_id": "media_fictional_audio_001",
+      "media_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "start_ms": 1000,
+      "end_ms": 9000,
+      "coordinate_system": "rendition_media_ms"
+    }
+  ],
+  "privacy_reviews": [
+    {
+      "solo_voice_privacy_review_id": "solo_voice_privacy_fictional_aster_001",
+      "review_decision_id": "review_fictional_solo_voice_privacy_001",
+      "solo_voice_subject_id": "solo_voice_subject_fictional_aster_001",
+      "decision": "clear_private_use",
+      "reviewer_id": "reviewer_fictional_privacy",
+      "reviewed_at": "2026-01-02T12:00:00Z",
+      "basis": "Fictional independent review approves only the private named-voice record.",
+      "privacy_attestation": {
+        "named_voice_personal_data_reviewed": true,
+        "private_storage_only": true,
+        "public_export_approved": false,
+        "biometric_artifacts_used": false,
+        "machine_identity_outputs_used": false
+      }
+    }
+  ],
+  "speaker_decisions": [
+    {
+      "solo_voice_attestation_decision_id": "solo_voice_decision_fictional_aster_001",
+      "review_decision_id": "review_fictional_solo_voice_audio_001",
+      "solo_voice_subject_id": "solo_voice_subject_fictional_aster_001",
+      "decision": "assert",
+      "reviewer_id": "reviewer_fictional_audio",
+      "decided_at": "2026-01-02T12:05:00Z",
+      "basis": "Fictional reviewer directly recognizes the one live voice throughout the complete interval.",
+      "direct_audio_attestation": {
+        "attestation": "I directly listened to the complete anchored interval and identify exactly one live human voice as the named entity without relying on source or channel context, transcript text, machine identity output, or machine confidence.",
+        "audio_directly_perceived": true,
+        "reviewed_entire_interval": true,
+        "exactly_one_live_human_speaker": true,
+        "overlap_detected": false,
+        "playback_detected": false,
+        "tts_detected": false,
+        "synthetic_voice_detected": false,
+        "unknown_audio_origin_detected": false,
+        "source_metadata_used_as_identity_evidence": false,
+        "channel_context_used_as_identity_evidence": false,
+        "transcript_text_used_as_identity_evidence": false,
+        "machine_identity_output_used": false,
+        "machine_confidence_used": false,
+        "speaking_face_claimed": false
+      }
+    }
+  ]
+}

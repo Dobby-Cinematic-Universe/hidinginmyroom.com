@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "review_batch_id": "speaker_review_fixture_001",
+  "recording_id": "rec_fixture_speaker_routing_001",
+  "duration_ms": 12000,
+  "review_state": "human_reviewed",
+  "reviewer_id": "reviewer_fixture_a",
+  "reviewed_at": "2026-08-26T12:00:00Z",
+  "source_identity_attestation": null,
+  "intervals": [
+    {
+      "hint_id": "hint_solo_001",
+      "start_ms": 0,
+      "end_ms": 4000,
+      "speech_presence": "present",
+      "speech_multiplicity": "single",
+      "audio_origin": "live_voice",
+      "face_visibility": "single_face",
+      "speaker_visual_relation": "onscreen",
+      "review_confidence": "high",
+      "comment": "One live voice and one visible face were reviewed; no identity was assigned."
+    },
+    {
+      "hint_id": "hint_overlap_001",
+      "start_ms": 4000,
+      "end_ms": 7000,
+      "speech_presence": "present",
+      "speech_multiplicity": "overlap",
+      "audio_origin": "live_voice",
+      "face_visibility": "multiple_faces",
+      "speaker_visual_relation": "mixed",
+      "review_confidence": "medium",
+      "comment": "Simultaneous voices remain representable and require an overlap-aware pass."
+    },
+    {
+      "hint_id": "hint_playback_001",
+      "start_ms": 7000,
+      "end_ms": 9000,
+      "speech_presence": "present",
+      "speech_multiplicity": "unknown",
+      "audio_origin": "playback_voice",
+      "face_visibility": "none",
+      "speaker_visual_relation": "offscreen",
+      "review_confidence": "high",
+      "comment": "Reviewed as playback, not as a live off-camera identity claim."
+    },
+    {
+      "hint_id": "hint_tts_001",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "speech_presence": "present",
+      "speech_multiplicity": "unknown",
+      "audio_origin": "tts_voice",
+      "face_visibility": "none",
+      "speaker_visual_relation": "offscreen",
+      "review_confidence": "medium",
+      "comment": "TTS is retained as a separate origin category."
+    },
+    {
+      "hint_id": "hint_synthetic_001",
+      "start_ms": 10500,
+      "end_ms": 12000,
+      "speech_presence": "present",
+      "speech_multiplicity": "unknown",
+      "audio_origin": "synthetic_voice",
+      "face_visibility": "unknown",
+      "speaker_visual_relation": "unknown",
+      "review_confidence": "low",
+      "comment": "Synthetic media remains distinct from TTS and ordinary playback."
+    }
+  ]
+}

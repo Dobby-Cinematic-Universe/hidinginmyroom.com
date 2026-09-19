@@ -1,0 +1,41 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
+import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
+import {loadCorpusGraph} from '../../../lib/corpus/graph';
+import {eventHref} from '../../../lib/corpus/event-links.mjs';
+import type {RelatedAccountGroup,CorpusGraphEvent} from '../../../lib/corpus/types';
+interface Props {group:RelatedAccountGroup; members:CorpusGraphEvent[];}
+export async function getStaticPaths() {
+  const graph=await loadCorpusGraph(),events=new Map(graph.events.map(e=>[e.event_id,e]));
+  return (graph.eventGroups||[]).map(group=>({params:{slug:group.slug},props:{group,members:group.members.map(id=>events.get(id)!)}}));
+}
+const {group,members}=Astro.props;
+---
+<CorpusLayout title={`Related accounts · ${group.label}`}>
+  <nav><a href="/corpus/">Corpus</a> / <a href="/corpus/graph/">Entities &amp; events</a> / Related accounts</nav>
+  <header><p class="corpus-eyebrow">Related accounts · local similarity grouping</p><h1>{group.label}</h1>
+    <p>{members.length} original descriptions · {group.sourceRecordings.length} source recordings</p>
+  </header>
+  <DerivedNotice />
+  <p>The heading is a representative source description, not a newly synthesized conclusion. Similarity does not establish that these accounts describe the same occurrence. Conflicting details remain below, unchanged; duplicate copies and later retellings are not independent confirmation.</p>
+  <section><h2>Original descriptions</h2>
+    <ol class="accounts">{members.map(e=><li>
+      <p>{e.description}</p>
+      <a href={eventHref(e.slug)}>Open original description and date mentions</a>
+      <ul>{(e.sourceRecordings||[]).map(r=><li><a href={`/corpus/videos/${r.slug}/`}>{r.title}</a><span> · Recording date: {r.recording_date||'unknown'}</span></li>)}</ul>
+    </li>)}</ol>
+  </section>
+  <section><h2>All source transcripts</h2>
+    <DerivedDirectory label="source transcripts" items={group.sourceRecordings.map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+  </section>
+</CorpusLayout>
+<style>
+  nav,p,span { color:var(--corpus-muted); }
+  h1 {font-size:clamp(1.8rem,4vw,3rem);line-height:1.2;overflow-wrap:anywhere;}
+  section {margin:1.5rem 0;padding:1rem;border:1px solid var(--corpus-line);background:var(--corpus-panel);}
+  .accounts {display:grid;gap:1.3rem;padding-left:1.4rem;}
+  .accounts>li {padding:.7rem;border-bottom:1px solid var(--corpus-line);}
+  a {color:var(--corpus-accent);}
+  li {line-height:1.6;}
+</style>

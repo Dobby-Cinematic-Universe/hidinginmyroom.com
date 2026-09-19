@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/contextual-media-local-asr-admission-v1.json",
+  "title": "HIMR private paired contextual media-local ASR admission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status", "plan_sha256", "schema_version", "bridge_version", "result",
+    "batch", "baseline", "glossary", "pair", "diff", "coordinate_contract",
+    "statistics", "policy"
+  ],
+  "properties": {
+    "status": { "enum": ["validated", "admitted"] },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "schema_version": { "const": 1 },
+    "bridge_version": { "const": "contextual-media-local-asr-bridge/2" },
+    "result": { "$ref": "#/$defs/result" },
+    "batch": { "$ref": "#/$defs/batch" },
+    "baseline": { "$ref": "#/$defs/baseline" },
+    "glossary": { "$ref": "#/$defs/glossary" },
+    "pair": { "$ref": "#/$defs/pair" },
+    "diff": { "$ref": "#/$defs/diff" },
+    "coordinate_contract": { "$ref": "#/$defs/coordinates" },
+    "statistics": { "$ref": "#/$defs/statistics" },
+    "policy": { "$ref": "#/$defs/policy" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "privateRef": { "type": "string", "pattern": "^urn:private:sha256:[0-9a-f]{64}$" },
+    "nonnegative": { "type": "integer", "minimum": 0 },
+    "result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["result_ref", "raw_sha256", "canonical_sha256", "byte_count", "result_key", "processing_run_id", "media_local_revision_id", "catalog_environment_projection_version", "catalog_environment_json_sha256", "parameters_json_sha256", "artifacts"],
+      "properties": {
+        "result_ref": { "$ref": "#/$defs/privateRef" },
+        "raw_sha256": { "$ref": "#/$defs/sha256" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "processing_run_id": { "$ref": "#/$defs/identifier" },
+        "media_local_revision_id": { "$ref": "#/$defs/identifier" },
+        "catalog_environment_projection_version": { "const": "contextual_asr_environment_redacted_v1" },
+        "catalog_environment_json_sha256": { "$ref": "#/$defs/sha256" },
+        "parameters_json_sha256": { "$ref": "#/$defs/sha256" },
+        "artifacts": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "$ref": "#/$defs/artifact" }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "artifact_kind", "storage_uri", "sha256", "byte_count"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "artifact_kind": { "enum": ["whispercpp_output_json_full", "transcript_normalized_json"] },
+        "storage_uri": { "$ref": "#/$defs/privateRef" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "batch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["batch_id", "identity_sha256", "manifest_ref", "manifest_raw_sha256", "manifest_canonical_sha256", "manifest_byte_count", "ordinal", "pair_projection_sha256", "work_order_ref", "work_order_raw_sha256", "work_order_canonical_sha256"],
+      "properties": {
+        "batch_id": { "const": "ctxasrbatch_b696c14db13d7ae51a207e528c5e1d0e" },
+        "identity_sha256": { "const": "b696c14db13d7ae51a207e528c5e1d0eebb9161e1e12ecd1dc017d93c1b47de7" },
+        "manifest_ref": { "$ref": "#/$defs/privateRef" },
+        "manifest_raw_sha256": { "const": "6742125ffb752778ca082c491f26d1c596c36e566f637ed9b9e8452d3708aa6f" },
+        "manifest_canonical_sha256": { "const": "743b1a2dc3e0a10efc100c456f3f7613d68470266803df19437657aea6eee13c" },
+        "manifest_byte_count": { "const": 60812 },
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 17 },
+        "pair_projection_sha256": { "$ref": "#/$defs/sha256" },
+        "work_order_ref": { "$ref": "#/$defs/privateRef" },
+        "work_order_raw_sha256": { "$ref": "#/$defs/sha256" },
+        "work_order_canonical_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "baseline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["media_local_revision_id", "processing_run_id", "result_raw_sha256", "result_canonical_sha256"],
+      "properties": {
+        "media_local_revision_id": { "$ref": "#/$defs/identifier" },
+        "processing_run_id": { "$ref": "#/$defs/identifier" },
+        "result_raw_sha256": { "$ref": "#/$defs/sha256" },
+        "result_canonical_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "glossary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["private_glossary_registration_id", "glossary_revision_id", "raw_sha256", "canonical_sha256", "prompt_sha256", "term_count", "terms_in_plan"],
+      "properties": {
+        "private_glossary_registration_id": { "$ref": "#/$defs/identifier" },
+        "glossary_revision_id": { "const": "glossary_himrverse_neutral_en_20260827_v1" },
+        "raw_sha256": { "const": "221543ce0a6ef220158d90c00bff95ec8d18aa911b11a40a3ac81e56e2a9b240" },
+        "canonical_sha256": { "const": "6bc1d768581d399c2ba846aba5454291b67ccea1c29efb452a4740ff3c1ab374" },
+        "prompt_sha256": { "const": "4ecd3ddb7e6546d145b260ab42ba64e003224e4b0e70d5d6847179fb01f29f96" },
+        "term_count": { "const": 26 },
+        "terms_in_plan": { "const": false }
+      }
+    },
+    "pair": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contextual_pair_id", "pair_state", "input_equal", "engine_equal", "model_equal", "window_equal", "inference_equal", "catalog_context_equal", "only_glossary_job_output_differ"],
+      "properties": {
+        "contextual_pair_id": { "$ref": "#/$defs/identifier" },
+        "pair_state": { "const": "competing_machine_revisions_no_preference" },
+        "input_equal": { "const": true },
+        "engine_equal": { "const": true },
+        "model_equal": { "const": true },
+        "window_equal": { "const": true },
+        "inference_equal": { "const": true },
+        "catalog_context_equal": { "const": true },
+        "only_glossary_job_output_differ": { "const": true }
+      }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["total_blocks", "changed_blocks", "unchanged_blocks", "total_character_edit_distance", "empty_nonempty_transitions", "maximum_absolute_first_token_start_drift_ms", "maximum_absolute_last_token_end_drift_ms", "baseline_lexical_tokens", "contextual_lexical_tokens", "baseline_untimed_lexical_tokens", "contextual_untimed_lexical_tokens"],
+      "properties": {
+        "total_blocks": { "$ref": "#/$defs/nonnegative" },
+        "changed_blocks": { "$ref": "#/$defs/nonnegative" },
+        "unchanged_blocks": { "$ref": "#/$defs/nonnegative" },
+        "total_character_edit_distance": { "$ref": "#/$defs/nonnegative" },
+        "empty_nonempty_transitions": { "$ref": "#/$defs/nonnegative" },
+        "maximum_absolute_first_token_start_drift_ms": { "$ref": "#/$defs/nonnegative" },
+        "maximum_absolute_last_token_end_drift_ms": { "$ref": "#/$defs/nonnegative" },
+        "baseline_lexical_tokens": { "$ref": "#/$defs/nonnegative" },
+        "contextual_lexical_tokens": { "$ref": "#/$defs/nonnegative" },
+        "baseline_untimed_lexical_tokens": { "$ref": "#/$defs/nonnegative" },
+        "contextual_untimed_lexical_tokens": { "$ref": "#/$defs/nonnegative" }
+      }
+    },
+    "diff": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contextual_diff_id", "diff_ref", "raw_sha256", "canonical_sha256", "byte_count", "identity_sha256", "block_ms", "summary", "glossary_term_metric_count", "transcript_text_in_plan"],
+      "properties": {
+        "contextual_diff_id": { "$ref": "#/$defs/identifier" },
+        "diff_ref": { "$ref": "#/$defs/privateRef" },
+        "raw_sha256": { "$ref": "#/$defs/sha256" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "identity_sha256": { "$ref": "#/$defs/sha256" },
+        "block_ms": { "type": "integer", "minimum": 5000, "maximum": 120000 },
+        "summary": { "$ref": "#/$defs/summary" },
+        "glossary_term_metric_count": { "$ref": "#/$defs/nonnegative" },
+        "transcript_text_in_plan": { "const": false }
+      }
+    },
+    "coordinates": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coordinate_system", "boundary", "input_duration_ms", "max_segment_end_ms", "input_boundary_overrun_ms", "null_timed_word_count", "recording_coordinates_asserted", "source_coordinates_asserted"],
+      "properties": {
+        "coordinate_system": { "const": "media_ms" },
+        "boundary": { "const": "half_open" },
+        "input_duration_ms": { "type": "integer", "minimum": 1 },
+        "max_segment_end_ms": { "$ref": "#/$defs/nonnegative" },
+        "input_boundary_overrun_ms": { "$ref": "#/$defs/nonnegative" },
+        "null_timed_word_count": { "$ref": "#/$defs/nonnegative" },
+        "recording_coordinates_asserted": { "const": false },
+        "source_coordinates_asserted": { "const": false }
+      }
+    },
+    "statistics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contextual_import_receipts", "contextual_pairs", "text_private_diffs", "media_local_revisions", "media_local_segments", "media_local_words", "publication_decisions", "preference_decisions", "human_review_decisions"],
+      "properties": {
+        "contextual_import_receipts": { "const": 1 },
+        "contextual_pairs": { "const": 1 },
+        "text_private_diffs": { "const": 1 },
+        "media_local_revisions": { "const": 1 },
+        "media_local_segments": { "$ref": "#/$defs/nonnegative" },
+        "media_local_words": { "$ref": "#/$defs/nonnegative" },
+        "publication_decisions": { "const": 0 },
+        "preference_decisions": { "const": 0 },
+        "human_review_decisions": { "const": 0 }
+      }
+    },
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["visibility", "result_filesystem_state", "decoder_scores_calibrated", "accuracy_claimed", "improvement_claimed", "preferred_revision_selected", "correction_asserted", "human_review_claimed", "automatic_merge_allowed", "publication_authority", "transcript_text_in_plan"],
+      "properties": {
+        "visibility": { "const": "private" },
+        "result_filesystem_state": { "const": "stable_hash_bound_no_seal_claim" },
+        "decoder_scores_calibrated": { "const": false },
+        "accuracy_claimed": { "const": false },
+        "improvement_claimed": { "const": false },
+        "preferred_revision_selected": { "const": false },
+        "correction_asserted": { "const": false },
+        "human_review_claimed": { "const": false },
+        "automatic_merge_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "transcript_text_in_plan": { "const": false }
+      }
+    }
+  }
+}

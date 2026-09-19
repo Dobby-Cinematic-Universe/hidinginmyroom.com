@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reviewed/aligned speaker-screen timestamp hints",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema_version",
+    "media_id",
+    "media_sha256",
+    "origin",
+    "evidence",
+    "alignment",
+    "segments"
+  ],
+  "properties": {
+    "kind": {
+      "const": "himr_speaker_screen_timed_cues"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "media_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "media_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "origin": {
+      "enum": [
+        "local_asr",
+        "provider_chapters",
+        "third_party",
+        "manual_review"
+      ]
+    },
+    "evidence": {
+      "$ref": "#/$defs/fileBinding"
+    },
+    "alignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "source_media_sha256",
+        "source_duration_ms",
+        "offset_ms",
+        "reviewed",
+        "review_evidence"
+      ],
+      "properties": {
+        "basis": {
+          "enum": [
+            "same_media",
+            "reviewed_offset"
+          ]
+        },
+        "source_media_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400000
+        },
+        "offset_ms": {
+          "type": "integer",
+          "minimum": -86400000,
+          "maximum": 86400000
+        },
+        "reviewed": {
+          "const": true
+        },
+        "review_evidence": {
+          "$ref": "#/$defs/fileBinding"
+        }
+      }
+    },
+    "segments": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cue_id",
+          "kind",
+          "start_ms",
+          "end_ms",
+          "text"
+        ],
+        "properties": {
+          "cue_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "kind": {
+            "enum": [
+              "transcript",
+              "chapter",
+              "reviewed_interval"
+            ]
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86399999
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400000
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/[^\\u0000-\\u001f]+$",
+          "maxLength": 4096
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

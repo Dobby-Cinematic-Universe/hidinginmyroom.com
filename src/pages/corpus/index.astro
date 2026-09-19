@@ -1,0 +1,337 @@
+---
+import CorpusSearch from '../../components/corpus/CorpusSearch.astro';
+import RecordingList from '../../components/corpus/RecordingList.astro';
+import CorpusLayout from '../../layouts/CorpusLayout.astro';
+import { recordingSearch } from '../../lib/corpus/search-mode';
+import {
+  formatDuration,
+  loadCorpusCatalog,
+} from '../../lib/corpus/release';
+
+const catalog = await loadCorpusCatalog();
+const recordingLevel=await recordingSearch(catalog.releaseId);
+const stats = catalog.stats;
+const facets = catalog.facets;
+const hasPublicRecords =
+  stats.recordings > 0 || stats.transcriptRevisions > 0 || stats.sourceListings > 0;
+const releaseDate = hasPublicRecords && catalog.generatedAt
+  ? new Date(catalog.generatedAt)
+  : undefined;
+const hasReleaseDate = releaseDate && !Number.isNaN(releaseDate.getTime());
+const recordings = catalog.recordings;
+const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeCompare(a.date_label||'')).slice(0, 12);
+---
+
+<CorpusLayout
+  title="HIMR Public Corpus"
+  description="Search public HIMR transcripts by words, speaker labels, source, year, and review state."
+>
+  <section class="corpus-hero" aria-labelledby="corpus-title">
+    <div>
+      <p class="corpus-eyebrow">Research dataset · separate from wiki search</p>
+      <h1 id="corpus-title">The public HIMR media corpus</h1>
+      <p class="corpus-hero__lede">
+        Search timestamped transcript segments and follow each result back to its recording,
+        revision and public source listing.
+      </p>
+    </div>
+    <details><summary>Dataset release details</summary><dl class="corpus-release">
+      <div>
+        <dt>Release</dt>
+        <dd>{hasPublicRecords ? catalog.releaseId : 'Awaiting first release'}</dd>
+      </div>
+      <div>
+        <dt>Generated</dt>
+        <dd>
+          {
+            hasReleaseDate ? (
+              <time datetime={catalog.generatedAt}>
+                {releaseDate.toLocaleDateString('en-GB', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            ) : (
+              'Not yet generated'
+            )
+          }
+        </dd>
+      </div>
+      <div>
+        <dt>Schema</dt>
+        <dd>{catalog.schemaVersion}</dd>
+      </div>
+    </dl></details>
+  </section>
+
+  <nav class="corpus-shortcuts" aria-label="Explore the corpus">
+    <a href="#corpus-search-title">Search transcripts ↓</a>
+    <a href="/corpus/browse/1/">Browse all recordings →</a>
+    <a href="/corpus/summaries/">Explore summaries →</a>
+  </nav>
+  <details class="corpus-limitations">
+    <summary>Machine transcripts are unreviewed — read the limitations</summary>
+    <p>
+      A transcript is not proof that its wording is correct or that a speaker’s claim is true.
+      Machine-only passages can mishear names, context, and overlapping speech. Inspect the public source and
+      its surrounding context before updating the reviewed wiki.
+    </p>
+  </details>
+
+  <dl class="corpus-stats" aria-label="Corpus release totals">
+    <div>
+      <dt>{stats.recordings.toLocaleString('en-US')}</dt>
+      <dd>recordings</dd>
+    </div>
+    <div>
+      <dt>{stats.transcriptSegments.toLocaleString('en-US')}</dt>
+      <dd>searchable transcript segments</dd>
+    </div>
+    <div>
+      <dt>{formatDuration(stats.durationMs)}</dt>
+      <dd>mapped runtime</dd>
+    </div>
+    <div>
+      <dt>{stats.sourceListings.toLocaleString('en-US')}</dt>
+      <dd>source listings</dd>
+    </div>
+  </dl>
+
+  <CorpusSearch recordCount={recordingLevel ? catalog.recordings.filter(r=>r.searchable_segment_count>0).length : stats.transcriptSegments} facets={facets} recordingLevel={recordingLevel} />
+
+  <section class="corpus-recordings" aria-labelledby="recordings-title">
+    <div class="corpus-recordings__heading">
+      <div>
+        <p class="corpus-eyebrow">Start exploring</p>
+        <h2 id="recordings-title">Recent recordings</h2>
+      </div>
+      <p>{recordings.length.toLocaleString('en-US')} recording pages</p>
+    </div>
+
+    {
+      recordings.length === 0 ? (
+        <div class="corpus-empty">
+          <h3>The explorer is ready for its first release.</h3>
+          <p>
+            No public corpus records are present yet. The route and independent search boundary are
+            available without placing placeholder results in the index.
+          </p>
+        </div>
+      ) : (
+        <>
+          <RecordingList recordings={landingRecordings} />
+          {recordings.length > landingRecordings.length && (
+            <p class="corpus-recordings__more">
+              Showing the {landingRecordings.length.toLocaleString('en-US')} most recent dated recordings.{' '}
+              <a href="/corpus/browse/1/">
+                Browse all {recordings.length.toLocaleString('en-US')} recordings
+              </a>
+            </p>
+          )}
+        </>
+      )
+    }
+  </section>
+</CorpusLayout>
+
+<style>
+  .corpus-shortcuts { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
+  .corpus-shortcuts a { padding: .75rem 1rem; border: 1px solid var(--corpus-line); border-radius: .4rem; background: var(--corpus-panel); text-decoration: none; }
+  .corpus-limitations { margin: 1rem 0; color: var(--corpus-muted); font-size: .9rem; }
+  summary { cursor: pointer; }
+  .corpus-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.75fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: end;
+    margin-bottom: 1.5rem;
+  }
+
+  .corpus-hero h1 {
+    max-width: 28ch;
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    letter-spacing: -0.055em;
+    line-height: 1.08;
+  }
+
+  .corpus-hero__lede {
+    max-width: 47rem;
+    margin: 1.2rem 0 0;
+    color: var(--corpus-muted);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+  }
+
+  .corpus-release {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.5rem;
+    background: var(--corpus-panel);
+  }
+
+  .corpus-release div {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .corpus-release dt,
+  .corpus-release dd {
+    margin: 0;
+  }
+
+  .corpus-release dt {
+    color: var(--corpus-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+
+  .corpus-release dd {
+    overflow-wrap: anywhere;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.82rem;
+  }
+
+  .corpus-caution {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid rgb(255 209 102 / 45%);
+    border-radius: 0.45rem;
+    background: rgb(255 209 102 / 7%);
+  }
+
+  .corpus-caution strong {
+    color: var(--corpus-warning);
+  }
+
+  .corpus-caution p {
+    margin: 0;
+    color: var(--corpus-muted);
+  }
+
+  .corpus-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0 0 1.25rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .corpus-stats div {
+    min-width: 0;
+    padding: 1rem;
+    background: var(--corpus-panel);
+  }
+
+  .corpus-stats div + div {
+    border-left: 1px solid var(--corpus-line);
+  }
+
+  .corpus-stats dt,
+  .corpus-stats dd {
+    margin: 0;
+  }
+
+  .corpus-stats dt {
+    overflow-wrap: anywhere;
+    color: var(--corpus-text);
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: 850;
+    line-height: 1.2;
+  }
+
+  .corpus-stats dd {
+    margin-top: 0.25rem;
+    color: var(--corpus-muted);
+    font-size: 0.78rem;
+  }
+
+  .corpus-recordings {
+    margin-top: 2rem;
+  }
+
+  .corpus-recordings__heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .corpus-recordings h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 4vw, 2.35rem);
+  }
+
+  .corpus-recordings__heading > p {
+    margin: 0;
+    color: var(--corpus-muted);
+    font-size: 0.85rem;
+  }
+
+  .corpus-empty {
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px dashed var(--corpus-line);
+    border-radius: 0.5rem;
+    background: var(--corpus-panel);
+  }
+
+  .corpus-empty h3,
+  .corpus-empty p {
+    margin: 0;
+  }
+
+  .corpus-empty p {
+    max-width: 50rem;
+    margin-top: 0.5rem;
+    color: var(--corpus-muted);
+  }
+
+  .corpus-recordings__more {
+    margin: 1rem 0 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.45rem;
+    color: var(--corpus-muted);
+    background: var(--corpus-panel);
+    text-align: center;
+  }
+
+  @media (max-width: 52rem) {
+    .corpus-hero,
+    .corpus-caution {
+      grid-template-columns: 1fr;
+    }
+
+    .corpus-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .corpus-stats div + div {
+      border-left: 0;
+    }
+
+    .corpus-stats div:nth-child(even) {
+      border-left: 1px solid var(--corpus-line);
+    }
+
+    .corpus-stats div:nth-child(n + 3) {
+      border-top: 1px solid var(--corpus-line);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .corpus-recordings__heading {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

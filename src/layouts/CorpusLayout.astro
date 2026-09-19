@@ -1,0 +1,299 @@
+---
+import { localPreviewRoot } from '../lib/local-preview';
+import CorpusChat from '../components/corpus/CorpusChat.astro';
+const isLocalPreview = !!localPreviewRoot();
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'HIMR Public Corpus',
+  description =
+    'Searchable, timestamped transcripts and provenance metadata for public HIMR recordings.',
+} = Astro.props;
+
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {isLocalPreview && <meta name="robots" content="noindex, nofollow, noarchive" />}
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b1018" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta name="twitter:card" content="summary" />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+    <link
+      rel="icon"
+      type="image/jpeg"
+      href="/images/wiki/daniel-channel-avatar-2026-08-25.jpg"
+    />
+    <title>{title}</title>
+  </head>
+  <body data-pagefind-ignore="all">
+    <a class="corpus-skip-link" href="#main-content">Skip to corpus content</a>
+    <div class="corpus-shell">
+      <header class="corpus-header">
+        <a class="corpus-brand" href="/corpus/" aria-label="HIMR Public Corpus home">
+          <span class="corpus-brand__mark" aria-hidden="true">
+            <img src="/images/wiki/tomoko-response-candidate-daniel-2017.webp" alt="" width="32" height="32" decoding="async" style="display:block;width:32px;height:32px;object-fit:cover;object-position:44% center" />
+          </span>
+          <span>
+            <strong>HIMR Public Corpus</strong>
+            <small>timestamped source index</small>
+          </span>
+        </a>
+        <nav aria-label="Corpus navigation">
+          <a href="/corpus/" aria-current={Astro.url.pathname === '/corpus/' ? 'page' : undefined}>Corpus</a>
+          <a href="/corpus/browse/1/" aria-current={Astro.url.pathname.startsWith('/corpus/browse/') ? 'page' : undefined}>Browse</a>
+          <a href="/corpus/summaries/" aria-current={Astro.url.pathname.startsWith('/corpus/summaries/') ? 'page' : undefined}>Summaries</a>
+          {(isLocalPreview || import.meta.env.PUBLIC_RAG_ENABLED==='true') && <a href="/corpus/ask/" aria-current={Astro.url.pathname === '/corpus/ask/' ? 'page' : undefined}>{isLocalPreview?'Ask (pilot)':'Ask'}</a>}
+          <a href="/corpus/graph/" aria-current={/^\/corpus\/(graph|entities|events|event-groups)\//.test(Astro.url.pathname) ? 'page' : undefined}>Entities &amp; events</a>
+          <a href="/wiki/">Reviewed wiki</a>
+          <a href="/">Main site</a>
+        </nav>
+      </header>
+
+      <main id="main-content">
+        {isLocalPreview && <details class="preview-notice"><summary>Private local preview — not published</summary><p>Rights, privacy, sensitivity and source-availability checks are not publication-approved. This snapshot is excluded from production builds.</p></details>}
+        <slot />
+        {Astro.url.pathname==='/corpus/ask/' && <CorpusChat />}
+      </main>
+
+      <footer class="corpus-footer">
+        <p>Machine text is a research aid. Check the linked source before relying on a passage.</p>
+        <a href="/wiki/archive/methodology/">Wiki verification method</a>
+        {(import.meta.env.DEV || import.meta.env.PUBLIC_RAG_ENABLED==='true') && <button type="button" data-chat-restore style="background:none;border:0;color:var(--corpus-accent);font:inherit;cursor:pointer;text-decoration:underline">Show corpus chat</button>}
+      </footer>
+    </div>
+    {Astro.url.pathname!=='/corpus/ask/' && <CorpusChat />}
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --corpus-bg: #0b1018;
+    --corpus-panel: #111a27;
+    --corpus-panel-strong: #162235;
+    --corpus-text: #edf3f8;
+    --corpus-muted: #a9b8c7;
+    --corpus-line: #2b3a4c;
+    --corpus-accent: #90e0ef;
+    --corpus-accent-strong: #2ec4d6;
+    --corpus-warning: #ffd166;
+    --corpus-danger: #ff8f8f;
+    --corpus-max: 82rem;
+    color-scheme: dark;
+    font-family:
+      Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background: var(--corpus-bg);
+  }
+
+  body {
+    min-width: 20rem;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--corpus-text);
+    background:
+      radial-gradient(circle at 85% -10%, rgb(46 196 214 / 14%), transparent 30rem),
+      var(--corpus-bg);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--corpus-accent);
+    text-underline-offset: 0.18em;
+  }
+
+  a:hover {
+    color: #c8f7ff;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--corpus-warning);
+    outline-offset: 3px;
+  }
+
+  .corpus-skip-link {
+    position: fixed;
+    z-index: 100;
+    inset: 0.75rem auto auto 0.75rem;
+    padding: 0.65rem 0.9rem;
+    color: var(--corpus-bg);
+    background: var(--corpus-warning);
+    font-weight: 800;
+    transform: translateY(-180%);
+  }
+
+  .corpus-skip-link:focus {
+    transform: translateY(0);
+  }
+
+  .preview-notice { border: 1px solid var(--corpus-warning); padding: .6rem .85rem; margin-bottom: 1rem; border-radius: .5rem; color: var(--corpus-warning); font-size: .85rem; }
+  .preview-notice summary { cursor: pointer; font-weight: 700; }
+  .preview-notice p { margin: .6rem 0 0; }
+  .corpus-shell {
+    width: min(100%, var(--corpus-max));
+    min-height: 100vh;
+    margin-inline: auto;
+    border-inline: 1px solid var(--corpus-line);
+    background: rgb(11 16 24 / 78%);
+  }
+
+  .corpus-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem clamp(1rem, 4vw, 2.5rem);
+    border-bottom: 1px solid var(--corpus-line);
+  }
+
+  .corpus-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .corpus-header nav a {
+    color: var(--corpus-muted);
+  }
+
+  .corpus-header nav a[aria-current='page'],
+  .corpus-header nav a:hover {
+    color: var(--corpus-text);
+  }
+
+  .corpus-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--corpus-text);
+    text-decoration: none;
+  }
+
+  .corpus-brand__mark {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.35rem;
+    color: var(--corpus-bg);
+    background: var(--corpus-panel);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-weight: 900;
+  }
+
+  .corpus-brand__mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 44% center;
+  }
+
+  .corpus-brand > span:last-child {
+    display: grid;
+    line-height: 1.2;
+  }
+
+  .corpus-brand strong {
+    font-size: 0.94rem;
+    letter-spacing: 0.03em;
+  }
+
+  .corpus-brand small {
+    color: var(--corpus-muted);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  #main-content {
+    min-height: 70vh;
+    padding: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .corpus-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem clamp(1rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--corpus-line);
+    color: var(--corpus-muted);
+    font-size: 0.84rem;
+  }
+
+  .corpus-footer p {
+    margin: 0;
+  }
+
+  .corpus-eyebrow {
+    margin: 0 0 0.65rem;
+    color: var(--corpus-accent);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .corpus-muted {
+    color: var(--corpus-muted);
+  }
+
+  .corpus-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.55rem;
+    padding: 0.12rem 0.5rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 999px;
+    color: var(--corpus-muted);
+    background: var(--corpus-bg);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.72rem;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 46rem) {
+    .corpus-header,
+    .corpus-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .corpus-brand small {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "request_id": "iamr_50b5f51db719a5638fc3cf0a147b4a75",
+  "request_kind": "archive_org_metadata_targets",
+  "requested_at": "2026-08-26T12:00:00Z",
+  "items": [
+    {
+      "identifier": "fictional-himr-item-a",
+      "basis": "catalog_archive_item"
+    },
+    {
+      "identifier": "fictional-himr-item-b",
+      "basis": "manual_public_lead"
+    }
+  ],
+  "policy": {
+    "public_unauthenticated_metadata_only": true,
+    "media_download": false,
+    "cookies_sent": false,
+    "authorization_sent": false,
+    "publication_authority": false
+  }
+}

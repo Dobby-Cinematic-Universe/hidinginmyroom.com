@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/evaluation/interval-proposal-v2.json",
+  "title": "ASR-blind grouped local-window interval proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_kind",
+    "manifest_sha256",
+    "proposal_id",
+    "proposal_state",
+    "created_at",
+    "cohort_id",
+    "cohort_manifest_sha256",
+    "request_id",
+    "request_manifest_sha256",
+    "selection_basis",
+    "policy",
+    "catalog_basis",
+    "recordings",
+    "accounting",
+    "safety"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "manifest_kind": { "const": "interval_proposal" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "proposal_id": { "type": "string", "pattern": "^interval_proposal_[0-9a-f]{32}$" },
+    "proposal_state": { "const": "proposal_unreviewed" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "cohort_id": { "$ref": "#/$defs/identifier" },
+    "cohort_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "request_id": { "type": "string", "pattern": "^proposal_request_[0-9a-f]{32}$" },
+    "request_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "selection_basis": { "const": "scene_silence_and_periodic_routing_without_asr_or_transcript" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "catalog_basis": { "$ref": "#/$defs/catalogBasis" },
+    "recordings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/recording" }
+    },
+    "accounting": { "$ref": "#/$defs/accounting" },
+    "safety": { "$ref": "#/$defs/safety" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "mediaId": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+    "nullableSha256": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/sha256" }
+      ]
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_duration_ms",
+        "minimum_interval_duration_ms",
+        "max_intervals_per_recording",
+        "max_total_intervals",
+        "max_total_duration_ms",
+        "minimum_gap_ms",
+        "periodic_stride_ms",
+        "max_silence_fraction_millionths"
+      ],
+      "properties": {
+        "interval_duration_ms": { "type": "integer", "minimum": 1, "maximum": 120000 },
+        "minimum_interval_duration_ms": { "type": "integer", "minimum": 1, "maximum": 120000 },
+        "max_intervals_per_recording": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "max_total_intervals": { "type": "integer", "minimum": 1, "maximum": 384 },
+        "max_total_duration_ms": { "type": "integer", "minimum": 1, "maximum": 28800000 },
+        "minimum_gap_ms": { "type": "integer", "minimum": 0, "maximum": 120000 },
+        "periodic_stride_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "max_silence_fraction_millionths": { "type": "integer", "minimum": 0, "maximum": 1000000 }
+      }
+    },
+    "catalogBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["open_mode", "quick_check", "schema_migrations_sha256", "relevant_rows_sha256"],
+      "properties": {
+        "open_mode": { "const": "sqlite_read_only_transaction" },
+        "quick_check": { "const": "ok" },
+        "schema_migrations_sha256": { "$ref": "#/$defs/sha256" },
+        "relevant_rows_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "preprocessBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_raw_sha256",
+        "import_envelope_sha256",
+        "import_batch_id",
+        "processing_run_id",
+        "implementation_version",
+        "recipe_sha256",
+        "routing_artifact_sha256",
+        "routing_metadata_sha256",
+        "audio_artifact_sha256",
+        "proxy_artifact_sha256",
+        "catalog_rows_sha256"
+      ],
+      "properties": {
+        "result_raw_sha256": { "$ref": "#/$defs/sha256" },
+        "import_envelope_sha256": { "$ref": "#/$defs/sha256" },
+        "import_batch_id": { "type": "string", "pattern": "^imp_[0-9a-f]{32}$" },
+        "processing_run_id": { "$ref": "#/$defs/identifier" },
+        "implementation_version": { "type": "string", "minLength": 1 },
+        "recipe_sha256": { "$ref": "#/$defs/sha256" },
+        "routing_artifact_sha256": { "$ref": "#/$defs/sha256" },
+        "routing_metadata_sha256": { "$ref": "#/$defs/sha256" },
+        "audio_artifact_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "proxy_artifact_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "catalog_rows_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "localWindowBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_sha256",
+        "bundle_id",
+        "window_id",
+        "work_order_sha256",
+        "artifact_id",
+        "artifact_kind",
+        "artifact_sha256",
+        "admission_processing_run_id",
+        "catalog_rows_sha256"
+      ],
+      "properties": {
+        "result_sha256": { "$ref": "#/$defs/sha256" },
+        "bundle_id": { "type": "string", "pattern": "^windowbundle_[0-9a-f]{32}$" },
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" },
+        "artifact_id": { "type": "string", "pattern": "^artifact_[0-9a-f]{32}$" },
+        "artifact_kind": { "enum": ["window_audio_16khz_mono_flac", "window_low_resolution_cfr_proxy"] },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" },
+        "admission_processing_run_id": { "type": "string", "pattern": "^run_[0-9a-f]{32}$" },
+        "catalog_rows_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_kind",
+        "parent_coordinate_system",
+        "local_coordinate_system",
+        "source_offset_ms",
+        "source_end_ms",
+        "local_window_binding"
+      ],
+      "properties": {
+        "binding_kind": { "const": "local_window" },
+        "parent_coordinate_system": { "const": "parent_rendition_media_ms" },
+        "local_coordinate_system": { "const": "analysis_media_ms" },
+        "source_offset_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "source_end_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "local_window_binding": { "$ref": "#/$defs/localWindowBinding" }
+      }
+    },
+    "routingSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analysis_coverage_duration_ms", "has_audio", "has_video", "scene_change_count", "silence_interval_count", "content_interpretation"],
+      "properties": {
+        "analysis_coverage_duration_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "has_audio": { "type": "boolean" },
+        "has_video": { "type": "boolean" },
+        "scene_change_count": { "type": "integer", "minimum": 0, "maximum": 200000 },
+        "silence_interval_count": { "type": "integer", "minimum": 0, "maximum": 200000 },
+        "content_interpretation": { "const": "none_machine_routing_only" }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_id",
+        "window_ordinal",
+        "analysis_rendition_id",
+        "analysis_rendition_kind",
+        "analysis_media_id",
+        "analysis_media_sha256",
+        "analysis_media_byte_count",
+        "analysis_media_duration_ms",
+        "preprocess_binding",
+        "timeline",
+        "routing_summary"
+      ],
+      "properties": {
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "window_ordinal": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "analysis_rendition_id": { "type": "string", "pattern": "^rnd_[0-9a-f]{32}$" },
+        "analysis_rendition_kind": {
+          "type": "string",
+          "pattern": "^local_window:(window_audio_16khz_mono_flac|window_low_resolution_cfr_proxy):windowbundle_[0-9a-f]{32}:window_[0-9]{6}$"
+        },
+        "analysis_media_id": { "$ref": "#/$defs/mediaId" },
+        "analysis_media_sha256": { "$ref": "#/$defs/sha256" },
+        "analysis_media_byte_count": { "type": "integer", "minimum": 1 },
+        "analysis_media_duration_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "preprocess_binding": { "$ref": "#/$defs/preprocessBinding" },
+        "timeline": { "$ref": "#/$defs/timeline" },
+        "routing_summary": { "$ref": "#/$defs/routingSummary" }
+      }
+    },
+    "reviewerFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language_tags", "code_switch", "speaker_overlap", "playback_speech", "noise"],
+      "properties": {
+        "language_tags": { "type": "null" },
+        "code_switch": { "type": "null" },
+        "speaker_overlap": { "type": "null" },
+        "playback_speech": { "type": "null" },
+        "noise": { "type": "null" }
+      }
+    },
+    "reviewerCompletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["include", "split", "stratum_id", "flags"],
+      "properties": {
+        "include": { "type": "null" },
+        "split": { "type": "null" },
+        "stratum_id": { "type": "null" },
+        "flags": { "$ref": "#/$defs/reviewerFlags" }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_id",
+        "status",
+        "boundary",
+        "window_id",
+        "window_ordinal",
+        "analysis_media_id",
+        "analysis_rendition_id",
+        "local_start_ms",
+        "local_end_ms",
+        "start_ms",
+        "end_ms",
+        "parent_start_ms",
+        "parent_end_ms",
+        "duration_ms",
+        "proposal_basis",
+        "anchor_local_ms",
+        "anchor_parent_ms",
+        "estimated_silence_overlap_ms",
+        "estimated_silence_fraction_millionths",
+        "reviewer_completion"
+      ],
+      "properties": {
+        "interval_id": { "type": "string", "pattern": "^proposal_interval_[0-9a-f]{32}$" },
+        "status": { "const": "proposal_unreviewed" },
+        "boundary": { "const": "half_open" },
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "window_ordinal": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "analysis_media_id": { "$ref": "#/$defs/mediaId" },
+        "analysis_rendition_id": { "type": "string", "pattern": "^rnd_[0-9a-f]{32}$" },
+        "local_start_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "local_end_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "start_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "end_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "parent_start_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "parent_end_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "duration_ms": { "type": "integer", "minimum": 1, "maximum": 120000 },
+        "proposal_basis": { "enum": ["scene_anchor", "silence_boundary", "periodic"] },
+        "anchor_local_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "anchor_parent_ms": { "type": "integer", "minimum": 0, "maximum": 172800000 },
+        "estimated_silence_overlap_ms": { "type": "integer", "minimum": 0, "maximum": 120000 },
+        "estimated_silence_fraction_millionths": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+        "reviewer_completion": { "$ref": "#/$defs/reviewerCompletion" }
+      }
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "recording_id",
+        "source_id",
+        "source_native_id",
+        "source_locator",
+        "parent_rendition_id",
+        "parent_rendition_kind",
+        "parent_media_id",
+        "parent_media_sha256",
+        "parent_media_byte_count",
+        "parent_media_duration_ms",
+        "windows",
+        "intervals"
+      ],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/identifier" },
+        "recording_id": { "type": "string", "pattern": "^rec_[0-9a-f]{32}$" },
+        "source_id": { "type": "string", "pattern": "^src_[0-9a-f]{32}$" },
+        "source_native_id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{11}$" },
+        "source_locator": { "type": "string", "pattern": "^https://www\\.youtube\\.com/watch\\?v=[A-Za-z0-9_-]{11}$" },
+        "parent_rendition_id": { "type": "string", "pattern": "^rnd_[0-9a-f]{32}$" },
+        "parent_rendition_kind": { "const": "acquired_source_media" },
+        "parent_media_id": { "$ref": "#/$defs/mediaId" },
+        "parent_media_sha256": { "$ref": "#/$defs/sha256" },
+        "parent_media_byte_count": { "type": "integer", "minimum": 1 },
+        "parent_media_duration_ms": { "type": "integer", "minimum": 1, "maximum": 172800000 },
+        "windows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/window" }
+        },
+        "intervals": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/interval" }
+        }
+      }
+    },
+    "accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_count", "window_count", "recordings_with_intervals", "interval_count", "total_duration_ms"],
+      "properties": {
+        "recording_count": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "window_count": { "type": "integer", "minimum": 1, "maximum": 384 },
+        "recordings_with_intervals": { "type": "integer", "minimum": 0, "maximum": 12 },
+        "interval_count": { "type": "integer", "minimum": 0, "maximum": 384 },
+        "total_duration_ms": { "type": "integer", "minimum": 0, "maximum": 28800000 }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposal_only",
+        "asr_output_inspected",
+        "transcript_text_inspected",
+        "direct_media_content_inspected",
+        "output_path_used",
+        "catalog_opened_query_only",
+        "catalog_mutated",
+        "freeze_created",
+        "reference_text_present",
+        "reference_quality_claimed",
+        "human_review_required"
+      ],
+      "properties": {
+        "proposal_only": { "const": true },
+        "asr_output_inspected": { "const": false },
+        "transcript_text_inspected": { "const": false },
+        "direct_media_content_inspected": { "const": false },
+        "output_path_used": { "const": false },
+        "catalog_opened_query_only": { "const": true },
+        "catalog_mutated": { "const": false },
+        "freeze_created": { "const": false },
+        "reference_text_present": { "const": false },
+        "reference_quality_claimed": { "const": false },
+        "human_review_required": { "const": true }
+      }
+    }
+  }
+}

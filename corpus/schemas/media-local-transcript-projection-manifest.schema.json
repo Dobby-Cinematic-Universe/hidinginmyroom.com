@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/media-local-transcript-projection-manifest-v1.json",
+  "title": "Reviewed media-local transcript identity-projection manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "policy_id", "selection", "review"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_id": { "$ref": "#/$defs/identifier" },
+    "policy_id": { "const": "media_local_full_file_identity_v1" },
+    "selection": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/selection" }
+    },
+    "review": { "$ref": "#/$defs/review" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "basis": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001F\\u007F]+$"
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal", "recording_id", "canonical_key", "source_id",
+        "media_source_id", "recording_source_id", "parent_media_id",
+        "public_source_metadata_observation_id",
+        "public_source_import_observation_id", "public_source_observed_at",
+        "parent_rendition_id", "normalized_media_id", "input_duration_ms",
+        "parent_duration_ms", "recording_duration_ms", "raw_revision_id",
+        "raw_import_id", "contextual_revision_id", "contextual_import_id",
+        "contextual_pair_id", "contextual_diff_id"
+      ],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "canonical_key": {
+          "type": "string", "minLength": 1, "maxLength": 500,
+          "pattern": "^(?!\\s)(?!.*\\s$)[^\\u0000-\\u001F\\u007F]+$"
+        },
+        "source_id": { "$ref": "#/$defs/identifier" },
+        "media_source_id": { "$ref": "#/$defs/identifier" },
+        "recording_source_id": { "$ref": "#/$defs/identifier" },
+        "public_source_metadata_observation_id": { "$ref": "#/$defs/identifier" },
+        "public_source_import_observation_id": { "$ref": "#/$defs/identifier" },
+        "public_source_observed_at": { "$ref": "#/$defs/utcTimestamp" },
+        "parent_media_id": { "$ref": "#/$defs/identifier" },
+        "parent_rendition_id": { "$ref": "#/$defs/identifier" },
+        "normalized_media_id": { "$ref": "#/$defs/identifier" },
+        "input_duration_ms": { "type": "integer", "minimum": 1 },
+        "parent_duration_ms": { "type": "integer", "minimum": 1 },
+        "recording_duration_ms": { "type": "integer", "minimum": 1 },
+        "raw_revision_id": { "$ref": "#/$defs/identifier" },
+        "raw_import_id": { "$ref": "#/$defs/identifier" },
+        "contextual_revision_id": { "$ref": "#/$defs/identifier" },
+        "contextual_import_id": { "$ref": "#/$defs/identifier" },
+        "contextual_pair_id": { "$ref": "#/$defs/identifier" },
+        "contextual_diff_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_id", "reviewed_at", "basis", "coordinate_attestation",
+        "approved_plan_sha256"
+      ],
+      "properties": {
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "reviewed_at": { "$ref": "#/$defs/utcTimestamp" },
+        "basis": { "$ref": "#/$defs/basis" },
+        "coordinate_attestation": {
+          "const": "reviewed_exact_full_file_identity_no_wording_or_speaker_claim_v1"
+        },
+        "approved_plan_sha256": {
+          "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}

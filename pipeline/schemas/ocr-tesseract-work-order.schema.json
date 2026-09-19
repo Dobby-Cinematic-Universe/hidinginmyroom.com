@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/ocr-tesseract-work-order-v1.json",
+  "title": "HIMR sealed sparse-frame Tesseract OCR work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "sparse_frame_result",
+    "execution_selection",
+    "tesseract",
+    "parameters",
+    "limits",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/jobId" },
+    "sparse_frame_result": { "$ref": "#/$defs/fileReference" },
+    "execution_selection": { "$ref": "#/$defs/executionSelection" },
+    "tesseract": { "$ref": "#/$defs/tesseract" },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "limits": { "$ref": "#/$defs/limits" },
+    "output": { "$ref": "#/$defs/output" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "absolutePath": { "type": "string", "pattern": "^/" },
+    "jobId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+    },
+    "fileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "executionSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "basis", "frame_ids"],
+      "properties": {
+        "mode": { "const": "explicit_frame_ids" },
+        "basis": {
+          "enum": [
+            "external_text_presence_candidate",
+            "reviewer_selected"
+          ]
+        },
+        "frame_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^frame_[0-9a-f]{32}$"
+          }
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "path", "expected_sha256", "expected_byte_count"],
+      "properties": {
+        "language": { "$ref": "#/$defs/language" },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483648
+        }
+      }
+    },
+    "tesseract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "expected_sha256",
+        "expected_byte_count",
+        "expected_version_output_sha256",
+        "expected_version_label",
+        "tessdata_dir",
+        "models"
+      ],
+      "properties": {
+        "executable": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1073741824
+        },
+        "expected_version_output_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_version_label": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "tessdata_dir": { "$ref": "#/$defs/absolutePath" },
+        "models": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/model" }
+        }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "languages",
+        "oem",
+        "psm",
+        "dpi",
+        "preserve_interword_spaces",
+        "thread_limit",
+        "tsv_creation"
+      ],
+      "properties": {
+        "languages": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/language" }
+        },
+        "oem": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "psm": {
+          "enum": [3, 4, 5, 6, 7, 8, 9, 10, 11, 13]
+        },
+        "dpi": { "type": "integer", "minimum": 70, "maximum": 1200 },
+        "preserve_interword_spaces": { "type": "boolean" },
+        "thread_limit": { "const": 1 },
+        "tsv_creation": { "const": "explicit_tessedit_create_tsv_1" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_frames",
+        "max_tsv_bytes_per_frame",
+        "max_words_per_frame",
+        "timeout_seconds_per_frame"
+      ],
+      "properties": {
+        "max_frames": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "max_tsv_bytes_per_frame": {
+          "type": "integer",
+          "minimum": 256,
+          "maximum": 67108864
+        },
+        "max_words_per_frame": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "timeout_seconds_per_frame": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": {
+        "root": { "$ref": "#/$defs/absolutePath" }
+      }
+    }
+  }
+}

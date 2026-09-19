@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "rrs_11111111111111111111111111111111",
+  "source_kind": "reddit_atom_feed",
+  "request": {
+    "method": "GET",
+    "url": "https://www.reddit.com/r/HIMRFAM2/new/.rss?limit=100",
+    "subreddit": "HIMRFAM2",
+    "sort": "new",
+    "limit": 100,
+    "accept": "application/atom+xml, application/xml;q=0.9, text/xml;q=0.8",
+    "user_agent": "hidinginmyroom-corpus-reddit-rss/1.0 (public metadata research)",
+    "cookies_sent": false,
+    "authorization_sent": false,
+    "started_at": "2026-08-26T12:00:00Z"
+  },
+  "response": {
+    "http_status": 200,
+    "final_url": "https://www.reddit.com/r/HIMRFAM2/new/.rss?limit=100",
+    "observed_at": "2026-08-26T12:00:01Z",
+    "content_type": "application/atom+xml; charset=UTF-8",
+    "payload_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "byte_count": 1234,
+    "payload_file": "rrs_11111111111111111111111111111111.atom.xml"
+  },
+  "privacy": {
+    "public_feed_only": true,
+    "comments_collected": false,
+    "authors_extracted": false,
+    "publication_authority": false
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "discovery_id": "rdd_33333333333333333333333333333333",
+  "schema_version": 1,
+  "manifest_kind": "reddit_atom_discovery",
+  "generated_at": "2026-08-26T12:00:01Z",
+  "subreddit": "HIMRFAM2",
+  "assertion_policy": {
+    "state": "unreviewed_discovery",
+    "titles_are_content_truth": false,
+    "comments_retained": false,
+    "authors_retained": false,
+    "publication_authority": false
+  },
+  "snapshot": {
+    "snapshot_id": "rrs_11111111111111111111111111111111",
+    "snapshot_manifest_file": "rrs_11111111111111111111111111111111.snapshot.json",
+    "payload_file": "rrs_11111111111111111111111111111111.atom.xml",
+    "request_url": "https://www.reddit.com/r/HIMRFAM2/new/.rss?limit=100",
+    "final_url": "https://www.reddit.com/r/HIMRFAM2/new/.rss?limit=100",
+    "http_status": 200,
+    "observed_at": "2026-08-26T12:00:01Z",
+    "payload_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "byte_count": 1234
+  },
+  "posts": [
+    {
+      "post_id": "1vvver5",
+      "permalink": "https://www.reddit.com/r/HIMRFAM2/comments/1vvver5/example/",
+      "title": "Unreviewed public RSS title",
+      "published_at": "2026-08-25T12:00:00Z",
+      "updated_at": "2026-08-25T12:00:00Z",
+      "timestamp_basis": "atom_published",
+      "title_assertion_state": "unreviewed",
+      "media_locators": [
+        {
+          "locator_kind": "reddit_video",
+          "native_id": "ftkqj9bfg1lh1",
+          "canonical_url": "https://v.redd.it/ftkqj9bfg1lh1",
+          "observed_url": "https://v.redd.it/ftkqj9bfg1lh1",
+          "basis": "atom_entry_content",
+          "assertion_state": "unreviewed",
+          "metadata_observation": {
+            "kind": "public_yt_dlp_info",
+            "observed_at": "2026-08-26T12:05:00Z",
+            "payload_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+            "duration_ms": 139000,
+            "access_state": "public"
+          }
+        }
+      ]
+    }
+  ]
+}

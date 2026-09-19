@@ -23,6 +23,7 @@ body:
       options:
         - Homepage
         - Wiki content rendering
+        - Corpus catalogue or transcript search
         - Navigation or links
         - Search
         - Mobile or responsive layout

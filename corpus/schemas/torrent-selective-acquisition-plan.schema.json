@@ -1,0 +1,535 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/torrent-selective-acquisition-plan.schema.json",
+  "title": "Private read-only selective torrent acquisition plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_kind",
+    "planner_version",
+    "inputs",
+    "catalog_binding",
+    "archive_binding",
+    "evidence_binding_sha256",
+    "coverage",
+    "availability_probe_request",
+    "availability_probe",
+    "probe_candidates",
+    "malformed_manual_review",
+    "selected_files",
+    "selected_torrent_file_indices",
+    "statistics",
+    "policy",
+    "plan_id",
+    "plan_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "plan_kind": {"const": "torrent_selective_acquisition_plan"},
+    "planner_version": {"const": "torrent_selective_acquisition_plan_v1"},
+    "inputs": {"$ref": "#/$defs/inputs"},
+    "catalog_binding": {"$ref": "#/$defs/catalog_binding"},
+    "archive_binding": {"$ref": "#/$defs/archive_binding"},
+    "evidence_binding_sha256": {"$ref": "#/$defs/sha256"},
+    "coverage": {"$ref": "#/$defs/coverage"},
+    "availability_probe_request": {"$ref": "#/$defs/probe_request"},
+    "availability_probe": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/probe_binding"}
+      ]
+    },
+    "probe_candidates": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/probe_candidate"}
+    },
+    "malformed_manual_review": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {"$ref": "#/$defs/malformed"}
+    },
+    "selected_files": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/selected_file"}
+    },
+    "selected_torrent_file_indices": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/nonnegative_integer"}
+    },
+    "statistics": {"$ref": "#/$defs/statistics"},
+    "policy": {"$ref": "#/$defs/policy"},
+    "plan_id": {"type": "string", "pattern": "^tslp_[0-9a-f]{32}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "stable_id": {"type": "string", "pattern": "^[a-z]+_[0-9a-f]{32}$"},
+    "nonnegative_integer": {"type": "integer", "minimum": 0},
+    "youtube_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{11}$"},
+    "youtube_url": {
+      "type": "string",
+      "pattern": "^https://www\\.youtube\\.com/watch\\?v=[A-Za-z0-9_-]{11}$"
+    },
+    "directory_label": {
+      "enum": [
+        "YouTube Videos",
+        "Old YouTube Livestreams",
+        "New YouTube Livestreams",
+        "New New YouTube Livestreams"
+      ]
+    },
+    "raw_components": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 5464,
+        "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+      }
+    },
+    "basis_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "catalog_exact_locator": {"$ref": "#/$defs/nonnegative_integer"},
+        "archive_exact_locator": {"$ref": "#/$defs/nonnegative_integer"},
+        "catalog_and_archive_exact_locator": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_sha256",
+        "torrent_byte_count",
+        "torrent_filename",
+        "info_hash_sha1",
+        "discovery_sha256",
+        "discovery_byte_count",
+        "discovery_filename",
+        "combined_import_input_sha256",
+        "torrent_video_inventory_sha256"
+      ],
+      "properties": {
+        "torrent_sha256": {"$ref": "#/$defs/sha256"},
+        "torrent_byte_count": {"type": "integer", "minimum": 1, "maximum": 33554432},
+        "torrent_filename": {"type": "string", "minLength": 1, "maxLength": 255},
+        "info_hash_sha1": {"$ref": "#/$defs/sha1"},
+        "discovery_sha256": {"$ref": "#/$defs/sha256"},
+        "discovery_byte_count": {"type": "integer", "minimum": 1, "maximum": 1048576},
+        "discovery_filename": {"type": "string", "minLength": 1, "maxLength": 255},
+        "combined_import_input_sha256": {"$ref": "#/$defs/sha256"},
+        "torrent_video_inventory_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "catalog_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accepted_row_count",
+        "distinct_youtube_video_ids",
+        "accepted_rows_by_namespace",
+        "ignored_unapproved_basis_rows",
+        "exact_locator_evidence_sha256"
+      ],
+      "properties": {
+        "accepted_row_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "distinct_youtube_video_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "accepted_rows_by_namespace": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "youtube_video_id": {"$ref": "#/$defs/nonnegative_integer"},
+            "youtube_video_id_candidate": {"$ref": "#/$defs/nonnegative_integer"}
+          }
+        },
+        "ignored_unapproved_basis_rows": {"$ref": "#/$defs/nonnegative_integer"},
+        "exact_locator_evidence_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "catalog_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_manifest_source_id",
+        "torrent_import_batch_id",
+        "torrent_importer_name",
+        "torrent_importer_version",
+        "observed_at",
+        "exact_locator_evidence"
+      ],
+      "properties": {
+        "torrent_manifest_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_import_batch_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_importer_name": {"const": "torrent_manifest_metadata"},
+        "torrent_importer_version": {"type": "string", "minLength": 1, "maxLength": 64},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "exact_locator_evidence": {"$ref": "#/$defs/catalog_evidence"}
+      }
+    },
+    "snapshot_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_id", "snapshot_sha256", "observed_at", "item_count"],
+      "properties": {
+        "snapshot_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "item_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "archive_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_row_count",
+        "distinct_youtube_video_ids",
+        "conflicting_rows_excluded",
+        "exact_locator_evidence_sha256",
+        "conflict_evidence_sha256"
+      ],
+      "properties": {
+        "evidence_row_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "distinct_youtube_video_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "conflicting_rows_excluded": {"$ref": "#/$defs/nonnegative_integer"},
+        "exact_locator_evidence_sha256": {"$ref": "#/$defs/sha256"},
+        "conflict_evidence_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "archive_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshots", "exact_locator_evidence"],
+      "properties": {
+        "snapshots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/snapshot_binding"}
+        },
+        "exact_locator_evidence": {"$ref": "#/$defs/archive_evidence"}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["covered_ids_sha256", "covered_ids_by_basis"],
+      "properties": {
+        "covered_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "covered_ids_by_basis": {"$ref": "#/$defs/basis_counts"}
+      }
+    },
+    "network_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cookies_sent",
+        "authorization_sent",
+        "media_payload_downloaded",
+        "playlist_expansion"
+      ],
+      "properties": {
+        "cookies_sent": {"const": false},
+        "authorization_sent": {"const": false},
+        "media_payload_downloaded": {"const": false},
+        "playlist_expansion": {"const": false}
+      }
+    },
+    "producer_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool", "invocation_flags", "one_target_per_process"],
+      "properties": {
+        "tool": {"const": "yt-dlp"},
+        "invocation_flags": {
+          "const": [
+            "--ignore-config",
+            "--skip-download",
+            "--no-playlist",
+            "--no-warnings",
+            "--dump-single-json"
+          ]
+        },
+        "one_target_per_process": {"const": true}
+      }
+    },
+    "probe_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["youtube_video_id", "canonical_url"],
+      "properties": {
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "canonical_url": {"$ref": "#/$defs/youtube_url"}
+      }
+    },
+    "probe_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "request_kind",
+        "evidence_binding_sha256",
+        "producer_contract",
+        "network_policy",
+        "targets",
+        "request_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "request_kind": {"const": "youtube_no_download_availability_request_v1"},
+        "evidence_binding_sha256": {"$ref": "#/$defs/sha256"},
+        "producer_contract": {"$ref": "#/$defs/producer_contract"},
+        "network_policy": {"$ref": "#/$defs/network_policy"},
+        "targets": {
+          "type": "array",
+          "maxItems": 50000,
+          "items": {"$ref": "#/$defs/probe_target"}
+        },
+        "request_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool", "version", "executable_sha256", "invocation_flags"],
+      "properties": {
+        "tool": {"const": "yt-dlp"},
+        "version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "executable_sha256": {"$ref": "#/$defs/sha256"},
+        "invocation_flags": {
+          "const": [
+            "--ignore-config",
+            "--skip-download",
+            "--no-playlist",
+            "--no-warnings",
+            "--dump-single-json"
+          ]
+        }
+      }
+    },
+    "outcome_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "available": {"$ref": "#/$defs/nonnegative_integer"},
+        "unavailable": {"$ref": "#/$defs/nonnegative_integer"},
+        "indeterminate": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
+    "probe_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "probe_filename",
+        "probe_sha256",
+        "probe_byte_count",
+        "request_sha256",
+        "observed_at",
+        "producer",
+        "network_policy",
+        "outcome_counts"
+      ],
+      "properties": {
+        "probe_filename": {"type": "string", "minLength": 1, "maxLength": 255},
+        "probe_sha256": {"$ref": "#/$defs/sha256"},
+        "probe_byte_count": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "producer": {"$ref": "#/$defs/producer"},
+        "network_policy": {"$ref": "#/$defs/network_policy"},
+        "outcome_counts": {"$ref": "#/$defs/outcome_counts"}
+      }
+    },
+    "probe_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "youtube_video_id",
+        "smallest_rendition_file_index",
+        "smallest_rendition_byte_count",
+        "directory_label",
+        "manifest_path",
+        "manifest_path_components_base64",
+        "manifest_path_sha256",
+        "locator_lane",
+        "rendition_file_count",
+        "rendition_file_indices",
+        "availability_state",
+        "availability_evidence_code"
+      ],
+      "properties": {
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "smallest_rendition_file_index": {"$ref": "#/$defs/nonnegative_integer"},
+        "smallest_rendition_byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "directory_label": {"$ref": "#/$defs/directory_label"},
+        "manifest_path": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "manifest_path_components_base64": {"$ref": "#/$defs/raw_components"},
+        "manifest_path_sha256": {"$ref": "#/$defs/sha256"},
+        "locator_lane": {"enum": ["terminal_bracket_video", "format_label_480p_video"]},
+        "rendition_file_count": {"type": "integer", "minimum": 1},
+        "rendition_file_indices": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonnegative_integer"}
+        },
+        "availability_state": {
+          "enum": ["awaiting_probe", "available", "unavailable", "indeterminate"]
+        },
+        "availability_evidence_code": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "enum": [
+                "metadata_resolved",
+                "private",
+                "removed",
+                "video_unavailable",
+                "sign_in_required",
+                "network_error",
+                "rate_limited",
+                "extractor_error"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "malformed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_file_index",
+        "directory_label",
+        "manifest_path",
+        "manifest_path_components_base64",
+        "manifest_path_sha256",
+        "byte_count",
+        "review_reason"
+      ],
+      "properties": {
+        "torrent_file_index": {"$ref": "#/$defs/nonnegative_integer"},
+        "directory_label": {"$ref": "#/$defs/directory_label"},
+        "manifest_path": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "manifest_path_components_base64": {"$ref": "#/$defs/raw_components"},
+        "manifest_path_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "review_reason": {"const": "scoped_video_filename_has_no_accepted_youtube_id_grammar"}
+      }
+    },
+    "selected_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "youtube_video_id",
+        "torrent_file_index",
+        "byte_count",
+        "manifest_path",
+        "manifest_path_sha256",
+        "availability_evidence_code",
+        "selection_reason"
+      ],
+      "properties": {
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "torrent_file_index": {"$ref": "#/$defs/nonnegative_integer"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "manifest_path": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "manifest_path_sha256": {"$ref": "#/$defs/sha256"},
+        "availability_evidence_code": {
+          "enum": ["private", "removed", "video_unavailable"]
+        },
+        "selection_reason": {
+          "const": "smallest_rendition_after_exact_archive_catalog_exclusion_and_no_download_youtube_unavailability_probe"
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider_file_records_scanned",
+        "scoped_file_records",
+        "scoped_video_file_records",
+        "usable_video_file_records",
+        "distinct_usable_youtube_video_ids",
+        "covered_distinct_ids",
+        "covered_ids_by_basis",
+        "probe_candidate_distinct_ids",
+        "probe_candidate_file_records",
+        "probe_candidate_smallest_renditions_bytes",
+        "malformed_manual_review_files",
+        "malformed_manual_review_bytes",
+        "preprobe_review_upper_bound_bytes",
+        "selected_file_count",
+        "selected_payload_bytes",
+        "payload_files_read",
+        "payload_bytes_read",
+        "catalog_rows_written",
+        "torrent_sessions_started"
+      ],
+      "properties": {
+        "provider_file_records_scanned": {"$ref": "#/$defs/nonnegative_integer"},
+        "scoped_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "scoped_video_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "usable_video_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "distinct_usable_youtube_video_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "covered_distinct_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "covered_ids_by_basis": {"$ref": "#/$defs/basis_counts"},
+        "probe_candidate_distinct_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "probe_candidate_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "probe_candidate_smallest_renditions_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "malformed_manual_review_files": {"$ref": "#/$defs/nonnegative_integer"},
+        "malformed_manual_review_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "preprobe_review_upper_bound_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "selected_file_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "selected_payload_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "payload_files_read": {"const": 0},
+        "payload_bytes_read": {"const": 0},
+        "catalog_rows_written": {"const": 0},
+        "torrent_sessions_started": {"const": 0}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_only_plan",
+        "torrent_client_invoked",
+        "torrent_swarm_joined",
+        "payload_downloaded_or_read",
+        "smallest_rendition_per_id",
+        "exact_catalog_locator_is_content_identity",
+        "exact_archive_locator_is_content_identity",
+        "availability_probe_downloads_media",
+        "availability_probe_uses_credentials",
+        "indeterminate_probe_outcomes_selected",
+        "malformed_paths_selected",
+        "operator_review_required_before_client_use",
+        "selective_file_index_client_required",
+        "publication_authority"
+      ],
+      "properties": {
+        "read_only_plan": {"const": true},
+        "torrent_client_invoked": {"const": false},
+        "torrent_swarm_joined": {"const": false},
+        "payload_downloaded_or_read": {"const": false},
+        "smallest_rendition_per_id": {"const": true},
+        "exact_catalog_locator_is_content_identity": {"const": false},
+        "exact_archive_locator_is_content_identity": {"const": false},
+        "availability_probe_downloads_media": {"const": false},
+        "availability_probe_uses_credentials": {"const": false},
+        "indeterminate_probe_outcomes_selected": {"const": false},
+        "malformed_paths_selected": {"const": false},
+        "operator_review_required_before_client_use": {"const": true},
+        "selective_file_index_client_required": {"const": true},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

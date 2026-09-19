@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/long-recording-bundle-manifest-v1.json",
+  "title": "HIMR explicit long-recording acquisition bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_id",
+    "bundle_relative_path",
+    "schema_version",
+    "materializer",
+    "plan",
+    "candidate",
+    "policy",
+    "safety",
+    "work_order"
+  ],
+  "properties": {
+    "bundle_id": { "type": "string", "pattern": "^longacqbundle_[0-9a-f]{32}$" },
+    "bundle_relative_path": {
+      "type": "string",
+      "pattern": "^bundles/longacqbundle_[0-9a-f]{32}$"
+    },
+    "schema_version": { "const": 1 },
+    "materializer": { "$ref": "#/$defs/materializer" },
+    "plan": { "$ref": "#/$defs/plan" },
+    "candidate": { "$ref": "#/$defs/candidate" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "safety": { "$ref": "#/$defs/safety" },
+    "work_order": { "$ref": "#/$defs/workOrder" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "materializer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "himr-long-recording-materializer" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "canonical_sha256", "core_sha256", "planned_at"],
+      "properties": {
+        "plan_id": { "type": "string", "pattern": "^acqplan_[0-9a-f]{32}$" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "core_sha256": { "$ref": "#/$defs/sha256" },
+        "planned_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recording_id",
+        "source_id",
+        "platform",
+        "source_kind",
+        "native_id",
+        "duration_ms",
+        "estimated_bytes",
+        "estimate_basis",
+        "queue_state",
+        "defer_reason"
+      ],
+      "properties": {
+        "recording_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "platform": { "enum": ["youtube", "internet_archive"] },
+        "source_kind": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "native_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "duration_ms": { "type": "integer", "minimum": 1 },
+        "estimated_bytes": { "type": "integer", "minimum": 1 },
+        "estimate_basis": {
+          "enum": ["provider_declared_byte_count", "duration_conservative_rate"]
+        },
+        "queue_state": { "const": "requires_chunking" },
+        "defer_reason": { "const": "requires_chunking" }
+      }
+    },
+    "ytDlp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "sha256", "byte_count", "format_selector"],
+      "properties": {
+        "executable": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "format_selector": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "media_output_root",
+        "full_source_max_bytes",
+        "plan_single_job_max_bytes",
+        "global_cache_cap_bytes",
+        "free_space_floor_bytes",
+        "direct_http_resume",
+        "direct_http_timeout_seconds",
+        "yt_dlp"
+      ],
+      "properties": {
+        "media_output_root": { "type": "string", "pattern": "^/" },
+        "full_source_max_bytes": { "type": "integer", "minimum": 1 },
+        "plan_single_job_max_bytes": { "type": "integer", "minimum": 1 },
+        "global_cache_cap_bytes": { "type": "integer", "minimum": 1 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 },
+        "direct_http_resume": { "const": true },
+        "direct_http_timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 3600 },
+        "yt_dlp": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/ytDlp" }] }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_class",
+        "access_policy",
+        "publication_authority",
+        "credentials_allowed",
+        "network_access_performed",
+        "catalog_mutated",
+        "normal_queue_semantics_changed",
+        "remote_time_sections_allowed",
+        "full_source_required_for_local_windows",
+        "access_challenge_policy"
+      ],
+      "properties": {
+        "bundle_class": { "const": "private_explicit_long_recording_acquisition" },
+        "access_policy": { "const": "public_only" },
+        "publication_authority": { "const": "none" },
+        "credentials_allowed": { "const": false },
+        "network_access_performed": { "const": false },
+        "catalog_mutated": { "const": false },
+        "normal_queue_semantics_changed": { "const": false },
+        "remote_time_sections_allowed": { "const": false },
+        "full_source_required_for_local_windows": { "const": true },
+        "access_challenge_policy": { "const": "retryable_without_credentials_or_admission" },
+        "cold_storage_access": {
+          "enum": [
+            "forbidden",
+            "sealed_work_order_media_output_root_write_only"
+          ]
+        }
+      }
+    },
+    "workOrder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["job_id", "adapter", "path", "sha256", "byte_count"],
+      "properties": {
+        "job_id": { "type": "string", "pattern": "^long-acq_[0-9a-f]{32}$" },
+        "adapter": { "enum": ["direct_http", "yt_dlp"] },
+        "path": { "const": "work-orders/000001.json" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

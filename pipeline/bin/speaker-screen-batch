@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec python3 -B "$SCRIPT_DIR/../speaker_screen_batch.py" "$@"

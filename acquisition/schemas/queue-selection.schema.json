@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/queue-selection-v1.json",
+  "title": "HIMR acquisition queue explicit selection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "purpose",
+    "youtube_video_ids",
+    "source_ids",
+    "recording_ids"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "purpose": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "youtube_video_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]{11}$" }
+    },
+    "source_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    },
+    "recording_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    }
+  },
+  "$defs": {}
+}

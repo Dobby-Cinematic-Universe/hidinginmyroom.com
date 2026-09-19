@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "job_id": "asr-pilot-001",
+  "input": {
+    "path": "/srv/himr-media/derived/audio-16khz-mono.flac",
+    "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "media_id": "media_sha256_0000000000000000000000000000000000000000000000000000000000000000",
+    "artifact_id": "artifact_normalized_audio_example",
+    "parent_processing_run_id": "run_preprocess_example"
+  },
+  "engine": {
+    "executable": "/opt/whisper.cpp/bin/whisper-cli",
+    "expected_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "version_label": "REPLACE_WITH_REVIEWED_VERSION_LABEL",
+    "version_evidence": "source_revision_plus_executable_sha256",
+    "build": {
+      "repository": "https://github.com/ggml-org/whisper.cpp",
+      "revision": "REPLACE_WITH_COMMIT_SHA",
+      "target": "whisper-cli",
+      "configuration": [
+        "GGML_NATIVE=OFF",
+        "GGML_CUDA=OFF"
+      ]
+    }
+  },
+  "model": {
+    "path": "/srv/himr-models/whisper/ggml-large-v3-turbo.bin",
+    "expected_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "model_id": "model_whispercpp_large_v3_turbo_example",
+    "name": "Whisper large-v3-turbo ggml",
+    "revision": "REPLACE_WITH_EXACT_MODEL_REVISION",
+    "source": "REPLACE_WITH_MODEL_SOURCE",
+    "license_label": "REPLACE_WITH_VERIFIED_LICENSE"
+  },
+  "window": {
+    "offset_ms": 0,
+    "duration_ms": null
+  },
+  "inference": {
+    "language": "en",
+    "threads": 4,
+    "translate": false,
+    "split_on_word": true,
+    "best_of": 5,
+    "beam_size": 5,
+    "max_segment_characters": 0,
+    "word_threshold": 0.01,
+    "entropy_threshold": 2.4,
+    "logprob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "temperature": 0.0,
+    "temperature_increment": 0.2,
+    "no_fallback": false,
+    "timeout_seconds": 43200
+  },
+  "glossary": {
+    "path": "/srv/himr-work-orders/glossaries/himr-neutral-v1.json",
+    "expected_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "catalog_context": {
+    "recording_id": "recording_replace_with_reviewed_id",
+    "rendition_id": null
+  },
+  "output": {
+    "root": "/srv/himr-media/asr"
+  }
+}

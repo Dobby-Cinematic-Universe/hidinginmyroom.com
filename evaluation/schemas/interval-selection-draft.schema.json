@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/evaluation/interval-selection-draft-v1.json",
+  "title": "HIMR private interval selection workspace draft v1",
+  "description": "Mutable private workspace state bound to one exact incomplete interval-selection review template. Playback coverage is not an attestation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_kind",
+    "manifest_sha256",
+    "draft_id",
+    "workspace_id",
+    "workspace_manifest_sha256",
+    "template_binding",
+    "revision",
+    "lifecycle",
+    "finalization_intent",
+    "finalization_manifest_sha256",
+    "created_at",
+    "updated_at",
+    "recordings"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_kind": { "const": "interval_selection_draft" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "draft_id": {
+      "type": "string",
+      "pattern": "^selection_draft_[0-9a-f]{32}$"
+    },
+    "workspace_id": { "$ref": "#/$defs/id" },
+    "workspace_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "template_binding": { "$ref": "#/$defs/template_binding" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "lifecycle": {
+      "enum": ["draft", "finalizing", "finalized", "invalidated"]
+    },
+    "finalization_intent": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/finalization_intent" }
+      ]
+    },
+    "finalization_manifest_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "updated_at": { "$ref": "#/$defs/timestamp" },
+    "recordings": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/recording" }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "lifecycle": { "const": "draft" } },
+        "required": ["lifecycle"]
+      },
+      "then": {
+        "properties": {
+          "finalization_intent": { "type": "null" },
+          "finalization_manifest_sha256": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "lifecycle": { "const": "finalizing" } },
+        "required": ["lifecycle"]
+      },
+      "then": {
+        "properties": {
+          "finalization_intent": { "$ref": "#/$defs/finalization_intent" },
+          "finalization_manifest_sha256": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "lifecycle": { "const": "finalized" } },
+        "required": ["lifecycle"]
+      },
+      "then": {
+        "properties": {
+          "finalization_intent": { "$ref": "#/$defs/finalization_intent" },
+          "finalization_manifest_sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "lifecycle": { "const": "invalidated" } },
+        "required": ["lifecycle"]
+      },
+      "then": {
+        "properties": {
+          "finalization_manifest_sha256": { "type": "null" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$"
+    },
+    "uuid_id": {
+      "type": "string",
+      "pattern": "^(src|rec|rnd)_[0-9a-f]{32}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "finalization_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "reviewed_at", "attested_at", "begun_at"],
+      "properties": {
+        "reviewer_id": { "$ref": "#/$defs/id" },
+        "reviewed_at": { "$ref": "#/$defs/timestamp" },
+        "attested_at": { "$ref": "#/$defs/timestamp" },
+        "begun_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "template_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "template_manifest_sha256",
+        "cohort_id",
+        "cohort_manifest_sha256",
+        "proposal_inputs_sha256"
+      ],
+      "properties": {
+        "review_id": {
+          "type": "string",
+          "pattern": "^selection_review_[0-9a-f]{32}$"
+        },
+        "template_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "cohort_id": { "$ref": "#/$defs/id" },
+        "cohort_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "proposal_inputs_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "null_flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language_tags",
+        "code_switch",
+        "speaker_overlap",
+        "playback_speech",
+        "noise"
+      ],
+      "properties": {
+        "language_tags": { "type": "null" },
+        "code_switch": { "type": "null" },
+        "speaker_overlap": { "type": "null" },
+        "playback_speech": { "type": "null" },
+        "noise": { "type": "null" }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language_tags",
+        "code_switch",
+        "speaker_overlap",
+        "playback_speech",
+        "noise"
+      ],
+      "properties": {
+        "language_tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[a-z]{2,3}|und)(?:-[A-Za-z0-9]{2,8})*$"
+          }
+        },
+        "code_switch": { "type": "boolean" },
+        "speaker_overlap": { "type": "boolean" },
+        "playback_speech": { "type": "boolean" },
+        "noise": {
+          "enum": ["clean", "light", "moderate", "heavy", "unknown"]
+        }
+      }
+    },
+    "coverage_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_ms", "end_ms"],
+      "properties": {
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "pending_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection_decision_id",
+        "proposal_interval_id",
+        "proposal_start_ms",
+        "proposal_end_ms",
+        "decision",
+        "accepted_start_ms",
+        "accepted_end_ms",
+        "adjustment_reason",
+        "rejection_reason",
+        "flags",
+        "coverage_ranges"
+      ],
+      "properties": {
+        "selection_decision_id": {
+          "type": "string",
+          "pattern": "^selection_decision_[0-9a-f]{32}$"
+        },
+        "proposal_interval_id": { "$ref": "#/$defs/id" },
+        "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 },
+        "decision": { "type": "null" },
+        "accepted_start_ms": { "type": "null" },
+        "accepted_end_ms": { "type": "null" },
+        "adjustment_reason": { "type": "null" },
+        "rejection_reason": { "type": "null" },
+        "flags": { "$ref": "#/$defs/null_flags" },
+        "coverage_ranges": {
+          "type": "array",
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/coverage_range" }
+        }
+      }
+    },
+    "included_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection_decision_id",
+        "proposal_interval_id",
+        "proposal_start_ms",
+        "proposal_end_ms",
+        "decision",
+        "accepted_start_ms",
+        "accepted_end_ms",
+        "adjustment_reason",
+        "rejection_reason",
+        "flags",
+        "coverage_ranges"
+      ],
+      "properties": {
+        "selection_decision_id": {
+          "type": "string",
+          "pattern": "^selection_decision_[0-9a-f]{32}$"
+        },
+        "proposal_interval_id": { "$ref": "#/$defs/id" },
+        "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 },
+        "decision": { "const": "include" },
+        "accepted_start_ms": { "type": "integer", "minimum": 0 },
+        "accepted_end_ms": { "type": "integer", "minimum": 1 },
+        "adjustment_reason": {
+          "enum": [
+            null,
+            "remove_non_speech_edge",
+            "remove_sensitive_edge",
+            "speech_boundary_refinement",
+            "other_reviewed_trim"
+          ]
+        },
+        "rejection_reason": { "type": "null" },
+        "flags": { "$ref": "#/$defs/flags" },
+        "coverage_ranges": {
+          "type": "array",
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/coverage_range" }
+        }
+      }
+    },
+    "excluded_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection_decision_id",
+        "proposal_interval_id",
+        "proposal_start_ms",
+        "proposal_end_ms",
+        "decision",
+        "accepted_start_ms",
+        "accepted_end_ms",
+        "adjustment_reason",
+        "rejection_reason",
+        "flags",
+        "coverage_ranges"
+      ],
+      "properties": {
+        "selection_decision_id": {
+          "type": "string",
+          "pattern": "^selection_decision_[0-9a-f]{32}$"
+        },
+        "proposal_interval_id": { "$ref": "#/$defs/id" },
+        "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 },
+        "decision": { "const": "exclude" },
+        "accepted_start_ms": { "type": "null" },
+        "accepted_end_ms": { "type": "null" },
+        "adjustment_reason": { "type": "null" },
+        "rejection_reason": {
+          "enum": [
+            "boundary_requires_reproposal",
+            "duplicate_or_redundant",
+            "no_usable_speech",
+            "out_of_scope",
+            "playback_only",
+            "privacy_or_sensitivity",
+            "technical_quality",
+            "other_reviewed_reason"
+          ]
+        },
+        "flags": { "$ref": "#/$defs/null_flags" },
+        "coverage_ranges": {
+          "type": "array",
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/coverage_range" }
+        }
+      }
+    },
+    "decision": {
+      "oneOf": [
+        { "$ref": "#/$defs/pending_decision" },
+        { "$ref": "#/$defs/included_decision" },
+        { "$ref": "#/$defs/excluded_decision" }
+      ]
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "recording_id",
+        "source_id",
+        "proposal_id",
+        "proposal_schema_version",
+        "split",
+        "intervals"
+      ],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/id" },
+        "recording_id": { "$ref": "#/$defs/uuid_id" },
+        "source_id": { "$ref": "#/$defs/uuid_id" },
+        "proposal_id": { "$ref": "#/$defs/id" },
+        "proposal_schema_version": { "enum": [1, 2] },
+        "split": {
+          "type": ["string", "null"],
+          "enum": [null, "calibration", "scoring"]
+        },
+        "intervals": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/decision" }
+        }
+      }
+    }
+  }
+}

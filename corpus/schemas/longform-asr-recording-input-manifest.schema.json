@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/longform-asr-recording-input-manifest.schema.json",
+  "title": "Long-form ASR normalized recording input manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "schema_version", "recording", "boundary_candidates"],
+  "properties": {
+    "kind": {"const": "himr_longform_recording_input_manifest"},
+    "schema_version": {"const": 1},
+    "recording": {"$ref": "#/$defs/recording"},
+    "boundary_candidates": {
+      "type": "array",
+      "maxItems": 1000000,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/boundary_candidate"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "media_id", "input"],
+      "properties": {
+        "recording_id": {"$ref": "#/$defs/identifier"},
+        "media_id": {"$ref": "#/$defs/identifier"},
+        "input": {"$ref": "#/$defs/input"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "path",
+        "sha256",
+        "byte_count",
+        "sample_rate_hz",
+        "channels",
+        "total_samples",
+        "duration_ms"
+      ],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^/"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"$ref": "#/$defs/positive_integer"},
+        "sample_rate_hz": {"const": 16000},
+        "channels": {"const": 1},
+        "total_samples": {"$ref": "#/$defs/positive_integer"},
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "description": "Nearest integer millisecond derived from total_samples; sample coordinates are authoritative."
+        }
+      }
+    },
+    "boundary_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample", "kind", "confidence_millionths"],
+      "properties": {
+        "sample": {"$ref": "#/$defs/positive_integer"},
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{0,63}$"
+        },
+        "confidence_millionths": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    }
+  }
+}

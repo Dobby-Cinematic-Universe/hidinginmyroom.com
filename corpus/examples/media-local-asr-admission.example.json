@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "validated",
+  "bridge_version": "media-local-asr-bridge/1",
+  "plan_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "result": {
+    "asr_result_uri": "file:///private/asr/result.json",
+    "raw_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "canonical_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "byte_count": 4096,
+    "result_key": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "processing_run_id": "run_asr_example",
+    "media_local_revision_id": "mltr_example"
+  },
+  "sealed_queue": {
+    "queue_id": "asrppqueue_66349d9b85c74f2376830edf2a7d4f0c",
+    "queue_identity_sha256": "66349d9b85c74f2376830edf2a7d4f0ccf9d4e093f9c55b8127429259f2948d1",
+    "queue_manifest_uri": "file:///private/queue/manifest.json",
+    "queue_manifest_raw_sha256": "100d142cf459a663dd0f899db74b9666fbe49942d7ff0960280424899d39b5a0",
+    "queue_ordinal": 3,
+    "routing_hint": "process",
+    "review_only_ordinals": [1, 13],
+    "work_order_uri": "file:///private/queue/work-orders/000003.json",
+    "work_order_raw_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "work_order_canonical_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "preprocess_lineage": {
+    "preprocess_result_uri": "file:///private/preprocess/result.json",
+    "preprocess_result_raw_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "preprocess_result_canonical_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "preprocess_import_batch_id": "imp_preprocess_example",
+    "preprocess_processing_run_id": "run_preprocess_example",
+    "preprocess_source_media_id": "media_sha256_3333333333333333333333333333333333333333333333333333333333333333",
+    "input_media_id": "media_sha256_4444444444444444444444444444444444444444444444444444444444444444",
+    "input_artifact_id": "artifact_audio_example",
+    "input_sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "sealed_result": {
+    "seal_receipt_uri": "file:///private/asr/sealing-control/receipts/asrsealreceipt_c0694c5c36586eb433a766490f3dbc01.json",
+    "seal_receipt_raw_sha256": "806439f2736dae9b95ffdffd19c3464c9efc39e79a5fbc21f7223b9f2c717b7b",
+    "seal_receipt_id": "asrsealreceipt_c0694c5c36586eb433a766490f3dbc01",
+    "seal_receipt_identity_sha256": "9f29212c38a78ff91faaea5dc7d8eb10f3d0405c0075ce8e365d4b33598df524",
+    "seal_receipt_ordinal": 9,
+    "sealed_result_directory_uri": "file:///private/asr/result-directory"
+  },
+  "catalog_context": {
+    "producer_catalog_context": null,
+    "recording_id": null,
+    "rendition_id": null,
+    "source_id": null
+  },
+  "coordinate_contract": {
+    "coordinate_system": "media_ms",
+    "boundary": "half_open",
+    "input_duration_ms": 10000,
+    "requested_start_ms": 0,
+    "requested_end_ms": 10000,
+    "max_segment_end_ms": 10687,
+    "input_boundary_overrun_ms": 687,
+    "null_timed_word_count": 0,
+    "recording_coordinates_asserted": false,
+    "source_coordinates_asserted": false,
+    "recording_transform_state": "unasserted_catalog_context_null",
+    "source_transform_state": "unasserted_catalog_context_null"
+  },
+  "statistics": {
+    "artifacts": 2,
+    "media_local_import_receipts": 1,
+    "media_local_revisions": 1,
+    "media_local_segments": 1,
+    "media_local_words": 2,
+    "null_timed_words": 0,
+    "processing_runs": 1,
+    "publication_decisions": 0,
+    "recording_scoped_transcript_revisions": 0,
+    "run_inputs": 1,
+    "source_coordinate_rows": 0,
+    "timeline_map_spans": 0
+  },
+  "safety": {
+    "credentials_used": false,
+    "identity_authority": "none",
+    "network_access_performed": false,
+    "publication_authority": "none",
+    "transcript_text_in_plan": false,
+    "visibility": "private"
+  }
+}

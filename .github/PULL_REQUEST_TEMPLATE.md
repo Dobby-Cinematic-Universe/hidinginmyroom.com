@@ -11,6 +11,7 @@ Describe the change and why it is needed.
 
 - [ ] Homepage, navigation, or interface
 - [ ] Wiki correction or new topic
+- [ ] Corpus source or transcript correction
 - [ ] Public source citation or image provenance
 - [ ] Build, tooling, or documentation
 
@@ -32,6 +33,6 @@ site changes. Do not include private or sensitive source material.
 - [ ] Public links work and use accurate labels.
 - [ ] Wiki claims follow `EDITORIAL_POLICY.md` and give precise public citations.
 - [ ] New images have adjacent source, rights, and transformation information.
-- [ ] No raw snapshots, transcripts, private research, or access-controlled media are included.
+- [ ] No raw snapshots, unreviewed transcript dumps, private research, biometric artifacts, or access-controlled media are included.
 - [ ] I ran `npm run build` successfully.
 - [ ] I checked relevant desktop/mobile, keyboard, and reduced-motion behavior.

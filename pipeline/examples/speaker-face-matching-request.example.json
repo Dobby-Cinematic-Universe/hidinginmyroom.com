@@ -1,0 +1,46 @@
+{
+  "kind": "himr_speaker_face_matching_request",
+  "schema_version": 1,
+  "purpose": "private_unvalidated_pilot",
+  "diarization_plan": {
+    "path": "/srv/himr-diarization/pilot-001/plan.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "job_ids": null,
+  "state_root": "/srv/himr-matching/pilot-001",
+  "ffmpeg": {
+    "path": "/usr/bin/ffmpeg",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "python": null,
+  "model_bundle": null,
+  "policy": {
+    "min_clip_ms": 2000,
+    "max_clip_ms": 5000,
+    "boundary_guard_ms": 200,
+    "clips_per_speaker": 3,
+    "max_clips": 96,
+    "min_face_px": 64,
+    "max_frame_gap_ms": 80,
+    "min_track_coverage": 0.9,
+    "min_active_fraction": 0.8,
+    "min_mean_raw_logit": 0.0,
+    "min_winner_margin": 0.5
+  },
+  "execution": {
+    "device": "cpu",
+    "gpu_uuid": null,
+    "threads": 1,
+    "cuda_memory_fraction": 0.5
+  },
+  "limits": {
+    "max_clips": 256,
+    "max_jobs_per_run": 32,
+    "max_run_seconds": 3600,
+    "clip_timeout_seconds": 120,
+    "host_memory_max_bytes": 4294967296,
+    "min_free_bytes": 1073741824
+  },
+  "blocking_units": ["himr-speaker-screen-fast-20260912.service"],
+  "retain_clip_media": false
+}

@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/background-producer-run-v1.json",
+  "title": "HIMR finite background acquisition producer report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "producer",
+    "mode",
+    "status",
+    "schedule_id",
+    "schedule_path",
+    "schedule_physical_sha256",
+    "schedule_identity_sha256",
+    "queue_bundle_id",
+    "limits",
+    "ready_before",
+    "ready_after",
+    "planned_ordinals",
+    "planned_reservation_bytes",
+    "stop_reason",
+    "queue_summary",
+    "safety",
+    "summary_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "producer": { "$ref": "#/$defs/producer" },
+    "mode": { "enum": ["validate", "run"] },
+    "status": { "enum": ["validated", "held", "bounded", "completed", "failed"] },
+    "schedule_id": { "type": "string", "pattern": "^bgacqsched_[0-9a-f]{32}$" },
+    "schedule_path": { "type": "string", "pattern": "^/" },
+    "schedule_physical_sha256": { "$ref": "#/$defs/sha256" },
+    "schedule_identity_sha256": { "$ref": "#/$defs/sha256" },
+    "queue_bundle_id": { "type": "string", "pattern": "^acqbundle_[0-9a-f]{32}$" },
+    "limits": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/limits" }
+      ]
+    },
+    "ready_before": { "$ref": "#/$defs/ready" },
+    "ready_after": { "$ref": "#/$defs/ready" },
+    "planned_ordinals": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "type": "integer", "minimum": 1 }
+    },
+    "planned_reservation_bytes": { "type": "integer", "minimum": 0 },
+    "stop_reason": { "type": ["string", "null"] },
+    "queue_summary": { "type": ["object", "null"] },
+    "safety": { "$ref": "#/$defs/runtimeSafety" },
+    "summary_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "source_path", "source_sha256", "source_byte_count"],
+      "properties": {
+        "name": { "const": "himr-background-acquisition-producer" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "source_path": { "type": "string", "pattern": "^/" },
+        "source_sha256": { "$ref": "#/$defs/sha256" },
+        "source_byte_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_new_items", "max_new_bytes", "max_run_seconds", "free_space_floor_bytes"],
+      "properties": {
+        "max_new_items": { "type": "integer", "minimum": 1 },
+        "max_new_bytes": { "type": "integer", "minimum": 1 },
+        "max_run_seconds": { "type": "integer", "minimum": 1, "maximum": 604800 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "ready": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completed_acquisition_count",
+        "acknowledged_preprocess_count",
+        "ready_item_count",
+        "ready_byte_count",
+        "zone",
+        "items"
+      ],
+      "properties": {
+        "completed_acquisition_count": { "type": "integer", "minimum": 0 },
+        "acknowledged_preprocess_count": { "type": "integer", "minimum": 0 },
+        "ready_item_count": { "type": "integer", "minimum": 0 },
+        "ready_byte_count": { "type": "integer", "minimum": 0 },
+        "zone": {
+          "enum": ["at_or_above_high_water", "at_or_below_low_water", "hysteresis_hold"]
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": { "$ref": "#/$defs/readyItem" }
+        }
+      }
+    },
+    "readyItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "job_id", "media_sha256", "media_byte_count"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1 },
+        "job_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "media_sha256": { "$ref": "#/$defs/sha256" },
+        "media_byte_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "runtimeSafety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "access_policy",
+        "catalog_access",
+        "catalog_writes",
+        "cold_storage_access",
+        "credentials_allowed",
+        "deletion_authority",
+        "discovery_allowed",
+        "event_authority",
+        "export_authority",
+        "identity_authority",
+        "publication_authority",
+        "substitutions_allowed",
+        "credentials_used",
+        "maximum_network_concurrency"
+      ],
+      "properties": {
+        "access_policy": { "const": "sealed_public_work_orders_only" },
+        "catalog_access": { "const": "forbidden" },
+        "catalog_writes": { "const": false },
+        "cold_storage_access": { "const": "forbidden" },
+        "credentials_allowed": { "const": false },
+        "deletion_authority": { "const": "none" },
+        "discovery_allowed": { "const": false },
+        "event_authority": { "const": "none" },
+        "export_authority": { "const": "none" },
+        "identity_authority": { "const": "none" },
+        "publication_authority": { "const": "none" },
+        "substitutions_allowed": { "const": false },
+        "credentials_used": { "const": false },
+        "maximum_network_concurrency": { "const": 1 }
+      }
+    }
+  }
+}

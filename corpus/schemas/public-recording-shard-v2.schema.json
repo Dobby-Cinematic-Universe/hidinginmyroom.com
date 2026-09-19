@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/corpus/schemas/public-recording-shard-v2.json",
+  "title": "HIMR public corpus recording and transcript shard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "recording"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "kind": { "const": "recording" },
+    "recording": { "$ref": "public-release.schema.json#/$defs/recording" }
+  },
+  "$defs": {}
+}

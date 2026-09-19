@@ -1,10 +1,21 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { fileURLToPath } from 'node:url';
+import { createDevWatchIgnore } from './scripts/dev-watch-ignore.mjs';
+import { privateRagProxy } from './scripts/rag/dev-proxy.mjs';
 
 const site = process.env.SITE_URL?.trim() || 'https://hidinginmyroom.com';
 
 export default defineConfig({
   site,
+  vite: {
+    plugins: [privateRagProxy()],
+    server: {
+      watch: {
+        ignored: [createDevWatchIgnore(fileURLToPath(new URL('.', import.meta.url)))],
+      },
+    },
+  },
   integrations: [
     starlight({
       title: 'HIMR WIKI',
@@ -17,6 +28,7 @@ export default defineConfig({
       },
       sidebar: [
         { label: 'Main Site', link: '/' },
+        { label: 'Transcript Corpus', link: '/corpus/' },
         { label: 'Wiki Portal', link: '/wiki/' },
         {
           label: 'Overview & Chronology',

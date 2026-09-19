@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/corpus/schemas/public-catalog-shard-v2.json",
+  "title": "HIMR public corpus catalog shard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "ordinal", "recordings"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "kind": { "const": "catalog" },
+    "ordinal": { "type": "integer", "minimum": 0 },
+    "recordings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/summary" }
+    }
+  },
+  "$defs": {
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recording_id", "slug", "title", "date_label", "date_year", "date_basis",
+        "duration_ms", "recording_type", "review_state", "source_count",
+        "transcript_revision_count", "segment_count", "searchable_segment_count",
+        "platforms", "languages", "detail"
+      ],
+      "properties": {
+        "recording_id": { "type": "string", "pattern": "^rec_[a-f0-9]{32}$" },
+        "slug": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$" },
+        "title": { "type": "string", "minLength": 1 },
+        "date_label": { "type": ["string", "null"] },
+        "date_year": { "type": ["integer", "null"] },
+        "date_basis": { "type": "string", "minLength": 1 },
+        "duration_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "recording_type": {
+          "enum": ["video", "livestream", "short", "guest_appearance", "compilation", "unknown"]
+        },
+        "review_state": { "enum": ["metadata_only", "unreviewed", "reviewed", "disputed"] },
+        "source_count": { "type": "integer", "minimum": 1 },
+        "transcript_revision_count": { "type": "integer", "minimum": 0 },
+        "segment_count": { "type": "integer", "minimum": 0 },
+        "searchable_segment_count": { "type": "integer", "minimum": 0 },
+        "platforms": { "$ref": "#/$defs/unique_strings" },
+        "languages": { "$ref": "#/$defs/unique_strings" },
+        "detail": { "$ref": "#/$defs/detail_reference" }
+      }
+    },
+    "unique_strings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "detail_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^recordings/rec_[a-f0-9]{32}-[a-f0-9]{16}\\.json$"
+        },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

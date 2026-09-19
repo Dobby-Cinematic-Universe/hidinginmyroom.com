@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "manifest_id": "reviewer-admin-2026-08-27-001",
+  "created_at": "2026-08-27T20:05:00Z",
+  "authorized_by": "maintainer_primary",
+  "basis": "Reviewed role assignments for the private corpus catalog.",
+  "registrations": [
+    {
+      "reviewer_registration_id": "reviewer-register-alice-001",
+      "reviewer_id": "reviewer_alice",
+      "display_label": "Alice Maintainer",
+      "reviewer_kind": "human",
+      "registered_at": "2026-08-27T20:00:00Z",
+      "basis": "Human editorial reviewer approved by the repository maintainer."
+    },
+    {
+      "reviewer_registration_id": "reviewer-register-policy-v1-001",
+      "reviewer_id": "reviewer_policy_v1",
+      "display_label": "Publication Policy v1",
+      "reviewer_kind": "automated_policy",
+      "registered_at": "2026-08-27T20:00:01Z",
+      "basis": "Constrained automated policy identity for deterministic routing."
+    },
+    {
+      "reviewer_registration_id": "reviewer-register-legacy-import-001",
+      "reviewer_id": "reviewer_legacy_import",
+      "display_label": "Legacy Review Import",
+      "reviewer_kind": "imported_legacy",
+      "registered_at": "2026-08-27T20:00:02Z",
+      "basis": "Attribution identity for preserved historical review records."
+    }
+  ],
+  "state_changes": [
+    {
+      "reviewer_state_change_id": "reviewer-activate-alice-001",
+      "reviewer_id": "reviewer_alice",
+      "active": true,
+      "changed_at": "2026-08-27T20:01:00Z",
+      "basis": "Explicitly granted current human-review authority."
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/reddit-rss-discovery-v1.json",
+  "title": "HIMR minimized Reddit Atom discovery manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["discovery_id", "schema_version", "manifest_kind", "generated_at", "subreddit", "assertion_policy", "snapshot", "posts"],
+  "properties": {
+    "discovery_id": {"type": "string", "pattern": "^rdd_[0-9a-f]{32}$"},
+    "schema_version": {"const": 1},
+    "manifest_kind": {"const": "reddit_atom_discovery"},
+    "generated_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "subreddit": {"type": "string", "pattern": "^[A-Za-z0-9_]{2,21}$"},
+    "assertion_policy": {"$ref": "#/$defs/assertion_policy"},
+    "snapshot": {"$ref": "#/$defs/snapshot"},
+    "posts": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/post"}
+    }
+  },
+  "$defs": {
+    "assertion_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "titles_are_content_truth", "comments_retained", "authors_retained", "publication_authority"],
+      "properties": {
+        "state": {"const": "unreviewed_discovery"},
+        "titles_are_content_truth": {"const": false},
+        "comments_retained": {"const": false},
+        "authors_retained": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_id", "snapshot_manifest_file", "payload_file", "request_url", "final_url", "http_status", "observed_at", "payload_sha256", "byte_count"],
+      "properties": {
+        "snapshot_id": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}$"},
+        "snapshot_manifest_file": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}\\.snapshot\\.json$"},
+        "payload_file": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}\\.atom\\.xml$"},
+        "request_url": {"type": "string", "format": "uri", "pattern": "^https://www\\.reddit\\.com/r/[A-Za-z0-9_]{2,21}/new/\\.rss\\?limit=(?:[1-9]|[1-9][0-9]|100)$", "maxLength": 4096},
+        "final_url": {"type": "string", "format": "uri", "pattern": "^https://(?:www\\.|old\\.)?reddit\\.com/", "maxLength": 4096},
+        "http_status": {"const": 200},
+        "observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_count": {"type": "integer", "minimum": 1, "maximum": 67108864}
+      }
+    },
+    "post": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["post_id", "permalink", "title", "published_at", "updated_at", "timestamp_basis", "title_assertion_state", "media_locators"],
+      "properties": {
+        "post_id": {"type": "string", "pattern": "^[a-z0-9]{5,16}$"},
+        "permalink": {"type": "string", "format": "uri", "pattern": "^https://(?:www\\.|old\\.)?reddit\\.com/", "maxLength": 4096},
+        "title": {"type": "string", "minLength": 1, "maxLength": 500},
+        "published_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "updated_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "timestamp_basis": {"enum": ["atom_published", "atom_updated_fallback"]},
+        "title_assertion_state": {"const": "unreviewed"},
+        "media_locators": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {"$ref": "#/$defs/media_locator"}
+        }
+      }
+    },
+    "media_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator_kind", "native_id", "canonical_url", "observed_url", "basis", "assertion_state"],
+      "properties": {
+        "locator_kind": {"enum": ["reddit_video", "reddit_gallery", "youtube_video", "internet_archive_item", "internet_archive_file", "image", "external_video"]},
+        "native_id": {"type": "string", "minLength": 1, "maxLength": 2048},
+        "canonical_url": {"type": "string", "format": "uri", "pattern": "^https://", "maxLength": 4096},
+        "observed_url": {"type": "string", "format": "uri", "pattern": "^https://", "maxLength": 4096},
+        "basis": {"enum": ["atom_entry_link", "atom_entry_content", "atom_media_element"]},
+        "assertion_state": {"const": "unreviewed"},
+        "metadata_observation": {"$ref": "#/$defs/metadata_observation"}
+      }
+    },
+    "metadata_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "observed_at", "payload_sha256", "duration_ms", "access_state"],
+      "properties": {
+        "kind": {"const": "public_yt_dlp_info"},
+        "observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "duration_ms": {"type": "integer", "minimum": 0, "maximum": 86400000},
+        "access_state": {"enum": ["public", "unknown"]}
+      }
+    }
+  }
+}

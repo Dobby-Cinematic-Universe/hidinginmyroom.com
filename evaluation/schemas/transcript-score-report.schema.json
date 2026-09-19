@@ -1,0 +1,591 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/evaluation/transcript-score-report-v1.json",
+  "title": "HIMR private text-free transcript score report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_kind",
+    "manifest_sha256",
+    "report_id",
+    "created_at",
+    "implementation",
+    "inputs",
+    "policy",
+    "term_set",
+    "metrics",
+    "calibration_readiness",
+    "quality_gates",
+    "warnings",
+    "publication",
+    "contains_transcript_text",
+    "accuracy_metrics_computed"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_kind": { "const": "transcript_score_report" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "report_id": {
+      "type": "string",
+      "pattern": "^transcript_score_report_[0-9a-f]{32}$"
+    },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "implementation": { "$ref": "#/$defs/implementation" },
+    "inputs": { "$ref": "#/$defs/inputs" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "term_set": { "$ref": "#/$defs/term_set" },
+    "metrics": { "$ref": "#/$defs/metrics" },
+    "calibration_readiness": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/readiness" }
+    },
+    "quality_gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/gate" }
+    },
+    "warnings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "publication": { "$ref": "#/$defs/publication" },
+    "contains_transcript_text": { "const": false },
+    "accuracy_metrics_computed": { "const": true }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "nullable_number": { "type": ["number", "null"] },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "storage_policy"],
+      "properties": {
+        "status": { "const": "withheld" },
+        "storage_policy": { "const": "private_only" }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "source_sha256",
+        "python_version",
+        "unicode_version"
+      ],
+      "properties": {
+        "name": { "const": "himr-transcript-evaluation-scorer" },
+        "version": { "type": "string", "minLength": 1 },
+        "source_sha256": { "$ref": "#/$defs/sha256" },
+        "python_version": { "type": "string", "minLength": 1 },
+        "unicode_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cohort_id",
+        "cohort_manifest_sha256",
+        "freeze_id",
+        "freeze_manifest_sha256",
+        "pass_a_annotation_id",
+        "pass_a_manifest_sha256",
+        "pass_b_annotation_id",
+        "pass_b_manifest_sha256",
+        "adjudication_id",
+        "adjudication_manifest_sha256",
+        "system_output_id",
+        "system_output_manifest_sha256",
+        "system_id",
+        "model_id",
+        "run_manifest_sha256",
+        "resource_profile"
+      ],
+      "properties": {
+        "cohort_id": { "$ref": "#/$defs/id" },
+        "cohort_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "freeze_id": { "$ref": "#/$defs/id" },
+        "freeze_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "pass_a_annotation_id": { "$ref": "#/$defs/id" },
+        "pass_a_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "pass_b_annotation_id": { "$ref": "#/$defs/id" },
+        "pass_b_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "adjudication_id": { "$ref": "#/$defs/id" },
+        "adjudication_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "system_output_id": {
+          "type": "string",
+          "pattern": "^system_output_[0-9a-f]{32}$"
+        },
+        "system_output_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "system_id": { "$ref": "#/$defs/id" },
+        "model_id": { "$ref": "#/$defs/id" },
+        "run_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "resource_profile": {
+          "enum": ["cpu_bronze", "local_gpu", "remote_gpu", "other_measured"]
+        }
+      }
+    },
+    "bootstrap_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "method", "replicates", "seed", "confidence_level"],
+      "properties": {
+        "unit": { "const": "recording_family" },
+        "method": { "const": "recording_family_percentile_v1" },
+        "replicates": { "type": "integer", "minimum": 200, "maximum": 10000 },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "confidence_level": { "const": 0.95 }
+      }
+    },
+    "sample_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_observations",
+        "minimum_positives",
+        "minimum_negatives",
+        "calibration_fitted"
+      ],
+      "properties": {
+        "minimum_observations": { "const": 200 },
+        "minimum_positives": { "const": 50 },
+        "minimum_negatives": { "const": 50 },
+        "calibration_fitted": { "const": false }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalization_profile",
+        "text_scoring",
+        "character_scoring",
+        "term_matching",
+        "timing_error",
+        "repetition_detection",
+        "bootstrap",
+        "calibration_sample_gate"
+      ],
+      "properties": {
+        "normalization_profile": {
+          "const": "unicode_nfkc_casefold_lexical_v1"
+        },
+        "text_scoring": {
+          "const": "adjudicated_verbatim_agreement_or_resolved_only"
+        },
+        "character_scoring": {
+          "const": "normalized_lexical_characters_without_whitespace_or_punctuation"
+        },
+        "term_matching": {
+          "const": "alignment_bound_greedy_nonoverlapping_normalized_occurrences_per_interval"
+        },
+        "timing_error": {
+          "const": "exact_matched_first_and_last_token_against_reference_utterance_span"
+        },
+        "repetition_detection": {
+          "const": "literal_cycle_1_to_8_tokens_four_repeats_minimum_12_tokens"
+        },
+        "bootstrap": { "$ref": "#/$defs/bootstrap_policy" },
+        "calibration_sample_gate": { "$ref": "#/$defs/sample_gate" }
+      }
+    },
+    "term_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term_set_revision_id",
+        "language",
+        "term_count",
+        "normalized_term_set_sha256",
+        "term_text_included"
+      ],
+      "properties": {
+        "term_set_revision_id": { "$ref": "#/$defs/id" },
+        "language": { "type": "string", "minLength": 2 },
+        "term_count": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "normalized_term_set_sha256": { "$ref": "#/$defs/sha256" },
+        "term_text_included": { "const": false }
+      }
+    },
+    "excluded_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adjudicated_non_speech",
+        "adjudicated_unintelligible",
+        "adjudicated_text_uncertainty"
+      ],
+      "properties": {
+        "adjudicated_non_speech": { "type": "integer", "minimum": 0 },
+        "adjudicated_unintelligible": { "type": "integer", "minimum": 0 },
+        "adjudicated_text_uncertainty": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "word_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_count",
+        "hypothesis_count",
+        "substitutions",
+        "deletions",
+        "insertions",
+        "error_count",
+        "error_rate"
+      ],
+      "properties": {
+        "reference_count": { "type": "integer", "minimum": 0 },
+        "hypothesis_count": { "type": "integer", "minimum": 0 },
+        "substitutions": { "type": "integer", "minimum": 0 },
+        "deletions": { "type": "integer", "minimum": 0 },
+        "insertions": { "type": "integer", "minimum": 0 },
+        "error_count": { "type": "integer", "minimum": 0 },
+        "error_rate": { "$ref": "#/$defs/nullable_number" }
+      }
+    },
+    "character_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference_count", "error_count", "error_rate"],
+      "properties": {
+        "reference_count": { "type": "integer", "minimum": 0 },
+        "error_count": { "type": "integer", "minimum": 0 },
+        "error_rate": { "$ref": "#/$defs/nullable_number" }
+      }
+    },
+    "term_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated_duration_ms",
+        "reference_occurrences",
+        "matched_occurrences",
+        "missed_occurrences",
+        "false_insertions",
+        "recall",
+        "false_insertions_per_media_hour"
+      ],
+      "properties": {
+        "evaluated_duration_ms": { "type": "integer", "minimum": 0 },
+        "reference_occurrences": { "type": "integer", "minimum": 0 },
+        "matched_occurrences": { "type": "integer", "minimum": 0 },
+        "missed_occurrences": { "type": "integer", "minimum": 0 },
+        "false_insertions": { "type": "integer", "minimum": 0 },
+        "recall": { "$ref": "#/$defs/nullable_number" },
+        "false_insertions_per_media_hour": { "$ref": "#/$defs/nullable_number" }
+      }
+    },
+    "nonspeech_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "annotated_nonspeech_duration_ms",
+        "nonempty_segment_count",
+        "segments_per_nonspeech_hour"
+      ],
+      "properties": {
+        "annotated_nonspeech_duration_ms": { "type": "integer", "minimum": 0 },
+        "nonempty_segment_count": { "type": "integer", "minimum": 0 },
+        "segments_per_nonspeech_hour": { "$ref": "#/$defs/nullable_number" }
+      }
+    },
+    "repetition_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_interval_count",
+        "maximum_identical_token_run",
+        "maximum_repeated_cycle_span_tokens",
+        "automatic_hallucination_claimed"
+      ],
+      "properties": {
+        "candidate_interval_count": { "type": "integer", "minimum": 0 },
+        "maximum_identical_token_run": { "type": "integer", "minimum": 0 },
+        "maximum_repeated_cycle_span_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "automatic_hallucination_claimed": { "const": false }
+      }
+    },
+    "timing_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hypothesis_word_object_count",
+        "timed_word_object_count",
+        "word_timing_coverage",
+        "monotonic_timed_word_object_count",
+        "monotonic_timed_word_fraction",
+        "reference_utterance_count",
+        "covered_reference_utterance_count",
+        "utterance_span_coverage",
+        "boundary_error_sample_count",
+        "median_absolute_boundary_error_ms",
+        "p95_absolute_boundary_error_ms",
+        "word_boundary_accuracy_claimed"
+      ],
+      "properties": {
+        "hypothesis_word_object_count": { "type": "integer", "minimum": 0 },
+        "timed_word_object_count": { "type": "integer", "minimum": 0 },
+        "word_timing_coverage": { "$ref": "#/$defs/nullable_number" },
+        "monotonic_timed_word_object_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "monotonic_timed_word_fraction": { "$ref": "#/$defs/nullable_number" },
+        "reference_utterance_count": { "type": "integer", "minimum": 0 },
+        "covered_reference_utterance_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "utterance_span_coverage": { "$ref": "#/$defs/nullable_number" },
+        "boundary_error_sample_count": { "type": "integer", "minimum": 0 },
+        "median_absolute_boundary_error_ms": {
+          "$ref": "#/$defs/nullable_number"
+        },
+        "p95_absolute_boundary_error_ms": { "$ref": "#/$defs/nullable_number" },
+        "word_boundary_accuracy_claimed": { "const": false }
+      }
+    },
+    "resource_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated_audio_duration_ms",
+        "wall_time_ms",
+        "cpu_time_ms",
+        "wall_real_time_factor",
+        "cpu_real_time_factor",
+        "peak_rss_bytes"
+      ],
+      "properties": {
+        "evaluated_audio_duration_ms": { "type": "integer", "minimum": 1 },
+        "wall_time_ms": { "type": "integer", "minimum": 1 },
+        "cpu_time_ms": { "type": "integer", "minimum": 0 },
+        "wall_real_time_factor": { "type": "number", "minimum": 0 },
+        "cpu_real_time_factor": { "type": "number", "minimum": 0 },
+        "peak_rss_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ci_available": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "method",
+        "unit",
+        "confidence_level",
+        "replicates",
+        "lower",
+        "upper"
+      ],
+      "properties": {
+        "state": { "const": "available" },
+        "method": { "const": "recording_family_percentile_v1" },
+        "unit": { "const": "recording_family" },
+        "confidence_level": { "const": 0.95 },
+        "replicates": { "type": "integer", "minimum": 200, "maximum": 10000 },
+        "lower": { "type": "number" },
+        "upper": { "type": "number" }
+      }
+    },
+    "ci_unavailable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason"],
+      "properties": {
+        "state": { "const": "not_available" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ci": {
+      "oneOf": [
+        { "$ref": "#/$defs/ci_available" },
+        { "$ref": "#/$defs/ci_unavailable" }
+      ]
+    },
+    "confidence_intervals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "word_error_rate",
+        "character_error_rate",
+        "himr_term_recall",
+        "himr_false_insertions_per_media_hour",
+        "nonspeech_segments_per_hour",
+        "word_timing_coverage",
+        "monotonic_timed_word_fraction",
+        "utterance_span_coverage",
+        "median_absolute_boundary_error_ms",
+        "p95_absolute_boundary_error_ms",
+        "wall_real_time_factor",
+        "cpu_real_time_factor",
+        "peak_rss_bytes"
+      ],
+      "properties": {
+        "word_error_rate": { "$ref": "#/$defs/ci" },
+        "character_error_rate": { "$ref": "#/$defs/ci" },
+        "himr_term_recall": { "$ref": "#/$defs/ci" },
+        "himr_false_insertions_per_media_hour": { "$ref": "#/$defs/ci" },
+        "nonspeech_segments_per_hour": { "$ref": "#/$defs/ci" },
+        "word_timing_coverage": { "$ref": "#/$defs/ci" },
+        "monotonic_timed_word_fraction": { "$ref": "#/$defs/ci" },
+        "utterance_span_coverage": { "$ref": "#/$defs/ci" },
+        "median_absolute_boundary_error_ms": { "$ref": "#/$defs/ci" },
+        "p95_absolute_boundary_error_ms": { "$ref": "#/$defs/ci" },
+        "wall_real_time_factor": { "$ref": "#/$defs/ci" },
+        "cpu_real_time_factor": { "$ref": "#/$defs/ci" },
+        "peak_rss_bytes": { "$ref": "#/$defs/ci" }
+      }
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_count",
+        "recording_count",
+        "recording_family_count",
+        "duration_ms",
+        "text_scorable_interval_count",
+        "excluded_interval_counts",
+        "word",
+        "character",
+        "himr_terms",
+        "nonspeech_hallucination",
+        "repetition",
+        "timing",
+        "resources",
+        "bootstrap_confidence_intervals"
+      ],
+      "properties": {
+        "interval_count": { "type": "integer", "minimum": 1 },
+        "recording_count": { "type": "integer", "minimum": 1 },
+        "recording_family_count": { "type": "integer", "minimum": 1 },
+        "duration_ms": { "type": "integer", "minimum": 1 },
+        "text_scorable_interval_count": { "type": "integer", "minimum": 0 },
+        "excluded_interval_counts": { "$ref": "#/$defs/excluded_counts" },
+        "word": { "$ref": "#/$defs/word_metrics" },
+        "character": { "$ref": "#/$defs/character_metrics" },
+        "himr_terms": { "$ref": "#/$defs/term_metrics" },
+        "nonspeech_hallucination": { "$ref": "#/$defs/nonspeech_metrics" },
+        "repetition": { "$ref": "#/$defs/repetition_metrics" },
+        "timing": { "$ref": "#/$defs/timing_metrics" },
+        "resources": { "$ref": "#/$defs/resource_metrics" },
+        "bootstrap_confidence_intervals": {
+          "$ref": "#/$defs/confidence_intervals"
+        }
+      }
+    },
+    "split_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "metrics"],
+      "properties": {
+        "scope": { "enum": ["calibration", "scoring"] },
+        "metrics": { "$ref": "#/$defs/aggregate" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall", "splits"],
+      "properties": {
+        "overall": { "$ref": "#/$defs/aggregate" },
+        "splits": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/split_metrics" }
+        }
+      }
+    },
+    "minimums": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observations", "positives", "negatives"],
+      "properties": {
+        "observations": { "const": 200 },
+        "positives": { "const": 50 },
+        "negatives": { "const": 50 }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task",
+        "split",
+        "eligible_observation_count",
+        "raw_score_observation_count",
+        "raw_score_coverage",
+        "positive_count",
+        "negative_count",
+        "minimums",
+        "state",
+        "calibration_fitted",
+        "calibrated_probability_claimed"
+      ],
+      "properties": {
+        "task": { "enum": ["word_correctness", "speech_presence"] },
+        "split": { "const": "calibration" },
+        "eligible_observation_count": { "type": "integer", "minimum": 0 },
+        "raw_score_observation_count": { "type": "integer", "minimum": 0 },
+        "raw_score_coverage": { "$ref": "#/$defs/nullable_number" },
+        "positive_count": { "type": "integer", "minimum": 0 },
+        "negative_count": { "type": "integer", "minimum": 0 },
+        "minimums": { "$ref": "#/$defs/minimums" },
+        "state": {
+          "enum": [
+            "no_raw_scores",
+            "insufficient_observations",
+            "insufficient_positives",
+            "insufficient_negatives",
+            "ready_to_fit_held_out_calibrator"
+          ]
+        },
+        "calibration_fitted": { "const": false },
+        "calibrated_probability_claimed": { "const": false }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "scope",
+        "metric",
+        "value",
+        "comparison",
+        "threshold",
+        "status"
+      ],
+      "properties": {
+        "gate_id": { "$ref": "#/$defs/id" },
+        "scope": { "enum": ["overall", "scoring"] },
+        "metric": { "$ref": "#/$defs/id" },
+        "value": { "$ref": "#/$defs/nullable_number" },
+        "comparison": { "enum": ["at_most", "at_least"] },
+        "threshold": { "type": "number" },
+        "status": { "enum": ["pass", "fail", "not_evaluable"] },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

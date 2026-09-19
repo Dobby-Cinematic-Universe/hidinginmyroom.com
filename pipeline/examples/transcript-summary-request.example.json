@@ -1,0 +1,42 @@
+{
+  "kind": "himr_transcript_summary_request",
+  "schema_version": 1,
+  "state_root": "/srv/himr/research/private-summaries/example-001",
+  "sources": [
+    {
+      "transcript": {
+        "path": "/mnt/archive/HIMR/corpus/derived/REPLACE_WITH_COMPLETED_RECORDING_TRANSCRIPT.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "format": "longform",
+      "recording_id": "REPLACE_WITH_RECORDING_ID",
+      "title": null,
+      "date": null,
+      "completion": null
+    }
+  ],
+  "config": {
+    "transcript_profile": "gemini_flash_batch",
+    "timeline_profile": "openai_mini_batch",
+    "max_input_bytes": 180000,
+    "max_output_tokens": 8192,
+    "max_items_per_section": 24,
+    "max_item_chars": 1200
+  },
+  "limits": {
+    "max_sources": 256,
+    "max_total_source_bytes": 134217728,
+    "max_jobs": 8192,
+    "max_waves": 1024,
+    "max_jobs_per_wave": 64,
+    "max_wave_bytes": 16777216
+  },
+  "budget": {
+    "max_reserved_microusd": 25000000,
+    "max_attempts_per_job": 2
+  },
+  "cloud": {
+    "processing_approved": false,
+    "paid_tier_confirmed": false
+  }
+}

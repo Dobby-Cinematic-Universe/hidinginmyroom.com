@@ -58,6 +58,39 @@ is the reviewed article and its precise citation. Wording must
 preserve the limits of a repost; follow the dedicated rules in the editorial policy
 and review process.
 
+### Corpus source and transcript corrections
+
+The corpus is a source-navigation system, not a second wiki. Start with
+[`docs/CORPUS_ARCHITECTURE.md`](./docs/CORPUS_ARCHITECTURE.md), then follow the
+confidence and review rules in [`docs/CORPUS_REVIEW.md`](./docs/CORPUS_REVIEW.md)
+and the publication boundary in
+[`docs/CORPUS_RIGHTS_AND_TAKEDOWN.md`](./docs/CORPUS_RIGHTS_AND_TAKEDOWN.md).
+
+- Propose stable public URLs, native platform IDs, dates, titles, and exact media
+  locators as source metadata.
+- Treat titles, filenames, community posts, archive labels, and machine output as
+  discovery leads until the underlying source is checked.
+- Keep raw ASR, contextual ASR, human-verbatim corrections, and readability edits as
+  separate immutable revisions.
+- Do not require a wording review merely to publish an otherwise eligible machine
+  transcript. Its generated/unreviewed status and “not a verified quotation” warning
+  must remain visible on every revision and search result.
+- Never silently replace, rank away, or delete a published revision. Disputes,
+  retractions, and reinstatements require a human decision and public explanation;
+  a retracted revision becomes a text-free tombstone when its gates permit one.
+- Never assign a real name from a face or voice cluster. Public identity labels need
+  a documented, human-reviewed public anchor; incidental people remain unknown.
+- Do not manually edit generated corpus releases. Submit a correction with its exact
+  recording, revision, segment, and source locator so a maintainer can update the
+  private catalogue and regenerate the deterministic export.
+- Maintainers generate v2 with `export-sharded --out-dir src/data/corpus`; v1
+  `release.json` is only a migration fallback. Never keep both active files, and run
+  `validate-release --release src/data/corpus/manifest.json` before building.
+
+The public site may contain only records that passed explicit rights, privacy,
+sensitivity, and publication decisions. Machine confidence is task-specific and
+must not be described as human verification.
+
 ### Images
 
 A new wiki image needs all three of the following:
@@ -76,9 +109,11 @@ or doxxing material. See [`RIGHTS.md`](./RIGHTS.md).
 ### Evidence and private research
 
 This public repository does not accept raw research snapshots, platform exports,
-members-only or local review videos, full transcripts, NotebookLM drafts, review
-queues, or private claim ledgers. Those materials are maintained separately and are
-not pull-request artifacts.
+members-only or local review videos, unreviewed transcript dumps, NotebookLM drafts,
+review queues, private biometric artifacts, or private claim ledgers. Those materials
+are maintained separately and are not pull-request artifacts. A generated,
+publication-safe corpus release is allowed only after the review and publication
+gates above.
 
 - Give public URLs and exact timestamps, post IDs, page numbers, or other locators.
 - Link to a public source instead of uploading a copy whenever possible.
@@ -126,6 +161,18 @@ and runs Astro diagnostics. `npm run build` runs those checks and generates `dis
 it is the required pre-PR command and the CI gate. Neither command fetches or reads
 private research.
 
+Corpus, acquisition, pipeline, or evaluation changes also require Python 3.12,
+FFmpeg/FFprobe, and the pinned development-only schema validator:
+
+```sh
+python3 -m pip install -r scripts/requirements-json-contracts.txt
+npm run test:contracts
+npm run test:python
+```
+
+`jsonschema` is used only by tests and CI. The acquisition, preprocessing, and corpus
+runtimes do not depend on it.
+
 Use `npm install` only when intentionally changing dependencies. Commit the
 resulting `package.json` and `package-lock.json` changes together. Do not commit
 `node_modules/`, `.astro/`, `dist/`, `.env`, or private research files.
@@ -151,8 +198,8 @@ and explain the uncertainty instead of silently resolving it.
 - [ ] Public-facing links work and use clear labels.
 - [ ] Wiki claims follow the editorial policy and give precise public citations.
 - [ ] New images have adjacent source, rights, and transformation information.
-- [ ] No raw snapshot, transcript, private research, or access-controlled media is
-      included.
+- [ ] No raw snapshot, unreviewed transcript dump, private research, biometric
+      artifact, or access-controlled media is included.
 - [ ] `npm run build` succeeds locally.
 - [ ] Visual changes were checked at appropriate viewport sizes and interaction
       preferences.

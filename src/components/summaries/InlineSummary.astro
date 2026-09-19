@@ -1,0 +1,22 @@
+---
+interface Props { id: string }
+const {id} = Astro.props;
+---
+<details class="inline-summary" data-summary-id={id}>
+  <summary>Read summary</summary>
+  <div data-summary-body><p>Expand to load the summary.</p></div>
+  <a href={`/corpus/summaries/${id}/`}>Open summary page ↗</a>
+</details>
+<script>
+  import '../../lib/summaries/inline-summary';
+</script>
+<style is:global>
+  .inline-summary { margin: .8rem 0; border: 1px solid var(--corpus-line); border-radius: .5rem; padding: .85rem 1rem; background: var(--corpus-panel); }
+  .inline-summary > summary { cursor: pointer; font-weight: 700; color: var(--corpus-accent); }
+  .inline-summary [data-summary-body] { max-height: 65vh; overflow-y: auto; scrollbar-gutter: stable; padding-right: .5rem; line-height: 1.7; }
+  .inline-summary [data-summary-body] p { color: var(--corpus-text); white-space: pre-line; }
+  .inline-summary h4 { margin: 1rem 0 .3rem; }
+  .inline-summary .summary-caution { color: var(--corpus-muted) !important; font-size: .85rem; }
+  .inline-summary > a { display: inline-block; margin-top: .75rem; font-size: .85rem; }
+  .inline-summary:not([open]) > a { display: none; }
+</style>

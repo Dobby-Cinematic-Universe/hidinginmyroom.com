@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/publication-manifest.schema.json",
+  "title": "HIMR publication administration manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "publication_decisions",
+    "gate_decisions"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_id": { "$ref": "#/$defs/identifier" },
+    "publication_decisions": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/publicationDecision" }
+    },
+    "gate_decisions": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/gateDecision" }
+    }
+  },
+  "anyOf": [
+    { "properties": { "publication_decisions": { "minItems": 1 } } },
+    { "properties": { "gate_decisions": { "minItems": 1 } } }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "objectId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "objectType": {
+      "enum": [
+        "source",
+        "recording",
+        "transcript_revision",
+        "entity",
+        "event",
+        "appearance",
+        "event_date",
+        "event_participant",
+        "event_relation",
+        "event_evidence"
+      ]
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "basis": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    },
+    "publicationDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publication_decision_id",
+        "object_type",
+        "object_id",
+        "decision",
+        "reviewer_id",
+        "decided_at",
+        "basis",
+        "note"
+      ],
+      "properties": {
+        "publication_decision_id": { "$ref": "#/$defs/identifier" },
+        "object_type": { "$ref": "#/$defs/objectType" },
+        "object_id": { "$ref": "#/$defs/objectId" },
+        "decision": { "enum": ["publish", "withhold", "remove"] },
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "review_decision_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/identifier" },
+            { "type": "null" }
+          ]
+        },
+        "decided_at": { "$ref": "#/$defs/utcTimestamp" },
+        "basis": { "$ref": "#/$defs/basis" },
+        "note": { "$ref": "#/$defs/note" },
+        "public_label": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "gateDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publication_gate_decision_id",
+        "object_type",
+        "object_id",
+        "gate_kind",
+        "decision",
+        "reviewer_id",
+        "decided_at",
+        "basis",
+        "note"
+      ],
+      "properties": {
+        "publication_gate_decision_id": { "$ref": "#/$defs/identifier" },
+        "object_type": { "$ref": "#/$defs/objectType" },
+        "object_id": { "$ref": "#/$defs/objectId" },
+        "gate_kind": { "enum": ["rights", "privacy", "sensitivity"] },
+        "decision": { "enum": ["clear", "withhold"] },
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "review_decision_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/identifier" },
+            { "type": "null" }
+          ]
+        },
+        "decided_at": { "$ref": "#/$defs/utcTimestamp" },
+        "basis": { "$ref": "#/$defs/basis" },
+        "note": { "$ref": "#/$defs/note" }
+      }
+    }
+  }
+}

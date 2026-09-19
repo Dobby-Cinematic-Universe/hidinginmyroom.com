@@ -1,0 +1,558 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import {
+  formatDuration,
+  formatTimestamp,
+  loadCorpusCatalog,
+  loadCorpusRecording,
+  revisionFragment,
+  searchableTranscripts,
+  segmentFragment,
+  transcriptDisclaimer,
+} from '../../../lib/corpus/release';
+import type { CorpusRecordingSummary } from '../../../lib/corpus/types';
+import { recordingAttribution } from '../../../lib/corpus/attribution';
+import { loadSummaryRelease } from '../../../lib/summaries/release';
+import { knownSpeakerLabel, showSpeakerLabels } from '../../../lib/corpus/presentation.mjs';
+import RecordingPlayer from '../../../components/corpus/RecordingPlayer.astro';
+import InlineSummary from '../../../components/summaries/InlineSummary.astro';
+
+export const getStaticPaths = (async () => {
+  const catalog = await loadCorpusCatalog();
+  return catalog.recordings.map((summary) => ({
+    params: { id: summary.slug },
+    props: { summary, releaseId: catalog.releaseId },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  summary: CorpusRecordingSummary;
+  releaseId: string;
+}
+
+const { summary, releaseId } = Astro.props;
+const recording = await loadCorpusRecording(summary);
+const transcripts = searchableTranscripts(recording);
+const annotation = await recordingAttribution(recording.recording_id);
+const linkedSummary = (await loadSummaryRelease()).summaries.find((r) => r.recording_id === recording.recording_id);
+const platforms = [...new Set(recording.sources.map((source) => source.platform))];
+---
+
+<CorpusLayout
+  title={`${recording.title} | HIMR Public Corpus`}
+  description={`Timestamped transcript and source provenance for ${recording.title}.`}
+>
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/corpus/">Corpus</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">Recording</span>
+  </nav>
+
+  <article class="recording">
+    <header class="recording__header">
+      <div>
+        <p class="corpus-eyebrow">Recording</p>
+        <h1>{recording.title}</h1>
+        <p class="recording__summary">
+          {recording.date_label || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
+        </p>
+      </div>
+      <div class="recording__badges" aria-label="Recording status">
+        {platforms.map((platform) => <span class="corpus-badge">{platform}</span>)}
+      </div>
+    </header>
+
+    <details class="recording__scope">
+      <summary>Machine transcript · wording, timing and speaker attribution may be wrong</summary>
+      <p>
+        Wording, speaker labels, and timestamps can still be wrong. A transcript does not establish
+        that statements in the recording are factual. Use the source links and surrounding context.
+      </p>
+    </details>
+
+    {linkedSummary && <InlineSummary id={linkedSummary.id} />}
+    <details class="recording__technical">
+    <summary>Source information &amp; transcript revisions</summary>
+    <div class="recording__grid">
+      <section class="recording__metadata" aria-labelledby="metadata-title">
+        <h2 id="metadata-title">Provenance</h2>
+        {annotation && <aside>
+          <p><strong>{annotation.origin === 'third_party' ? 'Third-party machine transcript' : 'Cloud machine transcript'}</strong></p>
+          {annotation.attribution && <p>{annotation.attribution}</p>}
+          {annotation.model && <p>{annotation.model}</p>}
+          {annotation.coverage_note && <p><strong>Transcript coverage:</strong> {annotation.coverage_note}</p>}
+          <p>{annotation.speaker_review_complete ? 'Speaker labels were manually reviewed; transcription accuracy remains unverified.' : 'Transcription and speaker attribution remain unverified.'} Full recording coverage has not been verified.</p>
+        </aside>}
+        <dl>
+          <div>
+            <dt>Corpus release</dt>
+            <dd>{releaseId}</dd>
+          </div>
+          <div>
+            <dt>Date basis</dt>
+            <dd>{recording.date_basis || 'Not stated'}</dd>
+          </div>
+          <div>
+            <dt>Duration</dt>
+            <dd>{formatDuration(recording.duration_ms)}</dd>
+          </div>
+          <div>
+            <dt>Revisions</dt>
+            <dd>{recording.transcript_revisions.length}</dd>
+          </div>
+        </dl>
+
+        <h3>Public source listings</h3>
+        {
+          recording.sources.length === 0 ? (
+            <p class="corpus-muted">No public source listing is attached to this release.</p>
+          ) : (
+            <ul class="source-list">
+              {recording.sources.map((source) => (
+                <li>
+                  <a href={source.url} target="_blank" rel="noopener noreferrer">
+                    <strong>{source.platform}</strong>
+                    <span>{source.native_id || source.source_id}</span>
+                  </a>
+                  <span class="corpus-badge">{source.access_state}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </section>
+
+      <section class="recording__revisions" aria-labelledby="revisions-title">
+        <h2 id="revisions-title">Transcript revisions</h2>
+        {
+          recording.transcript_revisions.length === 0 ? (
+            <p class="corpus-muted">No transcript revision has been published.</p>
+          ) : (
+            <ol>
+              {recording.transcript_revisions.map((revision) => (
+                <li>
+                  <div>
+                    <strong>{revision.revision_id}</strong>
+                    <span>{transcriptDisclaimer(revision)}</span>
+                    {revision.lifecycle_history.map((entry) => (
+                      <small>
+                        {entry.state} · <time datetime={entry.decided_at}>{entry.decided_at}</time> · {' '}
+                        {entry.explanation}
+                      </small>
+                    ))}
+                  </div>
+                  <div>
+                    <span class="corpus-badge">{revision.language}</span>
+                    <span class="corpus-badge">{revision.revision_kind}</span>
+                    <span class="corpus-badge">{revision.lifecycle_state}</span>
+                    <span class="corpus-badge">{revision.segments.length} segments</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )
+        }
+      </section>
+    </div>
+    </details>
+
+    <nav class="reader-actions" aria-label="Reading layout">
+      <a href="#recording-workspace">Watch &amp; read</a>
+      <button type="button" data-wide-player aria-pressed="false" hidden>Wide player</button>
+      <a href="#transcript-reading">Jump to transcript ↓</a>
+    </nav>
+    <div class="recording__workspace" id="recording-workspace">
+    <aside class="recording__watch"><RecordingPlayer sources={recording.sources} title={recording.title} /></aside>
+    <div class="recording__reading" id="transcript-reading">
+    {
+      transcripts.length === 0 ? (
+        <section class="transcript" aria-labelledby="transcript-title-empty">
+          <div class="transcript__heading">
+            <div>
+              <p class="corpus-eyebrow">Published non-retracted revisions</p>
+              <h2 id="transcript-title-empty">Timestamped transcript</h2>
+            </div>
+          </div>
+          <div class="transcript__empty">
+            <p>No transcript segments have been published for this recording.</p>
+          </div>
+        </section>
+      ) : (
+        transcripts.map((transcript) => {
+          const headingId = revisionFragment(transcript);
+          const showSpeakers = showSpeakerLabels(transcript.segments);
+          return (
+            <section class="transcript" lang={transcript.language} aria-labelledby={headingId}>
+              <div class="transcript__heading">
+                <div>
+                  <h2 id={headingId}>Transcript</h2>
+                </div>
+                <div class="recording__badges">
+                  <span class="corpus-badge">{transcript.language}</span>
+                </div>
+              </div>
+
+              <aside class="transcript__disclaimer" aria-label="Transcript status">
+                <strong>{transcriptDisclaimer(transcript)}</strong>
+              </aside>
+
+              {transcript.segments.length === 0 ? (
+                <div class="transcript__empty">
+                  <p>This published revision has no transcript segments.</p>
+                </div>
+              ) : (
+                <div>
+                <div class="transcript__tools" data-transcript-tools hidden>
+                  <label>Find in transcript<input type="search" data-transcript-search placeholder="Search words or a speaker…" /></label>
+                  <label><input type="checkbox" data-follow-playback /> Follow playback</label>
+                  <label><input type="checkbox" data-full-transcript /> Show full height</label>
+                  <span data-transcript-count role="status">{transcript.segments.length} {transcript.segments.length === 1 ? 'turn' : 'turns'}</span>
+                </div>
+                <ol class="transcript__segments" tabindex="0" aria-label="Scrollable transcript">
+                  {transcript.segments.map((segment) => {
+                    const fragment = segmentFragment(transcript, segment);
+                    const speaker = showSpeakers ? knownSpeakerLabel(segment.speaker_label) : null;
+                    return (
+                      <li id={fragment} data-start-ms={segment.start_ms} data-end-ms={segment.end_ms}>
+                        <div class="transcript__segment-meta">
+                          <a
+                            class="transcript__timestamp"
+                            href={`#${fragment}`}
+                            aria-label={`Jump to ${formatTimestamp(segment.start_ms)} in the recording and transcript`}
+                          >
+                            {formatTimestamp(segment.start_ms)}
+                          </a>
+                          {speaker && <span class="transcript__speaker">{speaker}</span>}
+                        </div>
+                        <p>{segment.text || '[No transcript text in this segment]'}</p>
+                        <details class="transcript__segment-detail"><summary>Segment details</summary><small>
+                          {formatTimestamp(segment.start_ms)}–{formatTimestamp(segment.end_ms)} · {
+                            segment.segment_id
+                          }
+                        </small></details>
+                      </li>
+                    );
+                  })}
+                </ol>
+                </div>
+              )}
+            </section>
+          );
+        })
+      )
+    }
+    </div>
+    </div>
+  </article>
+</CorpusLayout>
+<script>
+  import '../../../lib/corpus/recording-player';
+</script>
+
+<style>
+  .recording__technical { margin: 1rem 0 1.5rem; }
+  .recording__technical > summary { cursor: pointer; color: var(--corpus-muted); padding: .6rem 0; }
+  .recording__scope { color: var(--corpus-muted); margin: .8rem 0; font-size: .85rem; }
+  .recording__scope summary { cursor: pointer; }
+  .reader-actions { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; margin-bottom: 1rem; }
+  .reader-actions a,.reader-actions button { font: inherit; font-size: .85rem; padding: .6rem .8rem; border: 1px solid var(--corpus-line); border-radius: .4rem; background: var(--corpus-panel); color: var(--corpus-text); text-decoration: none; cursor: pointer; }
+  .reader-actions button[aria-pressed=true] { border-color: var(--corpus-accent); color: var(--corpus-accent); }
+  .recording__workspace { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(21rem,1fr); gap: 1.25rem; align-items: start; scroll-margin-top: 1rem; }
+  .recording__workspace.is-wide { grid-template-columns: minmax(0,1fr); }
+  .recording__workspace.is-wide .recording__watch { position: static; }
+  .recording__reading { scroll-margin-top: 1rem; }
+  .recording__watch { position: sticky; top: 1rem; }
+  .recording__reading { min-width: 0; }
+  .transcript__tools:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-bottom: .75rem; font-size: .85rem; }
+  .transcript__tools label:first-child { display: grid; gap: .35rem; width: 100%; }
+  .transcript__tools input[type=search] { width: 100%; padding: .65rem; background: var(--corpus-panel); color: var(--corpus-text); border: 1px solid var(--corpus-line); border-radius: .35rem; font: inherit; }
+  .transcript__tools span { color: var(--corpus-muted); }
+  .transcript__segments { max-height: 68vh; overflow-y: auto; scrollbar-gutter: stable; padding-right: .5rem !important; }
+  .transcript__segments.is-full-height { max-height: none; overflow: visible; }
+  .transcript__segments li[hidden] { display: none; }
+  .transcript__segments li.is-playing { border-color: var(--corpus-accent); background: var(--corpus-panel-strong); }
+  .transcript__segment-detail { color: var(--corpus-muted); font-size: .75rem; margin-top: .5rem; }
+  .transcript__segment-detail summary { cursor: pointer; }
+  @media (max-width: 60rem) { .recording__workspace { grid-template-columns: minmax(0,1fr); } .recording__watch { position: static; } }
+  @media print { .recording__watch,.transcript__tools { display: none !important; } .recording__workspace { display: block; } .transcript__segments { max-height: none; overflow: visible; } }
+  .corpus-breadcrumbs {
+    display: flex;
+    gap: 0.55rem;
+    margin-bottom: 1rem;
+    color: var(--corpus-muted);
+    font-size: 0.82rem;
+  }
+
+  .recording__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--corpus-line);
+  }
+
+  .recording h1 {
+    max-width: 27ch;
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: clamp(1.7rem, 3vw, 2.8rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .recording__summary {
+    margin: 0.85rem 0 0;
+    color: var(--corpus-muted);
+  }
+
+  .recording__badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  .recording__warning {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1rem;
+    margin: 1.25rem 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgb(255 209 102 / 45%);
+    border-radius: 0.4rem;
+    background: rgb(255 209 102 / 7%);
+  }
+
+  .recording__warning strong {
+    color: var(--corpus-warning);
+  }
+
+  .recording__warning p {
+    margin: 0;
+    color: var(--corpus-muted);
+  }
+
+  .recording__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .recording__metadata,
+  .recording__revisions {
+    padding: 1rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.5rem;
+    background: var(--corpus-panel);
+  }
+
+  .recording__metadata h2,
+  .recording__revisions h2,
+  .transcript h2 {
+    margin: 0;
+  }
+
+  .recording__metadata h3 {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1rem;
+  }
+
+  .recording__metadata dl {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0.8rem 0 0;
+  }
+
+  .recording__metadata dl div {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .recording__metadata dt,
+  .recording__metadata dd {
+    margin: 0;
+  }
+
+  .recording__metadata dt {
+    color: var(--corpus-muted);
+    font-size: 0.8rem;
+  }
+
+  .recording__metadata dd {
+    overflow-wrap: anywhere;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.78rem;
+  }
+
+  .source-list,
+  .recording__revisions ol {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .source-list li,
+  .recording__revisions li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.65rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.35rem;
+    background: var(--corpus-bg);
+  }
+
+  .source-list a,
+  .recording__revisions li > div:first-child {
+    display: grid;
+    min-width: 0;
+    color: var(--corpus-text);
+    text-decoration: none;
+  }
+
+  .source-list a span,
+  .recording__revisions li > div:first-child span {
+    overflow-wrap: anywhere;
+    color: var(--corpus-muted);
+    font-size: 0.75rem;
+  }
+
+  .recording__revisions ol {
+    margin-top: 0.8rem;
+  }
+
+  .recording__revisions li > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+
+  .transcript__heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .transcript__disclaimer {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0 0 0.8rem;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid rgb(255 209 102 / 45%);
+    border-radius: 0.4rem;
+    background: rgb(255 209 102 / 7%);
+  }
+
+  .transcript__disclaimer strong {
+    color: var(--corpus-warning);
+  }
+
+  .transcript__disclaimer span {
+    color: var(--corpus-muted);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.75rem;
+  }
+
+  .transcript + .transcript {
+    margin-top: 2rem;
+  }
+
+  .transcript__segments {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .transcript__segments li,
+  .transcript__empty {
+    scroll-margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.45rem;
+    background: var(--corpus-panel);
+  }
+
+  .transcript__segments li:target {
+    border-color: var(--corpus-warning);
+    box-shadow: 0 0 0 2px rgb(255 209 102 / 18%);
+  }
+
+  .transcript__segment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .transcript__timestamp {
+    min-width: 4.5rem;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-weight: 850;
+  }
+
+  .transcript__speaker {
+    color: var(--corpus-text);
+    font-weight: 750;
+  }
+
+  .transcript__segments p {
+    margin: 0.75rem 0 0;
+    white-space: pre-wrap;
+  }
+
+  .transcript__segments small {
+    display: block;
+    margin-top: 0.65rem;
+    overflow-wrap: anywhere;
+    color: var(--corpus-muted);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.68rem;
+  }
+
+  .transcript__empty p {
+    margin: 0;
+    color: var(--corpus-muted);
+  }
+
+  @media (max-width: 50rem) {
+    .recording__header,
+    .transcript__heading {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .recording__badges {
+      justify-content: flex-start;
+    }
+
+    .recording__warning,
+    .recording__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 35rem) {
+    .source-list li,
+    .recording__revisions li {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .recording__revisions li > div:last-child {
+      justify-content: flex-start;
+    }
+  }
+</style>

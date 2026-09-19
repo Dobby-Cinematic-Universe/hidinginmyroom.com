@@ -1,0 +1,59 @@
+---
+interface Props { items: {href:string; title:string; detail?:string; sourceCount?:number; speakerCount?:number}[]; label:string; mode?:'entities'|'events'; }
+const {items,label,mode}=Astro.props;
+const initial=items.slice(0,40);
+const payload=JSON.stringify(items).replaceAll('<','\\u003c').replaceAll('\u2028','\\u2028').replaceAll('\u2029','\\u2029');
+---
+<div data-derived-directory data-directory-key={label} class="derived-directory">
+  {items.length>0 && <label>Find in {label}<input type="search" data-filter placeholder="Filter by name, words, or recording date" /></label>}
+  {mode && <label class="directory-toggle"><input type="checkbox" data-subset />{mode==='entities'?'Only names with a speaker label':'Only entries with multiple source recordings'}</label>}
+  <button type="button" data-clear>Clear filters</button>
+  <p data-count role="status">{items.length.toLocaleString()} entries</p>
+  <ol data-items>{initial.map(item=><li><a href={item.href}>{item.title}</a>{item.detail&&<span>{item.detail}</span>}</li>)}</ol>
+  <button data-more hidden={items.length<=40} type="button">Show more</button>
+  <script is:inline type="application/json" data-directory-items set:html={payload} />
+</div>
+<script>
+  for(const root of document.querySelectorAll<HTMLElement>('[data-derived-directory]')) {
+    const items=JSON.parse(root.querySelector('[data-directory-items]')!.textContent!) as {href:string;title:string;detail?:string;sourceCount?:number;speakerCount?:number}[];
+    const input=root.querySelector<HTMLInputElement>('[data-filter]');
+    const list=root.querySelector<HTMLOListElement>('[data-items]')!;
+    const count=root.querySelector<HTMLElement>('[data-count]')!;
+    const more=root.querySelector<HTMLButtonElement>('[data-more]')!;
+    const subset=root.querySelector<HTMLInputElement>('[data-subset]');
+    const key=root.dataset.directoryKey!,params=new URLSearchParams(location.search);
+    if(input)input.value=params.get(key)||'';
+    if(subset)subset.checked=params.get(key+'-subset')==='1';
+    let selected=items,visible=40;
+    function render() {
+      list.replaceChildren();
+      for(const item of selected.slice(0,visible)) {
+        const li=document.createElement('li'),a=document.createElement('a');
+        a.href=item.href;a.textContent=item.title;li.append(a);
+        if(item.detail){const span=document.createElement('span');span.textContent=item.detail;li.append(span);}
+        list.append(li);
+      }
+      count.textContent=selected.length?`${selected.length.toLocaleString()} ${selected.length===1?'entry':'entries'} · showing ${Math.min(visible,selected.length).toLocaleString()}`:'No entries match. Try fewer words or clear the filters.';
+      more.hidden=visible>=selected.length;
+    }
+    function filter(){
+      const words=(input?.value||'').trim().toLowerCase().split(/\s+/).filter(Boolean);
+      selected=items.filter(i=>words.every(w=>`${i.title} ${i.detail||''}`.toLowerCase().includes(w))&&(!subset?.checked||(i.speakerCount??0)>0||(i.sourceCount??0)>1));visible=40;render();
+      const url=new URL(location.href);url.searchParams.delete(key);url.searchParams.delete(key+'-subset');if(input?.value)url.searchParams.set(key,input.value);if(subset?.checked)url.searchParams.set(key+'-subset','1');history.replaceState(null,'',url);
+    }
+    input?.addEventListener('input',filter);subset?.addEventListener('change',filter);
+    root.querySelector('[data-clear]')?.addEventListener('click',()=>{if(input)input.value='';if(subset)subset.checked=false;filter();});
+    more.addEventListener('click',()=>{visible+=40;render();});
+    if(input?.value||subset?.checked)filter();
+  }
+</script>
+<style>
+  label { display: grid; gap: .4rem; color: var(--corpus-muted); }
+  .directory-toggle{display:flex;align-items:center;gap:.5rem;margin:.8rem 0;font-size:.85rem}
+  input { padding: .7rem; background: var(--corpus-bg); color: var(--corpus-text); border: 1px solid var(--corpus-line); border-radius: .3rem; min-width: 0; }
+  ol { display: grid; gap: .8rem; list-style: none; padding: 0; }
+  li { display: grid; gap: .35rem; padding: .6rem 0; border-top: 1px solid var(--corpus-line); }
+  a { color: var(--corpus-accent); overflow-wrap: anywhere; }
+  span,p { color: var(--corpus-muted); font-size: .85rem; }
+  button { padding: .7rem 1rem; cursor: pointer; color: var(--corpus-text); background: var(--corpus-panel); border: 1px solid var(--corpus-line); }
+</style>

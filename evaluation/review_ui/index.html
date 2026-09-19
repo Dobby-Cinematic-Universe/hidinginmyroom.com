@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="referrer" content="no-referrer">
+    <title>Private interval selection review</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to review workspace</a>
+
+    <header class="app-header">
+      <div class="header-title">
+        <p class="eyebrow">Private ASR-blind review workspace</p>
+        <h1>Interval selection</h1>
+      </div>
+      <div class="header-state">
+        <span id="state-badge" class="state-badge state-draft">DRAFT — not valid or completed</span>
+        <span id="connection-status" class="connection-status" role="status" aria-live="polite">Connecting…</span>
+      </div>
+    </header>
+
+    <noscript>
+      <div class="standalone-message" role="alert">
+        <h2>JavaScript is required</h2>
+        <p>This private, local review workspace cannot load or save decisions without JavaScript.</p>
+      </div>
+    </noscript>
+
+    <main id="main-content" tabindex="-1">
+      <section id="error-summary" class="error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" hidden>
+        <h2 id="error-summary-title">There is a problem</h2>
+        <ul id="error-list"></ul>
+      </section>
+
+      <section id="loading-panel" class="standalone-message" aria-labelledby="loading-title">
+        <div class="loading-mark" aria-hidden="true"></div>
+        <h2 id="loading-title">Loading private review</h2>
+        <p id="loading-detail">Requesting the current same-session draft…</p>
+      </section>
+
+      <section id="invalid-panel" class="standalone-message danger-panel" aria-labelledby="invalid-title" tabindex="-1" hidden>
+        <p class="panel-kicker">Editing disabled</p>
+        <h2 id="invalid-title">This draft is invalid</h2>
+        <p id="invalid-detail">The server could not establish a safe review state. No decisions can be changed or finalized.</p>
+        <button id="invalid-reload" class="button button-secondary" type="button">Reload from server</button>
+      </section>
+
+      <section id="completed-panel" class="standalone-message completed-panel" aria-labelledby="completed-title" tabindex="-1" hidden>
+        <p class="panel-kicker">Private review complete</p>
+        <h2 id="completed-title">Attestation recorded</h2>
+        <p>This session is read-only. The completed manifest fingerprint is shown for confirmation only.</p>
+        <dl class="completion-details">
+          <div>
+            <dt>Completed manifest SHA-256</dt>
+            <dd><code id="completed-digest">Not returned</code></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section id="attestation-panel" class="attestation-screen" aria-labelledby="attestation-title" hidden>
+        <div class="attestation-card">
+          <p class="panel-kicker">Final step</p>
+          <h2 id="attestation-title">Attest and complete this private review</h2>
+          <p id="attestation-intro" class="attestation-intro">The draft is ready, but it is not valid or completed until all four statements are explicitly confirmed and the server accepts finalization.</p>
+
+          <div id="attestation-progress" class="compact-progress" aria-label="Ready draft summary"></div>
+
+          <form id="attestation-form" autocomplete="off" novalidate>
+            <div class="field-group">
+              <label for="reviewer-id">Reviewer ID</label>
+              <input id="reviewer-id" name="reviewer_id" type="text" required maxlength="128" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="reviewer-id-hint">
+              <p id="reviewer-id-hint" class="field-hint">Use your assigned reviewer identifier. File paths, manifest digests, and system identifiers are not accepted here.</p>
+            </div>
+
+            <fieldset class="attestation-list">
+              <legend>Required attestations</legend>
+              <label class="check-card" for="attest-parent-media">
+                <input id="attest-parent-media" name="attest_parent_media" type="checkbox" required>
+                <span>I reviewed the direct parent media for every decision.</span>
+              </label>
+              <label class="check-card" for="attest-no-asr">
+                <input id="attest-no-asr" name="attest_no_asr" type="checkbox" required>
+                <span>I did not inspect ASR output while making interval selections.</span>
+              </label>
+              <label class="check-card" for="attest-no-reference">
+                <input id="attest-no-reference" name="attest_no_reference" type="checkbox" required>
+                <span>I did not inspect reference text while making interval selections.</span>
+              </label>
+              <label class="check-card" for="attest-selection-basis">
+                <input id="attest-selection-basis" name="attest_selection_basis" type="checkbox" required>
+                <span>I based every selection only on source metadata and direct parent media.</span>
+              </label>
+            </fieldset>
+
+            <div class="form-actions attestation-actions">
+              <button id="return-to-review" class="button button-secondary" type="button">Review decisions</button>
+              <button id="finalize-review" class="button button-primary" type="submit">Complete private review</button>
+            </div>
+            <p id="attestation-save-status" class="save-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="review-workspace" class="review-workspace" aria-label="Interval review workspace" tabindex="-1" hidden>
+        <nav class="pane recording-pane" aria-labelledby="recordings-title">
+          <div class="pane-heading">
+            <div>
+              <p class="pane-step">1 of 3</p>
+              <h2 id="recordings-title">Recordings</h2>
+            </div>
+            <span id="recording-count" class="count-badge"></span>
+          </div>
+
+          <div class="progress-overview" aria-labelledby="progress-title">
+            <h3 id="progress-title">Draft progress</h3>
+            <div class="progress-row">
+              <span id="progress-label">0 of 0 intervals</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <progress id="decision-progress" value="0" max="1">0%</progress>
+            <dl class="metric-grid">
+              <div>
+                <dt>Accepted</dt>
+                <dd id="accepted-duration">—</dd>
+              </div>
+              <div>
+                <dt>Proposal total</dt>
+                <dd id="proposal-duration">—</dd>
+              </div>
+              <div class="metric-wide">
+                <dt>Proposal playback coverage</dt>
+                <dd id="coverage-progress">—</dd>
+              </div>
+              <div class="metric-wide">
+                <dt>Removal budget remaining</dt>
+                <dd id="removal-budget" role="status" aria-live="polite">—</dd>
+              </div>
+            </dl>
+            <button id="continue-attestation" class="button button-primary continue-button" type="button" hidden>Continue to attestation</button>
+          </div>
+
+          <ol id="recording-list" class="recording-list"></ol>
+        </nav>
+
+        <section class="pane media-pane" aria-labelledby="media-title">
+          <div class="pane-heading media-heading">
+            <div class="title-stack">
+              <p class="pane-step">2 of 3</p>
+              <h2 id="media-title">Parent media</h2>
+            </div>
+            <div class="media-verification">
+              <span id="media-verified" class="verification-badge">Verification unknown</span>
+            </div>
+          </div>
+
+          <div class="recording-context">
+            <div>
+              <p id="recording-title" class="recording-title">No recording selected</p>
+              <p id="recording-native-id" class="muted"></p>
+            </div>
+            <span id="recording-split-badge" class="split-badge">Split unset</span>
+          </div>
+
+          <div class="video-shell">
+            <video id="parent-video" controls preload="metadata" playsinline aria-describedby="media-status"></video>
+            <p id="media-status" class="media-status" role="status" aria-live="polite">Select a recording to load its direct parent media.</p>
+          </div>
+
+          <div class="playback-controls" aria-label="Interval playback controls">
+            <div class="control-row segment-controls">
+              <button id="play-proposal" class="button button-primary" type="button">Play proposal</button>
+              <button id="play-context" class="button button-secondary" type="button">Play context</button>
+              <button id="play-accepted" class="button button-secondary" type="button" disabled>Play accepted</button>
+            </div>
+            <div class="control-row transport-controls">
+              <button id="seek-back" class="button button-quiet" type="button" aria-label="Seek backward 5 seconds">−5 s</button>
+              <button id="seek-forward" class="button button-quiet" type="button" aria-label="Seek forward 5 seconds">+5 s</button>
+              <label class="inline-check" for="loop-segment">
+                <input id="loop-segment" type="checkbox">
+                Loop segment
+              </label>
+              <label class="inline-select" for="playback-rate">
+                Rate
+                <select id="playback-rate">
+                  <option value="0.75">0.75×</option>
+                  <option value="1" selected>1×</option>
+                  <option value="1.25">1.25×</option>
+                  <option value="1.5">1.5×</option>
+                  <option value="2">2×</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="interval-strip-wrap">
+            <div class="interval-strip-heading">
+              <h3>Intervals</h3>
+              <div class="interval-nav-buttons">
+                <button id="previous-interval" class="icon-button" type="button" aria-label="Previous interval">Previous</button>
+                <button id="next-interval" class="icon-button" type="button" aria-label="Next interval">Next</button>
+              </div>
+            </div>
+            <div id="interval-strip" class="interval-strip" role="list" aria-label="Intervals in selected recording"></div>
+          </div>
+
+          <section class="coordinate-card" aria-labelledby="coordinates-title">
+            <div class="coordinate-heading">
+              <h3 id="coordinates-title">Exact parent coordinates</h3>
+              <span id="interval-status-badge" class="decision-badge">Not reviewed</span>
+            </div>
+            <dl class="coordinate-grid">
+              <div>
+                <dt>Proposal start</dt>
+                <dd id="proposal-start">—</dd>
+              </div>
+              <div>
+                <dt>Proposal end</dt>
+                <dd id="proposal-end">—</dd>
+              </div>
+              <div>
+                <dt>Proposal duration</dt>
+                <dd id="interval-duration">—</dd>
+              </div>
+              <div>
+                <dt>Accepted range</dt>
+                <dd id="accepted-range">—</dd>
+              </div>
+              <div class="coordinate-wide">
+                <dt>Observed playback coverage</dt>
+                <dd id="playback-coverage">Not recorded</dd>
+              </div>
+            </dl>
+          </section>
+
+          <details class="shortcut-help">
+            <summary>Keyboard shortcuts</summary>
+            <p>When focus is outside a form or media control: <kbd>Shift</kbd>+<kbd>Space</kbd> plays or pauses, <kbd>Shift</kbd>+<kbd>J</kbd>/<kbd>K</kbd> seek 5 seconds, <kbd>Shift</kbd>+<kbd>[</kbd>/<kbd>]</kbd> change interval, and <kbd>Shift</kbd>+<kbd>L</kbd> toggles segment looping.</p>
+          </details>
+        </section>
+
+        <aside class="pane decision-pane" aria-labelledby="decision-title">
+          <div class="pane-heading">
+            <div>
+              <p class="pane-step">3 of 3</p>
+              <h2 id="decision-title">Decision</h2>
+            </div>
+            <span id="save-indicator" class="save-indicator" role="status" aria-live="polite">Not saved</span>
+          </div>
+
+          <form id="decision-form" novalidate>
+            <fieldset id="split-fieldset" class="form-section">
+              <legend>Recording split</legend>
+              <p class="field-hint">The split applies to the whole recording. No split is selected by default.</p>
+              <div class="choice-grid two-choice">
+                <label class="radio-card" for="split-calibration">
+                  <input id="split-calibration" type="radio" name="recording_split" value="calibration">
+                  <span>Calibration</span>
+                </label>
+                <label class="radio-card" for="split-scoring">
+                  <input id="split-scoring" type="radio" name="recording_split" value="scoring">
+                  <span>Scoring</span>
+                </label>
+              </div>
+              <div class="sub-actions">
+                <button id="save-split" class="button button-secondary" type="button">Save split</button>
+                <button id="clear-split" class="button button-quiet" type="button">Clear split</button>
+              </div>
+            </fieldset>
+
+            <fieldset id="decision-fieldset" class="form-section">
+              <legend>Interval disposition</legend>
+              <p class="field-hint">Choose one disposition after direct review. Nothing is assumed.</p>
+              <div class="choice-grid disposition-grid">
+                <label class="radio-card" for="decision-full">
+                  <input id="decision-full" type="radio" name="decision_mode" value="full">
+                  <span>Include full proposal</span>
+                </label>
+                <label class="radio-card" for="decision-trim">
+                  <input id="decision-trim" type="radio" name="decision_mode" value="trim">
+                  <span>Include trimmed range</span>
+                </label>
+                <label class="radio-card radio-card-danger" for="decision-exclude">
+                  <input id="decision-exclude" type="radio" name="decision_mode" value="exclude">
+                  <span>Exclude interval</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <section id="trim-fields" class="form-section nested-section" aria-labelledby="trim-title" hidden>
+              <h3 id="trim-title">Accepted parent range</h3>
+              <p class="field-hint">Trim inward only. Enter exact integer milliseconds inside the proposal.</p>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="accepted-start">Start (ms)</label>
+                  <input id="accepted-start" name="accepted_start_ms" type="number" min="0" step="1" inputmode="numeric">
+                </div>
+                <div class="field-group">
+                  <label for="accepted-end">End (ms)</label>
+                  <input id="accepted-end" name="accepted_end_ms" type="number" min="1" step="1" inputmode="numeric">
+                </div>
+              </div>
+              <div class="field-group">
+                <label for="adjustment-reason">Trim reason</label>
+                <select id="adjustment-reason" name="adjustment_reason">
+                  <option value="">Select a reviewed reason</option>
+                  <option value="remove_non_speech_edge">Remove non-speech edge</option>
+                  <option value="remove_sensitive_edge">Remove sensitive edge</option>
+                  <option value="speech_boundary_refinement">Speech boundary refinement</option>
+                  <option value="other_reviewed_trim">Other reviewed trim</option>
+                </select>
+              </div>
+            </section>
+
+            <section id="include-fields" class="form-section nested-section" aria-labelledby="flags-title" hidden>
+              <h3 id="flags-title">Required interval flags</h3>
+              <p class="field-hint">Every included interval needs an explicit value for every flag.</p>
+
+              <div class="field-group">
+                <label for="language-tags">Language tags</label>
+                <input id="language-tags" name="language_tags" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="For example: en, ja-JP" aria-describedby="language-tags-hint">
+                <p id="language-tags-hint" class="field-hint">Enter one or more comma- or space-separated BCP-47-like tags. Use <code>und</code> only when language is undetermined.</p>
+              </div>
+
+              <fieldset id="code-switch-fieldset" class="inline-fieldset">
+                <legend>Code switching</legend>
+                <div class="binary-options">
+                  <label><input type="radio" name="code_switch" value="true"> Present</label>
+                  <label><input type="radio" name="code_switch" value="false"> Absent</label>
+                </div>
+              </fieldset>
+
+              <fieldset id="speaker-overlap-fieldset" class="inline-fieldset">
+                <legend>Speaker overlap</legend>
+                <div class="binary-options">
+                  <label><input type="radio" name="speaker_overlap" value="true"> Present</label>
+                  <label><input type="radio" name="speaker_overlap" value="false"> Absent</label>
+                </div>
+              </fieldset>
+
+              <fieldset id="playback-speech-fieldset" class="inline-fieldset">
+                <legend>Playback speech</legend>
+                <div class="binary-options">
+                  <label><input type="radio" name="playback_speech" value="true"> Present</label>
+                  <label><input type="radio" name="playback_speech" value="false"> Absent</label>
+                </div>
+              </fieldset>
+
+              <div class="field-group">
+                <label for="noise-level">Noise</label>
+                <select id="noise-level" name="noise">
+                  <option value="">Select a noise level</option>
+                  <option value="clean">Clean</option>
+                  <option value="light">Light</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="heavy">Heavy</option>
+                  <option value="unknown">Unknown</option>
+                </select>
+              </div>
+            </section>
+
+            <section id="exclude-fields" class="form-section nested-section" aria-labelledby="exclusion-title" hidden>
+              <h3 id="exclusion-title">Exclusion</h3>
+              <div class="field-group">
+                <label for="rejection-reason">Reviewed reason</label>
+                <select id="rejection-reason" name="rejection_reason">
+                  <option value="">Select a rejection reason</option>
+                  <option value="boundary_requires_reproposal">Boundary requires reproposal</option>
+                  <option value="duplicate_or_redundant">Duplicate or redundant</option>
+                  <option value="no_usable_speech">No usable speech</option>
+                  <option value="out_of_scope">Out of scope</option>
+                  <option value="playback_only">Playback only</option>
+                  <option value="privacy_or_sensitivity">Privacy or sensitivity</option>
+                  <option value="technical_quality">Technical quality</option>
+                  <option value="other_reviewed_reason">Other reviewed reason</option>
+                </select>
+              </div>
+            </section>
+
+            <div class="form-actions sticky-actions">
+              <button id="clear-decision" class="button button-quiet" type="button">Clear decision</button>
+              <button id="save-decision" class="button button-primary" type="submit">Save interval decision</button>
+            </div>
+          </form>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>

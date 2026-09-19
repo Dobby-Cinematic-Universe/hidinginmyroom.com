@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/asr-whispercpp-batch-archival-disposition-v1.json",
+  "title": "Closed read-only archival disposition for a superseded whisper.cpp batch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_kind",
+    "validator_contract",
+    "subject",
+    "disposition",
+    "successor",
+    "equivalence",
+    "execution_evidence",
+    "safety"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "receipt_kind": { "const": "asr_whispercpp_batch_archival_disposition" },
+    "validator_contract": { "$ref": "#/$defs/validatorContract" },
+    "subject": { "$ref": "#/$defs/subjectArchive" },
+    "disposition": { "$ref": "#/$defs/disposition" },
+    "successor": { "$ref": "#/$defs/successorArchive" },
+    "equivalence": { "$ref": "#/$defs/equivalence" },
+    "execution_evidence": { "$ref": "#/$defs/executionEvidence" },
+    "safety": { "$ref": "#/$defs/safety" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._/-]+$",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "validatorContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "implementation_version", "semantics"],
+      "properties": {
+        "name": { "const": "himr-asr-whispercpp-batch-archive" },
+        "implementation_version": { "const": "0.1.0" },
+        "semantics": { "const": "read_only_exact_archive_validation_only" }
+      }
+    },
+    "materializerIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "implementation_version", "sha256", "byte_count"],
+      "properties": {
+        "name": { "const": "himr-asr-whispercpp-raw-batch" },
+        "implementation_version": { "const": "0.1.0" },
+        "sha256": { "const": "c940b93d11a22f057c4c244d0d17d0e933050f9dafe8f1c5ef8ede2bcf971df5" },
+        "byte_count": { "const": 71128 }
+      }
+    },
+    "subjectAdapterIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "contract_version", "implementation_version", "sha256", "byte_count"],
+      "properties": {
+        "name": { "const": "himr-asr-whispercpp" },
+        "contract_version": { "const": 1 },
+        "implementation_version": { "const": "0.2.2" },
+        "sha256": { "const": "e67fa795e4677de099e45319d3988dc09875366979990294df87ea93e162c98a" },
+        "byte_count": { "const": 55093 }
+      }
+    },
+    "successorAdapterIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "contract_version", "implementation_version", "sha256", "byte_count"],
+      "properties": {
+        "name": { "const": "himr-asr-whispercpp" },
+        "contract_version": { "const": 1 },
+        "implementation_version": { "const": "0.2.3" },
+        "sha256": { "const": "781f481a0f5ff155417795640ae089d484db0f56e7ec8e9e6e8375ef46c260f0" },
+        "byte_count": { "const": 57311 }
+      }
+    },
+    "engineIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version_label", "expected_sha256", "byte_count", "revision", "version_evidence"],
+      "properties": {
+        "version_label": { "const": "whisper.cpp v1.8.3" },
+        "expected_sha256": { "const": "4831024debb4e60e9433d27967ba6dae033d4b0c770c4ef208c16fc5a8fe77d6" },
+        "byte_count": { "const": 1010544 },
+        "revision": { "const": "2eeeba56e9edd762b4b38467bab96c2517163158" },
+        "version_evidence": { "const": "source_revision_plus_executable_sha256" }
+      }
+    },
+    "subjectArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_id",
+        "manifest_relative_path",
+        "manifest_sha256",
+        "manifest_byte_count",
+        "identity_sha256",
+        "implementation_version",
+        "materializer",
+        "asr_adapter",
+        "engine"
+      ],
+      "properties": {
+        "batch_id": { "const": "asrbatch_794f61d7ba9b883c8ab37cbcdc5a6d28" },
+        "manifest_relative_path": { "const": "research/corpus/private-asr-work-orders/batches/asrbatch_794f61d7ba9b883c8ab37cbcdc5a6d28/manifest.json" },
+        "manifest_sha256": { "const": "55b52cba003c526b27bc48b1cd12b45d103ea843e963c9f3fc99df5c470b2007" },
+        "manifest_byte_count": { "const": 127681 },
+        "identity_sha256": { "const": "794f61d7ba9b883c8ab37cbcdc5a6d2837836953e74bb978455c56eafbf5d08c" },
+        "implementation_version": { "const": "0.1.0" },
+        "materializer": { "$ref": "#/$defs/materializerIdentity" },
+        "asr_adapter": { "$ref": "#/$defs/subjectAdapterIdentity" },
+        "engine": { "$ref": "#/$defs/engineIdentity" }
+      }
+    },
+    "successorArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_id",
+        "manifest_relative_path",
+        "manifest_sha256",
+        "manifest_byte_count",
+        "identity_sha256",
+        "implementation_version",
+        "materializer",
+        "asr_adapter",
+        "engine"
+      ],
+      "properties": {
+        "batch_id": { "const": "asrbatch_a98bf085d254a67bb30b837b307436f6" },
+        "manifest_relative_path": { "const": "research/corpus/private-asr-work-orders/batches/asrbatch_a98bf085d254a67bb30b837b307436f6/manifest.json" },
+        "manifest_sha256": { "const": "a6345fd64151d6f78d946db2834a998a148d79318f5e9704c240297f1c189070" },
+        "manifest_byte_count": { "const": 127681 },
+        "identity_sha256": { "const": "a98bf085d254a67bb30b837b307436f601eef46fb241d658dc837599d51dea91" },
+        "implementation_version": { "const": "0.1.0" },
+        "materializer": { "$ref": "#/$defs/materializerIdentity" },
+        "asr_adapter": { "$ref": "#/$defs/successorAdapterIdentity" },
+        "engine": { "$ref": "#/$defs/engineIdentity" }
+      }
+    },
+    "historicalSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity_pin_retained", "source_artifact_bound_by_receipt", "source_reproducibility_claimed"],
+      "properties": {
+        "identity_pin_retained": { "const": true },
+        "source_artifact_bound_by_receipt": { "const": false },
+        "source_reproducibility_claimed": { "const": false }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason_code", "dispatch_allowed", "preserve_sealed_tree", "historical_adapter_source"],
+      "properties": {
+        "state": { "const": "superseded_validation_only_non_executable" },
+        "reason_code": { "const": "adapter_contract_0.2.3_inverted_offset_preservation" },
+        "dispatch_allowed": { "const": false },
+        "preserve_sealed_tree": { "const": true },
+        "historical_adapter_source": { "$ref": "#/$defs/historicalSource" }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audio_byte_count", "audio_duration_ms"],
+      "properties": {
+        "audio_byte_count": { "const": 160111673 },
+        "audio_duration_ms": { "const": 13319825 }
+      }
+    },
+    "workOrderEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "job_id", "file_sha256", "canonical_sha256", "byte_count"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "job_id": { "type": "string", "pattern": "^asr-raw-[0-9a-f]{32}$" },
+        "file_sha256": { "$ref": "#/$defs/sha256" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 4194304 }
+      }
+    },
+    "equivalence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "work_orders_byte_identical",
+        "work_order_count",
+        "totals",
+        "ordered_work_orders",
+        "manifest_difference_paths"
+      ],
+      "properties": {
+        "work_orders_byte_identical": { "const": true },
+        "work_order_count": { "const": 8 },
+        "totals": { "$ref": "#/$defs/totals" },
+        "ordered_work_orders": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/workOrderEvidence" }
+        },
+        "manifest_difference_paths": {
+          "const": [
+            "batch_id",
+            "batch_relative_path",
+            "identity_sha256",
+            "software.asr_adapter.byte_count",
+            "software.asr_adapter.implementation_version",
+            "software.asr_adapter.sha256"
+          ]
+        }
+      }
+    },
+    "resultEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_relative_path",
+        "result_sha256",
+        "result_byte_count",
+        "job_id",
+        "work_order_sha256",
+        "input_sha256",
+        "engine_version",
+        "engine_sha256",
+        "adapter_implementation_version",
+        "result_key",
+        "recipe_id",
+        "recipe_sha256",
+        "started_at",
+        "completed_at"
+      ],
+      "properties": {
+        "result_relative_path": { "$ref": "#/$defs/relativePath" },
+        "result_sha256": { "$ref": "#/$defs/sha256" },
+        "result_byte_count": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "job_id": { "type": "string", "pattern": "^asr-raw-[0-9a-f]{32}$" },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "engine_version": { "const": "whisper.cpp v1.8.3" },
+        "engine_sha256": { "const": "4831024debb4e60e9433d27967ba6dae033d4b0c770c4ef208c16fc5a8fe77d6" },
+        "adapter_implementation_version": { "enum": ["0.2.2", "0.2.3"] },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "recipe_id": { "type": "string", "pattern": "^recipe_asr_whispercpp_[0-9a-f]{32}$" },
+        "recipe_sha256": { "$ref": "#/$defs/sha256" },
+        "started_at": { "$ref": "#/$defs/timestamp" },
+        "completed_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "artifactPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject_relative_path", "successor_relative_path", "sha256", "byte_count"],
+      "properties": {
+        "subject_relative_path": { "$ref": "#/$defs/relativePath" },
+        "successor_relative_path": { "$ref": "#/$defs/relativePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 16777216 }
+      }
+    },
+    "job1Artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw", "normalized"],
+      "properties": {
+        "raw": { "$ref": "#/$defs/artifactPair" },
+        "normalized": { "$ref": "#/$defs/artifactPair" }
+      }
+    },
+    "invertedOffsetEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_relative_path",
+        "result_sha256",
+        "result_byte_count",
+        "normalized_relative_path",
+        "normalized_sha256",
+        "normalized_byte_count",
+        "job_id",
+        "work_order_sha256",
+        "adapter_implementation_version",
+        "timing_quality_flag",
+        "affected_token_count"
+      ],
+      "properties": {
+        "result_relative_path": { "$ref": "#/$defs/relativePath" },
+        "result_sha256": { "$ref": "#/$defs/sha256" },
+        "result_byte_count": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "normalized_relative_path": { "$ref": "#/$defs/relativePath" },
+        "normalized_sha256": { "$ref": "#/$defs/sha256" },
+        "normalized_byte_count": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "job_id": { "const": "asr-raw-061133bfbe8fbfaf2247bb5ad604adde" },
+        "work_order_sha256": { "const": "926502d0b4e55fb46f07a59e08dfdf4d87c49fd1a6585bef26c28f2d662efb82" },
+        "adapter_implementation_version": { "const": "0.2.3" },
+        "timing_quality_flag": { "const": "invalid_upstream_inverted" },
+        "affected_token_count": { "const": 10 }
+      }
+    },
+    "executionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_attribution",
+        "undocumented_legacy_job_2_attempt_claimed",
+        "subject_job_1",
+        "successor_job_1",
+        "job_1_artifacts",
+        "successor_job_2_inverted_offsets"
+      ],
+      "properties": {
+        "batch_attribution": { "const": "consistent_by_adapter_version_work_order_identity_and_observed_chronology_not_cryptographically_batch_bound" },
+        "undocumented_legacy_job_2_attempt_claimed": { "const": false },
+        "subject_job_1": { "$ref": "#/$defs/resultEvidence" },
+        "successor_job_1": { "$ref": "#/$defs/resultEvidence" },
+        "job_1_artifacts": { "$ref": "#/$defs/job1Artifacts" },
+        "successor_job_2_inverted_offsets": { "$ref": "#/$defs/invertedOffsetEvidence" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool_exposes_execution",
+        "tool_exposes_import",
+        "tool_exposes_publication",
+        "database_access",
+        "network_access",
+        "writes_performed_by_validator",
+        "execution_authority",
+        "import_authority",
+        "publication_authority",
+        "visibility"
+      ],
+      "properties": {
+        "tool_exposes_execution": { "const": false },
+        "tool_exposes_import": { "const": false },
+        "tool_exposes_publication": { "const": false },
+        "database_access": { "const": false },
+        "network_access": { "const": false },
+        "writes_performed_by_validator": { "const": false },
+        "execution_authority": { "const": "none" },
+        "import_authority": { "const": "none" },
+        "publication_authority": { "const": "none" },
+        "visibility": { "const": "private" }
+      }
+    }
+  }
+}

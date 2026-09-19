@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/whispercpp-vad-work-order-v1.json",
+  "title": "HIMR private whisper.cpp/Silero VAD work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "input",
+    "engine",
+    "model",
+    "parameters",
+    "catalog_context",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "input": { "$ref": "#/$defs/input" },
+    "engine": { "$ref": "#/$defs/engine" },
+    "model": { "$ref": "#/$defs/model" },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "catalog_context": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/catalogContext" }]
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "$ref": "#/$defs/absolutePath" } }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "absolutePath": { "type": "string", "pattern": "^/" },
+    "fileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "expected_byte_count"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "expected_sha256",
+        "expected_byte_count",
+        "media_id",
+        "artifact_id",
+        "parent_processing_run_id"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1, "maximum": 536870912 },
+        "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "parent_processing_run_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "target", "configuration"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "target": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "configuration": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 256 }
+        }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "expected_sha256",
+        "expected_byte_count",
+        "profile_id",
+        "version_label",
+        "version_evidence",
+        "build"
+      ],
+      "properties": {
+        "executable": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1 },
+        "profile_id": { "$ref": "#/$defs/identifier" },
+        "version_label": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "version_evidence": { "const": "source_revision_plus_executable_sha256" },
+        "build": { "$ref": "#/$defs/build" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "expected_sha256",
+        "expected_byte_count",
+        "profile_id",
+        "model_id",
+        "name",
+        "revision",
+        "source",
+        "license_label"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1 },
+        "profile_id": { "$ref": "#/$defs/identifier" },
+        "model_id": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "license_label": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segmentation_profile",
+        "parameter_binding",
+        "threads",
+        "threshold",
+        "min_speech_duration_ms",
+        "min_silence_duration_ms",
+        "max_speech_duration_state",
+        "speech_pad_ms",
+        "samples_overlap_seconds",
+        "use_gpu",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "segmentation_profile": { "const": "whispercpp-v1.8.7-silero-v6.2.0-cli-defaults-v1" },
+        "parameter_binding": { "const": "reviewed_source_defaults_with_broken_cli_fields_omitted_v1" },
+        "threads": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "threshold": { "const": 0.5 },
+        "min_speech_duration_ms": { "const": 250 },
+        "min_silence_duration_ms": { "const": 100 },
+        "max_speech_duration_state": { "const": "float_max_default" },
+        "speech_pad_ms": { "const": 30 },
+        "samples_overlap_seconds": { "const": 0.1 },
+        "use_gpu": { "const": false },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 7200 }
+      }
+    },
+    "catalogContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "rendition_id", "coordinate_system", "source_start_ms"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "rendition_id": { "$ref": "#/$defs/identifier" },
+        "coordinate_system": { "const": "rendition_media_ms" },
+        "source_start_ms": { "type": "integer", "minimum": 0, "maximum": 604800000 }
+      }
+    }
+  }
+}

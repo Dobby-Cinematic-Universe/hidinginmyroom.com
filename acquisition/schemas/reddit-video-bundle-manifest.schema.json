@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/reddit-video-bundle-manifest-v1.json",
+  "title": "HIMR immutable v.redd.it work-order bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_id", "schema_version", "manifest_kind", "implementation_version", "plan", "source_discovery", "storage_policy", "yt_dlp", "work_orders", "assertion_policy"],
+  "properties": {
+    "bundle_id": {"type": "string", "pattern": "^rvabundle_[0-9a-f]{32}$"},
+    "schema_version": {"const": 1},
+    "manifest_kind": {"const": "reddit_video_acquisition_bundle"},
+    "implementation_version": {"const": "0.2.0"},
+    "plan": {"$ref": "#/$defs/plan"},
+    "source_discovery": {"$ref": "#/$defs/source_discovery"},
+    "storage_policy": {"$ref": "#/$defs/storage_policy"},
+    "yt_dlp": {"$ref": "#/$defs/yt_dlp"},
+    "work_orders": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/work_order"}},
+    "assertion_policy": {"$ref": "#/$defs/assertion_policy"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "plan_sha256"],
+      "properties": {"plan_id": {"type": "string", "pattern": "^rvaplan_[0-9a-f]{32}$"}, "plan_sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "source_discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["discovery_id", "discovery_sha256", "snapshot_id", "snapshot_payload_sha256", "subreddit"],
+      "properties": {
+        "discovery_id": {"type": "string", "pattern": "^rdd_[0-9a-f]{32}$"},
+        "discovery_sha256": {"$ref": "#/$defs/sha256"},
+        "snapshot_id": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}$"},
+        "snapshot_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "subreddit": {"type": "string", "pattern": "^[A-Za-z0-9_]{2,21}$"}
+      }
+    },
+    "storage_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["media_output_root", "max_job_bytes", "global_cache_cap_bytes", "free_space_floor_bytes"],
+      "properties": {
+        "media_output_root": {"type": "string", "pattern": "^/"},
+        "max_job_bytes": {"type": "integer", "minimum": 1, "maximum": 3221225472},
+        "global_cache_cap_bytes": {"type": "integer", "minimum": 1},
+        "free_space_floor_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "executable_stat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device", "inode", "byte_count", "mtime_ns"],
+      "properties": {"device": {"type": "integer", "minimum": 0}, "inode": {"type": "integer", "minimum": 0}, "byte_count": {"type": "integer", "minimum": 1}, "mtime_ns": {"type": "integer", "minimum": 0}}
+    },
+    "runtime_tree": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["root", "sha256", "file_count", "byte_count"],
+          "properties": {
+            "root": {"type": "string", "pattern": "^/"},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "file_count": {"type": "integer", "minimum": 1, "maximum": 20000},
+            "byte_count": {"type": "integer", "minimum": 1, "maximum": 1073741824}
+          }
+        }
+      ]
+    },
+    "yt_dlp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "expected_executable_sha256", "expected_version", "executable_stat", "runtime_tree", "format_selector", "ignore_ambient_config", "credentials_allowed", "playlists_allowed", "comments_allowed"],
+      "properties": {
+        "executable": {"type": "string", "pattern": "^/"},
+        "expected_executable_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_version": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[^\\u0000-\\u001f\\u007f]+$"},
+        "executable_stat": {"$ref": "#/$defs/executable_stat"},
+        "runtime_tree": {"$ref": "#/$defs/runtime_tree"},
+        "format_selector": {"const": "bv*[height<=720]+ba/b[height<=720]/b"},
+        "ignore_ambient_config": {"const": true},
+        "credentials_allowed": {"const": false},
+        "playlists_allowed": {"const": false},
+        "comments_allowed": {"const": false}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["discovery_id", "snapshot_id", "snapshot_payload_sha256", "subreddit", "post_id", "post_permalink", "locator_basis", "metadata_payload_sha256", "metadata_observed_at", "title_assertion_state"],
+      "properties": {
+        "discovery_id": {"type": "string", "pattern": "^rdd_[0-9a-f]{32}$"},
+        "snapshot_id": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}$"},
+        "snapshot_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "subreddit": {"type": "string", "pattern": "^[A-Za-z0-9_]{2,21}$"},
+        "post_id": {"type": "string", "pattern": "^[a-z0-9]{5,16}$"},
+        "post_permalink": {"type": "string", "format": "uri", "pattern": "^https://(?:www\\.|old\\.)?reddit\\.com/"},
+        "locator_basis": {"enum": ["atom_entry_link", "atom_entry_content", "atom_media_element"]},
+        "metadata_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "metadata_observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "title_assertion_state": {"const": "unreviewed"}
+      }
+    },
+    "work_order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queue_ordinal", "job_id", "native_id", "canonical_url", "work_order_file", "work_order_sha256", "work_order_byte_count", "provenance", "publication_authority"],
+      "properties": {
+        "queue_ordinal": {"type": "integer", "minimum": 1},
+        "job_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+        "native_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{5,64}$"},
+        "canonical_url": {"type": "string", "format": "uri", "pattern": "^https://v\\.redd\\.it/[A-Za-z0-9_-]{5,64}$"},
+        "work_order_file": {"type": "string", "pattern": "^work-orders/[0-9]{6}\\.json$"},
+        "work_order_sha256": {"$ref": "#/$defs/sha256"},
+        "work_order_byte_count": {"type": "integer", "minimum": 1},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "publication_authority": {"const": false}
+      }
+    },
+    "assertion_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["atom_titles_are_content_truth", "metadata_is_content_truth", "publication_authority"],
+      "properties": {"atom_titles_are_content_truth": {"const": false}, "metadata_is_content_truth": {"const": false}, "publication_authority": {"const": false}}
+    }
+  }
+}

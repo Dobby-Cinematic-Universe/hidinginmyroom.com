@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/work-order-v1.json",
+  "title": "HIMR media acquisition work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "adapter",
+    "source",
+    "adapter_config",
+    "output",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "adapter": { "enum": ["local_file", "direct_http", "yt_dlp"] },
+    "source": { "$ref": "#/$defs/source" },
+    "adapter_config": { "type": "object" },
+    "handling_policy": { "$ref": "#/$defs/handling_policy" },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "type": "string", "pattern": "^/" } }
+    },
+    "limits": { "$ref": "#/$defs/limits" }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "adapter": { "const": "local_file" },
+        "source": {
+          "allOf": [
+            { "$ref": "#/$defs/source" },
+            {
+              "properties": {
+                "access_state": { "const": "unknown" }
+              }
+            }
+          ]
+        },
+        "adapter_config": { "$ref": "#/$defs/local_file_config" }
+      }
+    },
+    {
+      "not": { "required": ["handling_policy"] },
+      "properties": {
+        "adapter": { "const": "direct_http" },
+        "source": {
+          "allOf": [
+            { "$ref": "#/$defs/source" },
+            { "properties": { "access_state": { "const": "public" } } }
+          ]
+        },
+        "adapter_config": { "$ref": "#/$defs/direct_http_config" }
+      }
+    },
+    {
+      "not": { "required": ["handling_policy"] },
+      "properties": {
+        "adapter": { "const": "yt_dlp" },
+        "source": {
+          "allOf": [
+            { "$ref": "#/$defs/source" },
+            { "properties": { "access_state": { "const": "public" } } }
+          ]
+        },
+        "adapter_config": { "$ref": "#/$defs/yt_dlp_config" }
+      }
+    }
+  ],
+  "$defs": {
+    "nullable_sha256": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      ]
+    },
+    "nullable_positive_integer": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "integer", "minimum": 1 }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "source_kind",
+        "native_id",
+        "canonical_url",
+        "title",
+        "published_at",
+        "access_state"
+      ],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source_kind": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "native_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "canonical_url": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"], "maxLength": 2000 },
+        "published_at": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "format": "date-time", "maxLength": 100 }
+          ]
+        },
+        "access_state": {
+          "enum": [
+            "public",
+            "members_only",
+            "private",
+            "removed",
+            "unavailable",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "handling_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage_scope",
+        "publication_disposition",
+        "publication_authority",
+        "basis"
+      ],
+      "properties": {
+        "storage_scope": { "const": "private_canonical_cache" },
+        "publication_disposition": {
+          "enum": ["no_publication_authority", "never_publish"]
+        },
+        "publication_authority": { "const": "none" },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "pattern": "^[^\\u0000]+$"
+        }
+      }
+    },
+    "common_config": {
+      "type": "object",
+      "required": ["expected_sha256", "expected_byte_count"],
+      "properties": {
+        "expected_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "expected_byte_count": { "$ref": "#/$defs/nullable_positive_integer" }
+      }
+    },
+    "local_file_config": {
+      "allOf": [
+        { "$ref": "#/$defs/common_config" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "expected_sha256", "expected_byte_count"],
+          "properties": {
+            "path": { "type": "string", "pattern": "^/" },
+            "expected_sha256": { "$ref": "#/$defs/nullable_sha256" },
+            "expected_byte_count": { "$ref": "#/$defs/nullable_positive_integer" }
+          }
+        }
+      ]
+    },
+    "direct_http_config": {
+      "allOf": [
+        { "$ref": "#/$defs/common_config" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "resume",
+            "timeout_seconds",
+            "expected_sha256",
+            "expected_byte_count"
+          ],
+          "properties": {
+            "url": { "type": "string", "pattern": "^https?://" },
+            "resume": { "type": "boolean" },
+            "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 3600 },
+            "expected_sha256": { "$ref": "#/$defs/nullable_sha256" },
+            "expected_byte_count": { "$ref": "#/$defs/nullable_positive_integer" }
+          }
+        }
+      ]
+    },
+    "yt_dlp_config": {
+      "allOf": [
+        { "$ref": "#/$defs/common_config" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "executable",
+            "format_selector",
+            "expected_sha256",
+            "expected_byte_count"
+          ],
+          "properties": {
+            "url": { "type": "string", "pattern": "^https?://" },
+            "executable": { "type": "string", "pattern": "^/" },
+            "expected_executable_sha256": { "$ref": "#/$defs/nullable_sha256" },
+            "expected_ytdlp_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+            },
+            "expected_runtime_tree_root": { "type": "string", "pattern": "^/" },
+            "expected_runtime_tree_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "expected_webpage_url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://(?:www\\.|old\\.)?reddit\\.com/.*/comments/"
+            },
+            "format_selector": {
+              "oneOf": [
+                {
+                  "enum": [
+                    "b[height<=720]/b",
+                    "bv*[height<=720]+ba/b[height<=720]/b"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]{0,4}\\+[1-9][0-9]{0,4}$"
+                }
+              ]
+            },
+            "expected_sha256": { "$ref": "#/$defs/nullable_sha256" },
+            "expected_byte_count": { "$ref": "#/$defs/nullable_positive_integer" }
+          }
+        }
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_job_bytes",
+        "global_cache_cap_bytes",
+        "free_space_floor_bytes"
+      ],
+      "properties": {
+        "max_job_bytes": { "type": "integer", "minimum": 1 },
+        "global_cache_cap_bytes": { "type": "integer", "minimum": 1 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

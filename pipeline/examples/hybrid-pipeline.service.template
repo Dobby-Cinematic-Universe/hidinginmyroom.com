@@ -1,0 +1,29 @@
+# TEMPLATE ONLY: not installed, enabled, reloaded, or started.
+# Intended for a reviewed systemd user service, not a replacement legacy unit.
+# Replace every /absolute/... path and CONFIG_SHA256 placeholder before use.
+# Explicit hybrid `start` must succeed separately; this unit cannot bypass it.
+[Unit]
+Description=HIMR isolated CPU/cloud sidecar (explicit activation required)
+
+[Service]
+Type=simple
+WorkingDirectory=/absolute/path/to/HIMR
+ExecStart=/absolute/path/to/HIMR/pipeline/bin/hybrid-pipeline serve --config /absolute/private/hybrid/config.json --config-sha256 CONFIG_SHA256 --allow-local-processing --allow-cloud
+ExecStop=/absolute/path/to/HIMR/pipeline/bin/hybrid-pipeline stop --config /absolute/private/hybrid/config.json --config-sha256 CONFIG_SHA256
+# Supply SALAD_API_KEY through an owned mode-0600 file outside the repository.
+# For CPU-only operation remove this directive AND --allow-cloud above.
+EnvironmentFile=/absolute/private/credentials/hybrid.env
+UMask=0077
+Nice=10
+CPUWeight=20
+CPUQuota=400%
+MemoryMax=3G
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+KillMode=control-group
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

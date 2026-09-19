@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+repository_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+
+export PYTHONNOUSERSITE=1
+export PYTHONDONTWRITEBYTECODE=1
+
+exec /usr/bin/python3 -B -I "$repository_root/pipeline/materialize_gpu_asr_batch_v1.py" "$@"

@@ -1,0 +1,19 @@
+{
+  "kind": "himr_speaker_screen_guidance",
+  "schema_version": 1,
+  "records": [
+    {
+      "media_id": "media_example",
+      "media_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "acquisition_result": {
+        "path": "/ABSOLUTE/PRIVATE/PATH/completed-acquisition-result.json",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "timed_cues": {
+        "path": "/ABSOLUTE/PRIVATE/PATH/timed-cues.json",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  ],
+  "events": []
+}

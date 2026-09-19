@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/speaker-activity-routing-work-order-v1.json",
+  "title": "HIMR speaker and active-speaker routing work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "recording",
+    "inputs",
+    "reviewed_hints",
+    "capabilities",
+    "resources",
+    "policy",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/identifier" },
+    "recording": { "$ref": "#/$defs/recording" },
+    "inputs": { "$ref": "#/$defs/inputs" },
+    "reviewed_hints": { "$ref": "#/$defs/fileReference" },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "resources": { "$ref": "#/$defs/resources" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "output": { "$ref": "#/$defs/output" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "absolutePath": { "type": "string", "pattern": "^/" },
+    "fileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "duration_ms"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 604800000
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preprocess_result",
+        "asr_result",
+        "normalized_audio_sha256",
+        "proxy_video_sha256",
+        "glossary_sha256"
+      ],
+      "properties": {
+        "preprocess_result": { "$ref": "#/$defs/fileReference" },
+        "asr_result": { "$ref": "#/$defs/fileReference" },
+        "normalized_audio_sha256": { "$ref": "#/$defs/sha256" },
+        "proxy_video_sha256": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }]
+        },
+        "glossary_sha256": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }]
+        }
+      }
+    },
+    "unconfiguredCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "task", "reason"],
+      "properties": {
+        "status": { "const": "unconfigured" },
+        "task": {
+          "enum": [
+            "overlap_aware_diarization",
+            "face_tracking",
+            "active_speaker_association"
+          ]
+        },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "file"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "file": { "$ref": "#/$defs/fileReference" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "revision", "manifest", "weights"],
+      "properties": {
+        "model_id": { "$ref": "#/$defs/identifier" },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "manifest": { "$ref": "#/$defs/fileReference" },
+        "weights": { "$ref": "#/$defs/fileReference" }
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "artifact"],
+      "properties": {
+        "method": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "artifact": { "$ref": "#/$defs/fileReference" }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpu_threads", "memory_mb", "gpu_required", "gpu_memory_mb"],
+      "properties": {
+        "cpu_threads": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "memory_mb": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "gpu_required": { "type": "boolean" },
+        "gpu_memory_mb": { "type": "integer", "minimum": 0, "maximum": 1048576 }
+      }
+    },
+    "pinnedCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "task", "tool", "model", "calibration", "requirements"],
+      "properties": {
+        "status": { "const": "pinned" },
+        "task": {
+          "enum": [
+            "overlap_aware_diarization",
+            "face_tracking",
+            "active_speaker_association"
+          ]
+        },
+        "tool": { "$ref": "#/$defs/tool" },
+        "model": { "$ref": "#/$defs/model" },
+        "calibration": { "$ref": "#/$defs/calibration" },
+        "requirements": { "$ref": "#/$defs/requirements" }
+      }
+    },
+    "capability": {
+      "oneOf": [
+        { "$ref": "#/$defs/unconfiguredCapability" },
+        { "$ref": "#/$defs/pinnedCapability" }
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["diarization", "face_tracking", "active_speaker"],
+      "properties": {
+        "diarization": { "$ref": "#/$defs/capability" },
+        "face_tracking": { "$ref": "#/$defs/capability" },
+        "active_speaker": { "$ref": "#/$defs/capability" }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpu_threads",
+        "memory_mb",
+        "gpu_available",
+        "gpu_memory_mb",
+        "max_parallel_tasks"
+      ],
+      "properties": {
+        "cpu_threads": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "memory_mb": { "type": "integer", "minimum": 256, "maximum": 1048576 },
+        "gpu_available": { "type": "boolean" },
+        "gpu_memory_mb": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+        "max_parallel_tasks": { "type": "integer", "minimum": 1, "maximum": 128 }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "diarization_chunk_ms",
+        "face_chunk_ms",
+        "active_speaker_chunk_ms",
+        "route_visual_when_face_unknown"
+      ],
+      "properties": {
+        "diarization_chunk_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000
+        },
+        "face_chunk_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000
+        },
+        "active_speaker_chunk_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000
+        },
+        "route_visual_when_face_unknown": { "type": "boolean" }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result_path"],
+      "properties": {
+        "result_path": { "$ref": "#/$defs/absolutePath" }
+      }
+    }
+  }
+}

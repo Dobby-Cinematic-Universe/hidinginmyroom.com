@@ -1,0 +1,26 @@
+{
+  "kind": "himr_guided_speaker_screen_request",
+  "schema_version": 1,
+  "work_orders": [
+    {
+      "path": "/ABSOLUTE/PRIVATE/PATH/original-cpu-order.json",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "guidance": {
+    "path": "/ABSOLUTE/PRIVATE/PATH/guidance.json",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "state_root": "/ABSOLUTE/PRIVATE/PATH/guided-state",
+  "execution": {
+    "device": "cuda",
+    "threads": 1,
+    "batch_size": 4,
+    "decode_prefetch": 2,
+    "max_run_seconds": 3600,
+    "cuda_memory_fraction": 0.5,
+    "gpu_uuid": "GPU-00000000-0000-0000-0000-000000000000",
+    "host_memory_max_bytes": 4294967296
+  },
+  "max_target_windows": 16
+}

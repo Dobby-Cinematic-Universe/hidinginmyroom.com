@@ -1,0 +1,122 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import { loadCorpusGraph } from '../../../lib/corpus/graph';
+import { formatTimestamp } from '../../../lib/corpus/release';
+import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
+import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
+import {eventDirectoryItems} from '../../../lib/corpus/event-groups.mjs';
+import type {
+  CorpusGraphAppearance,
+  CorpusGraphEntity,
+  CorpusGraphEvent,
+  CorpusGraphParticipant,
+} from '../../../lib/corpus/types';
+
+interface Participation {
+  edge: CorpusGraphParticipant;
+  event: CorpusGraphEvent;
+}
+
+interface Props {
+  derived?: boolean;
+  relatedDescriptions: {href:string;title:string;detail:string}[];
+  entity: CorpusGraphEntity;
+  appearances: CorpusGraphAppearance[];
+  participations: Participation[];
+}
+
+export async function getStaticPaths() {
+  const graph = await loadCorpusGraph();
+  const events = new Map(graph.events.map((event) => [event.event_id, event]));
+  return graph.entities.map((entity) => ({
+    params: { slug: entity.slug },
+    props: {
+      derived:graph.derived,
+      relatedDescriptions:graph.derived ? eventDirectoryItems(graph,entity.entity_id) : [],
+      entity,
+      appearances: graph.appearances.filter((edge) => edge.entity_id === entity.entity_id),
+      participations: graph.eventParticipants
+        .filter((edge) => edge.entity_id === entity.entity_id)
+        .map((edge) => ({ edge, event: events.get(edge.event_id)! })),
+    },
+  }));
+}
+
+const { entity, appearances, participations, derived, relatedDescriptions } = Astro.props;
+---
+
+<CorpusLayout title={`${entity.label} · HIMR Public Corpus graph`}>
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/corpus/">Corpus</a><span>/</span>
+    <a href="/corpus/graph/">Entities &amp; events</a><span>/</span>
+    <span>{entity.label}</span>
+  </nav>
+  <article class="graph-detail">
+    <header>
+      <p class="corpus-eyebrow">{derived ? 'Source mention index' : 'Reviewed public entity'} · {entity.entity_type==='unknown'?'Name-like phrase':entity.entity_type.replaceAll('_', ' ')}</p>
+      <h1>{entity.label}</h1>
+    </header>
+    {derived ? <>
+      <DerivedNotice />
+      <nav class="entity-jumps" aria-label="Entity sections"><a href="#mentions">Mentions ({(entity.mentions||[]).length})</a><a href="#speakers">Speaker-labeled recordings ({(entity.speakerRecordings||[]).length})</a><a href="#descriptions">Related descriptions</a></nav>
+      <section id="mentions"><h2>Mentions</h2>
+        <DerivedDirectory label="mentions" items={(entity.mentions||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'} · Matched in ${(r.basis||[]).join(' and ')}`}))} />
+      </section>
+      <section id="speakers"><h2>Speaker labels in transcripts</h2>
+        <p>These are existing transcript labels, not identities inferred from mentions. A label does not establish an on-camera appearance.</p>
+        <DerivedDirectory label="speaker-labeled recordings" items={(entity.speakerRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+      </section>
+      <section id="descriptions"><h2>Event descriptions mentioning this name</h2>
+        <DerivedDirectory label="event descriptions" mode="events" items={relatedDescriptions} />
+      </section>
+    </> : <>
+    <aside>
+      This page does not publish private aliases, biometric matches, cluster identifiers,
+      observations, scores, crops, embeddings, or machine-only identity assertions.
+    </aside>
+    <section>
+      <h2>Named appearances</h2>
+      {appearances.length === 0 ? <p class="corpus-muted">No appearance edge is published.</p> : (
+        <ol>
+          {appearances.map((appearance) => (
+            <li>
+              <strong>{appearance.label}</strong>
+              <span>
+                <a href={`/corpus/videos/${appearance.anchor.recording.slug}/`}>
+                  {appearance.anchor.recording.title}
+                </a>
+                {' · rendition time '}{formatTimestamp(appearance.start_ms)}–{formatTimestamp(appearance.end_ms)}
+              </span>
+              <a href={appearance.anchor.source.url} target="_blank" rel="noopener noreferrer">
+                Public source ({appearance.anchor.source.platform})
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+    <section>
+      <h2>Event participation</h2>
+      {participations.length === 0 ? <p class="corpus-muted">No event-participant edge is published.</p> : (
+        <ol>
+          {participations.map(({ edge, event }) => (
+            <li><a href={`/corpus/events/${event.slug}/`}><strong>{event.label}</strong></a><span>{edge.label}</span></li>
+          ))}
+        </ol>
+      )}
+    </section>
+    </>}
+  </article>
+</CorpusLayout>
+
+<style>
+  .corpus-breadcrumbs { display: flex; flex-wrap: wrap; gap: .5rem; color: var(--corpus-muted); font-size: .82rem; }
+  .entity-jumps{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1rem}
+  .graph-detail h1 { margin: 0; font-size: clamp(2.3rem, 7vw, 5rem); letter-spacing: -.05em; }
+  .graph-detail aside { margin: 1.25rem 0; padding: 1rem; border: 1px solid var(--corpus-line); color: var(--corpus-muted); background: var(--corpus-panel); }
+  .graph-detail section { margin-top: 1.25rem; padding: 1rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); }
+  .graph-detail section h2 { margin-top: 0; }
+  .graph-detail ol { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+  .graph-detail li { display: grid; gap: .2rem; padding-top: .75rem; border-top: 1px solid var(--corpus-line); }
+  .graph-detail li span { color: var(--corpus-muted); }
+</style>

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/visual-fingerprint-compare-work-order-v1.schema.json",
+  "title": "Conservative visual-fingerprint comparison work order v1",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "absolutePath": {"type": "string", "pattern": "^/", "not": {"pattern": "://"}},
+    "side": {
+      "type": "object", "additionalProperties": false, "required": ["role", "result_path", "expected_sha256", "frame_ids"],
+      "properties": {
+        "role": {"enum": ["query", "candidate"]}, "result_path": {"$ref": "#/$defs/absolutePath"},
+        "expected_sha256": {"$ref": "#/$defs/sha256"},
+        "frame_ids": {"type": "array", "minItems": 1, "maxItems": 256, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}}
+      }
+    },
+    "threshold": {
+      "type": "object", "additionalProperties": false, "required": ["maximum_hamming_distance", "top_k", "max_pairwise_comparisons"],
+      "properties": {
+        "maximum_hamming_distance": {"type": "integer", "minimum": 0, "maximum": 64},
+        "top_k": {"type": "integer", "minimum": 1, "maximum": 100},
+        "max_pairwise_comparisons": {"type": "integer", "minimum": 1, "maximum": 65536}
+      }
+    },
+    "contextSide": {
+      "type": "object", "additionalProperties": false, "required": ["recording_id", "rendition_id"],
+      "properties": {"recording_id": {"$ref": "#/$defs/identifier"}, "rendition_id": {"$ref": "#/$defs/identifier"}}
+    },
+    "context": {
+      "type": "object", "additionalProperties": false, "required": ["query", "candidate"],
+      "properties": {"query": {"$ref": "#/$defs/contextSide"}, "candidate": {"$ref": "#/$defs/contextSide"}}
+    },
+    "output": {"type": "object", "additionalProperties": false, "required": ["root"], "properties": {"root": {"$ref": "#/$defs/absolutePath"}}}
+  },
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "job_id", "method", "query", "candidate", "threshold", "catalog_context", "output"],
+  "properties": {
+    "schema_version": {"const": 1}, "job_id": {"$ref": "#/$defs/identifier"},
+    "method": {"const": "minimum_pairwise_phash_hamming_v1"}, "query": {"$ref": "#/$defs/side"},
+    "candidate": {"$ref": "#/$defs/side"}, "threshold": {"$ref": "#/$defs/threshold"},
+    "catalog_context": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/context"}]}, "output": {"$ref": "#/$defs/output"}
+  }
+}

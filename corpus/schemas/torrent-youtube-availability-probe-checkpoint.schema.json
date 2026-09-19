@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/torrent-youtube-availability-probe-checkpoint.schema.json",
+  "title": "Private resumable YouTube no-download availability checkpoint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "checkpoint_kind",
+    "request_sha256",
+    "producer",
+    "network_policy",
+    "target_count",
+    "next_target_index",
+    "started_at",
+    "updated_at",
+    "outcomes",
+    "checkpoint_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "checkpoint_kind": {
+      "const": "youtube_no_download_availability_checkpoint_v1"
+    },
+    "request_sha256": {"$ref": "#/$defs/sha256"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "network_policy": {"$ref": "#/$defs/network_policy"},
+    "target_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 50000
+    },
+    "next_target_index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 50000
+    },
+    "started_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "checkpoint_sha256": {"$ref": "#/$defs/sha256"},
+    "outcomes": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/outcome"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "youtube_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{11}$"
+    },
+    "youtube_url": {
+      "type": "string",
+      "pattern": "^https://www\\.youtube\\.com/watch\\?v=[A-Za-z0-9_-]{11}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "version",
+        "executable_sha256",
+        "invocation_flags"
+      ],
+      "properties": {
+        "tool": {"const": "yt-dlp"},
+        "version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "executable_sha256": {"$ref": "#/$defs/sha256"},
+        "invocation_flags": {
+          "const": [
+            "--ignore-config",
+            "--skip-download",
+            "--no-playlist",
+            "--no-warnings",
+            "--dump-single-json"
+          ]
+        }
+      }
+    },
+    "network_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cookies_sent",
+        "authorization_sent",
+        "media_payload_downloaded",
+        "playlist_expansion"
+      ],
+      "properties": {
+        "cookies_sent": {"const": false},
+        "authorization_sent": {"const": false},
+        "media_payload_downloaded": {"const": false},
+        "playlist_expansion": {"const": false}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "youtube_video_id",
+        "canonical_url",
+        "availability_state",
+        "evidence_code"
+      ],
+      "properties": {
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "canonical_url": {"$ref": "#/$defs/youtube_url"},
+        "availability_state": {
+          "enum": ["available", "unavailable", "indeterminate"]
+        },
+        "evidence_code": {
+          "enum": [
+            "metadata_resolved",
+            "private",
+            "removed",
+            "video_unavailable",
+            "sign_in_required",
+            "network_error",
+            "rate_limited",
+            "extractor_error"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"availability_state": {"const": "available"}}
+          },
+          "then": {
+            "properties": {"evidence_code": {"const": "metadata_resolved"}}
+          }
+        },
+        {
+          "if": {
+            "properties": {"availability_state": {"const": "unavailable"}}
+          },
+          "then": {
+            "properties": {
+              "evidence_code": {
+                "enum": [
+                  "private",
+                  "removed",
+                  "video_unavailable"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"availability_state": {"const": "indeterminate"}}
+          },
+          "then": {
+            "properties": {
+              "evidence_code": {
+                "enum": [
+                  "sign_in_required",
+                  "network_error",
+                  "rate_limited",
+                  "extractor_error"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

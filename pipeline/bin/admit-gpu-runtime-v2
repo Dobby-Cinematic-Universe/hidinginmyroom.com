@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+repository_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+
+exec /usr/bin/python3 -B -I "$repository_root/pipeline/gpu/admit_runtime_v2.py" "$@"
+

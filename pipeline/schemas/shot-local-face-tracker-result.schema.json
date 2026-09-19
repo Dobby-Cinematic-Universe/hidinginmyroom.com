@@ -1,0 +1,576 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/shot-local-face-tracker-result.schema.json",
+  "title": "Private deterministic shot-local face-tracker result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "stage",
+    "status",
+    "dry_run",
+    "job_id",
+    "work_order_sha256",
+    "result_key",
+    "result_path",
+    "implementation",
+    "policy",
+    "runtime",
+    "input",
+    "recipe",
+    "shots",
+    "frames",
+    "tracks",
+    "authority"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "implementation_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "stage": { "const": "shot_local_face_tracker" },
+    "status": { "const": "completed" },
+    "dry_run": { "const": false },
+    "job_id": { "$ref": "#/$defs/id" },
+    "work_order_sha256": { "$ref": "#/$defs/sha256" },
+    "result_key": { "$ref": "#/$defs/sha256" },
+    "result_path": { "$ref": "#/$defs/absolutePath" },
+    "implementation": { "$ref": "#/$defs/implementation" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "input": { "$ref": "#/$defs/input" },
+    "recipe": { "$ref": "#/$defs/recipe" },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50000,
+      "items": { "$ref": "#/$defs/shot" }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": { "$ref": "#/$defs/frameResult" }
+    },
+    "tracks": {
+      "type": "array",
+      "maxItems": 6400000,
+      "items": { "$ref": "#/$defs/track" }
+    },
+    "authority": { "$ref": "#/$defs/authority" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "absolutePath": { "type": "string", "pattern": "^/", "maxLength": 4096 },
+    "nullableInteger": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "integer", "minimum": 0, "maximum": 1209600001 }
+      ]
+    },
+    "fileObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "storage_uri", "sha256", "byte_count", "visibility"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "storage_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^file:///"
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "visibility": { "const": "private" }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "implementation_version"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 4194304 },
+        "implementation_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "network_allowed",
+        "embeddings_allowed",
+        "cross_shot_join_allowed",
+        "identity_decision_allowed",
+        "active_speaker_decision_allowed",
+        "publication_authority",
+        "human_review_required"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "embeddings_allowed": { "const": false },
+        "cross_shot_join_allowed": { "const": false },
+        "identity_decision_allowed": { "const": false },
+        "active_speaker_decision_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "human_review_required": { "const": true }
+      }
+    },
+    "python": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "storage_uri",
+        "sha256",
+        "byte_count",
+        "visibility",
+        "expected_version"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "storage_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^file:///"
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "visibility": { "const": "host_runtime" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "runtimeObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python_version", "cpu_threads", "network_used"],
+      "properties": {
+        "python_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "cpu_threads": { "const": 1 },
+        "network_used": { "const": false }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "observation"],
+      "properties": {
+        "python": { "$ref": "#/$defs/python" },
+        "observation": { "$ref": "#/$defs/runtimeObservation" }
+      }
+    },
+    "detector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "recipe_id"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "recipe_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detections",
+        "recording_id",
+        "detector",
+        "coordinate_system"
+      ],
+      "properties": {
+        "detections": { "$ref": "#/$defs/fileObservation" },
+        "recording_id": { "$ref": "#/$defs/id" },
+        "detector": { "$ref": "#/$defs/detector" },
+        "coordinate_system": { "const": "pixel_xywh_top_left" }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipe_id",
+        "algorithm",
+        "prediction",
+        "assignment_objective",
+        "minimum_assignment_iou",
+        "max_gap_frames",
+        "minimum_confirmed_detections",
+        "iou_round_decimals"
+      ],
+      "properties": {
+        "recipe_id": { "$ref": "#/$defs/id" },
+        "algorithm": { "const": "constant_velocity_hungarian_iou_v1" },
+        "prediction": { "const": "last_two_matched_boxes_per_frame_delta_v1" },
+        "assignment_objective": {
+          "const": "max_cardinality_then_max_total_iou_stable_v1"
+        },
+        "minimum_assignment_iou": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "max_gap_frames": { "type": "integer", "minimum": 0, "maximum": 250 },
+        "minimum_confirmed_detections": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250
+        },
+        "iou_round_decimals": { "const": 8 }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shot_id",
+        "shot_ordinal",
+        "start_frame_index",
+        "end_frame_index_exclusive",
+        "start_timestamp_ms",
+        "end_timestamp_ms_exclusive"
+      ],
+      "properties": {
+        "shot_id": { "$ref": "#/$defs/id" },
+        "shot_ordinal": { "type": "integer", "minimum": 0, "maximum": 49999 },
+        "start_frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "end_frame_index_exclusive": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000001
+        },
+        "start_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "end_timestamp_ms_exclusive": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1209600001
+        }
+      }
+    },
+    "observedBox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 16384 },
+        "y": { "type": "number", "minimum": 0, "maximum": 16384 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 16384 }
+      }
+    },
+    "predictedBox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": -1000000000000000,
+          "maximum": 1000000000000000
+        },
+        "y": {
+          "type": "number",
+          "minimum": -1000000000000000,
+          "maximum": 1000000000000000
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000000000000
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000000000000
+        }
+      }
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track_id",
+        "detection_id",
+        "predicted_box",
+        "assignment_iou"
+      ],
+      "properties": {
+        "track_id": { "$ref": "#/$defs/id" },
+        "detection_id": { "$ref": "#/$defs/id" },
+        "predicted_box": { "$ref": "#/$defs/predictedBox" },
+        "assignment_iou": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track_id",
+        "predicted_box",
+        "consecutive_gap_count",
+        "closed"
+      ],
+      "properties": {
+        "track_id": { "$ref": "#/$defs/id" },
+        "predicted_box": { "$ref": "#/$defs/predictedBox" },
+        "consecutive_gap_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 251
+        },
+        "closed": { "type": "boolean" }
+      }
+    },
+    "start": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track_id", "detection_id"],
+      "properties": {
+        "track_id": { "$ref": "#/$defs/id" },
+        "detection_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "frameResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_id",
+        "shot_id",
+        "frame_index",
+        "timestamp_ms",
+        "detection_count",
+        "assignments",
+        "gaps",
+        "starts",
+        "closed_track_ids"
+      ],
+      "properties": {
+        "frame_id": { "$ref": "#/$defs/id" },
+        "shot_id": { "$ref": "#/$defs/id" },
+        "frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "detection_count": { "type": "integer", "minimum": 0, "maximum": 64 },
+        "assignments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/assignment" }
+        },
+        "gaps": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/gap" }
+        },
+        "starts": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/start" }
+        },
+        "closed_track_ids": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event",
+        "frame_id",
+        "frame_index",
+        "timestamp_ms",
+        "detection_id",
+        "observed_box",
+        "predicted_box",
+        "assignment_iou",
+        "consecutive_gap_count"
+      ],
+      "properties": {
+        "event": { "enum": ["track_started", "assigned_detection", "gap"] },
+        "frame_id": { "$ref": "#/$defs/id" },
+        "frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "detection_id": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/id" }]
+        },
+        "observed_box": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/observedBox" }]
+        },
+        "predicted_box": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/predictedBox" }]
+        },
+        "assignment_iou": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "number", "minimum": 0, "maximum": 1 }
+          ]
+        },
+        "consecutive_gap_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 251
+        }
+      }
+    },
+    "track": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track_id",
+        "track_ordinal",
+        "shot_id",
+        "created_frame_index",
+        "created_timestamp_ms",
+        "last_detection_frame_index",
+        "last_detection_timestamp_ms",
+        "ended_frame_index",
+        "ended_timestamp_ms",
+        "end_reason",
+        "detection_count",
+        "total_gap_count",
+        "max_consecutive_gap_count",
+        "confirmed_at_frame_index",
+        "confirmed_at_detection_id",
+        "observations",
+        "identity_state",
+        "identity_label",
+        "identity_probability",
+        "active_speaker_state",
+        "active_speaker_score",
+        "publication",
+        "confirmation_state"
+      ],
+      "properties": {
+        "track_id": { "$ref": "#/$defs/id" },
+        "track_ordinal": { "type": "integer", "minimum": 0 },
+        "shot_id": { "$ref": "#/$defs/id" },
+        "created_frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "created_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "last_detection_frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "last_detection_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "ended_frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "ended_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "end_reason": { "enum": ["shot_end", "max_gap_exceeded"] },
+        "detection_count": { "type": "integer", "minimum": 1 },
+        "total_gap_count": { "type": "integer", "minimum": 0 },
+        "max_consecutive_gap_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 251
+        },
+        "confirmed_at_frame_index": { "$ref": "#/$defs/nullableInteger" },
+        "confirmed_at_detection_id": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/id" }]
+        },
+        "observations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100000,
+          "items": { "$ref": "#/$defs/observation" }
+        },
+        "identity_state": { "const": "unknown" },
+        "identity_label": { "type": "null" },
+        "identity_probability": { "type": "null" },
+        "active_speaker_state": { "const": "unknown" },
+        "active_speaker_score": { "type": "null" },
+        "publication": { "const": false },
+        "confirmation_state": { "enum": ["confirmed", "unconfirmed"] }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity_state",
+        "identity_label",
+        "identity_probability",
+        "identity_decision",
+        "active_speaker_state",
+        "active_speaker_score",
+        "active_speaker_decision",
+        "cross_shot_join",
+        "publication",
+        "human_review_required"
+      ],
+      "properties": {
+        "identity_state": { "const": "unknown" },
+        "identity_label": { "type": "null" },
+        "identity_probability": { "type": "null" },
+        "identity_decision": { "const": false },
+        "active_speaker_state": { "const": "unknown" },
+        "active_speaker_score": { "type": "null" },
+        "active_speaker_decision": { "const": false },
+        "cross_shot_join": { "const": false },
+        "publication": { "const": false },
+        "human_review_required": { "const": true }
+      }
+    }
+  }
+}

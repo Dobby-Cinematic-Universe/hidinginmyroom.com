@@ -1,0 +1,71 @@
+name: Corpus source or transcript correction
+description: Report a source-mapping, timestamp, speaker-label, OCR, or transcript problem.
+title: "[Corpus]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Give stable corpus IDs and public source locators. Do not upload raw media, private research, biometric material, access-controlled content, or personal information. Machine confidence is not human verification.
+
+  - type: dropdown
+    id: correction_type
+    attributes:
+      label: Correction type
+      options:
+        - Source identity or duplicate
+        - Recording date or title
+        - Transcript wording or timing
+        - Speaker or active-speaker label
+        - OCR or scene observation
+        - Entity, event, or guest relation
+        - Rights, privacy, or removal concern
+    validations:
+      required: true
+
+  - type: input
+    id: corpus_url
+    attributes:
+      label: Corpus page
+      description: Link to the recording page and include its timestamp fragment when possible.
+      placeholder: https://hidinginmyroom.com/corpus/videos/.../?t=123#...
+    validations:
+      required: true
+
+  - type: textarea
+    id: identifiers
+    attributes:
+      label: Stable identifiers
+      description: Give the recording, source, revision, segment, or observation IDs shown by the corpus.
+      placeholder: |
+        recording_id:
+        source_id:
+        revision_id:
+        segment_id:
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_correction
+    attributes:
+      label: Observed problem and proposed correction
+      description: State narrowly what is wrong, what it should say, and whether you directly checked the audio, video, or both.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source_locator
+    attributes:
+      label: Public source and exact locator
+      description: Give the public URL and exact timestamp range or archive filename. Explain any missing context or authenticity concern.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have not attached raw media, private material, biometric data, credentials, or access-bearing URLs.
+          required: true
+        - label: I understand this report creates a review task and does not itself verify an identity, quote, or underlying event.
+          required: true

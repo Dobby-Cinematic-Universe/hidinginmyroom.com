@@ -1,0 +1,17 @@
+{
+  "name": "himr-public-corpus-rag",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-17",
+  "workers_dev": true,
+  "preview_urls": false,
+  "ai_search_namespaces": [{"binding":"AI_SEARCH","namespace":"default"}],
+  "ai": {"binding":"AI"},
+  "durable_objects": {"bindings":[{"name":"BUDGET","class_name":"PilotBudget"},{"name":"ADMISSION","class_name":"Admission"}]},
+  "migrations": [{"tag":"v1","new_sqlite_classes":["PilotBudget","Admission"]}],
+  "vars": {
+    "ACCESS_MODE":"public", "ENABLED":"false", "PUBLIC_RELEASE_APPROVED":"false",
+    "INSTANCE":"himr-public-NOT-CONFIGURED", "ALLOWED_ORIGIN":"https://hidinginmyroom.com",
+    "FREE_REVIEW_BEFORE":"2026-09-24T00:00:00Z", "CORPUS_VERSION":"NOT-CONFIGURED"
+  },
+  "observability": {"enabled":false}
+}

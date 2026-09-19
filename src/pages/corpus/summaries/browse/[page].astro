@@ -1,0 +1,22 @@
+---
+import CorpusLayout from '../../../../layouts/CorpusLayout.astro';
+import SummaryCards from '../../../../components/summaries/SummaryCards.astro';
+import SummaryNotice from '../../../../components/summaries/SummaryNotice.astro';
+import { loadSummaryRelease, summaryCard } from '../../../../lib/summaries/release';
+export async function getStaticPaths() {
+  const rows = [...(await loadSummaryRelease()).summaries].sort((a,b) => (b.period ?? '').localeCompare(a.period ?? ''));
+  const pages = Math.max(1,Math.ceil(rows.length/48));
+  return Array.from({length:pages},(_,i) => ({params:{page:String(i+1)},props:{cards:rows.slice(i*48,(i+1)*48).map(summaryCard),page:i+1,pages}}));
+}
+const { cards, page, pages } = Astro.props;
+---
+<CorpusLayout title={`Summary library · page ${page} | HIMR`}>
+  <a href="/corpus/summaries/">← Summaries</a>
+  <h1>Summary library</h1><p>Page {page} of {pages}</p>
+  <SummaryNotice /><SummaryCards cards={cards} />
+  {cards.length === 0 && <p>No summaries have been released yet.</p>}
+  <nav aria-label="Library pages">
+    {page > 1 && <a href={`/corpus/summaries/browse/${page-1}/`}>← Previous page</a>}
+    {' '}{page < pages && <a href={`/corpus/summaries/browse/${page+1}/`}>Next page →</a>}
+  </nav>
+</CorpusLayout>

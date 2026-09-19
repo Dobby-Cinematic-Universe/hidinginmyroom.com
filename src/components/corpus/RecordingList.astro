@@ -1,0 +1,103 @@
+---
+import { formatDuration } from '../../lib/corpus/release';
+import type { CorpusRecordingSummary } from '../../lib/corpus/types';
+import { loadSummaryRelease } from '../../lib/summaries/release';
+import InlineSummary from '../summaries/InlineSummary.astro';
+
+interface Props {
+  recordings: CorpusRecordingSummary[];
+}
+
+const { recordings } = Astro.props;
+const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kind==='transcript').map(s=>[s.recording_id,s.id]));
+---
+
+<ol class="recording-list">
+  {
+    recordings.map((recording) => {
+      return (
+        <li>
+          <a href={`/corpus/videos/${recording.slug}/`}>
+            <div>
+              <strong>{recording.title}</strong>
+              <span>
+                {recording.date_label || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
+              </span>
+            </div>
+            <div class="recording-list__badges" aria-label="Recording metadata">
+              {recording.searchable_segment_count > 0 && (
+                <span class="corpus-badge">{recording.searchable_segment_count} segments</span>
+              )}
+              {recording.languages.map((language) => <span class="corpus-badge">{language}</span>)}
+              {recording.platforms.map((platform) => <span class="corpus-badge">{platform}</span>)}
+            </div>
+          </a>
+          {summaries.has(recording.recording_id) && <InlineSummary id={summaries.get(recording.recording_id)!} />}
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .recording-list {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .recording-list li {
+    border: 1px solid var(--corpus-line);
+    border-radius: 0.45rem;
+    background: var(--corpus-panel);
+  }
+
+  .recording-list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    color: var(--corpus-text);
+    text-decoration: none;
+  }
+
+  .recording-list a:hover {
+    background: var(--corpus-panel-strong);
+  }
+
+  .recording-list a > div:first-child {
+    display: grid;
+    min-width: 0;
+    gap: 0.15rem;
+  }
+
+  .recording-list strong {
+    overflow-wrap: anywhere;
+  }
+
+  .recording-list a > div:first-child span {
+    color: var(--corpus-muted);
+    font-size: 0.8rem;
+  }
+
+  .recording-list__badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  @media (max-width: 40rem) {
+    .recording-list a {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .recording-list__badges {
+      justify-content: flex-start;
+    }
+  }
+</style>

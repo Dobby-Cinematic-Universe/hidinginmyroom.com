@@ -1,0 +1,815 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/speaker-activity-routing-result-v1.json",
+  "title": "HIMR deterministic speaker and active-speaker route plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "status",
+    "stage",
+    "implementation_version",
+    "routing_run_id",
+    "work_order_sha256",
+    "router_tool",
+    "recording",
+    "inputs",
+    "capabilities",
+    "resources",
+    "policy",
+    "identity_safety",
+    "intervals",
+    "tasks",
+    "active_speaker_association_placeholders",
+    "warnings",
+    "result_path"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/identifier" },
+    "status": { "const": "completed" },
+    "stage": { "const": "speaker_activity_router" },
+    "implementation_version": { "type": "string", "minLength": 1 },
+    "routing_run_id": {
+      "type": "string",
+      "pattern": "^run_speaker_router_[0-9a-f]{32}$"
+    },
+    "work_order_sha256": { "$ref": "#/$defs/sha256" },
+    "router_tool": { "$ref": "#/$defs/routerTool" },
+    "recording": { "$ref": "#/$defs/recording" },
+    "inputs": { "$ref": "#/$defs/inputs" },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "resources": { "$ref": "#/$defs/resources" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "identity_safety": { "$ref": "#/$defs/identitySafety" },
+    "intervals": {
+      "type": "array",
+      "maxItems": 200000,
+      "items": { "$ref": "#/$defs/interval" }
+    },
+    "tasks": {
+      "type": "array",
+      "maxItems": 1000000,
+      "items": { "$ref": "#/$defs/task" }
+    },
+    "active_speaker_association_placeholders": {
+      "type": "array",
+      "maxItems": 1000000,
+      "items": { "$ref": "#/$defs/associationPlaceholder" }
+    },
+    "warnings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "const": "evidence_conflict_requires_review" }
+    },
+    "result_path": { "$ref": "#/$defs/absolutePath" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "intervals": {
+            "contains": { "$ref": "#/$defs/namedDanielIntervalMarker" }
+          }
+        },
+        "required": ["intervals"]
+      },
+      "then": {
+        "properties": {
+          "inputs": {
+            "properties": {
+              "source_identity_attestation": {
+                "$ref": "#/$defs/sourceIdentityAttestation",
+                "properties": {
+                  "reviewed_live_speaker_count": { "const": 1 },
+                  "title_context_assessment": {
+                    "const": "no_contradiction_found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "absolutePath": { "type": "string", "pattern": "^/" },
+    "timestampSemantics": { "const": "half_open" },
+    "nullableSha256": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }]
+    },
+    "nullableIdentifier": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/identifier" }]
+    },
+    "nullableProbability": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "number", "minimum": 0, "maximum": 1 }
+      ]
+    },
+    "routerTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "duration_ms"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 604800000
+        }
+      }
+    },
+    "inputFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preprocess_result",
+        "asr_result",
+        "reviewed_hints",
+        "normalized_audio_sha256",
+        "proxy_video_sha256",
+        "glossary_sha256",
+        "preprocess_processing_run_id",
+        "asr_processing_run_id",
+        "review_batch_id",
+        "review_state",
+        "reviewer_id",
+        "reviewed_at",
+        "source_identity_attestation"
+      ],
+      "properties": {
+        "preprocess_result": { "$ref": "#/$defs/inputFile" },
+        "asr_result": { "$ref": "#/$defs/inputFile" },
+        "reviewed_hints": { "$ref": "#/$defs/inputFile" },
+        "normalized_audio_sha256": { "$ref": "#/$defs/sha256" },
+        "proxy_video_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "glossary_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "preprocess_processing_run_id": { "$ref": "#/$defs/identifier" },
+        "asr_processing_run_id": { "$ref": "#/$defs/identifier" },
+        "review_batch_id": { "$ref": "#/$defs/identifier" },
+        "review_state": { "const": "human_reviewed" },
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "reviewed_at": { "$ref": "#/$defs/zonedTime" },
+        "source_identity_attestation": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/sourceIdentityAttestation" }
+          ]
+        }
+      }
+    },
+    "zonedTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sourceIdentityAttestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attestation_id",
+        "source_confirmation",
+        "source_confirmation_evidence",
+        "public_label",
+        "basis",
+        "review_scope",
+        "reviewed_live_speaker_count",
+        "title_context_assessment",
+        "reviewer_id",
+        "reviewer_kind",
+        "reviewed_at",
+        "comment"
+      ],
+      "properties": {
+        "attestation_id": { "$ref": "#/$defs/identifier" },
+        "source_confirmation": { "const": "confirmed_daniel_owned_source" },
+        "source_confirmation_evidence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "public_label": { "const": "Daniel" },
+        "basis": { "const": "confirmed_daniel_source_solo_presumption" },
+        "review_scope": { "const": "complete_recording" },
+        "reviewed_live_speaker_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "title_context_assessment": {
+          "enum": [
+            "no_contradiction_found",
+            "contradicts_solo_daniel_presumption",
+            "ambiguous_or_unresolved"
+          ]
+        },
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "reviewer_kind": { "const": "human" },
+        "reviewed_at": { "$ref": "#/$defs/zonedTime" },
+        "comment": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1, "maxLength": 1000 }
+          ]
+        }
+      }
+    },
+    "observedFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "unconfiguredCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "task", "reason"],
+      "properties": {
+        "status": { "const": "unconfigured" },
+        "task": {
+          "enum": [
+            "overlap_aware_diarization",
+            "face_tracking",
+            "active_speaker_association"
+          ]
+        },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "observedTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "file"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "file": { "$ref": "#/$defs/observedFile" }
+      }
+    },
+    "observedModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "revision", "manifest", "weights"],
+      "properties": {
+        "model_id": { "$ref": "#/$defs/identifier" },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "manifest": { "$ref": "#/$defs/observedFile" },
+        "weights": { "$ref": "#/$defs/observedFile" }
+      }
+    },
+    "observedCalibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "artifact"],
+      "properties": {
+        "method": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "artifact": { "$ref": "#/$defs/observedFile" }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpu_threads", "memory_mb", "gpu_required", "gpu_memory_mb"],
+      "properties": {
+        "cpu_threads": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "memory_mb": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "gpu_required": { "type": "boolean" },
+        "gpu_memory_mb": { "type": "integer", "minimum": 0, "maximum": 1048576 }
+      }
+    },
+    "pinnedCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "task",
+        "tool",
+        "model",
+        "calibration",
+        "requirements",
+        "capability_recipe_sha256"
+      ],
+      "properties": {
+        "status": { "const": "pinned" },
+        "task": {
+          "enum": [
+            "overlap_aware_diarization",
+            "face_tracking",
+            "active_speaker_association"
+          ]
+        },
+        "tool": { "$ref": "#/$defs/observedTool" },
+        "model": { "$ref": "#/$defs/observedModel" },
+        "calibration": { "$ref": "#/$defs/observedCalibration" },
+        "requirements": { "$ref": "#/$defs/requirements" },
+        "capability_recipe_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "capability": {
+      "oneOf": [
+        { "$ref": "#/$defs/unconfiguredCapability" },
+        { "$ref": "#/$defs/pinnedCapability" }
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["diarization", "face_tracking", "active_speaker"],
+      "properties": {
+        "diarization": { "$ref": "#/$defs/capability" },
+        "face_tracking": { "$ref": "#/$defs/capability" },
+        "active_speaker": { "$ref": "#/$defs/capability" }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpu_threads",
+        "memory_mb",
+        "gpu_available",
+        "gpu_memory_mb",
+        "max_parallel_tasks"
+      ],
+      "properties": {
+        "cpu_threads": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "memory_mb": { "type": "integer", "minimum": 256, "maximum": 1048576 },
+        "gpu_available": { "type": "boolean" },
+        "gpu_memory_mb": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+        "max_parallel_tasks": { "type": "integer", "minimum": 1, "maximum": 128 }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "diarization_chunk_ms",
+        "face_chunk_ms",
+        "active_speaker_chunk_ms",
+        "route_visual_when_face_unknown"
+      ],
+      "properties": {
+        "diarization_chunk_ms": { "type": "integer", "minimum": 1000, "maximum": 3600000 },
+        "face_chunk_ms": { "type": "integer", "minimum": 1000, "maximum": 3600000 },
+        "active_speaker_chunk_ms": { "type": "integer", "minimum": 1000, "maximum": 3600000 },
+        "route_visual_when_face_unknown": { "type": "boolean" }
+      }
+    },
+    "identitySafety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "solo_label",
+        "allowed_named_public_label",
+        "named_public_label_basis",
+        "named_public_label_requires_human_reviewer",
+        "named_public_label_requires_source_confirmation_attestation",
+        "named_public_label_requires_no_title_context_contradiction",
+        "named_public_label_requires_visual_confirmation",
+        "diarization_label_scope",
+        "cross_recording_identity_inference",
+        "overlapping_speech_representable",
+        "face_visibility_implies_speaking",
+        "router_makes_identity_assertions"
+      ],
+      "properties": {
+        "solo_label": { "const": "unknown_single" },
+        "allowed_named_public_label": { "const": "Daniel" },
+        "named_public_label_basis": {
+          "const": "confirmed_daniel_source_solo_presumption"
+        },
+        "named_public_label_requires_human_reviewer": { "const": true },
+        "named_public_label_requires_source_confirmation_attestation": {
+          "const": true
+        },
+        "named_public_label_requires_no_title_context_contradiction": {
+          "const": true
+        },
+        "named_public_label_requires_visual_confirmation": { "const": false },
+        "diarization_label_scope": {
+          "const": "downstream_processing_run_local_only"
+        },
+        "cross_recording_identity_inference": { "const": "forbidden" },
+        "overlapping_speech_representable": { "const": true },
+        "face_visibility_implies_speaking": { "const": false },
+        "router_makes_identity_assertions": { "const": false }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asr_segment_ordinals",
+        "reviewed_hint_id",
+        "review_confidence",
+        "conflicts"
+      ],
+      "properties": {
+        "asr_segment_ordinals": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "reviewed_hint_id": { "$ref": "#/$defs/nullableIdentifier" },
+        "review_confidence": {
+          "oneOf": [
+            { "type": "null" },
+            { "enum": ["high", "medium", "low"] }
+          ]
+        },
+        "conflicts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "const": "asr_speech_overlaps_reviewed_absence" }
+        }
+      }
+    },
+    "speechObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "presence",
+        "multiplicity",
+        "provisional_speaker_label",
+        "public_speaker_label",
+        "public_identity_attribution"
+      ],
+      "properties": {
+        "presence": { "enum": ["absent", "present", "unknown"] },
+        "multiplicity": { "enum": ["none", "single", "overlap", "unknown"] },
+        "provisional_speaker_label": {
+          "oneOf": [
+            { "type": "null" },
+            { "const": "unknown_single" }
+          ]
+        },
+        "public_speaker_label": {
+          "oneOf": [
+            { "type": "null" },
+            { "const": "Daniel" }
+          ]
+        },
+        "public_identity_attribution": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/publicIdentityAttribution" }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "public_speaker_label": { "type": "null" },
+            "public_identity_attribution": { "type": "null" }
+          }
+        },
+        {
+          "properties": {
+            "public_speaker_label": { "const": "Daniel" },
+            "public_identity_attribution": {
+              "$ref": "#/$defs/publicIdentityAttribution"
+            }
+          }
+        }
+      ]
+    },
+    "publicIdentityAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_label",
+        "basis",
+        "source_confirmation",
+        "source_confirmation_attestation_id",
+        "reviewer_id",
+        "reviewer_kind",
+        "reviewed_at"
+      ],
+      "properties": {
+        "public_label": { "const": "Daniel" },
+        "basis": { "const": "confirmed_daniel_source_solo_presumption" },
+        "source_confirmation": { "const": "confirmed_daniel_owned_source" },
+        "source_confirmation_attestation_id": { "$ref": "#/$defs/identifier" },
+        "reviewer_id": { "$ref": "#/$defs/identifier" },
+        "reviewer_kind": { "const": "human" },
+        "reviewed_at": { "$ref": "#/$defs/zonedTime" }
+      }
+    },
+    "namedDanielIntervalMarker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_id",
+        "start_ms",
+        "end_ms",
+        "timestamp_semantics",
+        "evidence",
+        "speech_observation",
+        "face_visibility_observation",
+        "audio_origin_observation",
+        "speaker_visual_relation_observation"
+      ],
+      "properties": {
+        "interval_id": {},
+        "start_ms": {},
+        "end_ms": {},
+        "timestamp_semantics": {},
+        "evidence": {},
+        "speech_observation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "presence",
+            "multiplicity",
+            "provisional_speaker_label",
+            "public_speaker_label",
+            "public_identity_attribution"
+          ],
+          "properties": {
+            "presence": {},
+            "multiplicity": {},
+            "provisional_speaker_label": {},
+            "public_speaker_label": { "const": "Daniel" },
+            "public_identity_attribution": {}
+          }
+        },
+        "face_visibility_observation": {},
+        "audio_origin_observation": {},
+        "speaker_visual_relation_observation": {}
+      }
+    },
+    "faceVisibilityObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "speaking_face_claimed"],
+      "properties": {
+        "visibility": {
+          "enum": ["none", "single_face", "multiple_faces", "unknown"]
+        },
+        "speaking_face_claimed": { "const": false }
+      }
+    },
+    "audioOriginObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category"],
+      "properties": {
+        "category": {
+          "enum": [
+            "live_voice",
+            "playback_voice",
+            "reaction_insert_voice",
+            "tts_voice",
+            "synthetic_voice",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "visualRelationObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category"],
+      "properties": {
+        "category": { "enum": ["onscreen", "offscreen", "mixed", "unknown"] }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_id",
+        "start_ms",
+        "end_ms",
+        "timestamp_semantics",
+        "evidence",
+        "speech_observation",
+        "face_visibility_observation",
+        "audio_origin_observation",
+        "speaker_visual_relation_observation"
+      ],
+      "properties": {
+        "interval_id": { "$ref": "#/$defs/identifier" },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "timestamp_semantics": { "$ref": "#/$defs/timestampSemantics" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "speech_observation": { "$ref": "#/$defs/speechObservation" },
+        "face_visibility_observation": {
+          "$ref": "#/$defs/faceVisibilityObservation"
+        },
+        "audio_origin_observation": { "$ref": "#/$defs/audioOriginObservation" },
+        "speaker_visual_relation_observation": {
+          "$ref": "#/$defs/visualRelationObservation"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "speech_observation": {
+                "properties": {
+                  "public_speaker_label": { "const": "Daniel" }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "properties": {
+                  "reviewed_hint_id": { "$ref": "#/$defs/identifier" },
+                  "review_confidence": { "const": "high" },
+                  "conflicts": { "maxItems": 0 }
+                }
+              },
+              "speech_observation": {
+                "properties": {
+                  "presence": { "const": "present" },
+                  "multiplicity": { "const": "single" },
+                  "provisional_speaker_label": { "const": "unknown_single" }
+                }
+              },
+              "audio_origin_observation": {
+                "properties": { "category": { "const": "live_voice" } }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "speech_observation": {
+                "properties": {
+                  "provisional_speaker_label": { "const": "unknown_single" }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "speech_observation": {
+                "properties": {
+                  "presence": { "const": "present" },
+                  "multiplicity": { "const": "single" }
+                }
+              },
+              "audio_origin_observation": {
+                "properties": { "category": { "const": "live_voice" } }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "speech_observation": {
+                "properties": {
+                  "presence": { "const": "present" },
+                  "multiplicity": { "const": "single" }
+                }
+              },
+              "audio_origin_observation": {
+                "properties": { "category": { "const": "live_voice" } }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "speech_observation": {
+                "properties": {
+                  "provisional_speaker_label": { "const": "unknown_single" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "interval_id",
+        "start_ms",
+        "end_ms",
+        "timestamp_semantics",
+        "task_type",
+        "execution_state",
+        "reason_codes",
+        "capability_recipe_sha256",
+        "resource_deficits"
+      ],
+      "properties": {
+        "task_id": { "$ref": "#/$defs/identifier" },
+        "interval_id": { "$ref": "#/$defs/identifier" },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "timestamp_semantics": { "$ref": "#/$defs/timestampSemantics" },
+        "task_type": {
+          "enum": [
+            "solo_fast_path",
+            "overlap_aware_diarization",
+            "offscreen_speech_review",
+            "playback_voice_review",
+            "reaction_insert_review",
+            "tts_voice_review",
+            "synthetic_voice_review",
+            "audio_origin_review",
+            "evidence_conflict_review",
+            "face_tracking",
+            "active_speaker_association"
+          ]
+        },
+        "execution_state": {
+          "enum": [
+            "no_inference_required",
+            "human_review",
+            "ready_pinned",
+            "blocked_unconfigured",
+            "blocked_resources"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+        },
+        "capability_recipe_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "resource_deficits": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["cpu_threads", "memory_mb", "gpu", "gpu_memory_mb", "no_hash_pinned_capability"]
+          }
+        }
+      }
+    },
+    "associationPlaceholder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "association_id",
+        "task_id",
+        "start_ms",
+        "end_ms",
+        "timestamp_semantics",
+        "association_state",
+        "face_track_id",
+        "diarization_run_id",
+        "diarization_label",
+        "raw_confidence",
+        "calibrated_confidence",
+        "calibration_artifact_sha256",
+        "observation_source"
+      ],
+      "properties": {
+        "association_id": { "$ref": "#/$defs/identifier" },
+        "task_id": { "$ref": "#/$defs/identifier" },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "timestamp_semantics": { "$ref": "#/$defs/timestampSemantics" },
+        "association_state": { "const": "unknown" },
+        "face_track_id": { "type": "null" },
+        "diarization_run_id": { "type": "null" },
+        "diarization_label": { "type": "null" },
+        "raw_confidence": { "$ref": "#/$defs/nullableProbability" },
+        "calibrated_confidence": { "$ref": "#/$defs/nullableProbability" },
+        "calibration_artifact_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "observation_source": { "const": "routing_placeholder" }
+      }
+    }
+  }
+}

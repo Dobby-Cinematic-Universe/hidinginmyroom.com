@@ -6,24 +6,25 @@ or a creator's account into unqualified fact.
 
 This policy applies to every publicly visible page under `src/content/docs/wiki/`.
 Separate private research notes may contain incomplete leads, but they must retain
-clear warnings and must not be copied into the public wiki without review.
+clear warnings and must not be copied into the public wiki without the source,
+coordinate, rights, privacy, sensitivity, identity, and allegation checks below.
 
 ## 1. Evidence layers
 
 Use the narrowest statement supported by the evidence.
 
-| Source | What it can establish |
-| --- | --- |
-| Raw video or audio | What was audibly said or visibly shown at a stated time |
-| Human-corrected transcript | Searchable wording for the segment that was checked |
-| Machine transcript | A lead to a possible segment; never evidence, fact, or a quotation by itself |
-| Video title or filename | How an item was labeled; not proof that the title is true or that its date is authoritative |
-| First-party post or video | What the author publicly claimed |
-| Independent primary record | The fact directly documented by that record |
-| Reliable secondary source | Context or corroboration within the source's demonstrated scope |
+| Source                                    | What it can establish                                                                                                                                                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Raw video or audio                        | What was audibly said or visibly shown at a stated time                                                                                                                   |
+| Human-corrected transcript                | Searchable wording for the segment that was checked                                                                                                                       |
+| Machine transcript                        | A lead to a possible segment; never evidence, fact, or a quotation by itself                                                                                              |
+| Video title or filename                   | How an item was labeled; not proof that the title is true or that its date is authoritative                                                                               |
+| First-party post or video                 | What the author publicly claimed                                                                                                                                          |
+| Independent primary record                | The fact directly documented by that record                                                                                                                               |
+| Reliable secondary source                 | Context or corroboration within the source's demonstrated scope                                                                                                           |
 | Reviewed public community image or repost | What that complete copy visibly or audibly contains, within its preserved context; not original provenance, completeness, identity, date, or proof of an off-camera event |
-| Other community post, wiki, or forum | Community usage, an attributed allegation, or a research lead; not proof that the allegation is true |
-| AI or NotebookLM summary | Topic discovery only |
+| Other community post, wiki, or forum      | Community usage, an attributed allegation, or a research lead; not proof that the allegation is true                                                                      |
+| AI or NotebookLM summary                  | Topic discovery only                                                                                                                                                      |
 
 A video can verify the sentence “Daniel said X.” It cannot, by itself, verify that X
 happened. Use attribution whenever the underlying event has not been independently
@@ -35,49 +36,41 @@ a candidate passage, but an audio quotation or close paraphrase is **video check
 only after a human reviewer directly listens to the raw audio and records that review.
 Visual frame review does not imply that the soundtrack was heard.
 
-A narrow public **unverified research lead** exception exists for benign research
-navigation. Such a lead must be conspicuously labelled, must never be written as a
-fact, quotation, or evidentiary paraphrase, and must identify the exact source,
-candidate locator, raw-media status, and the named human-review queue. This
-exception does not apply to alleged serious wrongdoing, sexualized claims involving
-minors, or invasive private, relationship, financial, travel, or medical detail. Keep
-those subjects in the non-public research record until the applicable verification and
-sensitivity standards are met.
+An eligible **unverified machine-transcript lead** may be published without a human
+wording review. It must never be written as a verified fact or quotation and must
+identify the exact public source, candidate range, raw-media status, and machine
+status. Every such passage must display the canonical warning: **“Machine-generated
+and unreviewed; may be wrong; not a verified quotation.”** A second ASR pass can help
+triage errors but is not a publication prerequisite and does not verify the wording.
 
-A separate narrow **attributed self-account** exception permits a high-level
-machine-text paraphrase of a notable first-person claim made by the public creator
-about his own circumstances, conduct, intentions, public work, adult relationships,
-or a publicly discussed family event.
-It records an unverified candidate account attributed to Daniel; it does not make the
-machine text evidence that the speech or underlying event is true. Use this exception
-only when all of the following are satisfied:
+Eligibility remains deny-by-default at the rights, privacy, sensitivity, identity,
+and coordinate layers. Publication is permitted only after all applicable gates are
+recorded as clear. Doxxing, leaked intimate material, sexualized claims involving
+minors, unsupported diagnostic inference, gratuitous graphic detail, and content whose
+main effect would be harassment remain private regardless of a warning.
 
-- the public raw source and exact candidate range are identified;
-- at least two independent ASR passes materially agree on the central passage, while
-  any single-machine supporting chronology remains explicitly labelled as such;
-- no machine-text quotation is published, and the page plainly says that nobody
-  directly perceived the audio;
-- the summary is necessary for a notable topic, stays within Daniel's own account,
-  minimizes financial, housing, travel, medical, and intimate detail, and does not
-  identify otherwise unnamed people;
-- the maintainers' review record states the underlying status, corroboration limit,
-  and result of a bounded response search; and
-- minor-related or age-dependent claims, diagnostic inference, medical claims about a
-  living private third party, alleged crimes or abuse by another person, leaked
-  intimate material, graphic detail, and claims whose gist depends on unresolved
-  consent are omitted. Claims that materially accuse another living person must
-  instead satisfy the allegation standard with evidence appropriate to the claim.
+A high-level machine paraphrase of a notable first-person claim by the public creator
+may cover his own circumstances, conduct, intentions, public work, finances, housing,
+travel, adult relationships, or a publicly discussed family event when the exact
+source and range are given. Exact amounts or other sensitive detail should appear only
+when material to the topic and should be minimized. Machine output alone cannot name a
+speaker: attribution must come from independently checked source ownership/context or
+a recorded speaker review. A visible face does not by itself prove who produced the
+soundtrack.
 
-This exception should be rare. A visible creator caption may establish how the source
-was edited, but it does not corroborate the machine-rendered narration or the event.
+Machine-only allegations need a second, adjacent **Unverified allegation** warning in
+addition to the canonical machine warning. It must identify the attributed speaker,
+state the corroboration status, and include a relevant response or say that none was
+located. Publication does not verify the machine wording or underlying event. Claims
+about another living person must satisfy the sensitive-claim rules in section 6.
 
 ## 2. Verification states
 
 Every material claim has one state:
 
-- **Unverified** — imported or proposed but not checked. Keep in research only, except
-  for a conspicuously labelled benign research-navigation lead that satisfies the
-  requirements above. The exception does not upgrade the material into evidence.
+- **Unverified** — machine-generated, imported, or proposed but not checked. It may be
+  exposed as an eligible machine-transcript lead with the exact warning and independent
+  gates above. Publication does not upgrade it into evidence.
 - **Source matched** — the referenced file or post exists and its identity has been
   reconciled. This still does not verify its contents.
 - **Video checked** — the cited audio or visual segment was reviewed against the raw
@@ -93,13 +86,16 @@ Every material claim has one state:
 - **Rejected** — the available source does not support the proposed wording.
 
 “Source matched” is sufficient for a source catalogue. Narrative biographical,
-financial, medical, relationship, legal, or controversy claims normally require
-“video checked,” careful attribution, and independent corroboration where available.
+financial, medical, relationship, legal, or controversy claims require careful
+attribution and independent corroboration where available. A machine-only account may
+be shown solely as a warned unverified lead; “video checked” is required before the
+wiki describes its wording as directly perceived or verified.
 “Community media checked” is sufficient only for a narrow direct observation about
 the repost itself, not for the truth of its title or an event outside the recording.
-“Unverified research lead” is not a lower evidentiary shortcut: it can expose only a
-benign candidate locator and review task, not assert what the machine output says is
-true or quote it as speech.
+“Unverified machine-transcript lead” is not a lower evidentiary shortcut. It can
+expose a warned, attributed machine paraphrase and candidate locator after independent
+eligibility gates; it cannot assert that the machine output is correct or quote it as
+verified speech.
 
 Public subreddit images and clips may therefore supplement a missing primary source.
 Review the whole available item and the surrounding post, preserve the exact media
@@ -190,8 +186,10 @@ and do not turn anonymous speculation into the wiki's own conclusion.
 ## 7. AI-assisted research
 
 AI may search transcripts, cluster topics, propose candidate claims, and help format
-citations. It may not promote its own summary into evidence. The reviewer must open
-the underlying source and perform the required check.
+citations. It may not promote its own summary into evidence. The exact source and
+coordinates must be preserved, and the applicable publication gates and warnings must
+be applied. Human perception remains necessary for verified quotations, factual wiki
+conclusions, identity decisions, and lifecycle decisions.
 
 NotebookLM drafts in the private research workspace are unverified research indexes.
 Their titles, counts, summaries, entity links, and chronology must be re-established
@@ -201,17 +199,19 @@ from primary sources and the maintainers' review record before publication.
 
 Before publishing or materially expanding a page, confirm that:
 
-- every contestable statement has a corresponding maintainer review record;
+- every contestable statement has a corresponding source record and explicit review
+  state;
 - every citation supports the exact adjacent wording;
 - self-reports are attributed;
 - dates state their basis and precision;
 - contradictory sources are represented fairly;
-- cited transcript segments were checked against available media;
-- any public machine-only research lead is benign, conspicuously labelled, and gives
-  its exact source, candidate locator, raw-media status, and named review queue;
-- any machine-text attributed self-account satisfies the separate narrow exception,
-  carries a prominent adjacent warning and response-search result, and omits minor-related,
-  age-dependent, criminal, abusive, leaked, graphic, or consent-dependent material;
+- a cited transcript segment is called a verified quotation only when a human checked
+  it against the media;
+- every public machine-only lead gives its exact source, candidate locator,
+  raw-media status, canonical warning, and independent gate status;
+- a machine-text allegation also carries the adjacent allegation warning,
+  corroboration status, and response-search result, and omits disallowed minor-related,
+  leaked, diagnostic, harassing, or gratuitously graphic material;
 - reviewed reposts have a full-item integrity assessment and retained media hash;
 - allegations carry an adjacent warning, attribution, underlying verification state,
   corroboration status, and response note;
@@ -219,6 +219,8 @@ Before publishing or materially expanding a page, confirm that:
 - the page shows its verification status and last review date; and
 - another pass found no unsupported implications introduced during copy-editing.
 
-Corrections should preserve the reason for the change in version control. Material
-disputes belong in the private review record even when the rejected wording is removed
-from the public page.
+Corrections should preserve the reason for the change in version control. Machine
+output is corrected append-only rather than silently rewritten. A dispute, retraction,
+or reinstatement requires a human lifecycle decision and a public explanation;
+automated policy cannot retract text. Material disputes also belong in the private
+review record when active public wording changes.

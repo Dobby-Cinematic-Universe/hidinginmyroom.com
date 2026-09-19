@@ -1,0 +1,627 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/longform-recording-transcript-v1.json",
+  "title": "HIMR private assembled long-form recording transcript",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema_version",
+    "assembler_version",
+    "assembly_id",
+    "identity_sha256",
+    "parent_plan",
+    "span_result_bindings",
+    "recording",
+    "timeline",
+    "language",
+    "sources",
+    "coverage",
+    "boundaries",
+    "duplicate_groups",
+    "segments",
+    "text",
+    "counts",
+    "disclaimer",
+    "verified_quotation",
+    "review_status",
+    "policy"
+  ],
+  "properties": {
+    "kind": { "const": "himr_longform_recording_transcript" },
+    "schema_version": { "const": 1 },
+    "assembler_version": { "const": "0.1.0" },
+    "assembly_id": { "type": "string", "pattern": "^lfassembly_[0-9a-f]{32}$" },
+    "identity_sha256": { "$ref": "#/$defs/sha256" },
+    "parent_plan": { "$ref": "#/$defs/parentPlan" },
+    "span_result_bindings": { "$ref": "#/$defs/fileBinding" },
+    "recording": { "$ref": "#/$defs/recording" },
+    "timeline": { "$ref": "#/$defs/timeline" },
+    "language": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "selection_basis", "scores_calibrated"],
+      "properties": {
+        "value": { "const": "en" },
+        "selection_basis": { "const": "inherited_forced_span_asr_contract" },
+        "scores_calibrated": { "const": false }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "coverage": { "$ref": "#/$defs/coverage" },
+    "boundaries": {
+      "type": "array",
+      "maxItems": 4095,
+      "items": { "$ref": "#/$defs/boundary" }
+    },
+    "duplicate_groups": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/duplicateGroup" }
+    },
+    "segments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/segment" }
+    },
+    "text": { "type": "string" },
+    "counts": { "$ref": "#/$defs/counts" },
+    "disclaimer": {
+      "const": {
+        "code": "machine_generated_unreviewed_not_verified_quotation_v1",
+        "text": "Machine-generated and unreviewed; may be wrong; not a verified quotation."
+      }
+    },
+    "verified_quotation": { "const": false },
+    "review_status": { "const": "unreviewed_machine_assembly" },
+    "policy": {
+      "const": {
+        "visibility": "private",
+        "machine_generated": true,
+        "scores_calibrated": false,
+        "source_artifact_mutation": false,
+        "network_access": false,
+        "catalogue_mutation_authority": "none",
+        "publication_authority": "none",
+        "wiki_authority": "none",
+        "identity_authority": "none",
+        "deletion_authority": "none"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nonnegative": { "type": "integer", "minimum": 0 },
+    "nullableSha256": {
+      "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+    },
+    "fileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "parentPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "plan_id", "identity_sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "plan_id": { "type": "string", "pattern": "^lfplan_[0-9a-f]{32}$" },
+        "identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "media_id", "input"],
+      "properties": {
+        "recording_id": { "type": "string", "minLength": 1 },
+        "media_id": { "type": "string", "minLength": 1 },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "artifact_id",
+            "path",
+            "sha256",
+            "byte_count",
+            "sample_rate_hz",
+            "channels",
+            "total_samples",
+            "duration_ms"
+          ],
+          "properties": {
+            "artifact_id": { "type": "string", "minLength": 1 },
+            "path": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "byte_count": { "type": "integer", "minimum": 1 },
+            "sample_rate_hz": { "const": 16000 },
+            "channels": { "const": 1 },
+            "total_samples": { "type": "integer", "minimum": 1 },
+            "duration_ms": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinate_system",
+        "sample_rate_hz",
+        "start_sample",
+        "end_sample",
+        "duration_ms_presentation",
+        "millisecond_projection"
+      ],
+      "properties": {
+        "coordinate_system": { "const": "parent_pcm_samples_half_open" },
+        "sample_rate_hz": { "const": 16000 },
+        "start_sample": { "const": 0 },
+        "end_sample": { "type": "integer", "minimum": 1 },
+        "duration_ms_presentation": { "type": "integer", "minimum": 0 },
+        "millisecond_projection": {
+          "const": "nearest_integer_half_up_presentation_only"
+        }
+      }
+    },
+    "sourceArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "identity_sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "identity_sha256": { "$ref": "#/$defs/nullableSha256" }
+      }
+    },
+    "resultArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "identity_sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "dispositions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_segment_count",
+        "source_unit_count",
+        "core_owned_unit_count",
+        "context_unit_count",
+        "retained_unit_count",
+        "duplicate_excluded_unit_count"
+      ],
+      "properties": {
+        "source_segment_count": { "$ref": "#/$defs/nonnegative" },
+        "source_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "core_owned_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "context_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "retained_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "duplicate_excluded_unit_count": { "$ref": "#/$defs/nonnegative" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "span_id",
+        "span_ordinal",
+        "status",
+        "analysis_start_sample",
+        "analysis_end_sample",
+        "core_start_sample",
+        "core_end_sample",
+        "transcript",
+        "result",
+        "failure_code",
+        "dispositions"
+      ],
+      "properties": {
+        "span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+        "span_ordinal": { "$ref": "#/$defs/nonnegative" },
+        "status": { "enum": ["completed", "failed", "pending"] },
+        "analysis_start_sample": { "$ref": "#/$defs/nonnegative" },
+        "analysis_end_sample": { "type": "integer", "minimum": 1 },
+        "core_start_sample": { "$ref": "#/$defs/nonnegative" },
+        "core_end_sample": { "type": "integer", "minimum": 1 },
+        "transcript": {
+          "oneOf": [{ "$ref": "#/$defs/sourceArtifact" }, { "type": "null" }]
+        },
+        "result": {
+          "oneOf": [{ "$ref": "#/$defs/resultArtifact" }, { "type": "null" }]
+        },
+        "failure_code": {
+          "oneOf": [{ "type": "string" }, { "type": "null" }]
+        },
+        "dispositions": { "$ref": "#/$defs/dispositions" }
+      }
+    },
+    "coverageInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "span_id",
+        "start_sample",
+        "end_sample",
+        "start_ms",
+        "end_ms",
+        "status",
+        "decoded",
+        "speech_units_detected",
+        "retained_units",
+        "failure_code"
+      ],
+      "properties": {
+        "span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+        "start_sample": { "$ref": "#/$defs/nonnegative" },
+        "end_sample": { "type": "integer", "minimum": 1 },
+        "start_ms": { "$ref": "#/$defs/nonnegative" },
+        "end_ms": { "$ref": "#/$defs/nonnegative" },
+        "status": {
+          "enum": ["decoded_speech", "decoded_no_speech_detected", "failed", "pending"]
+        },
+        "decoded": { "type": "boolean" },
+        "speech_units_detected": { "$ref": "#/$defs/nonnegative" },
+        "retained_units": { "$ref": "#/$defs/nonnegative" },
+        "failure_code": {
+          "oneOf": [{ "type": "string" }, { "type": "null" }]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinate_system",
+        "complete",
+        "decoded_samples",
+        "total_samples",
+        "decoded_fraction_millionths",
+        "status_sample_counts",
+        "intervals"
+      ],
+      "properties": {
+        "coordinate_system": { "const": "parent_pcm_samples_half_open" },
+        "complete": { "type": "boolean" },
+        "decoded_samples": { "$ref": "#/$defs/nonnegative" },
+        "total_samples": { "type": "integer", "minimum": 1 },
+        "decoded_fraction_millionths": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "status_sample_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decoded_speech", "decoded_no_speech_detected", "failed", "pending"],
+          "properties": {
+            "decoded_speech": { "$ref": "#/$defs/nonnegative" },
+            "decoded_no_speech_detected": { "$ref": "#/$defs/nonnegative" },
+            "failed": { "$ref": "#/$defs/nonnegative" },
+            "pending": { "$ref": "#/$defs/nonnegative" }
+          }
+        },
+        "intervals": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "items": { "$ref": "#/$defs/coverageInterval" }
+        }
+      }
+    },
+    "boundaryComparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "similarity_millionths",
+        "minimum_consistent_millionths",
+        "left_token_count",
+        "right_token_count",
+        "left_token_sequence_sha256",
+        "right_token_sequence_sha256",
+        "matched_duplicate_pair_count",
+        "duplicate_group_ids"
+      ],
+      "properties": {
+        "method": { "const": "normalized_token_sequence_matcher_v1" },
+        "similarity_millionths": {
+          "oneOf": [
+            { "type": "integer", "minimum": 0, "maximum": 1000000 },
+            { "type": "null" }
+          ]
+        },
+        "minimum_consistent_millionths": { "const": 650000 },
+        "left_token_count": { "$ref": "#/$defs/nonnegative" },
+        "right_token_count": { "$ref": "#/$defs/nonnegative" },
+        "left_token_sequence_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "right_token_sequence_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "matched_duplicate_pair_count": { "$ref": "#/$defs/nonnegative" },
+        "duplicate_group_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^lfdupe_[0-9a-f]{32}$" }
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_id",
+        "at_sample",
+        "at_ms",
+        "left_span_id",
+        "right_span_id",
+        "shared_analysis_start_sample",
+        "shared_analysis_end_sample",
+        "status",
+        "conflict_flags",
+        "quality_warning",
+        "review_recommended",
+        "comparison"
+      ],
+      "properties": {
+        "boundary_id": { "type": "string", "pattern": "^lfboundary_[0-9a-f]{32}$" },
+        "at_sample": { "$ref": "#/$defs/nonnegative" },
+        "at_ms": { "$ref": "#/$defs/nonnegative" },
+        "left_span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+        "right_span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+        "shared_analysis_start_sample": {
+          "oneOf": [{ "$ref": "#/$defs/nonnegative" }, { "type": "null" }]
+        },
+        "shared_analysis_end_sample": {
+          "oneOf": [{ "$ref": "#/$defs/nonnegative" }, { "type": "null" }]
+        },
+        "status": { "enum": ["consistent", "conflict", "unassessed"] },
+        "conflict_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "quality_warning": { "type": "boolean" },
+        "review_recommended": { "type": "boolean" },
+        "comparison": { "$ref": "#/$defs/boundaryComparison" }
+      }
+    },
+    "duplicateCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_id",
+        "span_id",
+        "source_segment_ordinal",
+        "source_word_ordinal",
+        "start_sample",
+        "end_sample",
+        "core_owned",
+        "retained"
+      ],
+      "properties": {
+        "unit_id": { "type": "string", "pattern": "^lfunit_[0-9a-f]{32}$" },
+        "span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+        "source_segment_ordinal": { "$ref": "#/$defs/nonnegative" },
+        "source_word_ordinal": {
+          "oneOf": [{ "$ref": "#/$defs/nonnegative" }, { "type": "null" }]
+        },
+        "start_sample": { "$ref": "#/$defs/nonnegative" },
+        "end_sample": { "$ref": "#/$defs/nonnegative" },
+        "core_owned": { "type": "boolean" },
+        "retained": { "type": "boolean" }
+      }
+    },
+    "duplicateGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_group_id",
+        "unit_kind",
+        "normalized_text_sha256",
+        "winner_unit_id",
+        "decision",
+        "core_owner_collision",
+        "boundary_ids",
+        "candidates"
+      ],
+      "properties": {
+        "duplicate_group_id": { "type": "string", "pattern": "^lfdupe_[0-9a-f]{32}$" },
+        "unit_kind": { "enum": ["word", "segment_fallback"] },
+        "normalized_text_sha256": { "$ref": "#/$defs/sha256" },
+        "winner_unit_id": {
+          "oneOf": [
+            { "type": "string", "pattern": "^lfunit_[0-9a-f]{32}$" },
+            { "type": "null" }
+          ]
+        },
+        "decision": {
+          "enum": [
+            "single_core_owner",
+            "deterministic_core_margin_tiebreak",
+            "context_only_no_output"
+          ]
+        },
+        "core_owner_collision": { "type": "boolean" },
+        "boundary_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^lfboundary_[0-9a-f]{32}$" }
+        },
+        "candidates": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/duplicateCandidate" }
+        }
+      }
+    },
+    "word": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "start_sample", "end_sample"],
+      "properties": {
+        "text": { "type": "string" },
+        "start_sample": { "$ref": "#/$defs/nonnegative" },
+        "end_sample": { "$ref": "#/$defs/nonnegative" },
+        "raw_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+        "anomaly_flags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "segmentOwnership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "core_start_sample",
+        "core_end_sample",
+        "source_unit_count",
+        "retained_unit_count",
+        "context_excluded_unit_count",
+        "duplicate_excluded_unit_count"
+      ],
+      "properties": {
+        "basis": {
+          "enum": [
+            "word_anchor_in_source_core_then_duplicate_reconciliation",
+            "segment_anchor_in_source_core_then_duplicate_reconciliation"
+          ]
+        },
+        "core_start_sample": { "$ref": "#/$defs/nonnegative" },
+        "core_end_sample": { "type": "integer", "minimum": 1 },
+        "source_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "retained_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "context_excluded_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "duplicate_excluded_unit_count": { "$ref": "#/$defs/nonnegative" }
+      }
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segment_id",
+        "ordinal",
+        "text",
+        "start_sample",
+        "end_sample",
+        "start_ms",
+        "end_ms",
+        "words",
+        "source",
+        "ownership",
+        "duplicate_group_ids",
+        "boundary_conflict_ids"
+      ],
+      "properties": {
+        "segment_id": { "type": "string", "pattern": "^lfsegment_[0-9a-f]{32}$" },
+        "ordinal": { "$ref": "#/$defs/nonnegative" },
+        "text": { "type": "string" },
+        "start_sample": { "$ref": "#/$defs/nonnegative" },
+        "end_sample": { "$ref": "#/$defs/nonnegative" },
+        "start_ms": { "$ref": "#/$defs/nonnegative" },
+        "end_ms": { "$ref": "#/$defs/nonnegative" },
+        "words": { "type": "array", "items": { "$ref": "#/$defs/word" } },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["span_id", "source_segment_ordinal"],
+          "properties": {
+            "span_id": { "type": "string", "pattern": "^lfspan_[0-9a-f]{32}$" },
+            "source_segment_ordinal": { "$ref": "#/$defs/nonnegative" }
+          }
+        },
+        "ownership": { "$ref": "#/$defs/segmentOwnership" },
+        "duplicate_group_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^lfdupe_[0-9a-f]{32}$" }
+        },
+        "boundary_conflict_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^lfboundary_[0-9a-f]{32}$" }
+        },
+        "raw_score_provenance": { "$ref": "#/$defs/rawScoreProvenance" }
+      }
+    },
+    "rawScoreProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "temperature_raw",
+        "average_log_probability_raw",
+        "compression_ratio_raw",
+        "no_speech_probability_raw"
+      ],
+      "properties": {
+        "temperature_raw": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 10 },
+            { "type": "null" }
+          ]
+        },
+        "average_log_probability_raw": {
+          "oneOf": [
+            { "type": "number", "minimum": -1000, "maximum": 1000 },
+            { "type": "null" }
+          ]
+        },
+        "compression_ratio_raw": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 1000000 },
+            { "type": "null" }
+          ]
+        },
+        "no_speech_probability_raw": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "span_count",
+        "completed_span_count",
+        "failed_span_count",
+        "pending_span_count",
+        "source_segment_count",
+        "source_unit_count",
+        "retained_segment_count",
+        "retained_word_count",
+        "duplicate_group_count",
+        "boundary_count",
+        "boundary_conflict_count",
+        "boundary_unassessed_count"
+      ],
+      "properties": {
+        "span_count": { "$ref": "#/$defs/nonnegative" },
+        "completed_span_count": { "$ref": "#/$defs/nonnegative" },
+        "failed_span_count": { "$ref": "#/$defs/nonnegative" },
+        "pending_span_count": { "$ref": "#/$defs/nonnegative" },
+        "source_segment_count": { "$ref": "#/$defs/nonnegative" },
+        "source_unit_count": { "$ref": "#/$defs/nonnegative" },
+        "retained_segment_count": { "$ref": "#/$defs/nonnegative" },
+        "retained_word_count": { "$ref": "#/$defs/nonnegative" },
+        "duplicate_group_count": { "$ref": "#/$defs/nonnegative" },
+        "boundary_count": { "$ref": "#/$defs/nonnegative" },
+        "boundary_conflict_count": { "$ref": "#/$defs/nonnegative" },
+        "boundary_unassessed_count": { "$ref": "#/$defs/nonnegative" }
+      }
+    }
+  }
+}

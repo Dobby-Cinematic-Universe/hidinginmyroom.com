@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+"""Hash-pinned Python entrypoint for the Archive preprocess handoff."""
+
+from pathlib import Path
+import hashlib
+import os
+import stat
+import sys
+
+
+ACQUISITION_ROOT = Path(__file__).resolve().parent.parent
+EXPECTED_SOURCE_SHA256 = "ab7706e9ac152e6a431ee828409ab609363c3347de051a13c64702b7d38dbf7a"
+SOURCE = ACQUISITION_ROOT / "archive_preprocess_handoff.py"
+
+
+before = SOURCE.lstat()
+if (
+    stat.S_ISLNK(before.st_mode)
+    or not stat.S_ISREG(before.st_mode)
+    or before.st_uid != os.geteuid()
+    or before.st_nlink != 1
+    or stat.S_IMODE(before.st_mode) & 0o022
+):
+    raise RuntimeError("Archive preprocess handoff source is unsafe")
+descriptor = os.open(
+    SOURCE,
+    os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0),
+)
+try:
+    opened = os.fstat(descriptor)
+    body = bytearray()
+    while len(body) < opened.st_size:
+        chunk = os.read(descriptor, opened.st_size - len(body))
+        if not chunk:
+            break
+        body.extend(chunk)
+    after = os.fstat(descriptor)
+finally:
+    os.close(descriptor)
+current = SOURCE.lstat()
+identity = lambda value: (
+    value.st_dev,
+    value.st_ino,
+    value.st_size,
+    value.st_mtime_ns,
+    value.st_ctime_ns,
+    value.st_mode,
+    value.st_nlink,
+    value.st_uid,
+)
+if (
+    len(body) != before.st_size
+    or identity(before) != identity(opened)
+    or identity(opened) != identity(after)
+    or identity(after) != identity(current)
+    or hashlib.sha256(body).hexdigest() != EXPECTED_SOURCE_SHA256
+):
+    raise RuntimeError("Archive preprocess handoff source differs from launcher pin")
+
+sys.path.insert(0, str(ACQUISITION_ROOT))
+
+from archive_preprocess_handoff import main  # noqa: E402
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

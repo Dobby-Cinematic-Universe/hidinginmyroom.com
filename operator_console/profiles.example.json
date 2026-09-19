@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "id": "acquisition-validate-current",
+      "label": "Validate current acquisition schedule",
+      "description": "Read-only replay of one sealed producer schedule.",
+      "action": "acquisition.validate",
+      "parameters": {
+        "schedule": "$REPO/research/operator-inputs/acquisition-schedule.json"
+      }
+    },
+    {
+      "id": "acquisition-run-one",
+      "label": "Run one bounded acquisition cycle",
+      "description": "At most one new public item and no more than two hours.",
+      "action": "acquisition.run",
+      "parameters": {
+        "schedule": "$REPO/research/operator-inputs/acquisition-schedule.json",
+        "max_new_items": 1,
+        "max_new_bytes": 6442450944,
+        "max_run_seconds": 7200,
+        "free_space_floor_bytes": 107374182400
+      }
+    },
+    {
+      "id": "retain-one-public-acquisition",
+      "label": "Retain one public acquisition",
+      "description": "Replay one reviewed completed public result and copy its exact payload to the fixed cold content address without changing the acquisition object.",
+      "action": "retention.public_acquisition",
+      "parameters": {
+        "work_order": "$REPO/research/operator-inputs/public-retention/work-order.json",
+        "acquisition_root": "$REPO/research/corpus/acquired",
+        "staging_root": "$REPO/research/operator-state/cold-retention-staging",
+        "receipt_root": "$REPO/research/operator-state/cold-retention-receipts",
+        "expected_work_order_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "expected_result_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "expected_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "expected_byte_count": 1,
+        "free_space_floor_bytes": 107374182400
+      }
+    },
+    {
+      "id": "archive-preprocess-next-four",
+      "label": "Preprocess next Archive results",
+      "description": "Replay the acquisition schedule and process up to four completed, unacknowledged results as ASR-ready media.",
+      "action": "archive.preprocess_next",
+      "parameters": {
+        "schedule": "$REPO/research/corpus/acquisition-planning/archive-background-epoch2-2026-08-29/producer-control/schedule.json",
+        "bundle_root": "$REPO/research/corpus/preprocess-archive-background-epoch2-2026-08-29-control",
+        "processing_output_root": "$REPO/research/corpus/preprocess-archive-background-epoch2-2026-08-29-output",
+        "limit": 4
+      }
+    },
+    {
+      "id": "archive-epoch3-rolling",
+      "label": "Run rolling Archive epoch 3",
+      "description": "Overlap one sequential Archive download with one sequential ASR-ready preprocess worker under the sealed epoch limits.",
+      "action": "archive.rolling_pipeline",
+      "parameters": {
+        "schedule": "$REPO/research/corpus/acquisition-planning/archive-background-epoch3-2026-08-29/producer-control/schedule.json",
+        "bundle_root": "$REPO/research/corpus/preprocess-archive-background-epoch3-2026-08-29-control",
+        "processing_output_root": "$REPO/research/corpus/preprocess-archive-background-epoch3-2026-08-29-output",
+        "max_new_items": 4,
+        "max_new_bytes": 8589934592,
+        "max_run_seconds": 14400,
+        "free_space_floor_bytes": 137438953472,
+        "max_preprocess_items": 8
+      }
+    },
+    {
+      "id": "preprocess-status-current",
+      "label": "Inspect ASR-ready preprocessing",
+      "description": "Validate receipts and show completed and pending ordinals.",
+      "action": "preprocess.status",
+      "parameters": {
+        "bundle": "$REPO/research/operator-inputs/preprocess-bundle",
+        "state_root": "$REPO/research/operator-state/preprocess"
+      }
+    },
+    {
+      "id": "preprocess-dry-run-one",
+      "label": "Dry-run one preprocessing item",
+      "description": "Replay the next item without writing stage output.",
+      "action": "preprocess.dry_run",
+      "parameters": {
+        "bundle": "$REPO/research/operator-inputs/preprocess-bundle",
+        "state_root": "$REPO/research/operator-state/preprocess",
+        "limit": 1,
+        "dry_run": true
+      }
+    },
+    {
+      "id": "preprocess-run-one",
+      "label": "Run one preprocessing item",
+      "description": "Run or resume one item and require the pipeline's immutable receipt.",
+      "action": "preprocess.run",
+      "parameters": {
+        "bundle": "$REPO/research/operator-inputs/preprocess-bundle",
+        "state_root": "$REPO/research/operator-state/preprocess",
+        "limit": 1
+      }
+    },
+    {
+      "id": "asr-queue-validate-current",
+      "label": "Validate current ASR queue",
+      "description": "Read-only exact version dispatch for a sealed v0.2 or v0.3 queue.",
+      "action": "asr_queue.validate",
+      "parameters": {
+        "manifest": "$REPO/research/operator-inputs/asr-queue/manifest.json"
+      }
+    },
+    {
+      "id": "asr-v03-runner-validate-current",
+      "label": "Deep-validate current ASR v0.3 queue",
+      "description": "Read-only replay of routing and reusable result trees for every sealed member.",
+      "action": "asr_queue.runner_v03_validate",
+      "parameters": {
+        "manifest": "$REPO/research/operator-inputs/asr-v03-queue/manifest.json"
+      }
+    },
+    {
+      "id": "asr-v03-runner-dry-run-current",
+      "label": "Dry-run the whole ASR v0.3 queue",
+      "description": "CPU-intensive whole-queue probe and adapter plan with no ASR result writes.",
+      "action": "asr_queue.runner_v03_dry_run",
+      "parameters": {
+        "manifest": "$REPO/research/operator-inputs/asr-v03-queue/manifest.json",
+        "dry_run": true
+      }
+    },
+    {
+      "id": "catalog-validate-current",
+      "label": "Validate private catalogue",
+      "description": "Read-only audit of a closed, checkpointed private catalogue.",
+      "action": "catalog.validate",
+      "parameters": {
+        "database": "$REPO/research/corpus/corpus.sqlite3"
+      }
+    },
+    {
+      "id": "gpu-v1-materialize-reviewed-ordinals",
+      "label": "Materialize reviewed GPU batch",
+      "description": "Create exact v5 work orders and a finite batch for selected ready queue ordinals.",
+      "action": "gpu.materialize_v1",
+      "parameters": {
+        "queue_manifest": "$REPO/research/operator-inputs/asr-v03-queue/manifest.json",
+        "expected_queue_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "root_registration": "$REPO/research/corpus/gpu-runtime/portable-v2-control/hot-root-registration.json",
+        "expected_root_registration_sha256": "9e10b6f7ce302b10d764f1640a1c2f7085efea1724803d39b33a78e86ffac41c",
+        "runtime_admission": "$REPO/research/corpus/gpu-runtime/portable-v2-control/runtime-admission-v2-admitted.json",
+        "expected_runtime_admission_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "production_profile": "$REPO/research/corpus/gpu-runtime/portable-v2-control/production-profile-v2.json",
+        "expected_production_profile_sha256": "bf2ce7100c554687a4fa84922822b2d488c97e3bcfdc93890f9f98e5b3838cce",
+        "queue_ordinals": [1],
+        "work_order_root": "$REPO/research/operator-state/gpu-v2/work-orders",
+        "receipt_root": "$REPO/research/operator-state/gpu-v2/materializations",
+        "result_root": "$REPO/research/operator-state/gpu-v2/results",
+        "batch_root": "$REPO/research/operator-state/gpu-v2/batches",
+        "event_root": "$REPO/research/operator-state/gpu-v2/events",
+        "lock_root": "$REPO/research/operator-state/gpu-v2/locks"
+      }
+    },
+    {
+      "id": "gpu-v2-run-reviewed-batch",
+      "label": "Run reviewed GPU batch",
+      "description": "Run one admitted private v2 batch through the root-owned launcher and bounded systemd cgroup.",
+      "action": "gpu.batch_v2",
+      "parameters": {
+        "batch_manifest": "$REPO/research/operator-inputs/gpu-v2/batch-manifest.json",
+        "expected_batch_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "expected_runtime_admission_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "production_profile": "$REPO/research/corpus/gpu-runtime/portable-v2-control/production-profile-v2.json",
+        "expected_production_profile_sha256": "bf2ce7100c554687a4fa84922822b2d488c97e3bcfdc93890f9f98e5b3838cce",
+        "root_registration": "$REPO/research/corpus/gpu-runtime/portable-v2-control/hot-root-registration.json",
+        "expected_root_registration_sha256": "9e10b6f7ce302b10d764f1640a1c2f7085efea1724803d39b33a78e86ffac41c",
+        "expected_launcher_profile_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+        "writable_result_root": "$REPO/research/operator-state/gpu-v2/results",
+        "writable_event_root": "$REPO/research/operator-state/gpu-v2/events",
+        "writable_lock_root": "$REPO/research/operator-state/gpu-v2/locks"
+      }
+    }
+  ]
+}

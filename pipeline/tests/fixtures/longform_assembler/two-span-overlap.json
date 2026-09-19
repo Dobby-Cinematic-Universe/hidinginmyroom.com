@@ -1,0 +1,101 @@
+{
+  "description": "Two tiny logical spans with duplicate overlap words and different core-owned tails.",
+  "total_samples": 800,
+  "planning_policy": {
+    "adaptive": {
+      "boundary_search_samples": 50,
+      "max_core_samples": 400,
+      "max_span_count": 4,
+      "min_core_samples": 200,
+      "padding_samples": 100,
+      "target_core_samples": 400
+    },
+    "direct_max_samples": 400,
+    "kind": "himr_longform_asr_planning_policy",
+    "schema_version": 1
+  },
+  "span_segments": [
+    [
+      {
+        "end_sample": 480,
+        "ordinal": 0,
+        "scores": {
+          "average_log_probability_raw": -0.2,
+          "compression_ratio_raw": 1.1,
+          "no_speech_probability_raw": 0.1,
+          "temperature_raw": 0.0
+        },
+        "start_sample": 320,
+        "text": " hello same left",
+        "timing_clipped": false,
+        "words": [
+          {
+            "end_sample": 360,
+            "ordinal": 0,
+            "probability_raw": 0.9,
+            "start_sample": 340,
+            "text": " hello",
+            "timing_clipped": false
+          },
+          {
+            "end_sample": 420,
+            "ordinal": 1,
+            "probability_raw": 0.8,
+            "start_sample": 390,
+            "text": " same",
+            "timing_clipped": false
+          },
+          {
+            "end_sample": 450,
+            "ordinal": 2,
+            "probability_raw": 0.7,
+            "start_sample": 430,
+            "text": " left",
+            "timing_clipped": false
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "end_sample": 180,
+        "ordinal": 0,
+        "scores": {
+          "average_log_probability_raw": -0.1,
+          "compression_ratio_raw": 1.0,
+          "no_speech_probability_raw": 0.1,
+          "temperature_raw": 0.0
+        },
+        "start_sample": 20,
+        "text": " hello same right",
+        "timing_clipped": false,
+        "words": [
+          {
+            "end_sample": 60,
+            "ordinal": 0,
+            "probability_raw": 0.85,
+            "start_sample": 40,
+            "text": " hello",
+            "timing_clipped": false
+          },
+          {
+            "end_sample": 120,
+            "ordinal": 1,
+            "probability_raw": 0.95,
+            "start_sample": 90,
+            "text": " same",
+            "timing_clipped": false
+          },
+          {
+            "end_sample": 150,
+            "ordinal": 2,
+            "probability_raw": 0.75,
+            "start_sample": 130,
+            "text": " right",
+            "timing_clipped": false
+          }
+        ]
+      }
+    ]
+  ]
+}

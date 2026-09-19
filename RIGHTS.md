@@ -30,6 +30,12 @@ Maintainers may decline or remove material whose ownership, permission, privacy,
 provenance is unclear. Do not submit leaked, private, intimate, or access-controlled
 material even if it is available elsewhere online.
 
+Publication of corpus metadata or transcript material is deny-by-default and follows
+the additional review, minimization, correction, and removal rules in
+[`docs/CORPUS_RIGHTS_AND_TAKEDOWN.md`](./docs/CORPUS_RIGHTS_AND_TAKEDOWN.md). A
+machine transcript's existence in a private workbench is not a decision to publish
+it.
+
 For a rights, attribution, privacy, or removal concern that can be explained entirely
 with public information, use the repository's content-correction issue form. If the
 report would expose private information or unpublished evidence, follow

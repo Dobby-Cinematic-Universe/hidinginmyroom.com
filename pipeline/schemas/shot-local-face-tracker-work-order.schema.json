@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/shot-local-face-tracker-work-order.schema.json",
+  "title": "Private deterministic shot-local face-tracker work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "policy",
+    "runtime",
+    "input",
+    "recipe",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/id" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "input": { "$ref": "#/$defs/input" },
+    "recipe": { "$ref": "#/$defs/recipe" },
+    "output": { "$ref": "#/$defs/output" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "absolutePath": { "type": "string", "pattern": "^/", "maxLength": 4096 },
+    "filePin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "expected_byte_count"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "network_allowed",
+        "embeddings_allowed",
+        "cross_shot_join_allowed",
+        "identity_decision_allowed",
+        "active_speaker_decision_allowed",
+        "publication_authority",
+        "human_review_required"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "embeddings_allowed": { "const": false },
+        "cross_shot_join_allowed": { "const": false },
+        "identity_decision_allowed": { "const": false },
+        "active_speaker_decision_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "human_review_required": { "const": true }
+      }
+    },
+    "python": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "expected_sha256",
+        "expected_byte_count",
+        "expected_version"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python"],
+      "properties": { "python": { "$ref": "#/$defs/python" } }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detections"],
+      "properties": { "detections": { "$ref": "#/$defs/filePin" } }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipe_id",
+        "algorithm",
+        "prediction",
+        "assignment_objective",
+        "minimum_assignment_iou",
+        "max_gap_frames",
+        "minimum_confirmed_detections",
+        "iou_round_decimals"
+      ],
+      "properties": {
+        "recipe_id": { "$ref": "#/$defs/id" },
+        "algorithm": { "const": "constant_velocity_hungarian_iou_v1" },
+        "prediction": { "const": "last_two_matched_boxes_per_frame_delta_v1" },
+        "assignment_objective": {
+          "const": "max_cardinality_then_max_total_iou_stable_v1"
+        },
+        "minimum_assignment_iou": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "max_gap_frames": { "type": "integer", "minimum": 0, "maximum": 250 },
+        "minimum_confirmed_detections": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250
+        },
+        "iou_round_decimals": { "const": 8 }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "$ref": "#/$defs/absolutePath" } }
+    }
+  }
+}

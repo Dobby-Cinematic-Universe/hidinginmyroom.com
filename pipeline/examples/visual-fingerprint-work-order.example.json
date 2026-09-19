@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "job_id": "visual-pilot-001",
+  "input": {
+    "path": "/srv/himr-media/derived/proxy-640x360-25fps.mp4",
+    "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_byte_count": 123456,
+    "media_id": "media_sha256_0000000000000000000000000000000000000000000000000000000000000000",
+    "artifact_id": "artifact_proxy_example",
+    "parent_processing_run_id": "run_preprocess_example",
+    "duration_ms": 120000,
+    "timeline_origin_ms": 0,
+    "video_stream_selector": "0:v:0",
+    "sealed": true
+  },
+  "engine": {
+    "executable": "/usr/bin/ffmpeg",
+    "expected_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "expected_byte_count": 421024,
+    "expected_version_output_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "expected_capabilities_output_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "version_label": "ffmpeg version pinned-example"
+  },
+  "extraction": {
+    "algorithm": "fixed_q20_dct_phash_8x8_v1",
+    "pixel_format": "gray",
+    "width": 32,
+    "height": 32,
+    "scale_flags": "bilinear",
+    "threads": 1,
+    "timeout_seconds_per_frame": 120,
+    "max_timestamp_drift_ms": 100,
+    "samples": [
+      {"sample_id": "opening", "window_id": "window-000", "start_ms": 0, "end_ms": 1000, "requested_timestamp_ms": 0, "timestamp_kind": "keyframe"},
+      {"sample_id": "scene-001", "window_id": "window-001", "start_ms": 30000, "end_ms": 31000, "requested_timestamp_ms": 30000, "timestamp_kind": "explicit"}
+    ]
+  },
+  "catalog_context": null,
+  "output": {"root": "/srv/himr-media/derived"}
+}

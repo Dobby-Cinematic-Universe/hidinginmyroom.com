@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/private-glossary-registration-v1.json",
+  "title": "HIMR private neutral glossary registration plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status", "plan_sha256", "private_glossary_registration_id",
+    "schema_version", "admin_version", "glossary", "registered_at", "policy"
+  ],
+  "properties": {
+    "status": { "enum": ["validated", "registered"] },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "private_glossary_registration_id": { "$ref": "#/$defs/identifier" },
+    "schema_version": { "const": 1 },
+    "admin_version": { "const": "private-neutral-glossary-admin/2" },
+    "glossary": { "$ref": "#/$defs/glossary" },
+    "registered_at": { "type": "string", "format": "date-time" },
+    "policy": { "$ref": "#/$defs/policy" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "privateRef": { "type": "string", "pattern": "^urn:private:sha256:[0-9a-f]{64}$" },
+    "glossary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref", "raw_sha256", "canonical_sha256", "byte_count",
+        "schema_version", "glossary_revision_id", "revision_label",
+        "revision_sha256", "language", "prompt_sha256", "term_count"
+      ],
+      "properties": {
+        "artifact_ref": { "$ref": "#/$defs/privateRef" },
+        "raw_sha256": { "const": "221543ce0a6ef220158d90c00bff95ec8d18aa911b11a40a3ac81e56e2a9b240" },
+        "canonical_sha256": { "const": "6bc1d768581d399c2ba846aba5454291b67ccea1c29efb452a4740ff3c1ab374" },
+        "byte_count": { "const": 613 },
+        "schema_version": { "const": 1 },
+        "glossary_revision_id": { "const": "glossary_himrverse_neutral_en_20260827_v1" },
+        "revision_label": { "const": "2026-08-27.1-machine-candidate" },
+        "revision_sha256": { "const": "69dcc99a3598677ce56e27d4b2916c5b1c9f91d36d8e69c8f7f3b7778370a61a" },
+        "language": { "const": "en" },
+        "prompt_sha256": { "const": "4ecd3ddb7e6546d145b260ab42ba64e003224e4b0e70d5d6847179fb01f29f96" },
+        "term_count": { "const": 26 }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility", "terms_in_plan", "terms_stored_in_catalog", "review_state",
+        "accuracy_claimed", "publication_authority"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "terms_in_plan": { "const": false },
+        "terms_stored_in_catalog": { "const": false },
+        "review_state": { "const": "machine_candidate_unreviewed" },
+        "accuracy_claimed": { "const": false },
+        "publication_authority": { "const": "none" }
+      }
+    }
+  }
+}

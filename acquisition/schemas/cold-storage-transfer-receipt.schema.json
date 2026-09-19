@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/cold-storage-transfer-receipt-v1.json",
+  "title": "HIMR cold-storage transfer receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "producer",
+    "transfer_id",
+    "status",
+    "completed_at",
+    "request",
+    "source",
+    "preflight",
+    "destination",
+    "verification",
+    "policy",
+    "catalog_location_candidate",
+    "identity_sha256",
+    "receipt_id"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "kind": { "const": "cold_storage_transfer_receipt" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "transfer_id": {
+      "type": "string",
+      "pattern": "^coldtx_[0-9a-f]{32}$"
+    },
+    "status": { "const": "completed" },
+    "completed_at": { "$ref": "#/$defs/timestamp" },
+    "request": { "$ref": "#/$defs/request" },
+    "source": { "$ref": "#/$defs/source" },
+    "preflight": { "$ref": "#/$defs/preflight" },
+    "destination": { "$ref": "#/$defs/destination" },
+    "verification": { "$ref": "#/$defs/verification" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "catalog_location_candidate": { "$ref": "#/$defs/catalogLocationCandidate" },
+    "identity_sha256": { "$ref": "#/$defs/sha256" },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^coldreceipt_[0-9a-f]{32}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "destination": {
+            "properties": {
+              "admission": { "const": "copied" }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "verification": {
+            "properties": {
+              "copy_stream_sha256": { "$ref": "#/$defs/sha256" },
+              "temporary_file_fsynced": { "const": true }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "verification": {
+            "properties": {
+              "copy_stream_sha256": { "type": "null" },
+              "temporary_file_fsynced": { "const": false }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "absoluteRoot": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4096,
+      "pattern": "^/(?!.*//)(?!.*(?:/\\.\\.?)(?:/|$))(?!.*\\/$)[^\\\\\\u0000]+$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*\\/$)[^\\\\\\u0000]+$"
+    },
+    "nonnegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "device": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "himr-cold-storage-transfer" },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_root",
+        "source_relative_path",
+        "destination_root",
+        "receipt_root",
+        "expected_sha256",
+        "expected_byte_count",
+        "free_space_floor_bytes"
+      ],
+      "properties": {
+        "source_root": { "$ref": "#/$defs/absoluteRoot" },
+        "source_relative_path": { "$ref": "#/$defs/relativePath" },
+        "destination_root": { "$ref": "#/$defs/absoluteRoot" },
+        "receipt_root": { "$ref": "#/$defs/absoluteRoot" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "$ref": "#/$defs/positiveInteger" },
+        "free_space_floor_bytes": { "$ref": "#/$defs/nonnegativeInteger" }
+      }
+    },
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device",
+        "inode",
+        "byte_count",
+        "mtime_ns",
+        "ctime_ns",
+        "owner_uid",
+        "mode",
+        "nlink"
+      ],
+      "properties": {
+        "device": { "$ref": "#/$defs/device" },
+        "inode": { "$ref": "#/$defs/nonnegativeInteger" },
+        "byte_count": { "$ref": "#/$defs/positiveInteger" },
+        "mtime_ns": { "type": "integer" },
+        "ctime_ns": { "type": "integer" },
+        "owner_uid": { "$ref": "#/$defs/nonnegativeInteger" },
+        "mode": { "const": "0400" },
+        "nlink": { "const": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "byte_count",
+        "identity_before",
+        "identity_after",
+        "regular_file",
+        "single_link",
+        "owner_sealed",
+        "symlink_components_followed",
+        "unchanged"
+      ],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "$ref": "#/$defs/positiveInteger" },
+        "identity_before": { "$ref": "#/$defs/fileIdentity" },
+        "identity_after": { "$ref": "#/$defs/fileIdentity" },
+        "regular_file": { "const": true },
+        "single_link": { "const": true },
+        "owner_sealed": { "const": true },
+        "symlink_components_followed": { "const": false },
+        "unchanged": { "const": true }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_root_device",
+        "receipt_root_device",
+        "destination_root_device",
+        "source_receipt_same_filesystem",
+        "destination_distinct_filesystem",
+        "destination_free_bytes_before",
+        "required_new_bytes",
+        "free_space_floor_bytes",
+        "projected_free_bytes",
+        "space_sufficient",
+        "archive_tree_scanned"
+      ],
+      "properties": {
+        "source_root_device": { "$ref": "#/$defs/device" },
+        "receipt_root_device": { "$ref": "#/$defs/device" },
+        "destination_root_device": { "$ref": "#/$defs/device" },
+        "source_receipt_same_filesystem": { "const": true },
+        "destination_distinct_filesystem": { "const": true },
+        "destination_free_bytes_before": { "$ref": "#/$defs/nonnegativeInteger" },
+        "required_new_bytes": { "$ref": "#/$defs/nonnegativeInteger" },
+        "free_space_floor_bytes": { "$ref": "#/$defs/nonnegativeInteger" },
+        "projected_free_bytes": { "$ref": "#/$defs/nonnegativeInteger" },
+        "space_sufficient": { "const": true },
+        "archive_tree_scanned": { "const": false }
+      }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "storage_uri",
+        "storage_class",
+        "sha256",
+        "byte_count",
+        "mode",
+        "nlink",
+        "admission",
+        "verified_at"
+      ],
+      "properties": {
+        "relative_path": {
+          "type": "string",
+          "pattern": "^media/sha256/[0-9a-f]{2}/[0-9a-f]{64}/payload$"
+        },
+        "storage_uri": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 8192,
+          "pattern": "^file:///"
+        },
+        "storage_class": { "const": "local_cold_archive" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "$ref": "#/$defs/positiveInteger" },
+        "mode": { "const": "0400" },
+        "nlink": { "const": 1 },
+        "admission": {
+          "enum": ["copied", "existing_verified", "recovered_existing"]
+        },
+        "verified_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "copy_stream_sha256",
+        "archive_readback_sha256",
+        "archive_readback_byte_count",
+        "archive_full_read_count",
+        "bounded_archive_read",
+        "temporary_file_fsynced",
+        "final_file_fsynced",
+        "destination_directories_fsynced",
+        "atomic_no_replace",
+        "source_reverified"
+      ],
+      "properties": {
+        "copy_stream_sha256": {
+          "oneOf": [
+            { "$ref": "#/$defs/sha256" },
+            { "type": "null" }
+          ]
+        },
+        "archive_readback_sha256": { "$ref": "#/$defs/sha256" },
+        "archive_readback_byte_count": { "$ref": "#/$defs/positiveInteger" },
+        "archive_full_read_count": { "const": 1 },
+        "bounded_archive_read": { "const": true },
+        "temporary_file_fsynced": { "type": "boolean" },
+        "final_file_fsynced": { "const": true },
+        "destination_directories_fsynced": { "const": true },
+        "atomic_no_replace": { "const": true },
+        "source_reverified": { "const": true }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_deleted",
+        "source_mutated",
+        "network_actions_performed",
+        "media_processing_performed",
+        "archive_indexing_performed",
+        "catalogue_mutated",
+        "catalogue_import_authority",
+        "publication_authority",
+        "archive_read_policy"
+      ],
+      "properties": {
+        "source_deleted": { "const": false },
+        "source_mutated": { "const": false },
+        "network_actions_performed": { "const": false },
+        "media_processing_performed": { "const": false },
+        "archive_indexing_performed": { "const": false },
+        "catalogue_mutated": { "const": false },
+        "catalogue_import_authority": { "const": "none" },
+        "publication_authority": { "const": "none" },
+        "archive_read_policy": {
+          "const": "one_explicit_object_checksum_verification_only"
+        }
+      }
+    },
+    "catalogLocationCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "media_id",
+        "storage_uri",
+        "storage_class",
+        "verified_at",
+        "is_primary",
+        "import_authority"
+      ],
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "pattern": "^media_sha256_[0-9a-f]{64}$"
+        },
+        "storage_uri": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 8192,
+          "pattern": "^file:///"
+        },
+        "storage_class": { "const": "local_cold_archive" },
+        "verified_at": { "$ref": "#/$defs/timestamp" },
+        "is_primary": { "const": 0 },
+        "import_authority": { "const": "none" }
+      }
+    }
+  }
+}

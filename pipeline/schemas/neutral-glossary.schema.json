@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/neutral-glossary-v1.json",
+  "title": "HIMR neutral ASR glossary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "glossary_revision_id",
+    "revision",
+    "language",
+    "terms"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "glossary_revision_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "revision": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$"
+    },
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
+import {loadCorpusGraph} from '../../../lib/corpus/graph';
+import type {CorpusGraphEvent,CorpusGraphEntity} from '../../../lib/corpus/types';
+export async function getStaticPaths(){
+  const graph=await loadCorpusGraph();
+  if(!graph.derived)return [];
+  const buckets=new Map<string,CorpusGraphEvent[]>();
+  for(const e of graph.events){const key=e.slug.slice(6,8);if(!buckets.has(key))buckets.set(key,[]);buckets.get(key)!.push(e);}
+  return [...buckets].map(([bucket,events])=>({params:{bucket},props:{events,entities:graph.entities,groups:graph.eventGroups||[]}}));
+}
+const {events,entities,groups}=Astro.props;
+const names=new Map<string,CorpusGraphEntity>(entities.map((e:CorpusGraphEntity)=>[e.entity_id,e]));
+---
+<CorpusLayout title="Source event descriptions | HIMR Corpus">
+  <nav><a href="/corpus/graph/">← Entities &amp; events</a></nav>
+  <h1>Source event descriptions</h1>
+  <DerivedNotice />
+  <p>Each description retains its sources. Recording dates are not necessarily event dates.</p>
+  {events.map((event:CorpusGraphEvent)=><article id={event.slug}>
+    <h2>{event.label}</h2><p>{event.description}</p>
+    <p>{event.classification==='reported_allegation'?'Reported allegation':event.classification==='uncertainty'?'Uncertain account':'Reported statement—not independently verified'}</p>
+    <p>Dates mentioned: {event.dateMentions?.join(' · ')||'None extracted'}</p>
+    <p>Names mentioned: {(event.mentionedEntities||[]).map(id=>names.get(id)).filter(Boolean).map(e=><a href={`/corpus/entities/${e!.slug}/`}>{e!.label} </a>)}</p>
+    <ul>{(event.sourceRecordings||[]).map(r=><li><a href={`/corpus/videos/${r.slug}/`}>{r.title}</a> · Recording date: {r.recording_date||'unknown'}</li>)}</ul>
+    <p>Source summaries: {(event.sourceSummaryIds||[]).map(id=><a href={`/corpus/summaries/${id}/`}>Recording summary </a>)}</p>
+    {groups.filter(g=>g.members.includes(event.event_id)).map(g=><p><a href={`/corpus/event-groups/${g.slug}/`}>Compare related accounts</a></p>)}
+    <a href={`#${event.slug}`}>Link to this description</a>
+  </article>)}
+</CorpusLayout>
+<style>
+  article{margin:1.5rem 0;padding:1.2rem;border:1px solid var(--corpus-line);border-radius:.5rem;scroll-margin-top:1rem;max-width:85ch}
+  article:target{border-color:var(--corpus-accent)}h2{font-size:1.2rem;line-height:1.45}p,li{line-height:1.65}a{margin-right:.35rem}
+</style>

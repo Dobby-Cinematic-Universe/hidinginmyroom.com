@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/preprocess-batch-manifest-v1.json",
+  "title": "Immutable private media-preprocess work-order batch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_kind", "materializer", "selection", "profile", "producer", "tools", "processing_output_root", "work_order_count", "work_orders", "safety", "bundle_id", "bundle_relative_path", "identity_sha256", "manifest_sha256"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "bundle_kind": { "const": "private_media_preprocess_work_order_batch" },
+    "materializer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "himr-preprocess-batch" },
+        "version": { "enum": ["0.1.0", "0.2.0", "0.3.0"] }
+      }
+    },
+    "selection": { "$ref": "#/$defs/selection_reference" },
+    "profile": { "$ref": "#/$defs/profile_reference" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ffmpeg", "ffprobe"],
+      "properties": {
+        "ffmpeg": { "$ref": "#/$defs/tool" },
+        "ffprobe": { "$ref": "#/$defs/tool" }
+      }
+    },
+    "processing_output_root": { "$ref": "#/$defs/path" },
+    "work_order_count": { "type": "integer", "minimum": 1, "maximum": 128 },
+    "work_orders": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/work_order_descriptor" }
+    },
+    "handling_control": { "$ref": "#/$defs/handling_control" },
+    "safety": { "$ref": "#/$defs/bundle_safety" },
+    "bundle_id": { "type": "string", "pattern": "^ppbatch_[0-9a-f]{32}$" },
+    "bundle_relative_path": { "type": "string", "pattern": "^bundles/ppbatch_[0-9a-f]{32}$", "maxLength": 256 },
+    "identity_sha256": { "$ref": "#/$defs/sha256" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "path": { "type": "string", "pattern": "^/", "minLength": 1, "maxLength": 16384 },
+    "selection_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "selection_id", "sha256", "byte_count", "semantic_sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "selection_id": { "type": "string", "pattern": "^pbsel_[0-9a-f]{32}$" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 4194304 },
+        "semantic_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "profile_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "profile"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 65536 },
+        "profile": { "$ref": "#/$defs/profile" }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "ffmpeg_threads", "audio_sample_rate_hz", "audio_channels", "audio_sample_format", "flac_compression_level", "proxy_width", "proxy_height", "proxy_fps", "proxy_video_codec", "proxy_preset", "proxy_crf", "proxy_audio_codec", "proxy_audio_bitrate", "scene_threshold_percent", "silence_noise_db", "silence_min_duration_ms", "near_silent_fraction"],
+      "properties": {
+        "profile_id": { "const": "cpu-balanced-v1" },
+        "ffmpeg_threads": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "audio_sample_rate_hz": { "const": 16000 },
+        "audio_channels": { "const": 1 },
+        "audio_sample_format": { "const": "s16" },
+        "flac_compression_level": { "type": "integer", "minimum": 0, "maximum": 12 },
+        "proxy_width": { "type": "integer", "minimum": 2, "maximum": 1280 },
+        "proxy_height": { "type": "integer", "minimum": 2, "maximum": 1280 },
+        "proxy_fps": { "type": "integer", "minimum": 1, "maximum": 120 },
+        "proxy_video_codec": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "proxy_preset": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "proxy_crf": { "type": "integer", "minimum": 0, "maximum": 51 },
+        "proxy_audio_codec": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "proxy_audio_bitrate": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "scene_threshold_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "silence_noise_db": { "type": "number", "minimum": -100, "maximum": 0 },
+        "silence_min_duration_ms": { "type": "integer", "minimum": 1, "maximum": 9223372036854775807 },
+        "near_silent_fraction": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "implementation_version"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 4194304 },
+        "implementation_version": { "type": "string", "minLength": 1, "maxLength": 64 }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path", "executable_sha256", "executable_byte_count", "version", "version_output", "version_output_sha256", "build_configuration"],
+      "properties": {
+        "name": { "enum": ["ffmpeg", "ffprobe"] },
+        "path": { "$ref": "#/$defs/path" },
+        "executable_sha256": { "$ref": "#/$defs/sha256" },
+        "executable_byte_count": { "type": "integer", "minimum": 1, "maximum": 9223372036854775807 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "version_output": { "type": "string", "minLength": 1, "maxLength": 524288 },
+        "version_output_sha256": { "$ref": "#/$defs/sha256" },
+        "build_configuration": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1, "maxLength": 262144 }
+          ]
+        }
+      }
+    },
+    "work_order_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "entry_id", "job_id", "path", "sha256", "byte_count"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "entry_id": { "type": "string", "pattern": "^pbe_[0-9a-f]{32}$" },
+        "job_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+        "path": { "type": "string", "pattern": "^work-orders/[0-9]{6}\\.json$", "maxLength": 256 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 262144 },
+        "handling_boundary_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "handling_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_scope", "publication_disposition", "publication_authority", "basis"],
+      "properties": {
+        "storage_scope": { "const": "private_canonical_cache" },
+        "publication_disposition": { "enum": ["no_publication_authority", "never_publish"] },
+        "publication_authority": { "const": "none" },
+        "basis": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "handling_control_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "entry_id", "handling_policy", "handling_boundary_sha256", "seal_receipt_sha256", "seal_plan_sha256", "source_byte_identity_claimed"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "entry_id": { "type": "string", "pattern": "^pbe_[0-9a-f]{32}$" },
+        "handling_policy": { "$ref": "#/$defs/handling_policy" },
+        "handling_boundary_sha256": { "$ref": "#/$defs/sha256" },
+        "seal_receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "seal_plan_sha256": { "$ref": "#/$defs/sha256" },
+        "source_byte_identity_claimed": { "const": false }
+      }
+    },
+    "handling_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "private_entry_count", "entries", "seal_receipt_replay_required", "handling_policy_propagation_required", "publication_authority", "identity_sha256"],
+      "properties": {
+        "kind": { "const": "v30_private_acquisition_handling_control" },
+        "private_entry_count": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/handling_control_entry" }
+        },
+        "seal_receipt_replay_required": { "const": true },
+        "handling_policy_propagation_required": { "const": true },
+        "publication_authority": { "const": "none" },
+        "identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "bundle_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "network_allowed", "credentials_allowed", "publication_authority", "identity_claims_allowed", "source_bytes_preserved", "automatic_catalog_admission", "sequential_execution_only", "default_run_limit", "maximum_items", "receipt_required_for_completion"],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "credentials_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_claims_allowed": { "const": false },
+        "source_bytes_preserved": { "const": true },
+        "automatic_catalog_admission": { "const": false },
+        "private_acquisition_seal_required": { "const": true },
+        "handling_policy_propagation_required": { "const": true },
+        "sequential_execution_only": { "const": true },
+        "default_run_limit": { "const": 1 },
+        "maximum_items": { "const": 128 },
+        "receipt_required_for_completion": { "const": true }
+      }
+    }
+  }
+}

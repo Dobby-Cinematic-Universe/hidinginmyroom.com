@@ -1,0 +1,20 @@
+{
+  "audio_channels": 1,
+  "audio_sample_format": "s16",
+  "audio_sample_rate_hz": 16000,
+  "ffmpeg_threads": 4,
+  "flac_compression_level": 8,
+  "near_silent_fraction": 0.98,
+  "profile_id": "cpu-balanced-v1",
+  "proxy_audio_bitrate": "96k",
+  "proxy_audio_codec": "aac",
+  "proxy_crf": 28,
+  "proxy_fps": 25,
+  "proxy_height": 360,
+  "proxy_preset": "veryfast",
+  "proxy_video_codec": "libx264",
+  "proxy_width": 640,
+  "scene_threshold_percent": 10.0,
+  "silence_min_duration_ms": 750,
+  "silence_noise_db": -35.0
+}

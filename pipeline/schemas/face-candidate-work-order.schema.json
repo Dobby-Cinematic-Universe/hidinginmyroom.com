@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/face-candidate-work-order.schema.json",
+  "title": "Private YuNet/SFace face-candidate work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "policy",
+    "runtime",
+    "models",
+    "parameters",
+    "frames",
+    "comparisons",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/id" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "models": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["yunet", "sface"],
+      "properties": {
+        "yunet": { "$ref": "#/$defs/model" },
+        "sface": { "$ref": "#/$defs/model" }
+      }
+    },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/frame" }
+    },
+    "comparisons": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": { "$ref": "#/$defs/comparison" }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "$ref": "#/$defs/absolutePath" } }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "absolutePath": { "type": "string", "pattern": "^/", "maxLength": 4096 },
+    "filePin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "expected_byte_count"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "network_allowed",
+        "publication_authority",
+        "identity_decision_allowed",
+        "human_review_required",
+        "calibration_state",
+        "calibrated_probability",
+        "source_context_is_identity"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_decision_allowed": { "const": false },
+        "human_review_required": { "const": true },
+        "calibration_state": { "const": "not_calibrated" },
+        "calibrated_probability": { "type": "null" },
+        "source_context_is_identity": { "const": false }
+      }
+    },
+    "pythonRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "expected_sha256",
+        "expected_byte_count",
+        "expected_version"
+      ],
+      "properties": {
+        "executable": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": { "type": "integer", "minimum": 1 },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "packageRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wheel", "binary", "expected_version"],
+      "properties": {
+        "wheel": { "$ref": "#/$defs/filePin" },
+        "binary": { "$ref": "#/$defs/filePin" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "opencvRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wheel",
+        "binary",
+        "expected_version",
+        "expected_build_information_sha256"
+      ],
+      "properties": {
+        "wheel": { "$ref": "#/$defs/filePin" },
+        "binary": { "$ref": "#/$defs/filePin" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "expected_build_information_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_root", "python", "opencv", "numpy"],
+      "properties": {
+        "module_root": { "$ref": "#/$defs/absolutePath" },
+        "python": { "$ref": "#/$defs/pythonRuntime" },
+        "opencv": { "$ref": "#/$defs/opencvRuntime" },
+        "numpy": { "$ref": "#/$defs/packageRuntime" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "license",
+        "upstream_url",
+        "upstream_commit",
+        "license_expression"
+      ],
+      "properties": {
+        "artifact": { "$ref": "#/$defs/filePin" },
+        "license": { "$ref": "#/$defs/filePin" },
+        "upstream_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/opencv/opencv_zoo/"
+        },
+        "upstream_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "license_expression": { "enum": ["MIT", "Apache-2.0"] }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score_threshold",
+        "nms_threshold",
+        "top_k",
+        "threads",
+        "max_frames",
+        "max_detections_per_frame",
+        "comparison_metric",
+        "embedding_format"
+      ],
+      "properties": {
+        "score_threshold": { "type": "number", "minimum": 0.01, "maximum": 1 },
+        "nms_threshold": { "type": "number", "minimum": 0.01, "maximum": 1 },
+        "top_k": { "type": "integer", "minimum": 1, "maximum": 5000 },
+        "threads": { "const": 1 },
+        "max_frames": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "max_detections_per_frame": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "comparison_metric": { "const": "cosine_similarity_raw_v1" },
+        "embedding_format": { "const": "float32_little_endian_v1" }
+      }
+    },
+    "sourceContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_role",
+        "source_native_id",
+        "source_url",
+        "source_context_label",
+        "basis",
+        "human_identity_attestation"
+      ],
+      "properties": {
+        "context_role": {
+          "enum": ["source_context_anchor", "comparison_query"]
+        },
+        "source_native_id": { "$ref": "#/$defs/id" },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "source_context_label": {
+          "type": ["string", "null"],
+          "maxLength": 128
+        },
+        "basis": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "human_identity_attestation": { "const": false }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_id",
+        "path",
+        "expected_sha256",
+        "expected_byte_count",
+        "requested_timestamp_ms",
+        "observed_timestamp_ms",
+        "timestamp_drift_ms",
+        "coordinate_system",
+        "source_context"
+      ],
+      "properties": {
+        "frame_id": { "$ref": "#/$defs/id" },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "expected_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "requested_timestamp_ms": { "type": "integer", "minimum": 0 },
+        "observed_timestamp_ms": { "type": "integer", "minimum": 0 },
+        "timestamp_drift_ms": {
+          "type": "integer",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "coordinate_system": { "$ref": "#/$defs/id" },
+        "source_context": { "$ref": "#/$defs/sourceContext" }
+      }
+    },
+    "candidateMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left_source_timestamp_ms",
+        "right_artifact_timestamp_ms",
+        "basis",
+        "recording_relationship_decision"
+      ],
+      "properties": {
+        "left_source_timestamp_ms": { "type": "integer", "minimum": 0 },
+        "right_artifact_timestamp_ms": { "type": "integer", "minimum": 0 },
+        "basis": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "recording_relationship_decision": { "const": false }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparison_id",
+        "left_frame_id",
+        "right_frame_id",
+        "candidate_coordinate_mapping"
+      ],
+      "properties": {
+        "comparison_id": { "$ref": "#/$defs/id" },
+        "left_frame_id": { "$ref": "#/$defs/id" },
+        "right_frame_id": { "$ref": "#/$defs/id" },
+        "candidate_coordinate_mapping": { "$ref": "#/$defs/candidateMapping" }
+      }
+    }
+  }
+}

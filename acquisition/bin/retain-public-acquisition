@@ -1,0 +1,158 @@
+#!/usr/bin/python3 -IB
+"""Isolated, hash-pinned entrypoint for one public-acquisition retention."""
+
+from __future__ import annotations
+
+import hashlib
+import os
+import stat
+import sys
+import types
+from pathlib import Path
+
+
+if (
+    sys.flags.isolated != 1
+    or sys.flags.no_user_site != 1
+    or sys.flags.dont_write_bytecode != 1
+):
+    raise RuntimeError("public-retention launcher requires isolated Python -IB")
+
+
+ACQUISITION_ROOT = Path(__file__).resolve().parent.parent
+MAX_SOURCE_BYTES = 4 * 1024 * 1024
+EXPECTED_SOURCES = {
+    "acquire.py": "de7eaa811232aaeecc1bf53f94904aa21753dd8d7e2e35cc0b52033927732d47",
+    "cold_storage_transfer.py": "f6509b04b047eb3fb428cb785399c7e3812bb2ee3e89620668cc99c952e34446",
+    "retain_public_acquisition.py": "6d51d8a965f3eab7e9ae3a2917d19fd32f0ffcc2bc20fd4914c15c8844f03efb",
+}
+
+
+def _identity(value: os.stat_result) -> tuple[int, ...]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_nlink,
+        value.st_uid,
+        value.st_gid,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
+def _directory_flags() -> int:
+    return (
+        os.O_RDONLY
+        | getattr(os, "O_CLOEXEC", 0)
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_DIRECTORY", 0)
+    )
+
+
+def _file_flags() -> int:
+    return (
+        os.O_RDONLY
+        | getattr(os, "O_CLOEXEC", 0)
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+
+
+def _retain_source(
+    root_descriptor: int,
+    root_stat: os.stat_result,
+    name: str,
+    expected_sha256: str,
+) -> tuple[int, bytes, Path]:
+    path = ACQUISITION_ROOT / name
+    inspected = os.stat(name, dir_fd=root_descriptor, follow_symlinks=False)
+    if (
+        stat.S_ISLNK(inspected.st_mode)
+        or not stat.S_ISREG(inspected.st_mode)
+        or inspected.st_uid != os.geteuid()
+        or inspected.st_nlink != 1
+        or stat.S_IMODE(inspected.st_mode) & 0o7022
+        or inspected.st_dev != root_stat.st_dev
+        or not 1 <= inspected.st_size <= MAX_SOURCE_BYTES
+    ):
+        raise RuntimeError(f"public-retention source is unsafe: {name}")
+    descriptor = os.open(name, _file_flags(), dir_fd=root_descriptor)
+    try:
+        opened = os.fstat(descriptor)
+        body = bytearray()
+        while len(body) < opened.st_size:
+            chunk = os.read(descriptor, opened.st_size - len(body))
+            if not chunk:
+                break
+            body.extend(chunk)
+        if os.read(descriptor, 1):
+            raise RuntimeError(f"public-retention source grew while reading: {name}")
+        after = os.fstat(descriptor)
+        current = os.stat(name, dir_fd=root_descriptor, follow_symlinks=False)
+        if (
+            len(body) != opened.st_size
+            or _identity(inspected) != _identity(opened)
+            or _identity(opened) != _identity(after)
+            or _identity(after) != _identity(current)
+            or hashlib.sha256(body).hexdigest() != expected_sha256
+        ):
+            raise RuntimeError(
+                f"public-retention source differs from launcher pin: {name}"
+            )
+        return descriptor, bytes(body), path
+    except Exception:
+        os.close(descriptor)
+        raise
+
+
+def _load_verified_module(name: str, body: bytes, path: Path) -> types.ModuleType:
+    module = types.ModuleType(name)
+    module.__file__ = str(path)
+    module.__package__ = ""
+    module.__loader__ = None
+    module.__spec__ = None
+    sys.modules[name] = module
+    code = compile(body, str(path), "exec", dont_inherit=True)
+    exec(code, module.__dict__)
+    return module
+
+
+root_descriptor = os.open(ACQUISITION_ROOT, _directory_flags())
+retained: dict[str, tuple[int, bytes, Path]] = {}
+try:
+    root_stat = os.fstat(root_descriptor)
+    current_root = ACQUISITION_ROOT.lstat()
+    if (
+        stat.S_ISLNK(current_root.st_mode)
+        or not stat.S_ISDIR(current_root.st_mode)
+        or current_root.st_uid != os.geteuid()
+        or stat.S_IMODE(current_root.st_mode) & 0o022
+        or _identity(current_root) != _identity(root_stat)
+    ):
+        raise RuntimeError("public-retention acquisition root is unsafe")
+    for source_name, source_sha256 in EXPECTED_SOURCES.items():
+        retained[source_name] = _retain_source(
+            root_descriptor, root_stat, source_name, source_sha256
+        )
+
+    _load_verified_module("acquire", retained["acquire.py"][1], retained["acquire.py"][2])
+    _load_verified_module(
+        "cold_storage_transfer",
+        retained["cold_storage_transfer.py"][1],
+        retained["cold_storage_transfer.py"][2],
+    )
+    retention = _load_verified_module(
+        "retain_public_acquisition",
+        retained["retain_public_acquisition.py"][1],
+        retained["retain_public_acquisition.py"][2],
+    )
+finally:
+    for descriptor, _body, _path in reversed(tuple(retained.values())):
+        os.close(descriptor)
+    os.close(root_descriptor)
+
+
+if __name__ == "__main__":
+    raise SystemExit(retention.main())

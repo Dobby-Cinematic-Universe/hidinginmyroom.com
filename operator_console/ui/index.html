@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="referrer" content="no-referrer">
+    <title>HIMR autonomous pipeline</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body aria-busy="false">
+    <a class="skip-link" href="#main-content">Skip to pipeline controls</a>
+
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Private loopback workspace</p>
+        <h1>HIMR autonomous pipeline</h1>
+      </div>
+      <div class="header-status">
+        <span id="connection-badge" class="status-badge" data-tone="neutral">Connecting</span>
+        <p id="aggregate-status" class="aggregate-status" role="status" aria-live="polite">
+          Loading current pipeline state…
+        </p>
+      </div>
+    </header>
+
+    <noscript>
+      <section class="standalone-message" role="alert">
+        <h2>JavaScript is required</h2>
+        <p>The local console cannot validate state or operate the autonomous pipeline without JavaScript.</p>
+      </section>
+    </noscript>
+
+    <main id="main-content" tabindex="-1">
+      <section
+        id="error-summary"
+        class="error-summary"
+        role="alert"
+        aria-labelledby="error-summary-title"
+        tabindex="-1"
+        hidden
+      >
+        <h2 id="error-summary-title">The request could not be completed</h2>
+        <ul id="error-list"></ul>
+      </section>
+
+      <section id="loading-panel" class="standalone-message" aria-labelledby="loading-title">
+        <span class="loading-mark" aria-hidden="true"></span>
+        <h2 id="loading-title">Loading pipeline state</h2>
+        <p>The console is validating the autonomous controls and current monitor snapshot.</p>
+      </section>
+
+      <section
+        id="invalid-panel"
+        class="standalone-message danger-panel"
+        aria-labelledby="invalid-title"
+        tabindex="-1"
+        hidden
+      >
+        <p class="panel-kicker">Controls disabled</p>
+        <h2 id="invalid-title">Pipeline state is unavailable</h2>
+        <p id="invalid-detail">The server did not provide a safe state snapshot.</p>
+        <p>The console will retry automatically. Start and Stop remain disabled until a current snapshot is validated.</p>
+      </section>
+
+      <div id="console-workspace" hidden>
+        <section class="control-panel" aria-labelledby="pipeline-control-title">
+          <div class="control-copy">
+            <div class="control-title-row">
+              <div>
+                <p class="eyebrow">Autonomous operation</p>
+                <h2 id="pipeline-control-title">Pipeline control</h2>
+              </div>
+              <span id="overall-state-badge" class="status-badge status-badge-large" data-tone="neutral">
+                Unknown
+              </span>
+            </div>
+            <p id="pipeline-description" class="lede">
+              The registered autonomous controller manages all stages and resource decisions.
+            </p>
+            <p id="control-note" class="control-note" role="status" aria-live="polite">
+              Controls are waiting for a validated snapshot.
+            </p>
+          </div>
+
+          <div class="primary-controls" aria-label="Pipeline controls">
+            <button
+              id="start-pipeline"
+              class="button button-start"
+              type="button"
+              aria-describedby="control-note"
+              disabled
+            >
+              Start
+            </button>
+            <button
+              id="stop-pipeline"
+              class="button button-stop"
+              type="button"
+              aria-describedby="control-note"
+              disabled
+            >
+              Stop
+            </button>
+          </div>
+        </section>
+
+        <section class="monitor-grid" aria-label="Pipeline monitors">
+          <section class="monitor-panel monitor-overall" aria-labelledby="overall-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Controller telemetry</p>
+                <h2 id="overall-title">Overall state</h2>
+              </div>
+              <span id="telemetry-age" class="count-badge">Waiting</span>
+            </div>
+            <dl id="overall-facts" class="fact-grid"></dl>
+          </section>
+
+          <section class="monitor-panel monitor-stages" aria-labelledby="stages-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Controller lanes</p>
+                <h2 id="stages-title">Latest stage outcomes</h2>
+              </div>
+            </div>
+            <div id="stage-list" class="stage-grid"></div>
+            <div class="reservation-heading">
+              <h3 id="reservations-title">Console launch reservations</h3>
+              <p class="muted">Admission gates only; these are not CPU, GPU, network, or disk-utilization readings.</p>
+            </div>
+            <dl id="resource-list" class="resource-grid" aria-labelledby="reservations-title"></dl>
+          </section>
+
+          <section class="monitor-panel monitor-collections" aria-labelledby="collections-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">All configured Archive sources</p>
+                <h2 id="collections-title">Collection coverage</h2>
+              </div>
+              <span id="collection-total" class="count-badge">Not reported</span>
+            </div>
+            <dl id="collection-coverage" class="metric-grid metric-grid-wide"></dl>
+            <p id="collection-empty" class="muted">No collection discovery totals have been reported.</p>
+          </section>
+
+          <section class="monitor-panel monitor-progress" aria-labelledby="progress-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Work completed</p>
+                <h2 id="progress-title">Throughput &amp; progress</h2>
+              </div>
+              <span id="progress-value" class="count-badge">Not reported</span>
+            </div>
+            <label id="progress-label" class="progress-label" for="pipeline-progress">Pipeline progress</label>
+            <progress id="pipeline-progress" max="100" value="0">0%</progress>
+            <p id="progress-detail" class="monitor-note">Waiting for pipeline telemetry.</p>
+            <dl id="throughput-list" class="metric-grid"></dl>
+            <p id="throughput-empty" class="muted">No throughput telemetry has been reported.</p>
+            <p class="monitor-note">ASR complete (ordinary queue) is separate from long-form recording completion below; these counts are not added together.</p>
+          </section>
+
+          <section class="monitor-panel monitor-storage" aria-labelledby="storage-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Capacity &amp; movement</p>
+                <h2 id="storage-title">Storage</h2>
+              </div>
+            </div>
+            <dl id="storage-list" class="metric-grid"></dl>
+            <p id="storage-empty" class="muted">No storage telemetry has been reported.</p>
+          </section>
+
+          <section class="monitor-panel monitor-longform" aria-labelledby="longform-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Cached companion statistics</p>
+                <h2 id="longform-title">Long-form ASR</h2>
+              </div>
+              <span id="longform-age" class="count-badge">Not reported</span>
+            </div>
+            <p id="longform-detail" class="monitor-note">Long-form companion statistics have not been reported.</p>
+            <div id="longform-progress-section" hidden>
+              <label class="progress-label" for="longform-progress">Long-form ASR complete · of discovered recordings</label>
+              <progress id="longform-progress" max="100" value="0" aria-describedby="longform-detail">0%</progress>
+            </div>
+            <dl id="longform-counts" class="metric-grid metric-grid-wide"></dl>
+            <p id="longform-lifecycle" class="monitor-note" hidden></p>
+            <p id="longform-error" class="monitor-note" hidden></p>
+            <p class="monitor-note">This is progress within discovered long-form recordings, not the full campaign. Counts come from cached completed recording jobs, not a fresh verification of transcript files.</p>
+          </section>
+
+          <section class="monitor-panel monitor-errors" aria-labelledby="errors-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Attention required</p>
+                <h2 id="errors-title">Errors</h2>
+              </div>
+              <span id="monitor-error-count" class="count-badge">0</span>
+            </div>
+            <ul id="pipeline-errors" class="error-list" aria-live="polite"></ul>
+            <p id="errors-empty" class="healthy-message">No errors reported.</p>
+          </section>
+
+          <section class="monitor-panel monitor-activity" aria-labelledby="activity-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Newest first</p>
+                <h2 id="activity-title">Recent activity</h2>
+              </div>
+              <span id="activity-count" class="count-badge">0</span>
+            </div>
+            <p id="activity-history-note" class="monitor-note" hidden></p>
+            <ol id="activity-list" class="activity-list"></ol>
+            <p id="activity-empty" class="muted">No pipeline activity has been recorded.</p>
+          </section>
+
+          <section class="monitor-panel monitor-output" aria-labelledby="output-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Automatic log tail</p>
+                <h2 id="output-title">Latest run output</h2>
+              </div>
+              <span id="output-job" class="count-badge">No run</span>
+            </div>
+            <div class="log-grid">
+              <section class="log-panel" aria-labelledby="stdout-title">
+                <div class="log-heading">
+                  <h3 id="stdout-title">Standard output</h3>
+                  <span id="stdout-status">Not available</span>
+                </div>
+                <p id="stdout-truncation" class="log-notice" hidden></p>
+                <pre id="stdout-log" tabindex="0" aria-label="Latest standard output log"></pre>
+              </section>
+
+              <section class="log-panel" aria-labelledby="stderr-title">
+                <div class="log-heading">
+                  <h3 id="stderr-title">Standard error</h3>
+                  <span id="stderr-status">Not available</span>
+                </div>
+                <p id="stderr-truncation" class="log-notice" hidden></p>
+                <pre id="stderr-log" tabindex="0" aria-label="Latest standard error log"></pre>
+              </section>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Commands, paths, and parameters remain bound server-side. Durable receipts and validators remain completion authority.</p>
+      <div class="footer-state">
+        <code id="state-revision">Revision unavailable</code>
+        <code id="profile-set-digest">Profile set unavailable</code>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "kind": "himr_speaker_screen_timed_cues",
+  "schema_version": 1,
+  "media_id": "media_example",
+  "media_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "origin": "local_asr",
+  "evidence": {
+    "path": "/ABSOLUTE/PRIVATE/PATH/timestamped-transcript.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "alignment": {
+    "basis": "same_media",
+    "source_media_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "source_duration_ms": 600000,
+    "offset_ms": 0,
+    "reviewed": true,
+    "review_evidence": {
+      "path": "/ABSOLUTE/PRIVATE/PATH/actual-alignment-review.json",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  },
+  "segments": [
+    {
+      "cue_id": "intro_001",
+      "kind": "transcript",
+      "start_ms": 120000,
+      "end_ms": 125000,
+      "text": "Joining me today is our guest."
+    }
+  ]
+}

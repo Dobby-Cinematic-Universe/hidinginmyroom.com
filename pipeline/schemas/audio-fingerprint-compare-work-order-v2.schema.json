@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/audio-fingerprint-compare-work-order-v2.schema.json",
+  "title": "Cross-recording sealed-envelope raw-fingerprint comparison work order v2",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "absolutePath": {"type": "string", "pattern": "^/", "not": {"pattern": "://"}},
+    "side": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role", "result_path", "expected_result_sha256", "fingerprint_id"],
+      "properties": {
+        "role": {"enum": ["query", "candidate"]},
+        "result_path": {"$ref": "#/$defs/absolutePath"},
+        "expected_result_sha256": {"$ref": "#/$defs/sha256"},
+        "fingerprint_id": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "output": {
+      "type": "object", "additionalProperties": false, "required": ["root"],
+      "properties": {"root": {"$ref": "#/$defs/absolutePath"}}
+    }
+  },
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "job_id", "method", "query", "candidate", "output"],
+  "allOf": [
+    {
+      "properties": {
+        "query": {"properties": {"role": {"const": "query"}}},
+        "candidate": {"properties": {"role": {"const": "candidate"}}}
+      }
+    }
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "job_id": {"$ref": "#/$defs/identifier"},
+    "method": {"const": "exact_raw_bytes_v2"},
+    "query": {"$ref": "#/$defs/side"},
+    "candidate": {"$ref": "#/$defs/side"},
+    "output": {"$ref": "#/$defs/output"}
+  }
+}

@@ -1,0 +1,61 @@
+---
+import { loadCorpusCatalog } from '../../lib/corpus/release';
+const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date_year?[r.date_year]:[]))].sort((a,b)=>b-a);
+---
+<section data-recording-browser aria-label="Find recordings" hidden>
+  <form>
+    <label>Search recording titles<input type="search" name="q" placeholder="Any words in the title…" /></label>
+    <label>Year<select name="year"><option value="">All years</option>{years.map(y=><option value={y}>{y}</option>)}<option value="undated">Undated</option></select></label>
+    <label>Available content<select name="availability"><option value="">All recordings</option><option value="transcript">Has transcript</option><option value="summary">Has summary</option><option value="metadata">Metadata only</option></select></label>
+    <label>Sort<select name="sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select></label>
+    <button type="reset">Reset</button>
+  </form>
+  <p>Filters cover the entire corpus. For words spoken in a recording or speaker labels, use <a href="/corpus/#corpus-search-title">transcript search</a>.</p>
+  <p data-status role="status" aria-live="polite"></p>
+  <ol data-results class="browser-results"></ol>
+  <nav aria-label="Filtered recording pages" data-pager hidden><button type="button" data-prev>Previous</button><span data-page></span><button type="button" data-next>Next</button></nav>
+</section>
+<script>
+  import { filterRecordings } from '../../lib/corpus/browse.mjs';
+  import '../../lib/summaries/inline-summary';
+  const root=document.querySelector<HTMLElement>('[data-recording-browser]');
+  if(root){
+    root.hidden=false;
+    const form=root.querySelector('form')!,status=root.querySelector<HTMLElement>('[data-status]')!,list=root.querySelector('[data-results]')!;
+    const pager=root.querySelector<HTMLElement>('[data-pager]')!,prev=root.querySelector<HTMLButtonElement>('[data-prev]')!,next=root.querySelector<HTMLButtonElement>('[data-next]')!;
+    type Row={title:string;href:string;date:string|null;year:number|null;duration:string;hasTranscript:boolean;summaryId:string|null};
+    let rows:Row[]|undefined,pending:Promise<void>|undefined,page=1;
+    const params=new URLSearchParams(location.search);
+    for(const name of ['q','year','availability','sort']){const c=form.elements.namedItem(name) as HTMLInputElement;if(params.has(name))c.value=params.get(name)!;}
+    page=Math.max(1,Number.parseInt(params.get('page')||'1')||1);
+    function render(){
+      if(!rows)return;
+      const values=Object.fromEntries(new FormData(form)) as Record<string,string>;
+      const matches=filterRecordings(rows,values) as Row[],pages=Math.max(1,Math.ceil(matches.length/40));page=Math.min(page,pages);
+      const fragment=document.createDocumentFragment();
+      for(const r of matches.slice((page-1)*40,page*40)){
+        const li=document.createElement('li'),a=document.createElement('a'),meta=document.createElement('p');a.href=r.href;a.textContent=r.title;
+        meta.textContent=`${r.date||'Date unresolved'} · ${r.duration} · ${r.hasTranscript?'Transcript available':'Metadata only'}`;li.append(a,meta);
+        if(r.summaryId){const d=document.createElement('details'),s=document.createElement('summary'),b=document.createElement('div'),link=document.createElement('a');d.className='inline-summary';d.dataset.summaryId=r.summaryId;s.textContent='Read summary';b.dataset.summaryBody='';link.href=`/corpus/summaries/${r.summaryId}/`;link.textContent='Open summary page ↗';d.append(s,b,link);li.append(d);}
+        fragment.append(li);
+      }
+      list.replaceChildren(fragment);status.textContent=matches.length?`${matches.length.toLocaleString()} ${matches.length===1?'recording':'recordings'} · showing ${(page-1)*40+1}–${Math.min(page*40,matches.length)}`:'No recordings match. Try fewer words or reset the filters.';
+      pager.hidden=pages<2;prev.disabled=page===1;next.disabled=page===pages;pager.querySelector('[data-page]')!.textContent=`Page ${page} of ${pages}`;
+      document.querySelector<HTMLElement>('[data-static-browse]')!.hidden=true;
+      const url=new URL(location.href);url.search='';for(const [key,value]of Object.entries(values))if(value&&!(key==='sort'&&value==='newest'))url.searchParams.set(key,value);if(page>1)url.searchParams.set('page',String(page));history.replaceState(null,'',url);
+    }
+    async function update(){
+      if(!rows){status.textContent='Loading recording titles…';pending??=fetch('/corpus/recordings.json').then(async r=>{if(!r.ok)throw Error('unavailable');rows=await r.json();}).finally(()=>{pending=undefined;});try{await pending;}catch{status.textContent='Could not load filters. The static recording list is still available below. Change a filter to retry.';return;}}
+      render();
+    }
+    let timer:ReturnType<typeof setTimeout>;
+    form.addEventListener('input',()=>{page=1;clearTimeout(timer);timer=setTimeout(()=>void update(),150);});
+    form.addEventListener('submit',e=>{e.preventDefault();page=1;void update();});
+    form.addEventListener('reset',()=>{page=1;setTimeout(()=>void update(),0);});
+    prev.addEventListener('click',()=>{page--;render();root.scrollIntoView({block:'start'});});next.addEventListener('click',()=>{page++;render();root.scrollIntoView({block:'start'});});
+    void update();
+  }
+</script>
+<style>
+  form{display:flex;flex-wrap:wrap;gap:.8rem;align-items:end}label{display:grid;gap:.4rem;font-size:.85rem}label:first-child{flex:1;min-width:min(100%,16rem)}input,select,button{font:inherit;color:var(--corpus-text);background:var(--corpus-panel);border:1px solid var(--corpus-line);border-radius:.4rem;padding:.7rem;min-width:0}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}p{color:var(--corpus-muted);font-size:.85rem}.browser-results{list-style:none;padding:0;display:grid;gap:.6rem}.browser-results :global(li){padding:1rem;border:1px solid var(--corpus-line);border-radius:.5rem;background:var(--corpus-panel)}.browser-results :global(li>a){font-weight:700;overflow-wrap:anywhere}.browser-results :global(li>p){margin:.4rem 0;color:var(--corpus-muted);font-size:.85rem}nav:not([hidden]){display:flex;gap:1rem;align-items:center}
+</style>

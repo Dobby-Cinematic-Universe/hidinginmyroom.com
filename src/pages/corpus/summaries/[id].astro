@@ -1,0 +1,46 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import SummaryNotice from '../../../components/summaries/SummaryNotice.astro';
+import SummaryCards from '../../../components/summaries/SummaryCards.astro';
+import { loadSummaryRelease, summaryCard, type PublicSummary } from '../../../lib/summaries/release';
+import { loadCorpusCatalog } from '../../../lib/corpus/release';
+import { periodLabel } from '../../../lib/summaries/schema.mjs';
+export async function getStaticPaths() {
+  return (await loadSummaryRelease()).summaries.map((summary) => ({params:{id:summary.id},props:{summary}}));
+}
+const { summary } = Astro.props as { summary: PublicSummary };
+const release = await loadSummaryRelease();
+const records = new Map((await loadCorpusCatalog()).recordings.map((r) => [r.recording_id,r]));
+const labels = {summary:'Overview',topics:'Themes',events:'Developments',uncertainties:'Uncertainties & gaps'};
+const sectionKeys = Object.keys(labels) as (keyof typeof labels)[];
+const related = release.summaries.filter((r) => r.id !== summary.id && (summary.kind === 'archive' ? r.kind === 'yearly' || (r.kind === 'monthly' && !r.period) : summary.kind === 'yearly' ? r.kind === 'monthly' && r.period?.startsWith(summary.period!+'-') : summary.kind === 'monthly' ? r.kind === 'transcript' && r.period === summary.period : false)).sort((a,b) => (a.period ?? '').localeCompare(b.period ?? ''));
+const parent = release.summaries.find((r) => summary.kind === 'monthly' && summary.period ? r.kind === 'yearly' && r.period === summary.period.slice(0,4) : summary.kind === 'transcript' ? r.kind === 'monthly' && r.period === summary.period : r.kind === 'archive' && r.id !== summary.id);
+---
+<CorpusLayout title={`${summary.title} | HIMR summaries`} description={`${summary.kind} AI-generated summary with transcript-level sources.`}>
+  <nav aria-label="Breadcrumb"><a href="/corpus/summaries/">Summaries</a>{parent && <> / <a href={`/corpus/summaries/${parent.id}/`}>{parent.title}</a></>}</nav>
+  <article>
+    <header><p class="summary-kicker">{summary.kind === 'transcript' ? 'Recording summary' : `${summary.kind} summary`} · {summary.kind === 'archive' ? 'Selected archive' : periodLabel(summary.period)}</p><h1>{summary.title}</h1></header>
+    <SummaryNotice />
+    {summary.recording_id && <p><a href={`/corpus/videos/${records.get(summary.recording_id)!.slug}/`}>Read this recording’s transcript →</a></p>}
+    <nav class="section-nav" aria-label="Summary sections">{sectionKeys.filter((s) => summary.sections[s].length).map((s) => <a href={`#${s}`}>{labels[s]}</a>)}</nav>
+    <div class="summary-prose">{sectionKeys.filter((s) => summary.sections[s].length).map((section) => <section id={section}>
+      <h2>{labels[section]}</h2>
+      {summary.sections[section].map((item) => <div class="summary-point">
+        {item.classification === 'reported_allegation' && <span class="evidence-label">Reported allegation</span>}
+        <p>{item.text}</p>
+        {summary.kind !== 'transcript' && <details><summary>Source recordings ({item.source_recording_ids.length})</summary><ul>{item.source_recording_ids.map((id) => <li><a href={`/corpus/videos/${records.get(id)!.slug}/`}>{records.get(id)!.title}</a>{records.get(id)!.transcript_revision_count === 0 && <span> — catalog only; transcript unavailable in this release</span>}</li>)}</ul></details>}
+      </div>)}
+    </section>)}</div>
+    {related.length > 0 && <section><h2>Explore this period</h2><SummaryCards cards={related.map(summaryCard)} /></section>}
+    <footer class="summary-release">Release {release.release_id} · <time datetime={release.generated_at}>{release.generated_at.slice(0,10)}</time> · <a href="/wiki/archive/methodology/">Methodology</a></footer>
+  </article>
+</CorpusLayout>
+<style>
+  header { margin-top: 2rem; } h1 { font-size: clamp(2rem,4vw,3rem); line-height: 1.2; max-width: 30ch; }
+  .section-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
+  .summary-prose { max-width: 78ch; font-size: 1.05rem; line-height: 1.8; }
+  section { scroll-margin-top: 1.5rem; } .summary-point { margin: 1.4rem 0; } .summary-point p { white-space: pre-line; margin: .4rem 0; }
+  details { color: var(--corpus-muted); font-size: .85rem; } details summary { cursor: pointer; } details ul { max-height: 20rem; overflow: auto; }
+  .evidence-label { font-size: .72rem; color: var(--corpus-warning); text-transform: uppercase; letter-spacing: .06em; }
+  .summary-release { color: var(--corpus-muted); border-top: 1px solid var(--corpus-line); margin-top: 3rem; padding-top: 1rem; font-size: .8rem; }
+</style>

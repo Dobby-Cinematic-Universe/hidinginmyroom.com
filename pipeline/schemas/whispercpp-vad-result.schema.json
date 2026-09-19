@@ -1,0 +1,961 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/whispercpp-vad-result-v1.json",
+  "title": "HIMR private whisper.cpp/Silero VAD result",
+  "oneOf": [
+    { "$ref": "#/$defs/planned" },
+    { "$ref": "#/$defs/completed" },
+    { "$ref": "#/$defs/failure" }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "jobIdentifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "absolutePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^/"
+    },
+    "utcSecond": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "stat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device", "inode", "byte_count", "mtime_ns"],
+      "properties": {
+        "device": { "type": "integer", "minimum": 0 },
+        "inode": { "type": "integer", "minimum": 0 },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "mtime_ns": { "type": "integer" }
+      }
+    },
+    "flacStreaminfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "container",
+        "sample_rate_hz",
+        "channels",
+        "bits_per_sample",
+        "total_samples",
+        "duration_ms",
+        "duration_coordinate_basis"
+      ],
+      "properties": {
+        "container": { "const": "flac" },
+        "sample_rate_hz": { "const": 16000 },
+        "channels": { "const": 1 },
+        "bits_per_sample": { "const": 16 },
+        "total_samples": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 115200007
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7200000
+        },
+        "duration_coordinate_basis": {
+          "const": "flac_streaminfo_total_samples_nearest_ms"
+        }
+      }
+    },
+    "inputObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "byte_count",
+        "stat_before",
+        "stat_after",
+        "unchanged",
+        "media_id",
+        "artifact_id",
+        "parent_processing_run_id",
+        "flac_streaminfo"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 536870912
+        },
+        "stat_before": { "$ref": "#/$defs/stat" },
+        "stat_after": { "$ref": "#/$defs/stat" },
+        "unchanged": { "const": true },
+        "media_id": {
+          "type": "string",
+          "pattern": "^media_sha256_[0-9a-f]{64}$"
+        },
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "parent_processing_run_id": { "$ref": "#/$defs/identifier" },
+        "flac_streaminfo": { "$ref": "#/$defs/flacStreaminfo" }
+      }
+    },
+    "engineBuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "target", "configuration"],
+      "properties": {
+        "repository": { "const": "https://github.com/ggml-org/whisper.cpp" },
+        "revision": { "const": "48f628a84833905ee4a0658ee6d4a5c915ce1997" },
+        "target": { "const": "whisper-vad-speech-segments" },
+        "configuration": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "CMAKE_BUILD_TYPE=Release" },
+            { "const": "CC=/usr/bin/gcc" },
+            { "const": "CXX=/usr/bin/g++" },
+            { "const": "CCACHE_DISABLE=1" },
+            { "const": "GGML_BLAS=OFF" },
+            { "const": "GGML_CUDA=OFF" },
+            { "const": "GGML_NATIVE=ON" },
+            { "const": "GGML_OPENMP=ON" },
+            { "const": "GGML_VULKAN=OFF" },
+            { "const": "WHISPER_FFMPEG=OFF" }
+          ],
+          "items": false,
+          "minItems": 10,
+          "maxItems": 10
+        }
+      }
+    },
+    "knownCliDefects": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "v1.8.7_min_speech_short_flag_and_min_silence_assignment_defect"
+        }
+      ],
+      "items": false,
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "engineObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "byte_count",
+        "stat_before",
+        "stat_after",
+        "unchanged",
+        "profile_id",
+        "version_label",
+        "version_evidence",
+        "build",
+        "stdout_coordinate_unit",
+        "known_cli_defects"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": {
+          "const": "ca7828ddc277c93daf5f356a52e853f0d4964933c2e1f01652924ec9a4e7d39e"
+        },
+        "byte_count": { "const": 658912 },
+        "stat_before": { "$ref": "#/$defs/stat" },
+        "stat_after": { "$ref": "#/$defs/stat" },
+        "unchanged": { "const": true },
+        "profile_id": {
+          "const": "whispercpp-vad-speech-segments-v1.8.7-linux-amd64-cpu"
+        },
+        "version_label": { "const": "whisper.cpp v1.8.7" },
+        "version_evidence": {
+          "const": "source_revision_plus_executable_sha256"
+        },
+        "build": { "$ref": "#/$defs/engineBuild" },
+        "stdout_coordinate_unit": { "const": "centiseconds" },
+        "known_cli_defects": { "$ref": "#/$defs/knownCliDefects" }
+      }
+    },
+    "modelObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "byte_count",
+        "stat_before",
+        "stat_after",
+        "unchanged",
+        "profile_id",
+        "model_id",
+        "name",
+        "revision",
+        "source",
+        "license_label"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": {
+          "const": "2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987"
+        },
+        "byte_count": { "const": 885098 },
+        "stat_before": { "$ref": "#/$defs/stat" },
+        "stat_after": { "$ref": "#/$defs/stat" },
+        "unchanged": { "const": true },
+        "profile_id": { "const": "silero-vad-v6.2.0-ggml" },
+        "model_id": { "const": "silero_vad_v6_2_0_ggml" },
+        "name": { "const": "Silero VAD v6.2.0 GGML" },
+        "revision": { "const": "v6.2.0" },
+        "source": {
+          "const": "https://huggingface.co/ggml-org/whisper-vad/blob/main/ggml-silero-v6.2.0.bin"
+        },
+        "license_label": { "const": "MIT" }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segmentation_profile",
+        "parameter_binding",
+        "threads",
+        "threshold",
+        "min_speech_duration_ms",
+        "min_silence_duration_ms",
+        "max_speech_duration_state",
+        "speech_pad_ms",
+        "samples_overlap_seconds",
+        "use_gpu",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "segmentation_profile": {
+          "const": "whispercpp-v1.8.7-silero-v6.2.0-cli-defaults-v1"
+        },
+        "parameter_binding": {
+          "const": "reviewed_source_defaults_with_broken_cli_fields_omitted_v1"
+        },
+        "threads": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "threshold": { "const": 0.5 },
+        "min_speech_duration_ms": { "const": 250 },
+        "min_silence_duration_ms": { "const": 100 },
+        "max_speech_duration_state": { "const": "float_max_default" },
+        "speech_pad_ms": { "const": 30 },
+        "samples_overlap_seconds": { "const": 0.1 },
+        "use_gpu": { "const": false },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7200
+        }
+      }
+    },
+    "catalogContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "rendition_id", "coordinate_system", "source_start_ms"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "rendition_id": { "$ref": "#/$defs/identifier" },
+        "coordinate_system": { "const": "rendition_media_ms" },
+        "source_start_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 604800000
+        }
+      }
+    },
+    "timingContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine_coordinate_unit",
+        "engine_coordinate_to_ms_multiplier",
+        "artifact_coordinate_system",
+        "source_coordinate_system",
+        "maximum_explicit_tail_overrun_ms",
+        "tail_policy"
+      ],
+      "properties": {
+        "engine_coordinate_unit": { "const": "centiseconds" },
+        "engine_coordinate_to_ms_multiplier": { "const": 10 },
+        "artifact_coordinate_system": { "const": "artifact_media_ms" },
+        "source_coordinate_system": {
+          "oneOf": [
+            { "type": "null" },
+            { "const": "rendition_media_ms" }
+          ]
+        },
+        "maximum_explicit_tail_overrun_ms": { "const": 64 },
+        "tail_policy": {
+          "const": "retain_raw_engine_coordinate_and_clip_normalized_end"
+        }
+      }
+    },
+    "logicalCommand": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/absolutePath" },
+        { "const": "--threads" },
+        { "type": "string", "pattern": "^(?:[1-9]|1[0-6])$" },
+        { "const": "--vad-model" },
+        { "$ref": "#/$defs/absolutePath" },
+        { "const": "--file" },
+        { "$ref": "#/$defs/absolutePath" },
+        { "const": "--no-prints" }
+      ],
+      "items": false,
+      "minItems": 8,
+      "maxItems": 8
+    },
+    "descriptorPath": {
+      "type": "string",
+      "pattern": "^/proc/self/fd/[0-9]+$"
+    },
+    "childCommand": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/descriptorPath" },
+        { "const": "--threads" },
+        { "type": "string", "pattern": "^(?:[1-9]|1[0-6])$" },
+        { "const": "--vad-model" },
+        { "$ref": "#/$defs/descriptorPath" },
+        { "const": "--file" },
+        { "$ref": "#/$defs/descriptorPath" },
+        { "const": "--no-prints" }
+      ],
+      "items": false,
+      "minItems": 8,
+      "maxItems": 8
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical",
+        "child_facing",
+        "descriptor_execution_policy",
+        "state"
+      ],
+      "properties": {
+        "logical": { "$ref": "#/$defs/logicalCommand" },
+        "child_facing": { "$ref": "#/$defs/childCommand" },
+        "descriptor_execution_policy": {
+          "enum": [
+            "linux_proc_self_fd_retained_verified_v1",
+            "linux_sealed_memfd_engine_model_retained_input_v2",
+            "linux_sealed_memfd_retained_component_io_v3"
+          ]
+        },
+        "state": { "enum": ["planned", "executed"] }
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "calibrated_probability",
+        "score_available",
+        "threshold_is_not_confidence"
+      ],
+      "properties": {
+        "state": { "const": "not_calibrated" },
+        "calibrated_probability": { "type": "null" },
+        "score_available": { "const": false },
+        "threshold_is_not_confidence": { "const": true }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "speech_presence_candidates_only",
+        "speaker_count_authority",
+        "speaker_identity_authority",
+        "face_identity_authority",
+        "active_speaker_authority",
+        "action_detection_authority",
+        "publication_authority",
+        "catalog_write_authority",
+        "human_review_required",
+        "network"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "speech_presence_candidates_only": { "const": true },
+        "speaker_count_authority": { "const": "none" },
+        "speaker_identity_authority": { "const": "none" },
+        "face_identity_authority": { "const": "none" },
+        "active_speaker_authority": { "const": "none" },
+        "action_detection_authority": { "const": "none" },
+        "publication_authority": { "const": "none" },
+        "catalog_write_authority": { "const": "none" },
+        "human_review_required": { "const": true },
+        "network": {
+          "const": "not_used_by_adapter; worker isolation still required"
+        }
+      }
+    },
+    "engineProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "expected_sha256",
+        "byte_count",
+        "version_label",
+        "version_evidence",
+        "build",
+        "stdout_coordinate_unit",
+        "known_cli_defects"
+      ],
+      "properties": {
+        "profile_id": {
+          "const": "whispercpp-vad-speech-segments-v1.8.7-linux-amd64-cpu"
+        },
+        "expected_sha256": {
+          "const": "ca7828ddc277c93daf5f356a52e853f0d4964933c2e1f01652924ec9a4e7d39e"
+        },
+        "byte_count": { "const": 658912 },
+        "version_label": { "const": "whisper.cpp v1.8.7" },
+        "version_evidence": {
+          "const": "source_revision_plus_executable_sha256"
+        },
+        "build": { "$ref": "#/$defs/engineBuild" },
+        "stdout_coordinate_unit": { "const": "centiseconds" },
+        "known_cli_defects": { "$ref": "#/$defs/knownCliDefects" }
+      }
+    },
+    "modelProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "expected_sha256",
+        "byte_count",
+        "model_id",
+        "name",
+        "revision",
+        "source",
+        "license_label"
+      ],
+      "properties": {
+        "profile_id": { "const": "silero-vad-v6.2.0-ggml" },
+        "expected_sha256": {
+          "const": "2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987"
+        },
+        "byte_count": { "const": 885098 },
+        "model_id": { "const": "silero_vad_v6_2_0_ggml" },
+        "name": { "const": "Silero VAD v6.2.0 GGML" },
+        "revision": { "const": "v6.2.0" },
+        "source": {
+          "const": "https://huggingface.co/ggml-org/whisper-vad/blob/main/ggml-silero-v6.2.0.bin"
+        },
+        "license_label": { "const": "MIT" }
+      }
+    },
+    "inputAudioContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["container", "sample_rate_hz", "channels", "bits_per_sample"],
+      "properties": {
+        "container": { "const": "flac" },
+        "sample_rate_hz": { "const": 16000 },
+        "channels": { "const": 1 },
+        "bits_per_sample": { "const": 16 }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "implementation_version",
+        "stage",
+        "descriptor_execution_policy",
+        "engine_profile",
+        "model_profile",
+        "parameters",
+        "input_audio_contract",
+        "output_contract"
+      ],
+      "properties": {
+        "contract_version": { "const": 1 },
+        "implementation_version": { "enum": ["0.1.0", "0.2.0", "0.3.0"] },
+        "stage": { "const": "vad_whispercpp" },
+        "descriptor_execution_policy": {
+          "enum": [
+            "linux_proc_self_fd_retained_verified_v1",
+            "linux_sealed_memfd_engine_model_retained_input_v2",
+            "linux_sealed_memfd_retained_component_io_v3"
+          ]
+        },
+        "engine_profile": { "$ref": "#/$defs/engineProfile" },
+        "model_profile": { "$ref": "#/$defs/modelProfile" },
+        "parameters": { "$ref": "#/$defs/parameters" },
+        "input_audio_contract": { "$ref": "#/$defs/inputAudioContract" },
+        "output_contract": { "const": "speech-candidate-intervals-private-v1" }
+      }
+    },
+    "processingRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "processing_run_id",
+        "stage",
+        "implementation_version",
+        "started_at",
+        "completed_at",
+        "status",
+        "duration_ms"
+      ],
+      "properties": {
+        "processing_run_id": {
+          "type": "string",
+          "pattern": "^run_vad_whispercpp_[0-9a-f]{32}$"
+        },
+        "stage": { "const": "vad_whispercpp" },
+        "implementation_version": { "enum": ["0.1.0", "0.2.0", "0.3.0"] },
+        "started_at": { "$ref": "#/$defs/utcSecond" },
+        "completed_at": { "$ref": "#/$defs/utcSecond" },
+        "status": { "enum": ["queued", "completed"] },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "stdoutArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_kind", "path", "sha256", "byte_count", "visibility"],
+      "properties": {
+        "artifact_kind": { "const": "engine_stdout" },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8388608
+        },
+        "visibility": { "const": "private" }
+      }
+    },
+    "stderrArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_kind", "path", "sha256", "byte_count", "visibility"],
+      "properties": {
+        "artifact_kind": { "const": "engine_stderr" },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "visibility": { "const": "private" }
+      }
+    },
+    "plannedArtifacts": {
+      "type": "array",
+      "items": false,
+      "maxItems": 0
+    },
+    "completedArtifacts": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/stdoutArtifact" },
+        { "$ref": "#/$defs/stderrArtifact" }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segment_id",
+        "ordinal",
+        "label",
+        "artifact_start_ms",
+        "artifact_end_ms",
+        "raw_engine_start_centiseconds",
+        "raw_engine_end_centiseconds",
+        "raw_engine_start_text",
+        "raw_engine_end_text",
+        "source_start_ms",
+        "source_end_ms",
+        "timing_quality",
+        "tail_overrun_ms",
+        "score",
+        "calibrated_probability",
+        "calibration_state"
+      ],
+      "properties": {
+        "segment_id": {
+          "type": "string",
+          "pattern": "^vadseg_[0-9a-f]{32}$"
+        },
+        "ordinal": { "type": "integer", "minimum": 0, "maximum": 99999 },
+        "label": { "const": "speech_candidate" },
+        "artifact_start_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7200000
+        },
+        "artifact_end_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7200000
+        },
+        "raw_engine_start_centiseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 720010
+        },
+        "raw_engine_end_centiseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 720010
+        },
+        "raw_engine_start_text": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.00$"
+        },
+        "raw_engine_end_text": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.00$"
+        },
+        "source_start_ms": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 0, "maximum": 612000000 }
+          ]
+        },
+        "source_end_ms": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 612000000 }
+          ]
+        },
+        "timing_quality": {
+          "enum": [
+            "exact_10ms_engine_grid",
+            "tail_clipped_to_flac_duration"
+          ]
+        },
+        "tail_overrun_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "score": { "type": "null" },
+        "calibrated_probability": { "type": "null" },
+        "calibration_state": { "const": "not_calibrated" }
+      }
+    },
+    "segments": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": { "$ref": "#/$defs/segment" }
+    },
+    "plannedSegments": {
+      "type": "array",
+      "items": false,
+      "maxItems": 0
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "speech_segment_count",
+        "speech_duration_ms",
+        "input_duration_ms",
+        "speech_coverage_ratio",
+        "tail_clipped_segment_count"
+      ],
+      "properties": {
+        "speech_segment_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "speech_duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7200000
+        },
+        "input_duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7200000
+        },
+        "speech_coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "tail_clipped_segment_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      }
+    },
+    "errorDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "message"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,255}$"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        }
+      }
+    },
+    "common": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "job_id",
+        "status",
+        "dry_run",
+        "work_order_sha256",
+        "recipe_id",
+        "recipe_sha256",
+        "result_key",
+        "processing_run",
+        "input",
+        "engine",
+        "model",
+        "parameters",
+        "catalog_context",
+        "timing_contract",
+        "commands",
+        "calibration",
+        "safety",
+        "recipe",
+        "result_path",
+        "artifacts",
+        "segments",
+        "counts"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "job_id": { "$ref": "#/$defs/jobIdentifier" },
+        "status": { "enum": ["planned", "completed"] },
+        "dry_run": { "type": "boolean" },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" },
+        "recipe_id": {
+          "type": "string",
+          "pattern": "^recipe_vad_whispercpp_[0-9a-f]{32}$"
+        },
+        "recipe_sha256": { "$ref": "#/$defs/sha256" },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "processing_run": { "$ref": "#/$defs/processingRun" },
+        "input": { "$ref": "#/$defs/inputObservation" },
+        "engine": { "$ref": "#/$defs/engineObservation" },
+        "model": { "$ref": "#/$defs/modelObservation" },
+        "parameters": { "$ref": "#/$defs/parameters" },
+        "catalog_context": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/catalogContext" }
+          ]
+        },
+        "timing_contract": { "$ref": "#/$defs/timingContract" },
+        "commands": { "$ref": "#/$defs/commands" },
+        "calibration": { "$ref": "#/$defs/calibration" },
+        "safety": { "$ref": "#/$defs/safety" },
+        "recipe": { "$ref": "#/$defs/recipe" },
+        "result_path": { "$ref": "#/$defs/absolutePath" },
+        "artifacts": {
+          "oneOf": [
+            { "$ref": "#/$defs/plannedArtifacts" },
+            { "$ref": "#/$defs/completedArtifacts" }
+          ]
+        },
+        "segments": { "$ref": "#/$defs/segments" },
+        "counts": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/counts" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "processing_run": {
+                "properties": {
+                  "implementation_version": { "const": "0.1.0" }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "commands": {
+                "properties": {
+                  "descriptor_execution_policy": {
+                    "const": "linux_proc_self_fd_retained_verified_v1"
+                  }
+                }
+              },
+              "recipe": {
+                "properties": {
+                  "implementation_version": { "const": "0.1.0" },
+                  "descriptor_execution_policy": {
+                    "const": "linux_proc_self_fd_retained_verified_v1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "processing_run": {
+                "properties": {
+                  "implementation_version": { "const": "0.2.0" }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "commands": {
+                "properties": {
+                  "descriptor_execution_policy": {
+                    "const": "linux_sealed_memfd_engine_model_retained_input_v2"
+                  }
+                }
+              },
+              "recipe": {
+                "properties": {
+                  "implementation_version": { "const": "0.2.0" },
+                  "descriptor_execution_policy": {
+                    "const": "linux_sealed_memfd_engine_model_retained_input_v2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "processing_run": {
+                "properties": {
+                  "implementation_version": { "const": "0.3.0" }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "commands": {
+                "properties": {
+                  "descriptor_execution_policy": {
+                    "const": "linux_sealed_memfd_retained_component_io_v3"
+                  }
+                }
+              },
+              "recipe": {
+                "properties": {
+                  "implementation_version": { "const": "0.3.0" },
+                  "descriptor_execution_policy": {
+                    "const": "linux_sealed_memfd_retained_component_io_v3"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "planned": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "properties": {
+            "status": { "const": "planned" },
+            "dry_run": { "const": true },
+            "processing_run": {
+              "properties": { "status": { "const": "queued" } }
+            },
+            "commands": {
+              "properties": { "state": { "const": "planned" } }
+            },
+            "artifacts": { "$ref": "#/$defs/plannedArtifacts" },
+            "segments": { "$ref": "#/$defs/plannedSegments" },
+            "counts": { "type": "null" }
+          }
+        }
+      ]
+    },
+    "completed": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "properties": {
+            "status": { "const": "completed" },
+            "dry_run": { "const": false },
+            "processing_run": {
+              "properties": { "status": { "const": "completed" } }
+            },
+            "commands": {
+              "properties": { "state": { "const": "executed" } }
+            },
+            "artifacts": { "$ref": "#/$defs/completedArtifacts" },
+            "counts": { "$ref": "#/$defs/counts" }
+          }
+        }
+      ]
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "status", "job_id", "error", "errors"],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "status": { "const": "failed" },
+        "job_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/jobIdentifier" }
+          ]
+        },
+        "error": { "$ref": "#/$defs/errorDetail" },
+        "errors": {
+          "type": "array",
+          "prefixItems": [
+            { "$ref": "#/$defs/errorDetail" }
+          ],
+          "items": false,
+          "minItems": 1,
+          "maxItems": 1
+        }
+      }
+    }
+  }
+}

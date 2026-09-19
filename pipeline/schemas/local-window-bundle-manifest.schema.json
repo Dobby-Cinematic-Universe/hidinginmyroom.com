@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/local-window-bundle-manifest-v1.json",
+  "title": "HIMR immutable local-window bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_id", "bundle_relative_path", "schema_version", "materializer", "source", "source_probe", "tools", "policy", "safety", "work_order_count", "work_orders"],
+  "properties": {
+    "bundle_id": { "type": "string", "pattern": "^windowbundle_[0-9a-f]{32}$" },
+    "bundle_relative_path": { "type": "string", "pattern": "^bundles/windowbundle_[0-9a-f]{32}$" },
+    "schema_version": { "const": 1 },
+    "materializer": { "$ref": "#/$defs/materializer" },
+    "source": { "$ref": "#/$defs/source" },
+    "source_probe": { "$ref": "#/$defs/sourceProbe" },
+    "tools": { "$ref": "#/$defs/tools" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "safety": { "$ref": "#/$defs/safety" },
+    "work_order_count": { "type": "integer", "minimum": 1, "maximum": 256 },
+    "work_orders": { "type": "array", "minItems": 1, "maxItems": 256, "items": { "$ref": "#/$defs/workOrder" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableIndex": { "type": ["integer", "null"], "minimum": 0 },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "expected_sha256", "byte_count", "media_id", "duration_ms", "acquisition_result_path", "acquisition_result_sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+        "duration_ms": { "type": "integer", "minimum": 1 },
+        "acquisition_result_path": { "type": "string", "pattern": "^/" },
+        "acquisition_result_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "tool": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "version_output_sha256", "version_first_line"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "version_output_sha256": { "$ref": "#/$defs/sha256" },
+        "version_first_line": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "tools": {
+      "type": "object", "additionalProperties": false, "required": ["ffmpeg", "ffprobe"],
+      "properties": { "ffmpeg": { "$ref": "#/$defs/tool" }, "ffprobe": { "$ref": "#/$defs/tool" } }
+    },
+    "materializer": {
+      "type": "object", "additionalProperties": false, "required": ["name", "version"],
+      "properties": { "name": { "const": "himr-local-window" }, "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" } }
+    },
+    "sourceProbe": {
+      "type": "object", "additionalProperties": false, "required": ["duration_ms", "video_stream_index", "audio_stream_index"],
+      "properties": { "duration_ms": { "type": "integer", "minimum": 1 }, "video_stream_index": { "$ref": "#/$defs/nullableIndex" }, "audio_stream_index": { "$ref": "#/$defs/nullableIndex" } }
+    },
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["chunk_duration_ms", "max_windows", "max_window_output_bytes", "free_space_floor_bytes", "timeout_seconds", "profile_id"],
+      "properties": {
+        "chunk_duration_ms": { "type": "integer", "minimum": 1, "maximum": 7200000 },
+        "max_windows": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "max_window_output_bytes": { "type": "integer", "minimum": 1 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 86400 },
+        "profile_id": { "const": "long-window-cpu-v1" }
+      }
+    },
+    "safety": {
+      "type": "object", "additionalProperties": false,
+      "required": ["bundle_class", "network_access_performed", "credentials_allowed", "publication_authority", "identity_claims_allowed", "remote_time_sections_allowed", "full_parent_hash_required", "window_boundary", "representation_is_original_source"],
+      "properties": {
+        "bundle_class": { "const": "private_local_analysis_windows" },
+        "network_access_performed": { "const": false },
+        "credentials_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_claims_allowed": { "const": false },
+        "remote_time_sections_allowed": { "const": false },
+        "full_parent_hash_required": { "const": true },
+        "window_boundary": { "const": "half_open" },
+        "representation_is_original_source": { "const": false }
+      }
+    },
+    "workOrder": {
+      "type": "object", "additionalProperties": false,
+      "required": ["window_id", "ordinal", "start_ms", "end_ms", "boundary", "is_partial_tail", "job_id", "path", "sha256", "byte_count"],
+      "properties": {
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "boundary": { "const": "half_open" },
+        "is_partial_tail": { "type": "boolean" },
+        "job_id": { "type": "string", "pattern": "^local-window-[0-9]{6}$" },
+        "path": { "type": "string", "pattern": "^work-orders/[0-9]{6}\\.json$" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

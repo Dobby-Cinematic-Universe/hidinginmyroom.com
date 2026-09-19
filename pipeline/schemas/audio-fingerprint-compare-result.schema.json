@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/audio-fingerprint-compare-result-v1.schema.json",
+  "title": "Conservative raw-fingerprint comparison result v1",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "absolutePath": {"type": "string", "pattern": "^/", "not": {"pattern": "://"}},
+    "side": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role", "path", "storage_uri", "sha256", "byte_count", "artifact_id", "fingerprint_id", "media_id", "implementation_version", "algorithm", "raw_format", "sample_rate_hz", "channels", "window_kind", "start_ms", "end_ms", "fingerprint_word_count", "quality_flags", "unchanged"],
+      "properties": {
+        "role": {"enum": ["query", "candidate"]}, "path": {"$ref": "#/$defs/absolutePath"}, "storage_uri": {"type": "string", "pattern": "^file:///"},
+        "sha256": {"$ref": "#/$defs/sha256"}, "byte_count": {"type": "integer", "minimum": 0, "maximum": 67108864}, "artifact_id": {"$ref": "#/$defs/identifier"},
+        "fingerprint_id": {"$ref": "#/$defs/identifier"}, "media_id": {"$ref": "#/$defs/identifier"}, "implementation_version": {"type": "string", "minLength": 1},
+        "algorithm": {"type": "integer", "minimum": 0}, "raw_format": {"const": "ffmpeg_chromaprint_fp_format_raw"}, "sample_rate_hz": {"const": 16000}, "channels": {"const": 1},
+        "window_kind": {"type": "string", "minLength": 1}, "start_ms": {"type": "integer", "minimum": 0}, "end_ms": {"type": "integer", "minimum": 1},
+        "fingerprint_word_count": {"type": "integer", "minimum": 0}, "quality_flags": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "unchanged": {"const": true}
+      }
+    },
+    "contextSide": {"type": "object", "additionalProperties": false, "required": ["recording_id", "rendition_id"], "properties": {"recording_id": {"$ref": "#/$defs/identifier"}, "rendition_id": {"$ref": "#/$defs/identifier"}}},
+    "context": {"type": "object", "additionalProperties": false, "required": ["query", "candidate"], "properties": {"query": {"$ref": "#/$defs/contextSide"}, "candidate": {"$ref": "#/$defs/contextSide"}}},
+    "run": {"type": "object", "additionalProperties": false, "required": ["processing_run_id", "execution_nonce", "started_at", "completed_at", "status"], "properties": {"processing_run_id": {"$ref": "#/$defs/identifier"}, "execution_nonce": {"type": "string", "pattern": "^[0-9a-f]{32}$"}, "started_at": {"type": "string", "format": "date-time"}, "completed_at": {"type": "string", "format": "date-time"}, "status": {"const": "completed"}}},
+    "comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": ["match_candidate_id", "exact_raw_equal", "raw_score", "score_semantics", "calibrated_probability", "quality_flags", "decision_state", "requires_human_review", "relationship_asserted"],
+      "properties": {
+        "match_candidate_id": {"$ref": "#/$defs/identifier"}, "exact_raw_equal": {"type": "boolean"}, "raw_score": {"enum": [0.0, 1.0]},
+        "score_semantics": {"const": "boolean_raw_byte_equality_not_probability"}, "calibrated_probability": {"type": "null"},
+        "quality_flags": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "decision_state": {"const": "candidate"},
+        "requires_human_review": {"const": true}, "relationship_asserted": {"const": false}
+      }
+    }
+  },
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "stage", "implementation_version", "status", "dry_run", "job_id", "recipe_id", "recipe_sha256", "method", "query", "candidate", "comparison", "processing_run", "catalog_context", "result_path", "errors"],
+  "properties": {
+    "schema_version": {"const": 1}, "stage": {"const": "audio_fingerprint_exact_compare"}, "implementation_version": {"type": "string", "minLength": 1},
+    "status": {"enum": ["planned", "completed"]}, "dry_run": {"type": "boolean"}, "job_id": {"$ref": "#/$defs/identifier"},
+    "recipe_id": {"type": "string", "pattern": "^recipe_audio_fingerprint_compare_[0-9a-f]{32}$"}, "recipe_sha256": {"$ref": "#/$defs/sha256"},
+    "method": {"const": "exact_raw_bytes_v1"}, "query": {"$ref": "#/$defs/side"}, "candidate": {"$ref": "#/$defs/side"},
+    "comparison": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/comparison"}]}, "processing_run": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/run"}]},
+    "catalog_context": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/context"}]}, "result_path": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/absolutePath"}]},
+    "errors": {"type": "array", "maxItems": 0}
+  }
+}

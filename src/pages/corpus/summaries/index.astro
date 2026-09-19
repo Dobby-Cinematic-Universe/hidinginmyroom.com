@@ -1,0 +1,117 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import SummaryNotice from '../../../components/summaries/SummaryNotice.astro';
+import SummaryCards from '../../../components/summaries/SummaryCards.astro';
+import { loadSummaryRelease, summaryCard } from '../../../lib/summaries/release';
+const release = await loadSummaryRelease();
+const rows = release.summaries;
+const years = [...new Set(rows.flatMap((r) => r.period ? [r.period.slice(0,4)] : []))].sort().reverse();
+const initial = [...rows].sort((a,b) => (b.period ?? '').localeCompare(a.period ?? '')).slice(0,24);
+---
+<CorpusLayout title="Archive summaries | HIMR" description="Browse AI-generated recording summaries, monthly and yearly recaps, and an archive overview with transcript sources.">
+  <header class="summaries-hero">
+    <p class="summary-kicker">The archive, at a glance</p>
+    <h1>Stories across the recordings.</h1>
+    <p class="summaries-lede">Start with the bigger picture. Follow a year, explore a month, or return to the transcript behind a summary.</p>
+    <div class="summary-totals">{['archive','yearly','monthly','transcript'].map((kind) => <span><strong>{rows.filter((r) => r.kind === kind).length.toLocaleString('en')}</strong> {kind === 'transcript' ? 'recording summaries' : kind === 'archive' ? 'overviews' : `${kind} summaries`}</span>)}</div>
+  </header>
+  <SummaryNotice />
+  <nav class="summary-levels" aria-label="Explore by summary level">
+    {['archive','yearly','monthly','transcript'].map(kind=><a href={`?kind=${kind}#summary-browser`}>{kind==='archive'?'Archive overview':kind==='transcript'?'Recording summaries':`${kind==='yearly'?'Yearly':'Monthly'} summaries`} ({rows.filter(r=>r.kind===kind).length.toLocaleString()})</a>)}
+  </nav>
+  {rows.length === 0 ? <section class="summary-empty"><h2>Preparing the first summary release</h2><p>Summaries are being prepared. Only approved, completed summaries with available public transcript links will appear here.</p><p>The processing pipeline is separate from this site; unreleased drafts are not included.</p><a href="/corpus/">Explore the public corpus →</a></section> : <>
+    {rows.some((r) => r.kind === 'archive') && <section aria-label="Archive overview"><h2>The bigger picture</h2><SummaryCards cards={rows.filter((r) => r.kind === 'archive').map(summaryCard)} /></section>}
+    <section aria-labelledby="browse-heading" id="summary-browser">
+      <h2 id="browse-heading">Explore the summaries</h2>
+      <form class="summary-filters" role="search">
+        <label>Search titles and previews<input type="search" name="q" placeholder="A name, place, or topic…" maxlength="200" /></label>
+        <label>Summary level<select name="kind"><option value="">All levels</option><option value="archive">Archive overview</option><option value="yearly">Yearly</option><option value="monthly">Monthly</option><option value="transcript">Recording</option></select></label>
+        <label>Year<select name="year"><option value="">All dates</option>{years.map((y) => <option value={y}>{y}</option>)}<option value="undated">Undated</option></select></label>
+        <button type="reset">Reset</button>
+      </form>
+      <p role="status" aria-live="polite" id="summary-results-status">Latest released summaries</p>
+      <div id="summary-results"><SummaryCards cards={initial.map(summaryCard)} /></div>
+      <nav class="summary-pagination" aria-label="Search result pages" hidden><button type="button" data-prev>Previous</button><span data-page></span><button type="button" data-next>Next</button></nav>
+      <p><a href="/corpus/summaries/browse/1/">Browse all summaries without search →</a></p>
+      <noscript><p>Search needs JavaScript. All summaries remain available through the browse pages above.</p></noscript>
+    </section>
+  </>}
+</CorpusLayout>
+<script>
+  import '../../../lib/summaries/inline-summary';
+  import { filterSummaries, periodLabel } from '../../../lib/summaries/schema.mjs';
+  import type { summaryCard } from '../../../lib/summaries/release';
+  const browser = document.querySelector('#summary-browser');
+  if (browser) {
+    const form = browser.querySelector('form')!;
+    const results = document.querySelector('#summary-results')!;
+    const status = document.querySelector('#summary-results-status')!;
+    const pager = browser.querySelector<HTMLElement>('.summary-pagination')!;
+    const prev = pager.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = pager.querySelector<HTMLButtonElement>('[data-next]')!;
+    let cards: ReturnType<typeof summaryCard>[] | undefined;
+    let pending: Promise<void> | undefined;
+    let page = 0;
+    const query = new URLSearchParams(location.search);
+    page=Math.max(0,(Number.parseInt(query.get('page')||'1')||1)-1);
+    for (const name of ['q','kind','year']) (form.elements.namedItem(name) as HTMLInputElement).value = query.get(name) ?? '';
+    function render() {
+      if (!cards) return;
+      const data = new FormData(form);
+      const q = String(data.get('q') ?? ''); const kind = String(data.get('kind') ?? ''); const year = String(data.get('year') ?? '');
+      const matches = filterSummaries(cards,q,kind,year) as typeof cards;
+      const pages = Math.max(1, Math.ceil(matches.length / 24)); page = Math.min(page,pages-1);
+      const list = document.createElement('ul'); list.className = 'summary-cards';
+      for (const card of matches.slice(page*24,(page+1)*24)) {
+        const li = document.createElement('li'); const meta = document.createElement('span'); meta.className = 'summary-kicker';
+        meta.textContent = `${card.kind === 'transcript' ? 'Recording' : card.kind} · ${card.kind === 'archive' ? 'Selected archive' : periodLabel(card.period)}`;
+        const h = document.createElement('h3'); const a = document.createElement('a'); a.href = card.href; a.textContent = card.title; h.append(a);
+        const p = document.createElement('p'); p.textContent = card.excerpt; li.append(meta,h,p); list.append(li);
+        if(card.kind==='transcript'){
+          const details=document.createElement('details');details.className='inline-summary';details.dataset.summaryId=card.id;
+          const toggle=document.createElement('summary');toggle.textContent='Read summary';
+          const body=document.createElement('div');body.dataset.summaryBody='';body.textContent='Expand to load the summary.';
+          const link=document.createElement('a');link.href=card.href;link.textContent='Open summary page ↗';
+          details.append(toggle,body,link);li.append(details);
+        }
+      }
+      results.replaceChildren(list); status.textContent = matches.length ? `${matches.length.toLocaleString()} summaries · page ${page+1} of ${pages}` : 'No summaries match. Try another search or reset the filters.';
+      pager.hidden = pages < 2; prev.disabled = page === 0; next.disabled = page+1 >= pages;
+      pager.querySelector('[data-page]')!.textContent = `${page+1} / ${pages}`;
+      const params = new URLSearchParams(); for (const [k,v] of [['q',q],['kind',kind],['year',year]]) if(v) params.set(k,v);
+      if(page>0) params.set('page',String(page+1));
+      history.replaceState(null,'',location.pathname+(params.size ? '?'+params : '')+location.hash);
+    }
+    async function update() {
+      if (!cards) {
+        status.textContent = 'Loading summary index…';
+        pending ??= fetch('/corpus/summaries/search.json').then(async (response) => {
+          if (!response.ok) throw new Error('index unavailable'); cards = await response.json();
+        }).finally(() => { pending = undefined; });
+        try { await pending; } catch { status.textContent = 'Search is unavailable. Use the browse-all link below, or change a filter to retry.'; return; }
+      }
+      render();
+    }
+    form.addEventListener('submit',(e) => { e.preventDefault(); page=0; void update(); });
+    form.addEventListener('input',() => { page=0; void update(); });
+    form.addEventListener('reset',() => { page=0; setTimeout(() => void update(),0); });
+    prev.addEventListener('click',() => { page--; render(); browser.scrollIntoView({block:'start'}); }); next.addEventListener('click',() => { page++; render(); browser.scrollIntoView({block:'start'}); });
+    if (query.size) void update();
+  }
+</script>
+<style>
+  .summaries-hero { padding-block: 1rem; max-width: 65rem; }
+  .summary-levels{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.2rem 0}.summary-levels a{padding:.7rem 1rem;border:1px solid var(--corpus-line);border-radius:.4rem;text-decoration:none;background:var(--corpus-panel)}
+  h1 { font-size: clamp(2.2rem,5vw,3.8rem); line-height: 1.1; letter-spacing: -.035em; margin: .7rem 0 1rem; }
+  .summaries-lede { max-width: 60ch; color: var(--corpus-muted); font-size: 1.15rem; }
+  .summary-totals { display: flex; flex-wrap: wrap; gap: 1rem 2rem; margin-top: 2rem; color: var(--corpus-muted); }
+  .summary-totals strong { color: var(--corpus-text); font-size: 1.5rem; margin-right: .3rem; }
+  .summary-empty { padding: 2rem; border: 1px dashed var(--corpus-line); border-radius: .65rem; margin-block: 2rem; }
+  .summary-filters { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; }
+  label { display: grid; gap: .4rem; font-size: .85rem; }
+  label:first-child { flex: 1; min-width: min(100%,16rem); }
+  input, select, button { font: inherit; padding: .7rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); color: var(--corpus-text); border-radius: .4rem; }
+  button { cursor: pointer; } button:disabled { opacity: .45; cursor: default; }
+  .summary-pagination:not([hidden]) { display: flex; align-items: center; gap: 1rem; }
+  #summary-results-status { color: var(--corpus-muted); }
+</style>

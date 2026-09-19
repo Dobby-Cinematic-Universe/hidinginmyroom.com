@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+repository_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+runtime_python="$repository_root/research/corpus/gpu-runtime/env/bin/python"
+adapter="$repository_root/pipeline/gpu/production_asr_v4.py"
+
+if [ ! -x "$runtime_python" ]; then
+  echo "managed GPU Python is unavailable or not executable: $runtime_python" >&2
+  exit 127
+fi
+
+export PYTHONNOUSERSITE=1
+export HF_HUB_OFFLINE=1
+export HF_DATASETS_OFFLINE=1
+export HF_HUB_DISABLE_TELEMETRY=1
+export DO_NOT_TRACK=1
+
+exec "$runtime_python" -B -I "$adapter" "$@"
+

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/preprocess-batch-run-summary-v1.json",
+  "title": "Private media-preprocess batch run summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "stage", "status", "dry_run", "bundle_id", "item_count", "completed_count", "pending_count", "completed_ordinals", "pending_ordinals", "newly_completed_ordinals", "state_sha256", "safety"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "stage": { "const": "private_media_preprocess_batch_runner" },
+    "status": { "enum": ["pending", "complete"] },
+    "dry_run": { "type": "boolean" },
+    "bundle_id": { "type": "string", "pattern": "^ppbatch_[0-9a-f]{32}$" },
+    "item_count": { "type": "integer", "minimum": 1, "maximum": 128 },
+    "completed_count": { "type": "integer", "minimum": 0, "maximum": 128 },
+    "pending_count": { "type": "integer", "minimum": 0, "maximum": 128 },
+    "completed_ordinals": { "$ref": "#/$defs/ordinals" },
+    "pending_ordinals": { "$ref": "#/$defs/ordinals" },
+    "newly_completed_ordinals": { "$ref": "#/$defs/ordinals" },
+    "state_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "handling_control": { "$ref": "#/$defs/handling_control" },
+    "safety": { "$ref": "#/$defs/summary_safety" }
+  },
+  "$defs": {
+    "ordinals": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": { "type": "integer", "minimum": 1, "maximum": 128 }
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "handling_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_scope", "publication_disposition", "publication_authority", "basis"],
+      "properties": {
+        "storage_scope": { "const": "private_canonical_cache" },
+        "publication_disposition": { "enum": ["no_publication_authority", "never_publish"] },
+        "publication_authority": { "const": "none" },
+        "basis": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "handling_control_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "entry_id", "handling_policy", "handling_boundary_sha256", "seal_receipt_sha256", "seal_plan_sha256", "source_byte_identity_claimed"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "entry_id": { "type": "string", "pattern": "^pbe_[0-9a-f]{32}$" },
+        "handling_policy": { "$ref": "#/$defs/handling_policy" },
+        "handling_boundary_sha256": { "$ref": "#/$defs/sha256" },
+        "seal_receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "seal_plan_sha256": { "$ref": "#/$defs/sha256" },
+        "source_byte_identity_claimed": { "const": false }
+      }
+    },
+    "handling_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "private_entry_count", "entries", "seal_receipt_replay_required", "handling_policy_propagation_required", "publication_authority", "identity_sha256"],
+      "properties": {
+        "kind": { "const": "v30_private_acquisition_handling_control" },
+        "private_entry_count": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/handling_control_entry" }
+        },
+        "seal_receipt_replay_required": { "const": true },
+        "handling_policy_propagation_required": { "const": true },
+        "publication_authority": { "const": "none" },
+        "identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "summary_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "network_allowed", "credentials_allowed", "publication_authority", "identity_claims_allowed", "source_bytes_preserved", "automatic_catalog_admission", "network_access_performed", "publication_performed", "sequential_execution_only"],
+      "properties": {
+        "visibility": { "const": "private" },
+        "network_allowed": { "const": false },
+        "credentials_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_claims_allowed": { "const": false },
+        "source_bytes_preserved": { "const": true },
+        "automatic_catalog_admission": { "const": false },
+        "private_acquisition_seal_required": { "const": true },
+        "handling_policy_propagation_required": { "const": true },
+        "network_access_performed": { "const": false },
+        "publication_performed": { "const": false },
+        "sequential_execution_only": { "const": true }
+      }
+    }
+  }
+}

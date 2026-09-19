@@ -1,0 +1,15 @@
+[project]
+name = "himr-gpu-runtime"
+version = "0.1.0"
+description = "Private, hash-locked RTX 3050 inference runtime for HIMR corpus pilots"
+requires-python = "==3.12.14"
+dependencies = [
+  "ctranslate2==4.8.1",
+  "faster-whisper==1.2.1",
+  "nvidia-cublas-cu12==12.9.2.10",
+  "nvidia-cudnn-cu12==9.24.0.43",
+  "nvidia-ml-py==13.610.43",
+]
+
+[tool.uv]
+package = false

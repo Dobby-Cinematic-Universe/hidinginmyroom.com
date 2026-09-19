@@ -1,0 +1,13 @@
+{
+  "name": "himr-private-rag-pilot",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-17",
+  "workers_dev": true,
+  "preview_urls": false,
+  "ai_search_namespaces": [{"binding":"AI_SEARCH","namespace":"default"}],
+  "ai": {"binding":"AI"},
+  "durable_objects": {"bindings":[{"name":"BUDGET","class_name":"PilotBudget"}]},
+  "migrations": [{"tag":"v1","new_sqlite_classes":["PilotBudget"]}],
+  "vars": {"INSTANCE":"himr-private-pilot-v1","ENABLED":"true","FREE_REVIEW_BEFORE":"2026-09-24T00:00:00Z","CORPUS_VERSION":"pilot-v1"},
+  "observability": {"enabled":false}
+}

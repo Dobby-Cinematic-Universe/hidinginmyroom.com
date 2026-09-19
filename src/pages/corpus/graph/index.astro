@@ -1,0 +1,131 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import { loadCorpusGraph } from '../../../lib/corpus/graph';
+import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
+import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
+import {eventDirectoryItems} from '../../../lib/corpus/event-groups.mjs';
+
+const graph = await loadCorpusGraph();
+const hasGraph = graph.entities.length > 0 || graph.events.length > 0;
+const releaseDate = hasGraph ? new Date(graph.generatedAt) : undefined;
+const eventItems=graph.derived?eventDirectoryItems(graph):[];
+---
+
+<CorpusLayout
+  title="Entities and events · HIMR Public Corpus"
+  description="Names, places, event descriptions, and source links from the HIMR corpus."
+>
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/corpus/">Corpus</a>
+    <span aria-hidden="true">/</span>
+    <span>Entities &amp; events</span>
+  </nav>
+
+  <header class="graph-header">
+    <div>
+      <p class="corpus-eyebrow">{graph.derived ? 'Automatically populated source index' : 'Separate reviewed graph release'}</p>
+      <h1>Entities and events</h1>
+      <p>
+        {graph.derived ? 'Browse mentions, existing speaker labels, and event descriptions without a mandatory review step. Similar names and conflicting accounts are not automatically merged.' : 'This view contains only objects and edges with their own complete human review, publication decision, and current rights, privacy, and sensitivity clearances.'}
+      </p>
+    </div>
+    <dl>
+      <div><dt>Release</dt><dd>{graph.releaseId}</dd></div>
+      <div>
+        <dt>Generated</dt>
+        <dd>
+          {releaseDate && !Number.isNaN(releaseDate.getTime())
+            ? releaseDate.toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                timeZone: 'UTC',
+              })
+            : 'Awaiting first reviewed graph release'}
+        </dd>
+      </div>
+    </dl>
+  </header>
+
+  {graph.derived ? <DerivedNotice /> : <aside class="graph-caution">
+    <strong>Evidence is not a verdict.</strong>
+    <p>
+      An edge records the reviewed relationship to a public source. “Direct,” “contextual,”
+      “corroborating,” or “contradicting” describes that edge; it does not automatically prove
+      a claim or identify an unnamed person.
+    </p>
+  </aside>}
+
+  {graph.derived && <nav class="graph-jumps" aria-label="Index sections"><a href="#entities">Names &amp; places ↓</a><a href="#events">Related accounts &amp; descriptions ↓</a></nav>}
+  {graph.derived && <div class="graph-columns">
+    <section id="entities"><h2>Entities <small>{graph.counts.entities.toLocaleString()}</small></h2>
+      <p>Speaker names, common places/platforms, and repeated name-like phrases. This is an incomplete mention index, not an identity register.</p>
+      <DerivedDirectory label="entities" mode="entities" items={graph.entities.map(e=>({href:`/corpus/entities/${e.slug}/`,title:e.label,speakerCount:e.speakerRecordings?.length||0,detail:`${e.entity_type==='unknown'?'Name-like phrase':e.entity_type} · ${e.mentions?.length||0} recordings mentioning this name · ${e.speakerRecordings?.length||0} with a speaker label`}))} />
+    </section>
+    <section id="events"><h2>Related accounts &amp; descriptions <small>{eventItems.length.toLocaleString()}</small></h2>
+      <p>{(graph.eventGroups||[]).length.toLocaleString()} local similarity groups across {graph.counts.events.toLocaleString()} original descriptions. Multi-recording entries appear first. Related accounts may describe different occurrences or disagree; more links do not imply independent corroboration.</p>
+      {graph.groupingStale&&<p>The summaries changed since the last grouping pass. Descriptions remain available; rerun local event grouping to refresh the groups.</p>}
+      <DerivedDirectory label="events" mode="events" items={eventItems} />
+    </section>
+  </div>}
+
+  {
+    graph.derived ? null : !hasGraph ? (
+      <section class="graph-empty">
+        <h2>The graph boundary is ready.</h2>
+        <p>
+          No entity or event has passed every independent review and publication gate, so this
+          static release is intentionally empty.
+        </p>
+      </section>
+    ) : (
+      <div class="graph-columns">
+        <section aria-labelledby="entities-title">
+          <h2 id="entities-title">Entities <small>{graph.counts.entities}</small></h2>
+          <ol>
+            {graph.entities.map((entity) => (
+              <li>
+                <a href={`/corpus/entities/${entity.slug}/`}>
+                  <strong>{entity.label}</strong>
+                  <span>{entity.entity_type.replaceAll('_', ' ')}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+        <section aria-labelledby="events-title">
+          <h2 id="events-title">Events <small>{graph.counts.events}</small></h2>
+          <ol>
+            {graph.events.map((event) => (
+              <li><a href={`/corpus/events/${event.slug}/`}><strong>{event.label}</strong></a></li>
+            ))}
+          </ol>
+        </section>
+      </div>
+    )
+  }
+</CorpusLayout>
+
+<style>
+  .corpus-breadcrumbs { display: flex; gap: .55rem; margin-bottom: 1rem; color: var(--corpus-muted); font-size: .82rem; }
+  .graph-jumps{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1rem}
+  .graph-header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, .55fr); gap: 2rem; align-items: end; }
+  .graph-header h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -.035em; line-height: 1.1; }
+  .graph-header p { max-width: 48rem; color: var(--corpus-muted); }
+  .graph-header dl { display: grid; gap: .55rem; margin: 0; padding: 1rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); }
+  .graph-header dl div { display: grid; grid-template-columns: 6rem 1fr; gap: .5rem; }
+  .graph-header dt, .graph-header dd { margin: 0; }
+  .graph-header dt { color: var(--corpus-muted); font-size: .75rem; text-transform: uppercase; }
+  .graph-header dd { overflow-wrap: anywhere; font-family: ui-monospace, monospace; font-size: .8rem; }
+  .graph-caution, .graph-empty { margin-top: 1.5rem; padding: 1rem; border: 1px solid rgb(255 209 102 / 45%); background: rgb(255 209 102 / 7%); }
+  .graph-caution p, .graph-empty p { margin: .35rem 0 0; color: var(--corpus-muted); }
+  .graph-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+  .graph-columns section { padding: 1rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); }
+  .graph-columns h2 { margin-top: 0; }
+  .graph-columns h2 small { color: var(--corpus-muted); font-size: .8rem; }
+  .graph-columns ol { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+  .graph-columns li { border-top: 1px solid var(--corpus-line); }
+  .graph-columns a { display: grid; padding: .65rem 0; text-decoration: none; }
+  .graph-columns span { color: var(--corpus-muted); font-size: .8rem; }
+  @media (max-width: 48rem) { .graph-header, .graph-columns { grid-template-columns: 1fr; } }
+</style>

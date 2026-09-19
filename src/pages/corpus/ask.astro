@@ -1,0 +1,8 @@
+---
+import CorpusLayout from '../../layouts/CorpusLayout.astro';
+---
+<CorpusLayout title="Ask the corpus">
+  <h1>Ask the corpus</h1>
+  <p>Explore recordings through source-linked answers or find a passage. You can also open chat from the corner of any corpus page.</p>
+  {!import.meta.env.DEV && import.meta.env.PUBLIC_RAG_ENABLED!=='true' && <p>Chat is not publicly available yet.</p>}
+</CorpusLayout>

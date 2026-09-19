@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/queue-bundle-manifest-v1.json",
+  "title": "HIMR immutable private acquisition work-order bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_id",
+    "bundle_relative_path",
+    "schema_version",
+    "materializer",
+    "plan",
+    "policy",
+    "safety",
+    "work_order_count",
+    "work_orders"
+  ],
+  "properties": {
+    "bundle_id": {
+      "type": "string",
+      "pattern": "^acqbundle_[0-9a-f]{32}$"
+    },
+    "bundle_relative_path": {
+      "type": "string",
+      "pattern": "^bundles/acqbundle_[0-9a-f]{32}$"
+    },
+    "schema_version": { "const": 1 },
+    "materializer": { "$ref": "#/$defs/materializer" },
+    "plan": { "$ref": "#/$defs/plan" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "safety": { "$ref": "#/$defs/safety" },
+    "work_order_count": { "type": "integer", "minimum": 0 },
+    "work_orders": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/work_order" }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "materializer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "himr-queue-materializer" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "canonical_sha256", "core_sha256", "planned_at"],
+      "properties": {
+        "plan_id": { "type": "string", "pattern": "^acqplan_[0-9a-f]{32}$" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "core_sha256": { "$ref": "#/$defs/sha256" },
+        "planned_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "yt_dlp_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "sha256", "byte_count", "format_selector"],
+      "properties": {
+        "executable": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "format_selector": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "media_output_root",
+        "max_job_bytes",
+        "global_cache_cap_bytes",
+        "free_space_floor_bytes",
+        "direct_http_resume",
+        "direct_http_timeout_seconds",
+        "yt_dlp"
+      ],
+      "properties": {
+        "media_output_root": { "type": "string", "pattern": "^/" },
+        "max_job_bytes": { "type": "integer", "minimum": 1 },
+        "global_cache_cap_bytes": { "type": "integer", "minimum": 1 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 },
+        "direct_http_resume": { "const": true },
+        "direct_http_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "yt_dlp": { "$ref": "#/$defs/yt_dlp_policy" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_class",
+        "access_policy",
+        "publication_authority",
+        "credentials_allowed",
+        "network_access_performed",
+        "catalog_mutated",
+        "selected_ready_candidates_only"
+      ],
+      "properties": {
+        "bundle_class": { "const": "private_acquisition_work_orders" },
+        "access_policy": { "const": "public_only" },
+        "publication_authority": { "const": "none" },
+        "credentials_allowed": { "const": false },
+        "network_access_performed": { "const": false },
+        "catalog_mutated": { "const": false },
+        "selected_ready_candidates_only": { "const": true }
+      }
+    },
+    "work_order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "queue_ordinal",
+        "recording_id",
+        "source_id",
+        "job_id",
+        "adapter",
+        "path",
+        "sha256",
+        "byte_count"
+      ],
+      "properties": {
+        "queue_ordinal": { "type": "integer", "minimum": 1 },
+        "recording_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source_id": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "job_id": {
+          "type": "string",
+          "pattern": "^acq-[0-9a-f]{32}-[0-9]{6}$"
+        },
+        "adapter": { "enum": ["direct_http", "yt_dlp"] },
+        "path": {
+          "type": "string",
+          "pattern": "^work-orders/[0-9]{6}\\.json$"
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

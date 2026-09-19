@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "inventory_id": "archive-org-wiki-linked-files-2026-08-27",
+  "review_basis": {
+    "snapshot_id": "iams_e12428c928e888d699b81a7670051131",
+    "observed_at": "2026-08-27T09:07:12Z",
+    "snapshot_json_sha256": "1ea6f5d49c9a0aa5dc3dddc00f3d35bb1b6ab1ee0dcaba1060012b026536f01f",
+    "sources": [
+      {
+        "identifier": "699994",
+        "response_url": "https://archive.org/metadata/699994",
+        "observed_at": "2026-08-27T09:07:07Z",
+        "payload_sha256": "f904e427ff130950ce301da9d3834a31810b64a21c206b265d4d76e6cf10c534"
+      },
+      {
+        "identifier": "hidinginmyroom",
+        "response_url": "https://archive.org/metadata/hidinginmyroom",
+        "observed_at": "2026-08-27T09:07:10Z",
+        "payload_sha256": "1e50befbdae653064ab3971de9e94583fbd99fb25cd7c8189b51f7e26a712dac"
+      },
+      {
+        "identifier": "hidinginmyroom3",
+        "response_url": "https://archive.org/metadata/hidinginmyroom3",
+        "observed_at": "2026-08-27T09:07:12Z",
+        "payload_sha256": "92324b53ce6d0904fb20d14de48f96941830cfa2319cdab7f24a5d13439f32b3"
+      }
+    ]
+  },
+  "items": [
+    {
+      "identifier": "699994",
+      "files": [
+        {
+          "name": "20250618-why i regret leaving Thailand-l62ymLSJd0o.mp4",
+          "size": 80360817,
+          "md5": "f242aa07f276ddede1a58bc6ecff4536",
+          "sha1": "8cc026ec0c1494904b238771cc0bc0b50ca9585d"
+        },
+        {
+          "name": "20250619-i'm quitting youtube (streaming on kick.com)--G4wOVD-64A.mp4",
+          "size": 10061492,
+          "md5": "07f56e2f2e20f7df207ff0ca7fda22ad",
+          "sha1": "fa151141e5455c30bffdfbd4d6162803a9fff6ee"
+        },
+        {
+          "name": "20250620-i'm leaving youtube!-vtBo2HY9SxI.mp4",
+          "size": 31456734,
+          "md5": "a0d4f4df20f4eb007b7636501add21f9",
+          "sha1": "9cbba032f5039374b2d98eac03c40a8a69a2196a"
+        },
+        {
+          "name": "20260717-Hiding in my room is live--tqBDUcWYzk.mp4",
+          "size": 1643003218,
+          "md5": "ab79b65200f01baec817a60518e377c9",
+          "sha1": "f8dd018df516c29da738d1023ab369967541c509"
+        },
+        {
+          "name": "20260719-Hiding in my room is live!-uI1kiEZgxio.webm",
+          "size": 1152048132,
+          "md5": "249d315e5d4cb7b2cca5675307e9af2a",
+          "sha1": "0a314c56e2d9bae26149b2894783d64c81341264"
+        }
+      ]
+    },
+    {
+      "identifier": "hidinginmyroom",
+      "files": [
+        {
+          "name": "Cooking dinner for her [PJBFnY1cVt8].mp4",
+          "size": 8471538130,
+          "md5": "facd90b38e7b26141bd7077af209b7e8",
+          "sha1": "3354c9059f1ed952175407a71a8240f0bd64a183"
+        },
+        {
+          "name": "Exploring Kyoto [8TAr1xDfgyE].mp4",
+          "size": 10041604840,
+          "md5": "6da958e5bc814abd4f46c6219d912520",
+          "sha1": "c782cd374af14957cd7b3e2678cda12373cedacc"
+        },
+        {
+          "name": "Japanese Woman let me come inside her house! [nDlsd1OJMnA].mp4",
+          "size": 397554010,
+          "md5": "5677461e6a645b9918eb1e193440c055",
+          "sha1": "608f1e8f9368f40c58f487008bc9707a5127ec2f"
+        },
+        {
+          "name": "Staying at my viewers house [QA8bpJbBEKA].mp4",
+          "size": 1556743705,
+          "md5": "ef44bcc54fc457f75b821bdecd0de14a",
+          "sha1": "e591872800c2139df0ac349f2edc93acb21f5441"
+        },
+        {
+          "name": "The Final Chapter [lDFfL_62XpU].mp4",
+          "size": 7281661717,
+          "md5": "e56aa36c0de80e0e877930a0e6cf9080",
+          "sha1": "d195e25f043d62c9b62da5496277413936eb233a"
+        },
+        {
+          "name": "The craziest viewer I ever slept with [c2UrI729Ywc].mp4",
+          "size": 37465222,
+          "md5": "560f50d74a0eebba340d340a80a4c8ed",
+          "sha1": "3ca926e2d71eaa2b63e02c62d3758f1b9d07bd09"
+        },
+        {
+          "name": "[2023-11-19] Tax situation update - things are looking BAD [u_dH4Ewx-eA].mp4",
+          "size": 140587772,
+          "md5": "043ef6858b0e39c12635bd5398faef8a",
+          "sha1": "7099d6c1918e703e905f784954ef2959c7755e6c"
+        },
+        {
+          "name": "[2023-12-04] How i plan to pay off my debts - my Financial plan for 2024 [bqOO0cprz3A].mp4",
+          "size": 139531222,
+          "md5": "40b0bbcc167952ef756af721e3acbf2e",
+          "sha1": "a703fe474c727b0ebfc3a36dafab561d39280618"
+        },
+        {
+          "name": "dinner and owl cafe with bloodbucket [G07oXmwgq3s].mp4",
+          "size": 5624980073,
+          "md5": "564b40e1d26f664270db25595b4b3bfd",
+          "sha1": "71a45d09f0666184b1896762b792321c4c5d690f"
+        },
+        {
+          "name": "hello new stream chatting about life [FBitR95T73k].mp4",
+          "size": 2132200895,
+          "md5": "dd834f7a172d5f764de1cae8c3b07a80",
+          "sha1": "bfc461fbe742058aa8440c168390fa2780a2e9b7"
+        },
+        {
+          "name": "japanese woman came to my hotel room [QFRiGoeRbis].mp4",
+          "size": 2350660653,
+          "md5": "f146d5d60cd3656dec5e8f33055a8256",
+          "sha1": "05d453a76f7b87f4968402d72915a1408f45f059"
+        },
+        {
+          "name": "last trip with my girlfriend before i leave Thailand FOREVER [H73wIPAK5xo].mp4",
+          "size": 517369642,
+          "md5": "6c280868e114ef28acf82be0cedc51d4",
+          "sha1": "a4b3d0373b614c6f8b9cec38e6a8220f97926517"
+        },
+        {
+          "name": "meeting the hongkong guy [7UQrogf7FPA].mp4",
+          "size": 1576252010,
+          "md5": "9821730027c23e8a393d3ee1f6827670",
+          "sha1": "95d357b0933e7984b7b1a44e4c1b58c3f0b4174d"
+        },
+        {
+          "name": "my Last month in Thailand [3Lt-BxIbYuY].mp4",
+          "size": 6349677392,
+          "md5": "742ac62fa58e6043e2fde9e38a7961fa",
+          "sha1": "481e4d09959cc01e259f90ecf95a1a95f5d9e0cc"
+        },
+        {
+          "name": "shopping with japanese mum [PH-ULOEOO28].mp4",
+          "size": 1783025509,
+          "md5": "6c65f014494c66fa80c7ba7029ebf57d",
+          "sha1": "747de6bdd47e80fd59d3040e578caf553d1be654"
+        },
+        {
+          "name": "walking to Japanese Sun Tower (21km walkathon) [bLLuzNREUQ8].mp4",
+          "size": 10070418118,
+          "md5": "c42d620e23d4ca8afa2668a4fd9ce31b",
+          "sha1": "7c1d88b5f3340286345d5317474b4a2df778293e"
+        },
+        {
+          "name": "why my Girlfriend is leaving me and moving to the USA [3jJQbSAPVzQ].mp4",
+          "size": 183254230,
+          "md5": "fbab835031eeb3cd1152e7a9e048e698",
+          "sha1": "91ab93bed983671e6fe6a51c16c3ca25b456c7d3"
+        }
+      ]
+    },
+    {
+      "identifier": "hidinginmyroom3",
+      "files": [
+        {
+          "name": "[2024-10-04] i got in trouble with my car [TbXvrVocdLo].mp4",
+          "size": 78045382,
+          "md5": "8e57358db9672b661c929f6ce6c8ce09",
+          "sha1": "9eb517f6faba9c989bb22686f4764862f70667a4"
+        },
+        {
+          "name": "[2024-10-28] got some cool new stuff for my car  -) [e07WXPTdPc4].mp4",
+          "size": 2987257625,
+          "md5": "af7c2db961644384ece28559b753c8c3",
+          "sha1": "945e44adc98da4dec762f879883ba674fd5b5b43"
+        },
+        {
+          "name": "[2024-11-19] sunny is gone  -( [wfj0NzGIZZA].mp4",
+          "size": 2587725766,
+          "md5": "b8679ec4705d4296eebd21ca20ae92d6",
+          "sha1": "3703a7bde7407205d48ec8067ad5d76716e9977e"
+        },
+        {
+          "name": "[2024-11-22] Why i HATE working as an Amazon Flex Driver [GkR8qmnhMWg].mp4",
+          "size": 113882014,
+          "md5": "1a9c4fcf2123341d9605cbc9b7aa97c6",
+          "sha1": "82fc93f48309294e05cb9ec83ca55564d8354782"
+        },
+        {
+          "name": "[2024-11-24] i got pulled over by the police  -( [K3AJ8xD7Lvc].mp4",
+          "size": 1429350683,
+          "md5": "f5e59ad6e8fec1dabeca256136e56433",
+          "sha1": "24d01aa72eace250bd086af81a375ee8e5224e5a"
+        },
+        {
+          "name": "[2024-11-26] just got back home [U1mZLKVoz78].mp4",
+          "size": 2315723220,
+          "md5": "689d0de7fc510d751ac963353e7a663f",
+          "sha1": "594e27df2c666a14e4fd42ff31fc85b790f1aa25"
+        },
+        {
+          "name": "[2024-11-29] Delivering Amazon flex Packages with my MUM [tEL2FVsDhDg].mp4",
+          "size": 180756148,
+          "md5": "80c7458be1cd73397c03b85265fd6cbd",
+          "sha1": "8f14e041ae12972e88c660bad36f7ac8cdaeaefa"
+        },
+        {
+          "name": "[2024-12-01] My Life as an Amazon Delivery driver [Pbt_34hmM7A].mp4",
+          "size": 155035210,
+          "md5": "0126eb1426670e458351dd4643781dde",
+          "sha1": "05c339851c53b456d7fccc12635011de23c8f2ac"
+        },
+        {
+          "name": "[2024-12-05] Terrible Double shifts Delivering Amazon parcels [T4KKgGt-ceM].mp4",
+          "size": 119019985,
+          "md5": "5ce14413b5442f049bfd79902cd511ab",
+          "sha1": "3b626c8d9ab3ec68dfa3bc9349a0ac5e0409f1d0"
+        },
+        {
+          "name": "[2024-12-06] my life has gotten so much worse... [8TWGZPeIUv8].mp4",
+          "size": 1485979309,
+          "md5": "59ec7bd08f8814314de793ca3f291368",
+          "sha1": "28332188f0aee7f647ac726359bf441e1026be22"
+        },
+        {
+          "name": "[2024-12-15] Day in the Life of Amazon Flex driver at Christmas [lE9yZvOnvVc].mp4",
+          "size": 129148322,
+          "md5": "baf170431dc15fc257ec723e3db70047",
+          "sha1": "388545e8ad4a13b0c6be7e1dbfe370549418157e"
+        },
+        {
+          "name": "[2024-12-17] i got BANNED from amazon Flex... [d-PRe1ItW6A].mp4",
+          "size": 2305499864,
+          "md5": "320d51fcf096d8ba82163ce94e895f4d",
+          "sha1": "dec136c7f9cb33d61c189cd51afa0488c91d2679"
+        },
+        {
+          "name": "[2024-12-18] how i got banned from being an Amazon Flex Driver [njc1Gh6_hpo].mp4",
+          "size": 45182895,
+          "md5": "d85bc09eb27dec55480a5911186f310e",
+          "sha1": "ecdb0098bd883f8867d4dcab06263e8c7e0ec38f"
+        },
+        {
+          "name": "[2024-12-20] update on my NEW job after getting banned on amazon flex [6rzMdgUG3To].mp4",
+          "size": 4751983742,
+          "md5": "6efafacbbc2367e0f6287d67f95b1d8f",
+          "sha1": "41d23afd5bc0c832f18f3f496d67a77ce6e2289e"
+        },
+        {
+          "name": "[2024-12-29] The Truth about being an Amazon Flex Driver in the UK [UqJSSNjsZDg].mp4",
+          "size": 284712922,
+          "md5": "5866513bcd64c9e4cd7b8e7f08628d3c",
+          "sha1": "d23ee52e572de5a59c10e587ca16b432059e13bc"
+        },
+        {
+          "name": "[2025-01-13] why my mum kicked me and sunny out [WK0WGqXtisY].mp4",
+          "size": 3269400708,
+          "md5": "66f203008636f1af653d2d763be5a086",
+          "sha1": "4be40ec2937cd85334f7af46798d97df7e69d04b"
+        },
+        {
+          "name": "[2025-02-15] update on my new life - new job and debt [jGtOxt17NNU].mp4",
+          "size": 1997835539,
+          "md5": "a5878b0b01e915ef1d40f2b9c72c79be",
+          "sha1": "a8900acfcd459055dbe0959dd9c8cfd7d78b95b5"
+        },
+        {
+          "name": "[2025-02-16] my debt is getting out of control [RUwiPL7imes].mp4",
+          "size": 5415805566,
+          "md5": "76d261d1032996951a75ef210df3381e",
+          "sha1": "99283d7c2f2fa1fc8d2bd9b3d6f1a25bd8f3d47e"
+        },
+        {
+          "name": "[2025-02-27] drowning in debt... life updates [wOSTFfT2280].mp4",
+          "size": 3415370302,
+          "md5": "b324bbf0f0e269fbddef7e7f4fe12420",
+          "sha1": "ca85892c34aa0910ada9cbb0dc9dc13ec176da2c"
+        },
+        {
+          "name": "[2025-03-03] confusing and weird day [nFFD4uUGXtc].mp4",
+          "size": 3978881050,
+          "md5": "8dfcd4cefb8fcdf09c4958bb974827ac",
+          "sha1": "5165e58cf6b61e53cbe41fb36cdb40df828abe92"
+        },
+        {
+          "name": "[2025-03-04] Sunny PLEASE UNBLOCK ME IM SORRY  -( [_JnxNMu2NyY].mp4",
+          "size": 4634733984,
+          "md5": "0a545663954d8dcd25f513b2b76b6c64",
+          "sha1": "77d26b2cbf4d899e0974164547a73c17e2cbb853"
+        },
+        {
+          "name": "[2025-03-06] how i plan to get Sunny back [OzssmV4EsLw].mp4",
+          "size": 4584837858,
+          "md5": "efe148c46ce89c711aad4535ae75b2f1",
+          "sha1": "031bfcf49303e602735f22790c656f0bd54f00e8"
+        }
+      ]
+    }
+  ]
+}

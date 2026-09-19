@@ -1,0 +1,471 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/yunet-face-detector-result.schema.json",
+  "title": "Private bounded YuNet face-detector result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "stage",
+    "status",
+    "dry_run",
+    "job_id",
+    "work_order_sha256",
+    "result_key",
+    "result_path",
+    "implementation",
+    "policy",
+    "runtime",
+    "model",
+    "parameters",
+    "recording_id",
+    "shots",
+    "frames",
+    "detections_artifact",
+    "score_semantics",
+    "authority"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "implementation_version": { "enum": ["0.1.0", "0.2.0"] },
+    "stage": { "const": "yunet_face_detector_bridge" },
+    "status": { "const": "completed" },
+    "dry_run": { "const": false },
+    "job_id": { "$ref": "#/$defs/id" },
+    "work_order_sha256": { "$ref": "#/$defs/sha256" },
+    "result_key": { "$ref": "#/$defs/sha256" },
+    "result_path": { "$ref": "#/$defs/absolutePath" },
+    "implementation": { "$ref": "#/$defs/implementation" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "model": { "$ref": "#/$defs/model" },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "recording_id": { "$ref": "#/$defs/id" },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/shot" }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/frame" }
+    },
+    "detections_artifact": { "$ref": "#/$defs/artifactObservation" },
+    "score_semantics": {
+      "const": "raw_model_score_not_calibrated_probability"
+    },
+    "authority": { "$ref": "#/$defs/authority" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "implementation_version": { "const": "0.1.0" }
+        },
+        "required": ["implementation_version"]
+      },
+      "then": {
+        "properties": {
+          "implementation": {
+            "properties": {
+              "implementation_version": { "const": "0.1.0" }
+            }
+          },
+          "policy": {
+            "properties": {
+              "material_scope": { "const": "synthetic_fixture_only" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "implementation_version": { "const": "0.2.0" }
+        },
+        "required": ["implementation_version"]
+      },
+      "then": {
+        "properties": {
+          "implementation": {
+            "properties": {
+              "implementation_version": { "const": "0.2.0" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "policy": {
+            "properties": {
+              "material_scope": { "const": "public_single_shot_pilot_only" }
+            },
+            "required": ["material_scope"]
+          }
+        },
+        "required": ["policy"]
+      },
+      "then": {
+        "properties": {
+          "shots": { "minItems": 1, "maxItems": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "absolutePath": { "type": "string", "pattern": "^/", "maxLength": 4096 },
+    "fileUri": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^file:///",
+      "maxLength": 8192
+    },
+    "privateObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "storage_uri", "sha256", "byte_count", "visibility"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "storage_uri": { "$ref": "#/$defs/fileUri" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 134217728
+        },
+        "visibility": { "const": "private" }
+      }
+    },
+    "hostObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "storage_uri",
+        "sha256",
+        "byte_count",
+        "visibility",
+        "expected_version"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "storage_uri": { "$ref": "#/$defs/fileUri" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 134217728
+        },
+        "visibility": { "const": "host_runtime" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "artifactObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_kind",
+        "path",
+        "storage_uri",
+        "sha256",
+        "byte_count",
+        "visibility"
+      ],
+      "properties": {
+        "artifact_kind": { "const": "frame_local_face_detections_json" },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "storage_uri": { "$ref": "#/$defs/fileUri" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "visibility": { "const": "private" }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "implementation_version"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1, "maximum": 4194304 },
+        "implementation_version": { "enum": ["0.1.0", "0.2.0"] }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "material_scope",
+        "network_allowed",
+        "embeddings_allowed",
+        "identity_decision_allowed",
+        "active_speaker_decision_allowed",
+        "publication_authority",
+        "human_review_required"
+      ],
+      "properties": {
+        "visibility": { "const": "private" },
+        "material_scope": {
+          "enum": [
+            "synthetic_fixture_only",
+            "public_single_shot_pilot_only"
+          ]
+        },
+        "network_allowed": { "const": false },
+        "embeddings_allowed": { "const": false },
+        "identity_decision_allowed": { "const": false },
+        "active_speaker_decision_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "human_review_required": { "const": true }
+      }
+    },
+    "runtimePackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wheel", "binary", "expected_version"],
+      "properties": {
+        "wheel": { "$ref": "#/$defs/privateObservation" },
+        "binary": { "$ref": "#/$defs/privateObservation" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "opencvPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wheel",
+        "binary",
+        "expected_version",
+        "expected_build_information_sha256"
+      ],
+      "properties": {
+        "wheel": { "$ref": "#/$defs/privateObservation" },
+        "binary": { "$ref": "#/$defs/privateObservation" },
+        "expected_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "expected_build_information_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "runtimeObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python_version",
+        "opencv_version",
+        "numpy_version",
+        "opencv_build_information_sha256",
+        "opencv_threads",
+        "opencl_enabled",
+        "network_used"
+      ],
+      "properties": {
+        "python_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "opencv_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "numpy_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "opencv_build_information_sha256": { "$ref": "#/$defs/sha256" },
+        "opencv_threads": { "const": 1 },
+        "opencl_enabled": { "const": false },
+        "network_used": { "const": false }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_root", "python", "opencv", "numpy", "observation"],
+      "properties": {
+        "module_root": { "$ref": "#/$defs/absolutePath" },
+        "python": { "$ref": "#/$defs/hostObservation" },
+        "opencv": { "$ref": "#/$defs/opencvPackage" },
+        "numpy": { "$ref": "#/$defs/runtimePackage" },
+        "observation": { "$ref": "#/$defs/runtimeObservation" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "license",
+        "upstream_url",
+        "upstream_commit",
+        "license_expression"
+      ],
+      "properties": {
+        "artifact": { "$ref": "#/$defs/privateObservation" },
+        "license": { "$ref": "#/$defs/privateObservation" },
+        "upstream_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/opencv/opencv_zoo/",
+          "maxLength": 2048
+        },
+        "upstream_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "license_expression": { "const": "MIT" }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipe_id",
+        "score_threshold",
+        "nms_threshold",
+        "top_k",
+        "threads",
+        "backend",
+        "target",
+        "frame_period_ms",
+        "max_frames",
+        "max_detections_per_frame"
+      ],
+      "properties": {
+        "recipe_id": { "const": "yunet_2023mar_opencv_cpu_0.9_0.3_5000_v1" },
+        "score_threshold": { "const": 0.9 },
+        "nms_threshold": { "const": 0.3 },
+        "top_k": { "const": 5000 },
+        "threads": { "const": 1 },
+        "backend": { "const": "opencv_cpu" },
+        "target": { "const": "cpu" },
+        "frame_period_ms": { "const": 40 },
+        "max_frames": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "max_detections_per_frame": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shot_id",
+        "shot_ordinal",
+        "start_frame_index",
+        "end_frame_index_exclusive",
+        "start_timestamp_ms",
+        "end_timestamp_ms_exclusive"
+      ],
+      "properties": {
+        "shot_id": { "$ref": "#/$defs/id" },
+        "shot_ordinal": { "type": "integer", "minimum": 0, "maximum": 63 },
+        "start_frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "end_frame_index_exclusive": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000001
+        },
+        "start_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "end_timestamp_ms_exclusive": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1209600001
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "format"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1, "maximum": 1920 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 1080 },
+        "format": { "const": "png" }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_id",
+        "shot_id",
+        "frame_index",
+        "timestamp_ms",
+        "media_type",
+        "input",
+        "image",
+        "detection_count"
+      ],
+      "properties": {
+        "frame_id": { "$ref": "#/$defs/id" },
+        "shot_id": { "$ref": "#/$defs/id" },
+        "frame_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000000
+        },
+        "timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1209600000
+        },
+        "media_type": { "const": "image/png" },
+        "input": { "$ref": "#/$defs/privateObservation" },
+        "image": { "$ref": "#/$defs/image" },
+        "detection_count": { "type": "integer", "minimum": 0, "maximum": 64 }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "embeddings_present",
+        "identity_state",
+        "identity_label",
+        "identity_decision",
+        "active_speaker_state",
+        "active_speaker_score",
+        "active_speaker_decision",
+        "publication",
+        "human_review_required"
+      ],
+      "properties": {
+        "embeddings_present": { "const": false },
+        "identity_state": { "const": "unknown" },
+        "identity_label": { "type": "null" },
+        "identity_decision": { "const": false },
+        "active_speaker_state": { "const": "unknown" },
+        "active_speaker_score": { "type": "null" },
+        "active_speaker_decision": { "const": false },
+        "publication": { "const": false },
+        "human_review_required": { "const": true }
+      }
+    }
+  }
+}

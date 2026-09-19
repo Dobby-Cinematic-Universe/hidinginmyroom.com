@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/media-local-asr-admission-v1.json",
+  "title": "HIMR private media-local ASR admission plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "bridge_version", "plan_sha256", "result",
+    "sealed_queue", "preprocess_lineage", "sealed_result", "catalog_context",
+    "coordinate_contract", "statistics", "safety"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "status": { "enum": ["validated", "admitted"] },
+    "bridge_version": { "const": "media-local-asr-bridge/1" },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "result": { "$ref": "#/$defs/result" },
+    "sealed_queue": { "$ref": "#/$defs/sealedQueue" },
+    "preprocess_lineage": { "$ref": "#/$defs/preprocessLineage" },
+    "sealed_result": { "$ref": "#/$defs/sealedResult" },
+    "catalog_context": { "$ref": "#/$defs/catalogContext" },
+    "coordinate_contract": { "$ref": "#/$defs/coordinateContract" },
+    "statistics": { "$ref": "#/$defs/statistics" },
+    "safety": { "$ref": "#/$defs/safety" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "mediaId": {
+      "type": "string",
+      "pattern": "^media_sha256_[0-9a-f]{64}$"
+    },
+    "fileUri": { "type": "string", "pattern": "^file:///" },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asr_result_uri", "raw_sha256", "canonical_sha256", "byte_count",
+        "result_key", "processing_run_id", "media_local_revision_id"
+      ],
+      "properties": {
+        "asr_result_uri": { "$ref": "#/$defs/fileUri" },
+        "raw_sha256": { "$ref": "#/$defs/sha256" },
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "processing_run_id": { "$ref": "#/$defs/identifier" },
+        "media_local_revision_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "sealedQueue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "queue_id", "queue_identity_sha256", "queue_manifest_uri",
+        "queue_manifest_raw_sha256", "queue_ordinal", "routing_hint",
+        "review_only_ordinals", "work_order_uri", "work_order_raw_sha256",
+        "work_order_canonical_sha256"
+      ],
+      "properties": {
+        "queue_id": {
+          "const": "asrppqueue_66349d9b85c74f2376830edf2a7d4f0c"
+        },
+        "queue_identity_sha256": {
+          "const": "66349d9b85c74f2376830edf2a7d4f0ccf9d4e093f9c55b8127429259f2948d1"
+        },
+        "queue_manifest_uri": { "$ref": "#/$defs/fileUri" },
+        "queue_manifest_raw_sha256": {
+          "const": "100d142cf459a663dd0f899db74b9666fbe49942d7ff0960280424899d39b5a0"
+        },
+        "queue_ordinal": {
+          "type": "integer", "minimum": 2, "maximum": 19,
+          "not": { "enum": [13] }
+        },
+        "routing_hint": { "const": "process" },
+        "review_only_ordinals": {
+          "type": "array", "prefixItems": [{ "const": 1 }, { "const": 13 }],
+          "items": false, "minItems": 2, "maxItems": 2
+        },
+        "work_order_uri": { "$ref": "#/$defs/fileUri" },
+        "work_order_raw_sha256": { "$ref": "#/$defs/sha256" },
+        "work_order_canonical_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "preprocessLineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preprocess_result_uri", "preprocess_result_raw_sha256",
+        "preprocess_result_canonical_sha256", "preprocess_import_batch_id",
+        "preprocess_processing_run_id", "preprocess_source_media_id",
+        "input_media_id", "input_artifact_id", "input_sha256"
+      ],
+      "properties": {
+        "preprocess_result_uri": { "$ref": "#/$defs/fileUri" },
+        "preprocess_result_raw_sha256": { "$ref": "#/$defs/sha256" },
+        "preprocess_result_canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "preprocess_import_batch_id": { "$ref": "#/$defs/identifier" },
+        "preprocess_processing_run_id": { "$ref": "#/$defs/identifier" },
+        "preprocess_source_media_id": { "$ref": "#/$defs/mediaId" },
+        "input_media_id": { "$ref": "#/$defs/mediaId" },
+        "input_artifact_id": { "$ref": "#/$defs/identifier" },
+        "input_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "catalogContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_catalog_context", "recording_id", "rendition_id", "source_id"],
+      "properties": {
+        "producer_catalog_context": { "type": "null" },
+        "recording_id": { "type": "null" },
+        "rendition_id": { "type": "null" },
+        "source_id": { "type": "null" }
+      }
+    },
+    "sealedResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seal_receipt_uri", "seal_receipt_raw_sha256", "seal_receipt_id",
+        "seal_receipt_identity_sha256", "seal_receipt_ordinal",
+        "sealed_result_directory_uri"
+      ],
+      "properties": {
+        "seal_receipt_uri": { "$ref": "#/$defs/fileUri" },
+        "seal_receipt_raw_sha256": {
+          "const": "806439f2736dae9b95ffdffd19c3464c9efc39e79a5fbc21f7223b9f2c717b7b"
+        },
+        "seal_receipt_id": {
+          "const": "asrsealreceipt_c0694c5c36586eb433a766490f3dbc01"
+        },
+        "seal_receipt_identity_sha256": {
+          "const": "9f29212c38a78ff91faaea5dc7d8eb10f3d0405c0075ce8e365d4b33598df524"
+        },
+        "seal_receipt_ordinal": { "type": "integer", "minimum": 1, "maximum": 25 },
+        "sealed_result_directory_uri": { "$ref": "#/$defs/fileUri" }
+      }
+    },
+    "coordinateContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinate_system", "boundary", "input_duration_ms",
+        "requested_start_ms", "requested_end_ms", "max_segment_end_ms",
+        "input_boundary_overrun_ms", "null_timed_word_count",
+        "recording_coordinates_asserted", "source_coordinates_asserted",
+        "recording_transform_state", "source_transform_state"
+      ],
+      "properties": {
+        "coordinate_system": { "const": "media_ms" },
+        "boundary": { "const": "half_open" },
+        "input_duration_ms": { "type": "integer", "minimum": 1 },
+        "requested_start_ms": { "const": 0 },
+        "requested_end_ms": { "type": "integer", "minimum": 1 },
+        "max_segment_end_ms": { "type": "integer", "minimum": 0 },
+        "input_boundary_overrun_ms": { "type": "integer", "minimum": 0 },
+        "null_timed_word_count": { "type": "integer", "minimum": 0 },
+        "recording_coordinates_asserted": { "const": false },
+        "source_coordinates_asserted": { "const": false },
+        "recording_transform_state": {
+          "const": "unasserted_catalog_context_null"
+        },
+        "source_transform_state": {
+          "const": "unasserted_catalog_context_null"
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifacts", "media_local_import_receipts", "media_local_revisions",
+        "media_local_segments", "media_local_words", "null_timed_words",
+        "processing_runs", "publication_decisions",
+        "recording_scoped_transcript_revisions", "run_inputs",
+        "source_coordinate_rows", "timeline_map_spans"
+      ],
+      "properties": {
+        "artifacts": { "const": 2 },
+        "media_local_import_receipts": { "const": 1 },
+        "media_local_revisions": { "const": 1 },
+        "media_local_segments": { "type": "integer", "minimum": 0 },
+        "media_local_words": { "type": "integer", "minimum": 0 },
+        "null_timed_words": { "type": "integer", "minimum": 0 },
+        "processing_runs": { "const": 1 },
+        "publication_decisions": { "const": 0 },
+        "recording_scoped_transcript_revisions": { "const": 0 },
+        "run_inputs": { "const": 1 },
+        "source_coordinate_rows": { "const": 0 },
+        "timeline_map_spans": { "const": 0 }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "credentials_used", "identity_authority", "network_access_performed",
+        "publication_authority", "transcript_text_in_plan", "visibility"
+      ],
+      "properties": {
+        "credentials_used": { "const": false },
+        "identity_authority": { "const": "none" },
+        "network_access_performed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "transcript_text_in_plan": { "const": false },
+        "visibility": { "const": "private" }
+      }
+    }
+  }
+}

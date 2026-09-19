@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/corpus/schemas/public-release-v2.json",
+  "title": "HIMR sharded static corpus manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "release_id", "generated_at", "counts", "catalog_shard_size",
+    "stats", "facets", "catalog_shards"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "release_id": { "type": "string", "pattern": "^release_[a-f0-9]{24}$" },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:19|20)[0-9]{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\\.[0-9]+)?Z$"
+    },
+    "counts": { "$ref": "#/$defs/counts" },
+    "catalog_shard_size": { "type": "integer", "minimum": 1, "maximum": 1000 },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duration_ms", "searchable_transcript_segments", "source_listings",
+        "transcript_revisions"
+      ],
+      "properties": {
+        "duration_ms": { "type": "integer", "minimum": 0 },
+        "searchable_transcript_segments": { "type": "integer", "minimum": 0 },
+        "source_listings": { "type": "integer", "minimum": 0 },
+        "transcript_revisions": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "facets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platforms", "years", "languages", "speakers", "review_states",
+        "confidence_bands", "recording_types"
+      ],
+      "properties": {
+        "platforms": { "$ref": "#/$defs/unique_strings" },
+        "years": { "$ref": "#/$defs/unique_strings" },
+        "languages": { "$ref": "#/$defs/unique_strings" },
+        "speakers": { "$ref": "#/$defs/unique_strings" },
+        "review_states": { "$ref": "#/$defs/unique_strings" },
+        "confidence_bands": { "$ref": "#/$defs/unique_strings" },
+        "recording_types": { "$ref": "#/$defs/unique_strings" }
+      }
+    },
+    "catalog_shards": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/catalog_descriptor" }
+    }
+  },
+  "$defs": {
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordings", "sources", "transcript_revisions", "segments"],
+      "properties": {
+        "recordings": { "type": "integer", "minimum": 0 },
+        "sources": { "type": "integer", "minimum": 0 },
+        "transcript_revisions": { "type": "integer", "minimum": 0 },
+        "segments": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "unique_strings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "catalog_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path", "sha256", "bytes", "recording_count", "source_count",
+        "transcript_revision_count", "segment_count", "first_recording_id",
+        "last_recording_id"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^catalog/catalog-[0-9]{5}-[a-f0-9]{16}\\.json$"
+        },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "recording_count": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "source_count": { "type": "integer", "minimum": 0 },
+        "transcript_revision_count": { "type": "integer", "minimum": 0 },
+        "segment_count": { "type": "integer", "minimum": 0 },
+        "first_recording_id": { "$ref": "#/$defs/recording_id" },
+        "last_recording_id": { "$ref": "#/$defs/recording_id" }
+      }
+    },
+    "recording_id": {
+      "type": "string",
+      "pattern": "^rec_[a-f0-9]{32}$"
+    }
+  }
+}

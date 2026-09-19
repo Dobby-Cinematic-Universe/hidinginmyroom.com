@@ -1,0 +1,567 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://himr.example/schemas/asr-whispercpp-result-seal-plan.schema.json",
+  "title": "whisper.cpp completed-result seal plan (v1 two-source, v2 queue-only, or v3 batch-only)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "authority",
+    "created_at",
+    "excluded_source_entries",
+    "identity_sha256",
+    "implementation",
+    "importer_validator",
+    "kind",
+    "plan_id",
+    "policy",
+    "receipt_path",
+    "result_count",
+    "results",
+    "schema_version",
+    "sources",
+    "state",
+    "store_root"
+  ],
+  "properties": {
+    "authority": { "$ref": "#/$defs/authority" },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "excluded_source_entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/excludedSourceEntry" }
+    },
+    "identity_sha256": { "$ref": "#/$defs/sha256" },
+    "implementation": { "$ref": "#/$defs/fileIdentity" },
+    "importer_validator": { "$ref": "#/$defs/fileIdentity" },
+    "kind": { "const": "asr_whispercpp_completed_result_seal_plan" },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^asrsealplan_[0-9a-f]{32}$"
+    },
+    "policy": { "$ref": "#/$defs/policy" },
+    "receipt_path": { "$ref": "#/$defs/absolutePath" },
+    "result_count": { "type": "integer", "minimum": 1 },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/result" }
+    },
+    "schema_version": { "type": "integer", "enum": [1, 2, 3] },
+    "source_authority": {
+      "oneOf": [
+        { "$ref": "#/$defs/sourceAuthority" },
+        { "$ref": "#/$defs/batchSourceAuthority" }
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "state": { "const": "prepared_not_applied" },
+    "store_root": { "$ref": "#/$defs/absolutePath" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "schema_version": { "const": 1 } },
+        "required": ["schema_version"]
+      },
+      "then": {
+        "properties": {
+          "sources": { "minItems": 2, "maxItems": 2 }
+        },
+        "not": { "required": ["source_authority"] }
+      }
+    },
+    {
+      "if": {
+        "properties": { "schema_version": { "const": 2 } },
+        "required": ["schema_version"]
+      },
+      "then": {
+        "required": ["source_authority"],
+        "properties": {
+          "sources": {
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/source" },
+                {
+                  "properties": {
+                    "kind": { "const": "short_preprocess_queue" },
+                    "source_id": { "pattern": "^asrppqueue_[0-9a-f]{32}$" }
+                  }
+                }
+              ]
+            }
+          },
+          "results": {
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/result" },
+                {
+                  "properties": {
+                    "source_kind": { "const": "short_preprocess_queue" },
+                    "source_id": { "pattern": "^asrppqueue_[0-9a-f]{32}$" }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "schema_version": { "const": 3 } },
+        "required": ["schema_version"]
+      },
+      "then": {
+        "required": ["source_authority"],
+        "properties": {
+          "sources": {
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/source" },
+                {
+                  "properties": {
+                    "kind": { "const": "long_window_batch" },
+                    "source_id": { "pattern": "^asrbatch_[0-9a-f]{32}$" }
+                  }
+                }
+              ]
+            }
+          },
+          "results": {
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/result" },
+                {
+                  "properties": {
+                    "source_kind": { "const": "long_window_batch" },
+                    "source_id": { "pattern": "^asrbatch_[0-9a-f]{32}$" }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "absolutePath": {
+      "type": "string",
+      "pattern": "^/[^\\u0000]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asr_execution",
+        "catalog_import",
+        "database_writes",
+        "identity_authority",
+        "network_access",
+        "publication_authority"
+      ],
+      "properties": {
+        "asr_execution": { "const": false },
+        "catalog_import": { "const": false },
+        "database_writes": { "const": false },
+        "identity_authority": { "const": "none" },
+        "network_access": { "const": "none" },
+        "publication_authority": { "const": "none" }
+      }
+    },
+    "sourceAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "queue_id",
+        "queue_identity_sha256",
+        "queue_contract",
+        "queue_manifest_path",
+        "queue_manifest_sha256",
+        "schema_version",
+        "selection_policy"
+      ],
+      "properties": {
+        "mode": { "const": "queue_only" },
+        "queue_id": {
+          "type": "string",
+          "pattern": "^asrppqueue_[0-9a-f]{32}$"
+        },
+        "queue_identity_sha256": { "$ref": "#/$defs/sha256" },
+        "queue_contract": { "$ref": "#/$defs/queueContract" },
+        "queue_manifest_path": { "$ref": "#/$defs/absolutePath" },
+        "queue_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "schema_version": { "type": "integer", "const": 1 },
+        "selection_policy": {
+          "const": "all_and_only_routing_hint_process_entries"
+        }
+      }
+    },
+    "queueContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_schema_version",
+        "materializer",
+        "materializer_implementation_version",
+        "queue_manifest_schema",
+        "queue_validator",
+        "safety_sha256"
+      ],
+      "properties": {
+        "manifest_schema_version": { "type": "integer", "minimum": 1 },
+        "materializer": { "type": "string", "minLength": 1 },
+        "materializer_implementation_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "queue_manifest_schema": { "$ref": "#/$defs/fileIdentity" },
+        "queue_validator": { "$ref": "#/$defs/fileIdentity" },
+        "safety_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "batchSourceAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_contract",
+        "batch_id",
+        "batch_identity_sha256",
+        "batch_manifest_path",
+        "batch_manifest_sha256",
+        "mode",
+        "schema_version",
+        "selection_policy"
+      ],
+      "properties": {
+        "batch_contract": { "$ref": "#/$defs/batchContract" },
+        "batch_id": {
+          "type": "string",
+          "pattern": "^asrbatch_[0-9a-f]{32}$"
+        },
+        "batch_identity_sha256": { "$ref": "#/$defs/sha256" },
+        "batch_manifest_path": { "$ref": "#/$defs/absolutePath" },
+        "batch_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "mode": { "const": "batch_only" },
+        "schema_version": { "type": "integer", "const": 1 },
+        "selection_policy": { "const": "all_batch_work_orders" }
+      }
+    },
+    "batchContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_manifest_schema",
+        "batch_validator",
+        "catalog_binding_sha256",
+        "manifest_schema_version",
+        "materializer",
+        "materializer_implementation_version",
+        "safety_sha256"
+      ],
+      "properties": {
+        "batch_manifest_schema": { "$ref": "#/$defs/fileIdentity" },
+        "batch_validator": { "$ref": "#/$defs/fileIdentity" },
+        "catalog_binding_sha256": { "$ref": "#/$defs/sha256" },
+        "manifest_schema_version": { "type": "integer", "minimum": 1 },
+        "materializer": { "type": "string", "minLength": 1 },
+        "materializer_implementation_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "safety_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_entries",
+        "catalog_validation",
+        "container_changes",
+        "container_policy",
+        "directory_mode_after",
+        "directory_mode_before",
+        "file_mode_after",
+        "file_mode_before",
+        "hardlink_policy",
+        "symlink_policy"
+      ],
+      "properties": {
+        "allowed_entries": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "result.json" },
+            { "const": "transcript.normalized.json" },
+            { "const": "whisper.raw.json" }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "catalog_validation": {
+          "const": "validate_asr_whispercpp_result_file_catalog_free"
+        },
+        "container_changes": { "type": "array", "maxItems": 0 },
+        "container_policy": {
+          "const": "no_descendant_container_change_private_store_root_already_mode_0700"
+        },
+        "directory_mode_after": { "const": 320 },
+        "directory_mode_before": { "const": 448 },
+        "file_mode_after": { "const": 256 },
+        "file_mode_before": { "const": 420 },
+        "hardlink_policy": { "const": "all_three_files_must_have_nlink_1" },
+        "symlink_policy": { "const": "resolved_absolute_paths_and_O_NOFOLLOW" }
+      }
+    },
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["byte_count", "path", "sha256"],
+      "properties": {
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["byte_count", "implementation_version", "name", "sha256"],
+      "properties": {
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "implementation_version": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "byte_count",
+        "engine_sha256",
+        "engine_version",
+        "identity_sha256",
+        "kind",
+        "manifest_path",
+        "manifest_sha256",
+        "source_id"
+      ],
+      "properties": {
+        "adapter": { "$ref": "#/$defs/adapter" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "engine_sha256": { "$ref": "#/$defs/sha256" },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "identity_sha256": { "$ref": "#/$defs/sha256" },
+        "kind": {
+          "enum": ["long_window_batch", "short_preprocess_queue"]
+        },
+        "manifest_path": { "$ref": "#/$defs/absolutePath" },
+        "manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "source_id": {
+          "type": "string",
+          "pattern": "^asr(batch|ppqueue)_[0-9a-f]{32}$"
+        }
+      }
+    },
+    "excludedSourceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_sha256",
+        "input_sha256",
+        "job_id",
+        "ordinal",
+        "physical_sha256",
+        "reason",
+        "routing_hint",
+        "source_id",
+        "source_kind",
+        "work_order_path"
+      ],
+      "properties": {
+        "canonical_sha256": { "$ref": "#/$defs/sha256" },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "job_id": { "type": "string", "minLength": 1 },
+        "ordinal": { "type": "integer", "minimum": 1 },
+        "physical_sha256": { "$ref": "#/$defs/sha256" },
+        "reason": { "const": "sealed_queue_routing_hint_not_process" },
+        "routing_hint": {
+          "type": ["string", "null"],
+          "maxLength": 256
+        },
+        "source_id": { "type": "string", "minLength": 1 },
+        "source_kind": { "const": "short_preprocess_queue" },
+        "work_order_path": { "$ref": "#/$defs/absolutePath" }
+      }
+    },
+    "directoryBefore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ctime_ns_before",
+        "device",
+        "inode",
+        "mode_after",
+        "mode_before",
+        "mtime_ns",
+        "nlink",
+        "path"
+      ],
+      "properties": {
+        "ctime_ns_before": { "type": "integer", "minimum": 0 },
+        "device": { "type": "integer", "minimum": 0 },
+        "inode": { "type": "integer", "minimum": 1 },
+        "mode_after": { "const": 320 },
+        "mode_before": { "const": 448 },
+        "mtime_ns": { "type": "integer", "minimum": 0 },
+        "nlink": { "type": "integer", "minimum": 1 },
+        "path": { "$ref": "#/$defs/absolutePath" }
+      }
+    },
+    "fileBefore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "byte_count",
+        "ctime_ns_before",
+        "device",
+        "inode",
+        "mode_after",
+        "mode_before",
+        "mtime_ns",
+        "name",
+        "nlink",
+        "path",
+        "role",
+        "sha256"
+      ],
+      "properties": {
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "ctime_ns_before": { "type": "integer", "minimum": 0 },
+        "device": { "type": "integer", "minimum": 0 },
+        "inode": { "type": "integer", "minimum": 1 },
+        "mode_after": { "const": 256 },
+        "mode_before": { "const": 420 },
+        "mtime_ns": { "type": "integer", "minimum": 0 },
+        "name": {
+          "enum": ["result.json", "transcript.normalized.json", "whisper.raw.json"]
+        },
+        "nlink": { "const": 1 },
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "role": {
+          "enum": ["result_envelope", "normalized_transcript", "raw_whisper_output"]
+        },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "name": { "const": "result.json" } } },
+          "then": { "properties": { "role": { "const": "result_envelope" } } }
+        },
+        {
+          "if": { "properties": { "name": { "const": "transcript.normalized.json" } } },
+          "then": { "properties": { "role": { "const": "normalized_transcript" } } }
+        },
+        {
+          "if": { "properties": { "name": { "const": "whisper.raw.json" } } },
+          "then": { "properties": { "role": { "const": "raw_whisper_output" } } }
+        }
+      ]
+    },
+    "catalogValidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_count",
+        "job_id",
+        "model_id",
+        "processing_run_id",
+        "recipe_id",
+        "recording_id",
+        "rendition_id",
+        "result_envelope_sha256",
+        "result_key",
+        "segment_count",
+        "token_count"
+      ],
+      "properties": {
+        "artifact_count": { "type": "integer", "minimum": 0 },
+        "job_id": { "type": "string", "minLength": 1 },
+        "model_id": { "type": "string", "minLength": 1 },
+        "processing_run_id": { "type": "string", "minLength": 1 },
+        "recipe_id": { "type": "string", "minLength": 1 },
+        "recording_id": { "type": ["string", "null"] },
+        "rendition_id": { "type": ["string", "null"] },
+        "result_envelope_sha256": { "$ref": "#/$defs/sha256" },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "segment_count": { "type": "integer", "minimum": 0 },
+        "token_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog_free_validation",
+        "directory",
+        "files",
+        "input_sha256",
+        "job_id",
+        "ordinal",
+        "recipe_id",
+        "result_key",
+        "result_path",
+        "source_id",
+        "source_kind",
+        "source_ordinal",
+        "work_order_sha256"
+      ],
+      "properties": {
+        "catalog_free_validation": { "$ref": "#/$defs/catalogValidation" },
+        "directory": { "$ref": "#/$defs/directoryBefore" },
+        "files": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/fileBefore" }
+        },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "job_id": { "type": "string", "minLength": 1 },
+        "ordinal": { "type": "integer", "minimum": 1 },
+        "recipe_id": {
+          "type": "string",
+          "pattern": "^recipe_asr_whispercpp_[0-9a-f]{32}$"
+        },
+        "result_key": { "$ref": "#/$defs/sha256" },
+        "result_path": { "$ref": "#/$defs/absolutePath" },
+        "source_id": { "type": "string", "minLength": 1 },
+        "source_kind": {
+          "enum": ["long_window_batch", "short_preprocess_queue"]
+        },
+        "source_ordinal": { "type": "integer", "minimum": 1 },
+        "work_order_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

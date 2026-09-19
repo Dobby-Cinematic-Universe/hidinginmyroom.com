@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/evaluation/interval-selection-review-v1.json",
+  "title": "HIMR private interval selection review v1",
+  "description": "The review_id is a stable review-plan identity; manifest_sha256 identifies the exact incomplete or completed revision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_kind", "manifest_sha256", "review_id", "review_state", "created_at", "cohort_id", "cohort_manifest_sha256", "protocol", "proposal_inputs", "proposal_accounting", "reviewer", "privacy", "recordings"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_kind": { "const": "interval_selection_review" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "review_id": { "type": "string", "pattern": "^selection_review_[0-9a-f]{32}$" },
+    "review_state": { "enum": ["incomplete_template", "completed_private"] },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "cohort_id": { "$ref": "#/$defs/id" },
+    "cohort_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "protocol": { "$ref": "#/$defs/protocol" },
+    "proposal_inputs": {
+      "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/proposal_input" }
+    },
+    "proposal_accounting": { "$ref": "#/$defs/proposal_accounting" },
+    "reviewer": { "oneOf": [{ "$ref": "#/$defs/incomplete_reviewer" }, { "$ref": "#/$defs/completed_reviewer" }] },
+    "privacy": { "$ref": "#/$defs/privacy" },
+    "recordings": {
+      "type": "array", "minItems": 12, "maxItems": 12, "uniqueItems": true,
+      "items": { "oneOf": [{ "$ref": "#/$defs/incomplete_recording" }, { "$ref": "#/$defs/completed_recording" }] }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "review_state": { "const": "incomplete_template" } }, "required": ["review_state"] },
+      "then": {
+        "properties": {
+          "reviewer": { "$ref": "#/$defs/incomplete_reviewer" },
+          "recordings": { "items": { "$ref": "#/$defs/incomplete_recording" } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "review_state": { "const": "completed_private" } }, "required": ["review_state"] },
+      "then": {
+        "properties": {
+          "reviewer": { "$ref": "#/$defs/completed_reviewer" },
+          "recordings": { "items": { "$ref": "#/$defs/completed_recording" } }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "uuid_id": { "type": "string", "pattern": "^(src|rec|rnd)_[0-9a-f]{32}$" },
+    "timestamp": { "type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "protocol": {
+      "type": "object", "additionalProperties": false,
+      "required": ["protocol_revision", "minimum_accepted_duration_ms", "split_unit", "interval_adjustment"],
+      "properties": {
+        "protocol_revision": { "$ref": "#/$defs/id" },
+        "minimum_accepted_duration_ms": { "const": 3600000 },
+        "split_unit": { "const": "recording" },
+        "interval_adjustment": { "const": "trim_only_within_proposed_parent_range" }
+      }
+    },
+    "proposal_input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ordinal", "request_schema_version", "request_id", "request_manifest_sha256", "proposal_schema_version", "proposal_id", "proposal_manifest_sha256"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "request_schema_version": { "enum": [1, 2] },
+        "request_id": { "$ref": "#/$defs/id" },
+        "request_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "proposal_schema_version": { "enum": [1, 2] },
+        "proposal_id": { "$ref": "#/$defs/id" },
+        "proposal_manifest_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "proposal_accounting": {
+      "type": "object", "additionalProperties": false,
+      "required": ["recording_count", "interval_count", "total_duration_ms"],
+      "properties": {
+        "recording_count": { "const": 12 },
+        "interval_count": { "type": "integer", "minimum": 12 },
+        "total_duration_ms": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "review_tool": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": { "name": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 } }
+    },
+    "incomplete_reviewer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reviewer_id", "review_tool", "reviewed_at", "attested_at", "direct_parent_media_reviewed", "asr_outputs_inspected", "reference_text_inspected", "selection_basis"],
+      "properties": {
+        "reviewer_id": { "type": "null" }, "review_tool": { "type": "null" },
+        "reviewed_at": { "type": "null" }, "attested_at": { "type": "null" },
+        "direct_parent_media_reviewed": { "type": "null" }, "asr_outputs_inspected": { "type": "null" },
+        "reference_text_inspected": { "type": "null" }, "selection_basis": { "type": "null" }
+      }
+    },
+    "completed_reviewer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reviewer_id", "review_tool", "reviewed_at", "attested_at", "direct_parent_media_reviewed", "asr_outputs_inspected", "reference_text_inspected", "selection_basis"],
+      "properties": {
+        "reviewer_id": { "$ref": "#/$defs/id" }, "review_tool": { "$ref": "#/$defs/review_tool" },
+        "reviewed_at": { "$ref": "#/$defs/timestamp" }, "attested_at": { "$ref": "#/$defs/timestamp" },
+        "direct_parent_media_reviewed": { "const": true }, "asr_outputs_inspected": { "const": false },
+        "reference_text_inspected": { "const": false },
+        "selection_basis": { "const": "source_metadata_and_direct_parent_media_only" }
+      }
+    },
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["storage_policy", "publication_authority", "reference_text_present"],
+      "properties": {
+        "storage_policy": { "const": "private_only" }, "publication_authority": { "const": "none" },
+        "reference_text_present": { "const": false }
+      }
+    },
+    "null_flags": {
+      "type": "object", "additionalProperties": false,
+      "required": ["language_tags", "code_switch", "speaker_overlap", "playback_speech", "noise"],
+      "properties": {
+        "language_tags": { "type": "null" }, "code_switch": { "type": "null" },
+        "speaker_overlap": { "type": "null" }, "playback_speech": { "type": "null" }, "noise": { "type": "null" }
+      }
+    },
+    "flags": {
+      "type": "object", "additionalProperties": false,
+      "required": ["language_tags", "code_switch", "speaker_overlap", "playback_speech", "noise"],
+      "properties": {
+        "language_tags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^(?:[a-z]{2,3}|und)(?:-[A-Za-z0-9]{2,8})*$" } },
+        "code_switch": { "type": "boolean" }, "speaker_overlap": { "type": "boolean" },
+        "playback_speech": { "type": "boolean" }, "noise": { "enum": ["clean", "light", "moderate", "heavy", "unknown"] }
+      }
+    },
+    "incomplete_decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["selection_decision_id", "proposal_interval_id", "proposal_start_ms", "proposal_end_ms", "decision", "accepted_start_ms", "accepted_end_ms", "adjustment_reason", "rejection_reason", "flags"],
+      "properties": {
+        "selection_decision_id": { "type": "string", "pattern": "^selection_decision_[0-9a-f]{32}$" },
+        "proposal_interval_id": { "$ref": "#/$defs/id" }, "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 }, "decision": { "type": "null" },
+        "accepted_start_ms": { "type": "null" }, "accepted_end_ms": { "type": "null" },
+        "adjustment_reason": { "type": "null" }, "rejection_reason": { "type": "null" }, "flags": { "$ref": "#/$defs/null_flags" }
+      }
+    },
+    "included_decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["selection_decision_id", "proposal_interval_id", "proposal_start_ms", "proposal_end_ms", "decision", "accepted_start_ms", "accepted_end_ms", "adjustment_reason", "rejection_reason", "flags"],
+      "properties": {
+        "selection_decision_id": { "type": "string", "pattern": "^selection_decision_[0-9a-f]{32}$" },
+        "proposal_interval_id": { "$ref": "#/$defs/id" }, "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 }, "decision": { "const": "include" },
+        "accepted_start_ms": { "type": "integer", "minimum": 0 }, "accepted_end_ms": { "type": "integer", "minimum": 1 },
+        "adjustment_reason": { "type": ["string", "null"], "enum": [null, "remove_non_speech_edge", "remove_sensitive_edge", "speech_boundary_refinement", "other_reviewed_trim"] },
+        "rejection_reason": { "type": "null" }, "flags": { "$ref": "#/$defs/flags" }
+      }
+    },
+    "excluded_decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["selection_decision_id", "proposal_interval_id", "proposal_start_ms", "proposal_end_ms", "decision", "accepted_start_ms", "accepted_end_ms", "adjustment_reason", "rejection_reason", "flags"],
+      "properties": {
+        "selection_decision_id": { "type": "string", "pattern": "^selection_decision_[0-9a-f]{32}$" },
+        "proposal_interval_id": { "$ref": "#/$defs/id" }, "proposal_start_ms": { "type": "integer", "minimum": 0 },
+        "proposal_end_ms": { "type": "integer", "minimum": 1 }, "decision": { "const": "exclude" },
+        "accepted_start_ms": { "type": "null" }, "accepted_end_ms": { "type": "null" }, "adjustment_reason": { "type": "null" },
+        "rejection_reason": { "enum": ["boundary_requires_reproposal", "duplicate_or_redundant", "no_usable_speech", "out_of_scope", "playback_only", "privacy_or_sensitivity", "technical_quality", "other_reviewed_reason"] },
+        "flags": { "$ref": "#/$defs/null_flags" }
+      }
+    },
+    "incomplete_recording": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "recording_id", "source_id", "proposal_id", "proposal_schema_version", "split", "intervals"],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/id" }, "recording_id": { "$ref": "#/$defs/uuid_id" }, "source_id": { "$ref": "#/$defs/uuid_id" },
+        "proposal_id": { "$ref": "#/$defs/id" }, "proposal_schema_version": { "enum": [1, 2] }, "split": { "type": "null" },
+        "intervals": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/incomplete_decision" } }
+      }
+    },
+    "completed_recording": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "recording_id", "source_id", "proposal_id", "proposal_schema_version", "split", "intervals"],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/id" }, "recording_id": { "$ref": "#/$defs/uuid_id" }, "source_id": { "$ref": "#/$defs/uuid_id" },
+        "proposal_id": { "$ref": "#/$defs/id" }, "proposal_schema_version": { "enum": [1, 2] }, "split": { "enum": ["calibration", "scoring"] },
+        "intervals": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "oneOf": [{ "$ref": "#/$defs/included_decision" }, { "$ref": "#/$defs/excluded_decision" }] } }
+      }
+    }
+  }
+}

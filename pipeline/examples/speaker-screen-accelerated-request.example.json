@@ -1,0 +1,19 @@
+{
+  "kind": "himr_resident_speaker_screen_request",
+  "schema_version": 1,
+  "work_orders": [
+    {"path": "/ABSOLUTE/PRIVATE/PATH/orders/recording-a.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+    {"path": "/ABSOLUTE/PRIVATE/PATH/orders/recording-b.json", "sha256": "1111111111111111111111111111111111111111111111111111111111111111"}
+  ],
+  "state_root": "/ABSOLUTE/PRIVATE/PATH/resident-screen-001",
+  "execution": {
+    "device": "cpu",
+    "threads": 1,
+    "batch_size": 8,
+    "decode_prefetch": 2,
+    "max_run_seconds": 3600,
+    "cuda_memory_fraction": 0.5,
+    "gpu_uuid": null,
+    "host_memory_max_bytes": 4294967296
+  }
+}

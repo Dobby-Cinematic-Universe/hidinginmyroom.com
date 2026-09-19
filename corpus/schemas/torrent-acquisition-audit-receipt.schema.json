@@ -1,0 +1,394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/torrent-acquisition-audit-receipt.schema.json",
+  "title": "Private read-only torrent acquisition audit receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_kind",
+    "auditor_version",
+    "observed_at",
+    "bindings",
+    "selector",
+    "control_state",
+    "inventory",
+    "risky_unselected_artifacts",
+    "status",
+    "policy",
+    "receipt_id",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "receipt_kind": { "const": "torrent_acquisition_read_only_audit" },
+    "auditor_version": { "const": "torrent_acquisition_audit_v1" },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "bindings": { "$ref": "#/$defs/bindings" },
+    "selector": { "$ref": "#/$defs/selector" },
+    "control_state": { "$ref": "#/$defs/control_state" },
+    "inventory": { "$ref": "#/$defs/inventory" },
+    "risky_unselected_artifacts": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": { "$ref": "#/$defs/risky_artifact" }
+    },
+    "status": { "$ref": "#/$defs/status" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "receipt_id": { "type": "string", "pattern": "^taudit_[0-9a-f]{32}$" },
+    "receipt_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "nonnegative_integer": { "type": "integer", "minimum": 0 },
+    "sha1": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_id",
+        "plan_sha256",
+        "plan_file_sha256",
+        "selector_receipt_id",
+        "selector_receipt_sha256",
+        "selector_file_sha256",
+        "torrent_sha256",
+        "info_hash_sha1",
+        "torrent_file_count",
+        "torrent_piece_count",
+        "piece_length_bytes",
+        "torrent_total_bytes",
+        "session_sha256",
+        "session_byte_count",
+        "control_sha256",
+        "control_byte_count"
+      ],
+      "properties": {
+        "plan_id": { "type": "string", "pattern": "^tslp_[0-9a-f]{32}$" },
+        "plan_sha256": { "$ref": "#/$defs/sha256" },
+        "plan_file_sha256": { "$ref": "#/$defs/sha256" },
+        "selector_receipt_id": {
+          "type": "string",
+          "pattern": "^a2sr_[0-9a-f]{32}$"
+        },
+        "selector_receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "selector_file_sha256": { "$ref": "#/$defs/sha256" },
+        "torrent_sha256": { "$ref": "#/$defs/sha256" },
+        "info_hash_sha1": { "$ref": "#/$defs/sha1" },
+        "torrent_file_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "torrent_piece_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000000
+        },
+        "piece_length_bytes": { "type": "integer", "minimum": 1 },
+        "torrent_total_bytes": { "type": "integer", "minimum": 1 },
+        "session_sha256": { "$ref": "#/$defs/sha256" },
+        "session_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4194304
+        },
+        "control_sha256": { "$ref": "#/$defs/sha256" },
+        "control_byte_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        }
+      }
+    },
+    "selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_file_count",
+        "selected_payload_bytes",
+        "selected_piece_count",
+        "selected_piece_span_bytes",
+        "boundary_piece_bytes_upper_bound",
+        "selector_matches",
+        "torrent_path_matches",
+        "output_directory_matches",
+        "required_safety_options_match",
+        "option_count"
+      ],
+      "properties": {
+        "selected_file_count": { "type": "integer", "minimum": 1 },
+        "selected_payload_bytes": { "type": "integer", "minimum": 1 },
+        "selected_piece_count": { "type": "integer", "minimum": 1 },
+        "selected_piece_span_bytes": { "type": "integer", "minimum": 1 },
+        "boundary_piece_bytes_upper_bound": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "selector_matches": { "const": true },
+        "torrent_path_matches": { "const": true },
+        "output_directory_matches": { "const": true },
+        "required_safety_options_match": { "const": true },
+        "option_count": { "type": "integer", "minimum": 8, "maximum": 4096 }
+      }
+    },
+    "completed_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_piece_count",
+        "total_bytes",
+        "authorized_piece_count",
+        "authorized_bytes",
+        "authorized_indices_sha256",
+        "unauthorized_piece_count",
+        "unauthorized_bytes",
+        "unauthorized_indices_sha256"
+      ],
+      "properties": {
+        "total_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "total_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_indices_sha256": { "$ref": "#/$defs/sha256" },
+        "unauthorized_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "unauthorized_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "unauthorized_indices_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "in_flight_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_piece_count",
+        "total_present_bytes",
+        "authorized_piece_count",
+        "authorized_present_bytes",
+        "authorized_indices_sha256",
+        "unauthorized_piece_count",
+        "unauthorized_present_bytes",
+        "unauthorized_indices_sha256"
+      ],
+      "properties": {
+        "total_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "total_present_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_present_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "authorized_indices_sha256": { "$ref": "#/$defs/sha256" },
+        "unauthorized_piece_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "unauthorized_present_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "unauthorized_indices_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "control_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "extension_marker",
+        "recorded_uploaded_bytes",
+        "completed",
+        "in_flight",
+        "authorized_only"
+      ],
+      "properties": {
+        "format_version": { "const": 1 },
+        "extension_marker": { "const": 1 },
+        "recorded_uploaded_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "completed": { "$ref": "#/$defs/completed_state" },
+        "in_flight": { "$ref": "#/$defs/in_flight_state" },
+        "authorized_only": { "type": "boolean" }
+      }
+    },
+    "selected_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_file_count",
+        "expected_bytes",
+        "created_file_count",
+        "created_logical_bytes",
+        "created_allocated_bytes",
+        "control_and_size_complete_file_count"
+      ],
+      "properties": {
+        "expected_file_count": { "type": "integer", "minimum": 1 },
+        "expected_bytes": { "type": "integer", "minimum": 1 },
+        "created_file_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "created_logical_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "created_allocated_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "control_and_size_complete_file_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      }
+    },
+    "boundary_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eligible_file_count",
+        "piece_covered_bytes",
+        "created_file_count",
+        "created_logical_bytes",
+        "created_allocated_bytes",
+        "control_and_size_complete_file_count",
+        "fully_piece_covered_file_count",
+        "fully_piece_covered_bytes"
+      ],
+      "properties": {
+        "eligible_file_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "piece_covered_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "created_file_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "created_logical_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "created_allocated_bytes": { "$ref": "#/$defs/nonnegative_integer" },
+        "control_and_size_complete_file_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "fully_piece_covered_file_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "fully_piece_covered_bytes": { "$ref": "#/$defs/nonnegative_integer" }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_manifest_file_count",
+        "created_manifest_file_count",
+        "created_directory_count",
+        "selected",
+        "boundary",
+        "unknown_file_count",
+        "ineligible_created_file_count",
+        "risky_unselected_artifact_count",
+        "fully_materialized_risky_unselected_artifact_count"
+      ],
+      "properties": {
+        "expected_manifest_file_count": { "type": "integer", "minimum": 1 },
+        "created_manifest_file_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "created_directory_count": { "type": "integer", "minimum": 1 },
+        "selected": { "$ref": "#/$defs/selected_inventory" },
+        "boundary": { "$ref": "#/$defs/boundary_inventory" },
+        "unknown_file_count": { "const": 0 },
+        "ineligible_created_file_count": { "const": 0 },
+        "risky_unselected_artifact_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "fully_materialized_risky_unselected_artifact_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      }
+    },
+    "risky_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_file_index",
+        "manifest_path_sha256",
+        "suffix",
+        "risk_class",
+        "byte_count",
+        "piece_covered_bytes",
+        "fully_piece_covered",
+        "file_present",
+        "fully_materialized"
+      ],
+      "properties": {
+        "torrent_file_index": { "$ref": "#/$defs/nonnegative_integer" },
+        "manifest_path_sha256": { "$ref": "#/$defs/sha256" },
+        "suffix": {
+          "enum": [
+            ".appimage",
+            ".bash",
+            ".bat",
+            ".cjs",
+            ".cmd",
+            ".com",
+            ".desktop",
+            ".exe",
+            ".fish",
+            ".hta",
+            ".jar",
+            ".js",
+            ".lnk",
+            ".mjs",
+            ".msi",
+            ".pl",
+            ".ps1",
+            ".py",
+            ".rb",
+            ".reg",
+            ".scr",
+            ".sh",
+            ".url",
+            ".vbe",
+            ".vbs",
+            ".webloc",
+            ".wsf",
+            ".zsh"
+          ]
+        },
+        "risk_class": { "enum": ["executable", "script", "shortcut"] },
+        "byte_count": { "$ref": "#/$defs/nonnegative_integer" },
+        "piece_covered_bytes": { "type": "integer", "minimum": 1 },
+        "fully_piece_covered": { "type": "boolean" },
+        "file_present": { "type": "boolean" },
+        "fully_materialized": { "type": "boolean" }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metadata_snapshot_stable",
+        "selector_scope_status",
+        "audit_passed",
+        "fully_materialized_unselected_risky_artifacts_observed"
+      ],
+      "properties": {
+        "metadata_snapshot_stable": { "const": true },
+        "selector_scope_status": {
+          "enum": ["authorized_only", "unauthorized_piece_state_observed"]
+        },
+        "audit_passed": { "type": "boolean" },
+        "fully_materialized_unselected_risky_artifacts_observed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_only_acquisition_audit",
+        "acquisition_state_mutated",
+        "network_actions_performed",
+        "torrent_client_invoked_by_auditor",
+        "runtime_process_inspected",
+        "payload_files_opened",
+        "payload_bytes_read",
+        "payload_executed",
+        "paths_disclosed",
+        "publication_authority"
+      ],
+      "properties": {
+        "read_only_acquisition_audit": { "const": true },
+        "acquisition_state_mutated": { "const": false },
+        "network_actions_performed": { "const": false },
+        "torrent_client_invoked_by_auditor": { "const": false },
+        "runtime_process_inspected": { "const": false },
+        "payload_files_opened": { "const": 0 },
+        "payload_bytes_read": { "const": 0 },
+        "payload_executed": { "const": false },
+        "paths_disclosed": { "const": false },
+        "publication_authority": { "const": false }
+      }
+    }
+  }
+}

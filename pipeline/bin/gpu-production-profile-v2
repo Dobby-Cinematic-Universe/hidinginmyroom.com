@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec /usr/bin/python3 -B -I "$SCRIPT_DIR/../gpu/production_profile_v2.py" "$@"

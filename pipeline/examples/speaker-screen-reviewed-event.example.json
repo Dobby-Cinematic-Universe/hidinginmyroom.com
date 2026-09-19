@@ -1,0 +1,13 @@
+{
+  "kind": "himr_speaker_screen_reviewed_event",
+  "schema_version": 1,
+  "event_id": "example_reviewed_event",
+  "date": "2026-09-01",
+  "radius_days": 3,
+  "reviewed": true,
+  "reviewer": "REPLACE_WITH_ACTUAL_REVIEWER",
+  "evidence": {
+    "path": "/ABSOLUTE/PRIVATE/PATH/actual-review-notes.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "implementation_version": "0.2.0",
+  "stage": "yunet_face_detector_bridge",
+  "status": "completed",
+  "dry_run": false,
+  "job_id": "yunet_synthetic_fixture_001",
+  "work_order_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "result_key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "result_path": "/private/results/vision/yunet-face-detections/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/result.json",
+  "implementation": {
+    "path": "/workspace/pipeline/yunet_face_detector.py",
+    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "byte_count": 1,
+    "implementation_version": "0.2.0"
+  },
+  "policy": {
+    "visibility": "private",
+    "material_scope": "synthetic_fixture_only",
+    "network_allowed": false,
+    "embeddings_allowed": false,
+    "identity_decision_allowed": false,
+    "active_speaker_decision_allowed": false,
+    "publication_authority": "none",
+    "human_review_required": true
+  },
+  "runtime": {
+    "module_root": "/private/pinned-runtime/runtime",
+    "python": {
+      "path": "/usr/bin/python3",
+      "storage_uri": "file:///usr/bin/python3",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "byte_count": 1,
+      "visibility": "host_runtime",
+      "expected_version": "3.14.7"
+    },
+    "opencv": {
+      "wheel": {
+        "path": "/private/pinned-runtime/wheels/opencv.whl",
+        "storage_uri": "file:///private/pinned-runtime/wheels/opencv.whl",
+        "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "byte_count": 1,
+        "visibility": "private"
+      },
+      "binary": {
+        "path": "/private/pinned-runtime/runtime/cv2/cv2.so",
+        "storage_uri": "file:///private/pinned-runtime/runtime/cv2/cv2.so",
+        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "byte_count": 1,
+        "visibility": "private"
+      },
+      "expected_version": "4.14.0",
+      "expected_build_information_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "numpy": {
+      "wheel": {
+        "path": "/private/pinned-runtime/wheels/numpy.whl",
+        "storage_uri": "file:///private/pinned-runtime/wheels/numpy.whl",
+        "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "byte_count": 1,
+        "visibility": "private"
+      },
+      "binary": {
+        "path": "/private/pinned-runtime/runtime/numpy/core.so",
+        "storage_uri": "file:///private/pinned-runtime/runtime/numpy/core.so",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "byte_count": 1,
+        "visibility": "private"
+      },
+      "expected_version": "2.4.6"
+    },
+    "observation": {
+      "python_version": "3.14.7",
+      "opencv_version": "4.14.0",
+      "numpy_version": "2.4.6",
+      "opencv_build_information_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "opencv_threads": 1,
+      "opencl_enabled": false,
+      "network_used": false
+    }
+  },
+  "model": {
+    "artifact": {
+      "path": "/private/pinned-runtime/models/face_detection_yunet_2023mar.onnx",
+      "storage_uri": "file:///private/pinned-runtime/models/face_detection_yunet_2023mar.onnx",
+      "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+      "byte_count": 232589,
+      "visibility": "private"
+    },
+    "license": {
+      "path": "/private/pinned-runtime/licenses/yunet-LICENSE",
+      "storage_uri": "file:///private/pinned-runtime/licenses/yunet-LICENSE",
+      "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958",
+      "byte_count": 1085,
+      "visibility": "private"
+    },
+    "upstream_url": "https://github.com/opencv/opencv_zoo/tree/47534e27c9851bb1128ccc0102f1145e27f23f98/models/face_detection_yunet",
+    "upstream_commit": "47534e27c9851bb1128ccc0102f1145e27f23f98",
+    "license_expression": "MIT"
+  },
+  "parameters": {
+    "recipe_id": "yunet_2023mar_opencv_cpu_0.9_0.3_5000_v1",
+    "score_threshold": 0.9,
+    "nms_threshold": 0.3,
+    "top_k": 5000,
+    "threads": 1,
+    "backend": "opencv_cpu",
+    "target": "cpu",
+    "frame_period_ms": 40,
+    "max_frames": 1,
+    "max_detections_per_frame": 64
+  },
+  "recording_id": "synthetic_recording_001",
+  "shots": [
+    {
+      "shot_id": "shot_000",
+      "shot_ordinal": 0,
+      "start_frame_index": 0,
+      "end_frame_index_exclusive": 1,
+      "start_timestamp_ms": 0,
+      "end_timestamp_ms_exclusive": 40
+    }
+  ],
+  "frames": [
+    {
+      "frame_id": "frame_000",
+      "shot_id": "shot_000",
+      "frame_index": 0,
+      "timestamp_ms": 0,
+      "media_type": "image/png",
+      "input": {
+        "path": "/private/synthetic-frames/frame-000.png",
+        "storage_uri": "file:///private/synthetic-frames/frame-000.png",
+        "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "byte_count": 1,
+        "visibility": "private"
+      },
+      "image": { "width": 320, "height": 240, "format": "png" },
+      "detection_count": 0
+    }
+  ],
+  "detections_artifact": {
+    "artifact_kind": "frame_local_face_detections_json",
+    "path": "/private/results/vision/yunet-face-detections/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/detections.json",
+    "storage_uri": "file:///private/results/vision/yunet-face-detections/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/detections.json",
+    "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "byte_count": 1,
+    "visibility": "private"
+  },
+  "score_semantics": "raw_model_score_not_calibrated_probability",
+  "authority": {
+    "embeddings_present": false,
+    "identity_state": "unknown",
+    "identity_label": null,
+    "identity_decision": false,
+    "active_speaker_state": "unknown",
+    "active_speaker_score": null,
+    "active_speaker_decision": false,
+    "publication": false,
+    "human_review_required": true
+  }
+}

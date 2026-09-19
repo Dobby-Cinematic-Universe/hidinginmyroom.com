@@ -1,0 +1,448 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/corpus/torrent-bracket-reconciliation-plan.schema.json",
+  "title": "Private torrent terminal-bracket YouTube reconciliation plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_kind",
+    "inputs",
+    "catalog_binding",
+    "scope",
+    "candidates",
+    "statistics",
+    "policy",
+    "plan_id",
+    "plan_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "plan_kind": {"const": "torrent_bracket_youtube_reconciliation_review_plan"},
+    "inputs": {"$ref": "#/$defs/inputs"},
+    "catalog_binding": {"$ref": "#/$defs/catalog_binding"},
+    "scope": {"$ref": "#/$defs/scope"},
+    "candidates": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "statistics": {"$ref": "#/$defs/statistics"},
+    "policy": {"$ref": "#/$defs/policy"},
+    "plan_id": {"type": "string", "pattern": "^tbrp_[0-9a-f]{32}$"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "stable_id": {"type": "string", "pattern": "^[a-z]+_[0-9a-f]{32}$"},
+    "youtube_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{11}$"},
+    "nonnegative_integer": {"type": "integer", "minimum": 0},
+    "nullable_stable_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/stable_id"},
+        {"type": "null"}
+      ]
+    },
+    "directory_label": {
+      "enum": [
+        "YouTube Videos",
+        "Old YouTube Livestreams",
+        "New YouTube Livestreams",
+        "New New YouTube Livestreams"
+      ]
+    },
+    "resolution_state": {
+      "enum": [
+        "missing_native_source",
+        "native_source_without_unique_recording",
+        "unique_native_recording"
+      ]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_sha256",
+        "torrent_byte_count",
+        "torrent_filename",
+        "info_hash_sha1",
+        "discovery_sha256",
+        "discovery_byte_count",
+        "discovery_filename",
+        "combined_import_input_sha256"
+      ],
+      "properties": {
+        "torrent_sha256": {"$ref": "#/$defs/sha256"},
+        "torrent_byte_count": {"type": "integer", "minimum": 1, "maximum": 33554432},
+        "torrent_filename": {"type": "string", "minLength": 1, "maxLength": 255},
+        "info_hash_sha1": {"$ref": "#/$defs/sha1"},
+        "discovery_sha256": {"$ref": "#/$defs/sha256"},
+        "discovery_byte_count": {"type": "integer", "minimum": 1, "maximum": 1048576},
+        "discovery_filename": {"type": "string", "minLength": 1, "maxLength": 255},
+        "combined_import_input_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "catalog_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_manifest_source_id",
+        "torrent_import_batch_id",
+        "torrent_importer_name",
+        "torrent_importer_version",
+        "observed_at"
+      ],
+      "properties": {
+        "torrent_manifest_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_import_batch_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_importer_name": {"const": "torrent_manifest_metadata"},
+        "torrent_importer_version": {"type": "string", "minLength": 1, "maxLength": 64},
+        "observed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["directory_labels"],
+      "properties": {
+        "directory_labels": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"const": "YouTube Videos"},
+            {"const": "Old YouTube Livestreams"},
+            {"const": "New YouTube Livestreams"},
+            {"const": "New New YouTube Livestreams"}
+          ],
+          "items": false
+        }
+      }
+    },
+    "generic_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "candidate_kind",
+        "evidence_basis",
+        "youtube_video_id",
+        "resolution_state",
+        "calibration_state",
+        "requires_human_review",
+        "relationship_asserted",
+        "merge_performed",
+        "publication_authority"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "candidate_kind": {"const": "torrent_file_to_youtube_locator"},
+        "evidence_basis": {"const": "terminal_filename_bracket_before_video_extension"},
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "resolution_state": {"$ref": "#/$defs/resolution_state"},
+        "calibration_state": {"const": "not_calibrated"},
+        "requires_human_review": {"const": true},
+        "relationship_asserted": {"const": false},
+        "merge_performed": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    },
+    "generic_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match_candidate_id",
+        "left_object_type",
+        "left_object_id",
+        "right_object_type",
+        "right_object_id",
+        "match_method",
+        "raw_score",
+        "calibrated_probability",
+        "decision_state",
+        "metadata_json"
+      ],
+      "properties": {
+        "match_candidate_id": {"$ref": "#/$defs/stable_id"},
+        "left_object_type": {"const": "source"},
+        "left_object_id": {"$ref": "#/$defs/stable_id"},
+        "right_object_type": {"enum": ["source", "youtube_video_id"]},
+        "right_object_id": {"type": "string", "minLength": 11, "maxLength": 64},
+        "match_method": {"const": "torrent_terminal_bracket_youtube_locator_v1"},
+        "raw_score": {"type": "null"},
+        "calibrated_probability": {"type": "null"},
+        "decision_state": {"const": "candidate"},
+        "metadata_json": {"$ref": "#/$defs/generic_metadata"}
+      }
+    },
+    "raw_components": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 5464,
+        "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+      }
+    },
+    "evidence_json": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_sha256",
+        "discovery_sha256",
+        "info_hash_sha1",
+        "torrent_manifest_source_id",
+        "torrent_file_source_id",
+        "torrent_file_index",
+        "directory_label",
+        "manifest_path",
+        "manifest_path_components_base64",
+        "manifest_path_sha256",
+        "byte_count",
+        "youtube_video_id",
+        "evidence_basis",
+        "resolution_state",
+        "youtube_source_id",
+        "youtube_recording_id",
+        "mapped_recording_ids",
+        "requires_human_review",
+        "relationship_asserted",
+        "merge_performed",
+        "publication_authority",
+        "payload_downloaded_or_read"
+      ],
+      "properties": {
+        "torrent_sha256": {"$ref": "#/$defs/sha256"},
+        "discovery_sha256": {"$ref": "#/$defs/sha256"},
+        "info_hash_sha1": {"$ref": "#/$defs/sha1"},
+        "torrent_manifest_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_file_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_file_index": {"$ref": "#/$defs/nonnegative_integer"},
+        "directory_label": {"$ref": "#/$defs/directory_label"},
+        "manifest_path": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "manifest_path_components_base64": {"$ref": "#/$defs/raw_components"},
+        "manifest_path_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "evidence_basis": {"const": "terminal_filename_bracket_before_video_extension"},
+        "resolution_state": {"$ref": "#/$defs/resolution_state"},
+        "youtube_source_id": {"$ref": "#/$defs/nullable_stable_id"},
+        "youtube_recording_id": {"$ref": "#/$defs/nullable_stable_id"},
+        "mapped_recording_ids": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stable_id"}
+        },
+        "requires_human_review": {"const": true},
+        "relationship_asserted": {"const": false},
+        "merge_performed": {"const": false},
+        "publication_authority": {"const": false},
+        "payload_downloaded_or_read": {"const": false}
+      }
+    },
+    "typed_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match_candidate_id",
+        "review_task_id",
+        "candidate_kind",
+        "torrent_manifest_source_id",
+        "torrent_file_source_id",
+        "torrent_file_index",
+        "directory_label",
+        "manifest_path",
+        "manifest_path_components_base64",
+        "manifest_path_sha256",
+        "byte_count",
+        "youtube_video_id",
+        "youtube_source_id",
+        "youtube_recording_id",
+        "evidence_basis",
+        "resolution_state",
+        "requires_human_review",
+        "relationship_asserted",
+        "merge_performed",
+        "visibility",
+        "publication_authority",
+        "evidence_json"
+      ],
+      "properties": {
+        "match_candidate_id": {"$ref": "#/$defs/stable_id"},
+        "review_task_id": {"$ref": "#/$defs/stable_id"},
+        "candidate_kind": {"const": "torrent_file_to_youtube_locator"},
+        "torrent_manifest_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_file_source_id": {"$ref": "#/$defs/stable_id"},
+        "torrent_file_index": {"$ref": "#/$defs/nonnegative_integer"},
+        "directory_label": {"$ref": "#/$defs/directory_label"},
+        "manifest_path": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "manifest_path_components_base64": {"$ref": "#/$defs/raw_components"},
+        "manifest_path_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "youtube_video_id": {"$ref": "#/$defs/youtube_id"},
+        "youtube_source_id": {"$ref": "#/$defs/nullable_stable_id"},
+        "youtube_recording_id": {"$ref": "#/$defs/nullable_stable_id"},
+        "evidence_basis": {"const": "terminal_filename_bracket_before_video_extension"},
+        "resolution_state": {"$ref": "#/$defs/resolution_state"},
+        "requires_human_review": {"const": 1},
+        "relationship_asserted": {"const": 0},
+        "merge_performed": {"const": 0},
+        "visibility": {"const": "private"},
+        "publication_authority": {"const": "none"},
+        "evidence_json": {"$ref": "#/$defs/evidence_json"}
+      }
+    },
+    "review_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_task_id",
+        "task_kind",
+        "target_type",
+        "target_id",
+        "reason",
+        "priority",
+        "created_at"
+      ],
+      "properties": {
+        "review_task_id": {"$ref": "#/$defs/stable_id"},
+        "task_kind": {"const": "torrent_bracket_reconciliation_candidate"},
+        "target_type": {"const": "match_candidate"},
+        "target_id": {"$ref": "#/$defs/stable_id"},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "priority": {"const": 60},
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generic", "evidence", "review_task"],
+      "properties": {
+        "generic": {"$ref": "#/$defs/generic_candidate"},
+        "evidence": {"$ref": "#/$defs/typed_evidence"},
+        "review_task": {"$ref": "#/$defs/review_task"}
+      }
+    },
+    "directory_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "YouTube Videos",
+        "Old YouTube Livestreams",
+        "New YouTube Livestreams",
+        "New New YouTube Livestreams"
+      ],
+      "properties": {
+        "YouTube Videos": {"$ref": "#/$defs/nonnegative_integer"},
+        "Old YouTube Livestreams": {"$ref": "#/$defs/nonnegative_integer"},
+        "New YouTube Livestreams": {"$ref": "#/$defs/nonnegative_integer"},
+        "New New YouTube Livestreams": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
+    "resolution_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missing_native_source",
+        "native_source_without_unique_recording",
+        "unique_native_recording"
+      ],
+      "properties": {
+        "missing_native_source": {"$ref": "#/$defs/nonnegative_integer"},
+        "native_source_without_unique_recording": {"$ref": "#/$defs/nonnegative_integer"},
+        "unique_native_recording": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider_file_records_scanned",
+        "scoped_file_records",
+        "scoped_video_file_records",
+        "terminal_bracket_candidates",
+        "distinct_youtube_video_ids",
+        "candidates_by_directory",
+        "resolution_state_counts",
+        "review_tasks_total",
+        "payload_files_read",
+        "payload_bytes_read",
+        "source_or_recording_mutations",
+        "source_relations",
+        "recording_relations",
+        "recording_merges",
+        "publication_decisions",
+        "identity_assertions",
+        "claims"
+      ],
+      "properties": {
+        "provider_file_records_scanned": {"$ref": "#/$defs/nonnegative_integer"},
+        "scoped_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "scoped_video_file_records": {"$ref": "#/$defs/nonnegative_integer"},
+        "terminal_bracket_candidates": {"$ref": "#/$defs/nonnegative_integer"},
+        "distinct_youtube_video_ids": {"$ref": "#/$defs/nonnegative_integer"},
+        "candidates_by_directory": {"$ref": "#/$defs/directory_counts"},
+        "resolution_state_counts": {"$ref": "#/$defs/resolution_counts"},
+        "review_tasks_total": {"$ref": "#/$defs/nonnegative_integer"},
+        "payload_files_read": {"const": 0},
+        "payload_bytes_read": {"const": 0},
+        "source_or_recording_mutations": {"const": 0},
+        "source_relations": {"const": 0},
+        "recording_relations": {"const": 0},
+        "recording_merges": {"const": 0},
+        "publication_decisions": {"const": 0},
+        "identity_assertions": {"const": 0},
+        "claims": {"const": 0}
+      }
+    },
+    "capacity_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torrent_bytes",
+        "discovery_bytes",
+        "torrent_files",
+        "scoped_files",
+        "candidates"
+      ],
+      "properties": {
+        "torrent_bytes": {"const": 33554432},
+        "discovery_bytes": {"const": 1048576},
+        "torrent_files": {"const": 100000},
+        "scoped_files": {"const": 50000},
+        "candidates": {"const": 50000}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "terminal_brackets_only",
+        "bare_or_dash_suffixes_accepted",
+        "torrent_paths_are_content_truth",
+        "payload_download_or_read",
+        "requires_human_review",
+        "relationship_asserted",
+        "merge_performed",
+        "publication_authority",
+        "capacity_limits"
+      ],
+      "properties": {
+        "terminal_brackets_only": {"const": true},
+        "bare_or_dash_suffixes_accepted": {"const": false},
+        "torrent_paths_are_content_truth": {"const": false},
+        "payload_download_or_read": {"const": false},
+        "requires_human_review": {"const": true},
+        "relationship_asserted": {"const": false},
+        "merge_performed": {"const": false},
+        "publication_authority": {"const": false},
+        "capacity_limits": {"$ref": "#/$defs/capacity_limits"}
+      }
+    }
+  }
+}

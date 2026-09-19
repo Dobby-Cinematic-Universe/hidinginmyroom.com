@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/acquisition/reddit-rss-snapshot-v1.json",
+  "title": "HIMR public Reddit Atom snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "snapshot_id", "source_kind", "request", "response", "privacy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}$"},
+    "source_kind": {"const": "reddit_atom_feed"},
+    "request": {"$ref": "#/$defs/request"},
+    "response": {"$ref": "#/$defs/response"},
+    "privacy": {"$ref": "#/$defs/privacy"}
+  },
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "url", "subreddit", "sort", "limit", "accept", "user_agent", "cookies_sent", "authorization_sent", "started_at"],
+      "properties": {
+        "method": {"const": "GET"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://www\\.reddit\\.com/r/[A-Za-z0-9_]{2,21}/new/\\.rss\\?limit=(?:[1-9]|[1-9][0-9]|100)$", "maxLength": 4096},
+        "subreddit": {"type": "string", "pattern": "^[A-Za-z0-9_]{2,21}$"},
+        "sort": {"const": "new"},
+        "limit": {"type": "integer", "minimum": 1, "maximum": 100},
+        "accept": {"const": "application/atom+xml, application/xml;q=0.9, text/xml;q=0.8"},
+        "user_agent": {"const": "hidinginmyroom-corpus-reddit-rss/1.0 (public metadata research)"},
+        "cookies_sent": {"const": false},
+        "authorization_sent": {"const": false},
+        "started_at": {"type": "string", "format": "date-time", "pattern": "Z$"}
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["http_status", "final_url", "observed_at", "content_type", "payload_sha256", "byte_count", "payload_file"],
+      "properties": {
+        "http_status": {"const": 200},
+        "final_url": {"type": "string", "format": "uri", "pattern": "^https://(?:www\\.|old\\.)?reddit\\.com/", "maxLength": 4096},
+        "observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "content_type": {"type": "string", "maxLength": 200},
+        "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_count": {"type": "integer", "minimum": 1, "maximum": 67108864},
+        "payload_file": {"type": "string", "pattern": "^rrs_[0-9a-f]{32}\\.atom\\.xml$"}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_feed_only", "comments_collected", "authors_extracted", "publication_authority"],
+      "properties": {
+        "public_feed_only": {"const": true},
+        "comments_collected": {"const": false},
+        "authors_extracted": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

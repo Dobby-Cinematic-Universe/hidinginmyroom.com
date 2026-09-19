@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "job_id": "pilot-sparse-frames-001",
+  "preprocess_result": {
+    "path": "/srv/himr-media/derived/media/sha256/ab/abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789/recipes/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/executions/run_preprocess_0123456789abcdef0123456789abcdef/result.json",
+    "expected_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "ffmpeg": {
+    "path": "/usr/bin/ffmpeg",
+    "expected_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "expected_version_output_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "sampling": {
+    "include_recording_start": true,
+    "scene_changes": {
+      "enabled": true,
+      "max_frames": 32,
+      "offset_ms": 0
+    },
+    "periodic": {
+      "enabled": true,
+      "interval_ms": 60000,
+      "max_frames": 32
+    },
+    "min_separation_ms": 1000
+  },
+  "limits": {
+    "max_frames": 65,
+    "max_media_duration_ms": 86400000,
+    "max_input_pixels": 230400,
+    "max_frame_bytes": 16777216,
+    "max_timestamp_drift_ms": 1000,
+    "timeout_seconds_per_frame": 120
+  },
+  "output": {
+    "root": "/srv/himr-media/derived"
+  }
+}

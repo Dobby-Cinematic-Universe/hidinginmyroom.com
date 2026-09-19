@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frame_local_face_detections",
+  "recording_id": "recording_fixture_shot_tracker_001",
+  "coordinate_system": "pixel_xywh_top_left",
+  "detector": {
+    "name": "fixture_detector",
+    "version": "fixture-only",
+    "recipe_id": "fixture_detector_recipe_v1"
+  },
+  "authority": {
+    "embeddings_present": false,
+    "identity_state": "unknown",
+    "identity_label": null,
+    "active_speaker_state": "unknown",
+    "active_speaker_score": null,
+    "publication": false
+  },
+  "shots": [
+    {
+      "shot_id": "shot_000",
+      "shot_ordinal": 0,
+      "start_frame_index": 0,
+      "end_frame_index_exclusive": 3,
+      "start_timestamp_ms": 0,
+      "end_timestamp_ms_exclusive": 120
+    },
+    {
+      "shot_id": "shot_001",
+      "shot_ordinal": 1,
+      "start_frame_index": 3,
+      "end_frame_index_exclusive": 5,
+      "start_timestamp_ms": 120,
+      "end_timestamp_ms_exclusive": 200
+    }
+  ],
+  "frames": [
+    {
+      "frame_id": "frame_000",
+      "shot_id": "shot_000",
+      "frame_index": 0,
+      "timestamp_ms": 0,
+      "width": 640,
+      "height": 360,
+      "detections": [
+        {
+          "detection_id": "detection_000",
+          "detection_ordinal": 0,
+          "box": { "x": 100, "y": 80, "width": 80, "height": 100 },
+          "landmarks": [
+            { "x": 120, "y": 110 },
+            { "x": 155, "y": 110 },
+            { "x": 138, "y": 130 },
+            { "x": 122, "y": 155 },
+            { "x": 153, "y": 155 }
+          ],
+          "detector_score": 0.98,
+          "below_64px_width": false
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_001",
+      "shot_id": "shot_000",
+      "frame_index": 1,
+      "timestamp_ms": 40,
+      "width": 640,
+      "height": 360,
+      "detections": [
+        {
+          "detection_id": "detection_001",
+          "detection_ordinal": 0,
+          "box": { "x": 104, "y": 80, "width": 80, "height": 100 },
+          "landmarks": [
+            { "x": 124, "y": 110 },
+            { "x": 159, "y": 110 },
+            { "x": 142, "y": 130 },
+            { "x": 126, "y": 155 },
+            { "x": 157, "y": 155 }
+          ],
+          "detector_score": 0.97,
+          "below_64px_width": false
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_002",
+      "shot_id": "shot_000",
+      "frame_index": 2,
+      "timestamp_ms": 80,
+      "width": 640,
+      "height": 360,
+      "detections": []
+    },
+    {
+      "frame_id": "frame_003",
+      "shot_id": "shot_001",
+      "frame_index": 3,
+      "timestamp_ms": 120,
+      "width": 640,
+      "height": 360,
+      "detections": [
+        {
+          "detection_id": "detection_003",
+          "detection_ordinal": 0,
+          "box": { "x": 108, "y": 80, "width": 80, "height": 100 },
+          "landmarks": [
+            { "x": 128, "y": 110 },
+            { "x": 163, "y": 110 },
+            { "x": 146, "y": 130 },
+            { "x": 130, "y": 155 },
+            { "x": 161, "y": 155 }
+          ],
+          "detector_score": 0.96,
+          "below_64px_width": false
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_004",
+      "shot_id": "shot_001",
+      "frame_index": 4,
+      "timestamp_ms": 160,
+      "width": 640,
+      "height": 360,
+      "detections": [
+        {
+          "detection_id": "detection_004",
+          "detection_ordinal": 0,
+          "box": { "x": 112, "y": 80, "width": 80, "height": 100 },
+          "landmarks": [
+            { "x": 132, "y": 110 },
+            { "x": 167, "y": 110 },
+            { "x": 150, "y": 130 },
+            { "x": 134, "y": 155 },
+            { "x": 165, "y": 155 }
+          ],
+          "detector_score": 0.95,
+          "below_64px_width": false
+        }
+      ]
+    }
+  ]
+}

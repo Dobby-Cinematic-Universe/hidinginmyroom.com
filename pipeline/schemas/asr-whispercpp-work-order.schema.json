@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/asr-whispercpp-work-order-v1.json",
+  "title": "HIMR whisper.cpp ASR work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "input",
+    "engine",
+    "model",
+    "window",
+    "inference",
+    "glossary",
+    "catalog_context",
+    "output"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "input": { "$ref": "#/$defs/input" },
+    "engine": { "$ref": "#/$defs/engine" },
+    "model": { "$ref": "#/$defs/model" },
+    "window": { "$ref": "#/$defs/window" },
+    "inference": { "$ref": "#/$defs/inference" },
+    "glossary": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/glossaryReference" }]
+    },
+    "catalog_context": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/catalogContext" }]
+    },
+    "output": { "$ref": "#/$defs/output" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "absolutePath": { "type": "string", "pattern": "^/" },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "expected_sha256",
+        "media_id",
+        "artifact_id",
+        "parent_processing_run_id"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "media_id": {
+          "type": "string",
+          "pattern": "^media_sha256_[0-9a-f]{64}$"
+        },
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "parent_processing_run_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "expected_sha256",
+        "version_label",
+        "version_evidence",
+        "build"
+      ],
+      "properties": {
+        "executable": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "version_label": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "version_evidence": {
+          "const": "source_revision_plus_executable_sha256"
+        },
+        "build": { "$ref": "#/$defs/build" }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "target", "configuration"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "target": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "configuration": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 256 }
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "expected_sha256",
+        "model_id",
+        "name",
+        "revision",
+        "source",
+        "license_label"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "model_id": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "license_label": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset_ms", "duration_ms"],
+      "properties": {
+        "offset_ms": { "type": "integer", "minimum": 0, "maximum": 86400000 },
+        "duration_ms": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 86400000 }
+          ]
+        }
+      }
+    },
+    "inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "threads",
+        "translate",
+        "split_on_word",
+        "best_of",
+        "beam_size",
+        "max_segment_characters",
+        "word_threshold",
+        "entropy_threshold",
+        "logprob_threshold",
+        "no_speech_threshold",
+        "temperature",
+        "temperature_increment",
+        "no_fallback",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "language": {
+          "type": "string",
+          "pattern": "^(?:auto|[a-z]{2,3}(?:-[a-z0-9]{2,8})*)$"
+        },
+        "threads": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "translate": { "const": false },
+        "split_on_word": { "type": "boolean" },
+        "best_of": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "beam_size": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "max_segment_characters": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "word_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "entropy_threshold": { "type": "number", "minimum": 0, "maximum": 100 },
+        "logprob_threshold": { "type": "number", "minimum": -100, "maximum": 0 },
+        "no_speech_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "temperature": { "type": "number", "minimum": 0, "maximum": 1 },
+        "temperature_increment": { "type": "number", "minimum": 0, "maximum": 1 },
+        "no_fallback": { "type": "boolean" },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 86400 }
+      }
+    },
+    "glossaryReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/absolutePath" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "catalogContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recording_id", "rendition_id"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/identifier" },
+        "rendition_id": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/identifier" }]
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "$ref": "#/$defs/absolutePath" } }
+    }
+  }
+}

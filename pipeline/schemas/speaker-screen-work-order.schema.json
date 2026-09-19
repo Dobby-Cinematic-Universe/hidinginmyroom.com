@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://himr.local/schemas/speaker-screen-work-order.schema.json",
+  "title": "Standalone CPU speaker-screen work order",
+  "description": "Structural validation only. Runtime additionally verifies file bindings, private output isolation, merged-policy cross-field constraints, and checkpoint integrity. No execution or network authority is granted by schema validity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "schema_version", "recording", "ffmpeg", "models", "policy", "resources", "source_verification", "output_root"],
+  "properties": {
+    "kind": {"const": "himr_cpu_speaker_screen_work_order"},
+    "schema_version": {"type": "integer", "const": 1},
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["media_id", "path", "sha256", "byte_count", "duration_ms"],
+      "properties": {
+        "media_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$(?![\\s\\S])"},
+        "path": {"$ref": "#/$defs/absolutePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"type": "integer", "minimum": 1, "maximum": 68719476736},
+        "duration_ms": {"type": "integer", "minimum": 1, "maximum": 86400000}
+      }
+    },
+    "ffmpeg": {"$ref": "#/$defs/fileBinding"},
+    "models": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "schema_version", "silero_vad", "ecapa_embedding"],
+      "properties": {
+        "kind": {"const": "himr_speaker_screen_models"},
+        "schema_version": {"type": "integer", "const": 1},
+        "silero_vad": {"$ref": "#/$defs/fileBinding"},
+        "ecapa_embedding": {"$ref": "#/$defs/fileBinding"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "description": "Partial overrides merged over core.DEFAULT_POLICY. Runtime requires stride_ms >= probe_ms and distinct_cosine_max < match_cosine_min after merging. These cross-field comparisons are not expressed by standard JSON Schema.",
+      "additionalProperties": false,
+      "properties": {
+        "probe_ms": {"type": "integer", "minimum": 1, "maximum": 10000, "default": 10000},
+        "stride_ms": {"type": "integer", "minimum": 1, "maximum": 604800000, "default": 60000},
+        "max_windows": {"type": "integer", "minimum": 1, "maximum": 512, "default": 512},
+        "min_speech_ms": {"type": "integer", "minimum": 2000, "maximum": 5000, "default": 2000},
+        "min_support": {"type": "integer", "minimum": 2, "maximum": 8, "default": 2},
+        "match_cosine_min": {"type": "number", "minimum": -1, "maximum": 1, "default": 0.85},
+        "distinct_cosine_max": {"type": "number", "minimum": -1, "maximum": 1, "default": 0.65}
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["threads", "window_timeout_seconds", "max_run_seconds", "max_windows_per_run"],
+      "properties": {
+        "threads": {"type": "integer", "minimum": 1, "maximum": 2},
+        "window_timeout_seconds": {"type": "integer", "minimum": 10, "maximum": 600},
+        "max_run_seconds": {"type": "integer", "minimum": 10, "maximum": 3600},
+        "max_windows_per_run": {"type": "integer", "minimum": 1, "maximum": 512},
+        "early_stop_on_positive": {"type": "boolean", "default": false,
+          "description": "An opt-in supported multi-speaker decision may stop sampling early. Remaining probes and paused sampling state stay explicit; partial negatives never complete a decision."}
+      }
+    },
+    "source_verification": {"enum": ["metadata_witness", "sha256"]},
+    "output_root": {"$ref": "#/$defs/absolutePath"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "minLength": 64, "maxLength": 64, "pattern": "^[0-9a-f]{64}$"},
+    "absolutePath": {
+      "type": "string",
+      "maxLength": 4096,
+      "pattern": "^/(?!\\.{1,2}(?:/|$))[^/\\u0000-\\u001f\\u007f]+(?:/(?!\\.{1,2}(?:/|$))[^/\\u0000-\\u001f\\u007f]+)*$(?![\\s\\S])"
+    },
+    "fileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/absolutePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

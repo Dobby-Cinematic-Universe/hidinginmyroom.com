@@ -1,0 +1,37 @@
+---
+import { playableSources } from '../../lib/corpus/media.mjs';
+import type { CorpusSource } from '../../lib/corpus/types';
+interface Props { sources: CorpusSource[]; title: string }
+const {sources,title} = Astro.props;
+const choices = playableSources(sources);
+---
+<section class="recording-player" data-recording-player aria-label="Recording player">
+  <h2>Watch the recording</h2>
+  {choices.length ? <>
+    <label hidden={choices.length === 1}>Video source
+      <select data-video-source aria-label="Video source">
+        {choices.map((source,i)=><option value={source.url} data-kind={source.kind}>{source.label}{choices.length>1 ? ` · ${i+1}` : ''}</option>)}
+      </select>
+    </label>
+    <video data-video controls playsinline preload="none" hidden title={title}>
+      Your browser cannot play this video. Use a source link below.
+    </video>
+    <iframe data-youtube hidden title={`Video: ${title}`} loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <button type="button" data-load-youtube hidden>Load YouTube player</button>
+    <p data-player-status role="status">Choose a timestamp to jump to that part of the recording.</p>
+    <p class="player-note">External video · source availability may vary.</p>
+    <noscript><p>Enable JavaScript for playback here, or open a public source below.</p></noscript>
+  </> : <p>No embeddable video source is attached. Use the public source links below.</p>}
+  <details><summary>Open original source</summary><ul>{sources.map(source=><li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.platform} ↗</a></li>)}</ul></details>
+</section>
+<style>
+  .recording-player { padding: 1rem; border: 1px solid var(--corpus-line); border-radius: .6rem; background: var(--corpus-panel); }
+  h2 { font-size: 1.2rem; margin: 0 0 1rem; }
+  label { display: grid; gap: .4rem; font-size: .85rem; margin-bottom: 1rem; }
+  select,button { font: inherit; padding: .6rem; border: 1px solid var(--corpus-line); border-radius: .35rem; background: var(--corpus-bg); color: var(--corpus-text); max-width: 100%; }
+  button { cursor: pointer; }
+  video,iframe { width: 100%; aspect-ratio: 16/9; max-height: 75vh; object-fit: contain; background: #000; border: 0; border-radius: .35rem; }
+  [hidden] { display: none; }
+  p,details { font-size: .85rem; } .player-note { color: var(--corpus-muted); }
+  summary { cursor: pointer; } ul { padding-left: 1.2rem; }
+</style>

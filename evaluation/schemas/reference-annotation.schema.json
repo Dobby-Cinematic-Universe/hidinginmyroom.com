@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/evaluation/reference-annotation-v1.json",
+  "title": "HIMR independent human transcript reference annotation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_kind",
+    "manifest_sha256",
+    "annotation_id",
+    "freeze_id",
+    "freeze_manifest_sha256",
+    "pass_name",
+    "annotator_id",
+    "created_at",
+    "independence_attestation",
+    "annotation_tool",
+    "publication",
+    "intervals"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_kind": { "const": "reference_annotation" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "annotation_id": { "$ref": "#/$defs/id" },
+    "freeze_id": { "$ref": "#/$defs/id" },
+    "freeze_manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "pass_name": { "enum": ["pass_a", "pass_b"] },
+    "annotator_id": { "$ref": "#/$defs/id" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "independence_attestation": { "$ref": "#/$defs/independence_attestation" },
+    "annotation_tool": { "$ref": "#/$defs/tool" },
+    "publication": { "$ref": "#/$defs/publication" },
+    "intervals": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/reference_interval" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "uuid_id": { "type": "string", "pattern": "^(src|rec|rnd)_[0-9a-f]{32}$" },
+    "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language_tags", "code_switch", "speaker_overlap", "playback_speech", "noise"],
+      "properties": {
+        "language_tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[a-z]{2,3}|und)(?:-[A-Za-z0-9]{2,8})*$"
+          }
+        },
+        "code_switch": { "type": "boolean" },
+        "speaker_overlap": { "type": "boolean" },
+        "playback_speech": { "type": "boolean" },
+        "noise": { "enum": ["clean", "light", "moderate", "heavy", "unknown"] }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "withheld_publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "storage_policy"],
+      "properties": {
+        "status": { "const": "withheld" },
+        "storage_policy": { "const": "private_only" }
+      }
+    },
+    "released_publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "decision_id", "decided_by", "decided_at", "basis"],
+      "properties": {
+        "status": { "const": "released" },
+        "decision_id": { "$ref": "#/$defs/id" },
+        "decided_by": { "$ref": "#/$defs/id" },
+        "decided_at": { "$ref": "#/$defs/timestamp" },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "publication": {
+      "oneOf": [
+        { "$ref": "#/$defs/withheld_publication" },
+        { "$ref": "#/$defs/released_publication" }
+      ]
+    },
+    "independence_attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attestor_id",
+        "attested_at",
+        "direct_media_reviewed",
+        "asr_outputs_inspected",
+        "other_reference_pass_inspected",
+        "adjudication_inspected"
+      ],
+      "properties": {
+        "attestor_id": { "$ref": "#/$defs/id" },
+        "attested_at": { "$ref": "#/$defs/timestamp" },
+        "direct_media_reviewed": { "const": true },
+        "asr_outputs_inspected": { "const": false },
+        "other_reference_pass_inspected": { "const": false },
+        "adjudication_inspected": { "const": false }
+      }
+    },
+    "utterance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "utterance_id",
+        "start_ms",
+        "end_ms",
+        "speaker_label",
+        "text",
+        "text_state",
+        "flags"
+      ],
+      "properties": {
+        "utterance_id": { "$ref": "#/$defs/id" },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "speaker_label": { "$ref": "#/$defs/id" },
+        "text": { "type": "string" },
+        "text_state": {
+          "enum": ["verbatim", "contains_unintelligible_marker", "unintelligible", "non_speech"]
+        },
+        "flags": { "$ref": "#/$defs/flags" }
+      }
+    },
+    "reference_interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_id",
+        "recording_id",
+        "source_id",
+        "media_id",
+        "media_sha256",
+        "rendition_id",
+        "split",
+        "start_ms",
+        "end_ms",
+        "annotation_state",
+        "utterances"
+      ],
+      "properties": {
+        "interval_id": { "$ref": "#/$defs/id" },
+        "recording_id": { "$ref": "#/$defs/uuid_id" },
+        "source_id": { "$ref": "#/$defs/uuid_id" },
+        "media_id": { "$ref": "#/$defs/media_id" },
+        "media_sha256": { "$ref": "#/$defs/sha256" },
+        "rendition_id": { "$ref": "#/$defs/uuid_id" },
+        "split": { "enum": ["calibration", "scoring"] },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "annotation_state": { "enum": ["transcribed", "non_speech", "unintelligible"] },
+        "utterances": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/utterance" }
+        }
+      }
+    }
+  }
+}

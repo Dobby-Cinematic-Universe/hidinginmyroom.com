@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "job_id": "visual-compare-pilot-001",
+  "method": "minimum_pairwise_phash_hamming_v1",
+  "query": {
+    "role": "query",
+    "result_path": "/srv/himr-media/derived/vision/visual-fingerprints/query/result.json",
+    "expected_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "frame_ids": ["visual_fingerprint_query_example"]
+  },
+  "candidate": {
+    "role": "candidate",
+    "result_path": "/srv/himr-media/derived/vision/visual-fingerprints/candidate/result.json",
+    "expected_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "frame_ids": ["visual_fingerprint_candidate_example"]
+  },
+  "threshold": {"maximum_hamming_distance": 8, "top_k": 10, "max_pairwise_comparisons": 65536},
+  "catalog_context": null,
+  "output": {"root": "/srv/himr-media/derived"}
+}

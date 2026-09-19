@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+if [ "$#" -lt 1 ]; then
+    echo "Usage: speaker-screen-guided /absolute/isolated/python {plan|run|status} ..." >&2
+    exit 2
+fi
+GUIDED_SCREEN_PYTHON=$1
+shift
+case "$GUIDED_SCREEN_PYTHON" in
+    /*) ;;
+    *) echo "An absolute isolated Python path is required." >&2; exit 2 ;;
+esac
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec "$GUIDED_SCREEN_PYTHON" -B "$SCRIPT_DIR/../speaker_screen_guided.py" "$@"

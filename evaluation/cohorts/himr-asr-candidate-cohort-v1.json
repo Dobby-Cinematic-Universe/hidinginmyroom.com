@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "manifest_kind": "candidate_cohort",
+  "manifest_sha256": "c3448526ce7a8b364822a303cd2996860d5f96238a51e8ddf5b64883fb6f9a7f",
+  "cohort_id": "himr_asr_candidate_cohort_v1",
+  "state": "candidate_unfrozen",
+  "created_at": "2026-08-26T20:00:00Z",
+  "purpose": "asr_transcript_evaluation",
+  "expected_recording_count": 12,
+  "selection_policy": {
+    "candidate_basis": "public_source_locators_only",
+    "asr_outputs_may_be_inspected_for_selection": false,
+    "reference_freeze_required_before_system_output_inspection": true,
+    "split_unit": "recording"
+  },
+  "candidates": [
+    {
+      "candidate_id": "candidate_youtube_h3ySLeBAoXs",
+      "recording_id": "rec_3ea5d778e3a154629ceb35473afaebcd",
+      "source_id": "src_2962ce0a452759e995d5e8955efab7bd",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "h3ySLeBAoXs",
+      "public_locator": "https://www.youtube.com/watch?v=h3ySLeBAoXs",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_0frp1tHu7ek",
+      "recording_id": "rec_5b0c0714f1955337bfb85b61adb17b79",
+      "source_id": "src_d221bde343e05a45abe6115ad7a3fd03",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "0frp1tHu7ek",
+      "public_locator": "https://www.youtube.com/watch?v=0frp1tHu7ek",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_s2OW-jRyFrw",
+      "recording_id": "rec_5e7b69e89b1e592f92458902e0db2399",
+      "source_id": "src_fafecfa0685c53bfb7bdda67adcd6e70",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "s2OW-jRyFrw",
+      "public_locator": "https://www.youtube.com/watch?v=s2OW-jRyFrw",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_92LgEG6NhUw",
+      "recording_id": "rec_9165256fa6e6569e8ccac4a14d4aa630",
+      "source_id": "src_c46e4b47d218535cb6254778e2017637",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "92LgEG6NhUw",
+      "public_locator": "https://www.youtube.com/watch?v=92LgEG6NhUw",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_SlTpGmCrTxE",
+      "recording_id": "rec_fed811c7b6655a5eb2e7893d46912838",
+      "source_id": "src_9d3fda659b0150b8887e9e496497b876",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "SlTpGmCrTxE",
+      "public_locator": "https://www.youtube.com/watch?v=SlTpGmCrTxE",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_8AbFGYob9SU",
+      "recording_id": "rec_ae41d9600ded5627b7b3ac69875e8a1f",
+      "source_id": "src_422ea3cd176c5ddab517bce379219390",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "8AbFGYob9SU",
+      "public_locator": "https://www.youtube.com/watch?v=8AbFGYob9SU",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_UUqmpEOc5oc",
+      "recording_id": "rec_50ed316eb5cd55288ec4fe9e2cb2701a",
+      "source_id": "src_ca18b8b8b98b50b0bfd793bb5ba73d09",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "UUqmpEOc5oc",
+      "public_locator": "https://www.youtube.com/watch?v=UUqmpEOc5oc",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_Z32Y-D5kJTg",
+      "recording_id": "rec_2cedd0acd62a5a22905c958e60cc15cf",
+      "source_id": "src_d321a94f5fc351dc95983411c91c7ae8",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "Z32Y-D5kJTg",
+      "public_locator": "https://www.youtube.com/watch?v=Z32Y-D5kJTg",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_94ff_90_Dzs",
+      "recording_id": "rec_6b8714fd3a405a7d8794335c18dc7698",
+      "source_id": "src_9c62e5f5db195220b117042802d7c00d",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "94ff_90_Dzs",
+      "public_locator": "https://www.youtube.com/watch?v=94ff_90_Dzs",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_F_G3PXJL2AM",
+      "recording_id": "rec_89c3544f4ed55804860a4a00dfaf0224",
+      "source_id": "src_5c2a29a2ef6b5091b591cdbc00116d86",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "F_G3PXJL2AM",
+      "public_locator": "https://www.youtube.com/watch?v=F_G3PXJL2AM",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_tiMqrpC6ZZY",
+      "recording_id": "rec_5a3e100e3327590e8926b2d988f6135e",
+      "source_id": "src_e51419355b445c58942bbd02fe1088af",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "tiMqrpC6ZZY",
+      "public_locator": "https://www.youtube.com/watch?v=tiMqrpC6ZZY",
+      "eligibility_state": "unresolved"
+    },
+    {
+      "candidate_id": "candidate_youtube_fku-kaaUStw",
+      "recording_id": "rec_c76d046a322450fca1ee76f2353a021f",
+      "source_id": "src_46e0b529015955dbb004370f6462d6ef",
+      "platform": "youtube",
+      "source_kind": "youtube_video",
+      "native_id": "fku-kaaUStw",
+      "public_locator": "https://www.youtube.com/watch?v=fku-kaaUStw",
+      "eligibility_state": "unresolved"
+    }
+  ],
+  "exclusions": [
+    {
+      "native_id": "rKdcv4QvGig",
+      "reason_code": "access_controlled",
+      "note": "Explicitly excluded: members-only source is not eligible for the public-source evaluation cohort."
+    }
+  ]
+}

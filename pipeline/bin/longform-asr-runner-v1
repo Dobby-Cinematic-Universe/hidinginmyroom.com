@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+repository_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+runtime_python="$repository_root/research/corpus/gpu-runtime/env/bin/python"
+
+if [ ! -x "$runtime_python" ]; then
+    echo "pinned GPU runtime Python is unavailable: $runtime_python" >&2
+    exit 127
+fi
+
+export PYTHONNOUSERSITE=1
+export PYTHONDONTWRITEBYTECODE=1
+exec "$runtime_python" -B -I "$repository_root/pipeline/gpu/longform_asr_runner_v1.py" "$@"

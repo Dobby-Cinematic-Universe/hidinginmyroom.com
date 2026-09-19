@@ -1,0 +1,140 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import {localPreviewRoot} from '../../../lib/local-preview';
+import { loadCorpusGraph } from '../../../lib/corpus/graph';
+import { formatTimestamp } from '../../../lib/corpus/release';
+import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
+import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
+import type {
+  CorpusGraphDate,
+  CorpusGraphEntity,
+  CorpusGraphEvent,
+  CorpusGraphEvidence,
+  CorpusGraphParticipant,
+  CorpusGraphRelation,
+} from '../../../lib/corpus/types';
+
+interface ParticipantView { edge: CorpusGraphParticipant; entity: CorpusGraphEntity }
+interface RelationView { edge: CorpusGraphRelation; event: CorpusGraphEvent; direction: 'from' | 'to' }
+interface Props {
+  derived?: boolean;
+  relatedGroup?: {slug:string;label:string};
+  mentions: CorpusGraphEntity[];
+  event: CorpusGraphEvent;
+  dates: CorpusGraphDate[];
+  evidence: CorpusGraphEvidence[];
+  participants: ParticipantView[];
+  relations: RelationView[];
+}
+
+export async function getStaticPaths() {
+  const graph = await loadCorpusGraph();
+  if(graph.derived&&!localPreviewRoot())return [];
+  const entities = new Map(graph.entities.map((entity) => [entity.entity_id, entity]));
+  const events = new Map(graph.events.map((event) => [event.event_id, event]));
+  const groups=new Map((graph.eventGroups||[]).flatMap(g=>g.members.map(id=>[id,g] as const)));
+  return graph.events.map((event) => ({
+    params: { slug: event.slug },
+    props: {
+      derived: graph.derived,
+      relatedGroup: groups.get(event.event_id),
+      mentions: (event.mentionedEntities||[]).map(id=>entities.get(id)).filter(Boolean),
+      event,
+      dates: graph.eventDates.filter((edge) => edge.event_id === event.event_id),
+      evidence: graph.eventEvidence.filter((edge) => edge.event_id === event.event_id),
+      participants: graph.eventParticipants
+        .filter((edge) => edge.event_id === event.event_id)
+        .map((edge) => ({ edge, entity: entities.get(edge.entity_id)! })),
+      relations: graph.eventRelations.flatMap<RelationView>((edge) => {
+        if (edge.from_event_id === event.event_id) return [{ edge, event: events.get(edge.to_event_id)!, direction: 'from' as const }];
+        if (edge.to_event_id === event.event_id) return [{ edge, event: events.get(edge.from_event_id)!, direction: 'to' as const }];
+        return [];
+      }),
+    },
+  }));
+}
+
+const { event, dates, evidence, participants, relations, derived, mentions, relatedGroup } = Astro.props;
+const dateLabel = (date: CorpusGraphDate) =>
+  date.value_start === null
+    ? 'Date unresolved'
+    : date.value_end === null
+      ? date.value_start
+      : `${date.value_start}–${date.value_end}`;
+---
+
+<CorpusLayout title={`${event.label} · HIMR Public Corpus graph`}>
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/corpus/">Corpus</a><span>/</span>
+    <a href="/corpus/graph/">Entities &amp; events</a><span>/</span>
+    <span>{event.label}</span>
+  </nav>
+  <article class="graph-detail">
+    <header><p class="corpus-eyebrow">{derived?'Source event description':'Reviewed public event'}</p><h1>{event.label}</h1></header>
+    {derived ? <>
+      <DerivedNotice />
+      {relatedGroup&&<section><h2>Related accounts</h2><a href={`/corpus/event-groups/${relatedGroup.slug}/`}>Compare related descriptions and their source recordings</a></section>}
+      <section><h2>Description</h2><p>{event.description}</p></section>
+      <section><h2>Names and places mentioned</h2>
+        {mentions.length ? <ul>{mentions.map(e=><li><a href={`/corpus/entities/${e.slug}/`}>{e.label}</a></li>)}</ul> : <p>No indexed name matched this description.</p>}
+      </section>
+      <section><h2>Dates mentioned in the description</h2>
+        <p>{event.dateMentions?.length?event.dateMentions.join(' · '):'No explicit date extracted.'}</p>
+        <p>These mentions are not assigned as the event date. Recording dates below describe the sources; relative dates and conflicting accounts remain unresolved.</p>
+      </section>
+      <section><h2>Source transcripts</h2>
+        <DerivedDirectory label="source transcripts" items={(event.sourceRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+      </section>
+      <section><h2>Source summaries</h2><ul>{(event.sourceSummaryIds||[]).map(id=><li><a href={`/corpus/summaries/${id}/`}>Transcript summary</a></li>)}</ul></section>
+    </> : <>
+    <aside>
+      Support kinds describe the reviewed source relationship, not whether a recorded claim is
+      true. Private notes, local evidence paths, observations, and ungated edges are omitted.
+    </aside>
+    <div class="graph-grid">
+      <section>
+        <h2>Participants</h2>
+        <ol>{participants.map(({ edge, entity }) => (
+          <li><a href={`/corpus/entities/${entity.slug}/`}><strong>{entity.label}</strong></a><span>{edge.label}</span></li>
+        ))}</ol>
+      </section>
+      <section>
+        <h2>Dates</h2>
+        {dates.length === 0 ? <p class="corpus-muted">No date edge is published.</p> : <ol>{dates.map((date) => (
+          <li><strong>{dateLabel(date)}</strong><span>{date.label} · {date.precision} · {date.certainty}</span></li>
+        ))}</ol>}
+      </section>
+    </div>
+    <section>
+      <h2>Public evidence anchors</h2>
+      <ol>{evidence.map((edge) => (
+        <li>
+          <strong>{edge.label}</strong>
+          <span>{edge.support_kind}{edge.start_ms !== null && edge.end_ms !== null ? ` · rendition time ${formatTimestamp(edge.start_ms)}–${formatTimestamp(edge.end_ms)}` : ' · whole item'}</span>
+          <a href={`/corpus/videos/${edge.anchor.recording.slug}/`}>{edge.anchor.recording.title}</a>
+          <a href={edge.anchor.source.url} target="_blank" rel="noopener noreferrer">Public source ({edge.anchor.source.platform})</a>
+        </li>
+      ))}</ol>
+    </section>
+    {relations.length > 0 && <section>
+      <h2>Reviewed event relations</h2>
+      <ol>{relations.map(({ edge, event: related, direction }) => (
+        <li><strong>{edge.label}</strong><span>{direction === 'from' ? 'to' : 'from'} <a href={`/corpus/events/${related.slug}/`}>{related.label}</a></span></li>
+      ))}</ol>
+    </section>}
+    </>}
+  </article>
+</CorpusLayout>
+
+<style>
+  .corpus-breadcrumbs { display: flex; flex-wrap: wrap; gap: .5rem; color: var(--corpus-muted); font-size: .82rem; }
+  .graph-detail h1 { margin: 0; font-size: clamp(2.3rem, 7vw, 5rem); letter-spacing: -.05em; }
+  .graph-detail aside, .graph-detail section { margin-top: 1.25rem; padding: 1rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); }
+  .graph-detail aside { color: var(--corpus-muted); }
+  .graph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .graph-detail section h2 { margin-top: 0; }
+  .graph-detail ol { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+  .graph-detail li { display: grid; gap: .2rem; padding-top: .75rem; border-top: 1px solid var(--corpus-line); }
+  .graph-detail li span { color: var(--corpus-muted); }
+  @media (max-width: 48rem) { .graph-grid { grid-template-columns: 1fr; } }
+</style>

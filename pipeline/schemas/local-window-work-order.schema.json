@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hidinginmyroom.com/schemas/pipeline/local-window-work-order-v1.json",
+  "title": "HIMR local long-recording window work order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "job_id", "bundle_id", "source", "window", "tools", "profile", "limits", "output", "safety"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "job_id": { "$ref": "#/$defs/identifier" },
+    "bundle_id": { "type": "string", "pattern": "^windowbundle_[0-9a-f]{32}$" },
+    "source": { "$ref": "#/$defs/source" },
+    "window": { "$ref": "#/$defs/window" },
+    "tools": { "$ref": "#/$defs/tools" },
+    "profile": { "$ref": "#/$defs/profile" },
+    "limits": { "$ref": "#/$defs/limits" },
+    "output": { "$ref": "#/$defs/output" },
+    "safety": { "$ref": "#/$defs/safety" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "byte_count", "media_id", "duration_ms", "acquisition_result_path", "acquisition_result_sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "media_id": { "type": "string", "pattern": "^media_sha256_[0-9a-f]{64}$" },
+        "duration_ms": { "type": "integer", "minimum": 1 },
+        "acquisition_result_path": { "type": "string", "pattern": "^/" },
+        "acquisition_result_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_id", "ordinal", "start_ms", "end_ms", "boundary", "is_partial_tail"],
+      "properties": {
+        "window_id": { "type": "string", "pattern": "^window_[0-9]{6}$" },
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "start_ms": { "type": "integer", "minimum": 0 },
+        "end_ms": { "type": "integer", "minimum": 1 },
+        "boundary": { "const": "half_open" },
+        "is_partial_tail": { "type": "boolean" }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count", "version_output_sha256", "version_first_line"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "version_output_sha256": { "$ref": "#/$defs/sha256" },
+        "version_first_line": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ffmpeg", "ffprobe"],
+      "properties": { "ffmpeg": { "$ref": "#/$defs/tool" }, "ffprobe": { "$ref": "#/$defs/tool" } }
+    },
+    "nullableIndex": { "type": ["integer", "null"], "minimum": 0 },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "ffmpeg_threads", "audio_sample_rate_hz", "audio_channels", "audio_sample_format", "flac_compression_level", "proxy_width", "proxy_height", "proxy_fps", "proxy_video_codec", "proxy_preset", "proxy_crf", "proxy_audio_codec", "proxy_audio_bitrate", "video_stream_index", "audio_stream_index"],
+      "properties": {
+        "profile_id": { "const": "long-window-cpu-v1" },
+        "ffmpeg_threads": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "audio_sample_rate_hz": { "const": 16000 },
+        "audio_channels": { "const": 1 },
+        "audio_sample_format": { "const": "s16" },
+        "flac_compression_level": { "type": "integer", "minimum": 0, "maximum": 12 },
+        "proxy_width": { "type": "integer", "minimum": 2, "maximum": 1280 },
+        "proxy_height": { "type": "integer", "minimum": 2, "maximum": 1280 },
+        "proxy_fps": { "type": "integer", "minimum": 1, "maximum": 60 },
+        "proxy_video_codec": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "proxy_preset": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "proxy_crf": { "type": "integer", "minimum": 0, "maximum": 51 },
+        "proxy_audio_codec": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "proxy_audio_bitrate": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "video_stream_index": { "$ref": "#/$defs/nullableIndex" },
+        "audio_stream_index": { "$ref": "#/$defs/nullableIndex" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_window_output_bytes", "free_space_floor_bytes", "timeout_seconds"],
+      "properties": {
+        "max_window_output_bytes": { "type": "integer", "minimum": 1 },
+        "free_space_floor_bytes": { "type": "integer", "minimum": 0 },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 86400 }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": { "root": { "type": "string", "pattern": "^/" } }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network_allowed", "credentials_allowed", "publication_authority", "identity_claims_allowed", "source_bytes_preserved", "remote_section_download"],
+      "properties": {
+        "network_allowed": { "const": false },
+        "credentials_allowed": { "const": false },
+        "publication_authority": { "const": "none" },
+        "identity_claims_allowed": { "const": false },
+        "source_bytes_preserved": { "const": true },
+        "remote_section_download": { "const": false }
+      }
+    }
+  }
+}
