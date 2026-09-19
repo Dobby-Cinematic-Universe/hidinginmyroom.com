@@ -22,6 +22,7 @@ export function previewAnnotation(recordingId: string): {
   origin: string; attribution: string | null; model: string | null;
   speaker_review_complete: boolean; coverage_verified: boolean;
   coverage_note?: string | null;
+  media_status?: 'no_audio' | 'transcript_only';
 } | undefined {
   const root = localPreviewRoot();
   if (!root) return undefined;

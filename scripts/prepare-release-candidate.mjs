@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import path from 'node:path';
 import {validateSummaryRelease} from '../src/lib/summaries/schema.mjs';
+import {summaryQualityFindings} from './summary-quality.mjs';
 import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
@@ -38,6 +39,8 @@ for(const ref of manifest.catalog_shards){
 const available=new Set(records.filter(r=>r.searchable_segment_count>0).map(r=>r.recording_id));
 const summaries=JSON.parse(await readFile(source+'/summaries/refreshed.json','utf8'));
 normalizeSummaryUnicode(summaries);
+const summaryFindings=summaryQualityFindings(summaries);
+if(summaryFindings.length)throw Error(`Unresolved summary quality findings: ${JSON.stringify(summaryFindings)}`);
 const held=[];
 summaries.summaries=summaries.summaries.filter(s=>{
   const missing=[...new Set(Object.values(s.sections).flatMap(a=>a.flatMap(i=>i.source_recording_ids)).filter(id=>!available.has(id)))];
@@ -72,7 +75,7 @@ try{
   await writeFile(root+'/src/data/corpus/graph/event-groups.json',JSON.stringify(artifact));
 }catch(error){if(error.code!=='ENOENT')throw error;}
 await writeFile(root+'/candidate.config.mjs',`import base from './astro.config.mjs';\nexport default {...base,cacheDir:'./.candidate-astro',vite:{...base.vite,cacheDir:'./.candidate-vite'},};\n`);
-const report={publication_approved:false,deployment_performed:false,approval_schema_simulation:true,source:pointer.directory,corpus_release:manifest.release_id,recordings:records.length,transcripts:available.size,summaries:summaries.summaries.length,held_summaries:held,build:'pending',release_blockers:['Archive overview remains pending; refresh final summaries before release.','Catalog-only source with invalid segment timing holds two broader summaries.','Derived Entities & Events currently exists only in local preview; production graph is empty.','Public attribution projection and production chat configuration still need packaging.','Cloud indexing and real-domain launch checks remain outstanding.'],free_pages_limits:{files:20000,bytes_per_file:25*1024*1024}};
+const report={publication_approved:false,deployment_performed:false,approval_schema_simulation:true,source:pointer.directory,corpus_release:manifest.release_id,recordings:records.length,transcripts:available.size,summaries:summaries.summaries.length,held_summaries:held,build:'pending',release_blockers:['Archive overview remains pending; refresh final summaries before release.','Catalog-only source with invalid segment timing holds two broader summaries.','Derived Entities & Events currently exists only in local preview; production graph is empty.','Public attribution projection and production chat configuration still need packaging.','Real-domain launch checks remain outstanding.'],advisories:['Cloud indexing is non-blocking; search coverage may be incomplete while items are queued or reindexed.'],free_pages_limits:{files:20000,bytes_per_file:25*1024*1024}};
 const save=()=>writeFile(root+'/candidate-report.json',JSON.stringify(report,null,2)+'\n');await save();
 report.production_chat={included:productionChat,backend_enabled_at_build:chatBackendEnabled,origin:productionChat?'https://hidinginmyroom.com':null};
 if(summaries.summaries.some(s=>s.kind==='archive'))report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Archive overview'));

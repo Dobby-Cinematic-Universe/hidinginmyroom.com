@@ -2,10 +2,15 @@
 
 Approved origin: `https://hidinginmyroom.com`. On 2026-09-17 the owner approved
 the pilot snapshot, then expanded approval to all usable corpus text for public
-search and quoted answers. The full snapshot contains 3,989 current cloud/third-party
-transcripts (17,347 files), 2,688 transcript summaries, 136 broader summaries, and
-4,063 catalog metadata entries: 24,234 files, approximately 204 MB. Historical local
+search and quoted answers. The September 19 quality-v13 snapshot contains 4,033
+current cloud/third-party transcripts (17,522 files), 2,731 transcript summaries,
+139 broader summaries, and 4,103 catalog metadata entries: 24,495 files,
+approximately 207 MB. Historical local
 ASR, private review artifacts, media, and identity embeddings remain excluded.
+
+The owner authorized publishing quality-v13 after the R2 bundle verification.
+The existing live site/chat remain on the previous release until that coordinated
+cutover. `RELEASE_HANDOFF_20260919.md` records the release and receipt locations.
 
 ## Isolation and publication
 
@@ -18,9 +23,16 @@ configuration fails closed, including any attempt to use the private pilot index
 `RAG_PROFILE=public node scripts/rag/production.mjs stage` deploys a **disabled**
 Worker with production bindings/secrets; this does not publish the website.
 `RAG_PROFILE=public node scripts/rag/production.mjs activate --publish` refuses
-activation until every manifest file receipt exists and remote indexing is complete
-with no pending, skipped or failed files. It then enables the Worker, not the site.
-Do not bypass this gate to launch a partially populated public service.
+activation until every manifest file has an accepted upload receipt. Publication
+approval, matching source allowlist/release, the private raw endpoint, and explicit
+`--publish` remain required. It then enables the Worker, not the site.
+
+As requested on September 19, indexing completeness is **not a release gate**.
+Queued, running, outdated or count-mismatched items are reported as advisory status;
+failed/skipped items are flagged for attention without blocking release. Unavailable
+stats likewise do not prevent release. Search coverage may be incomplete until
+Cloudflare finishes indexing. No repeat upload or requeue is triggered by this
+check. The same policy applies to release-candidate preparation and finalization.
 
 The full uploader runs as `himr-public-rag-full-upload-20260917.service`. Inspect with:
 
@@ -46,8 +58,25 @@ The export includes all summary levels available in the selected preview snapsho
 future completed summaries require another export. Catalog-only entries are clearly
 marked as metadata, not evidence of speech. Broader summaries retain recording links.
 Never overwrite the private pilot to expand the public index. A later snapshot that
-supersedes documents requires explicit stale-item reconciliation before activation;
-the exact remote-count activation check deliberately fails closed in that situation.
+supersedes documents still needs explicit stale-item reconciliation. Current
+source allowlists continue to exclude superseded keys from public answers; an
+aggregate remote document count is not used as a release authorization check.
+
+### Incremental updates only
+
+For an incremental release, retain the existing instance, embedding/chunk settings,
+content-addressed document keys and `uploads.json`. `prepare --full` means exporting
+the full manifest locally, **not** re-uploading or reindexing the whole archive.
+`upload.mjs` skips accepted keys and submits only new/changed documents. Do not
+clear receipts, recreate the index, run a global resync, or retry healthy items.
+Failed-item recovery is separate and targets only receipt-bound failed keys.
+
+Do not run `manage.mjs configure` as a release step. It now performs no remote write
+when settings match and refuses configuration changes without the explicit
+`--allow-index-rebuild` override. Use that override only after approval for a
+possible full reindex, never just to unblock an incremental release. The release
+workflow cannot prevent Cloudflare or dashboard actions from requeueing items;
+a queued item is not evidence that it needs to be uploaded again.
 
 ## Website rollout
 
@@ -68,7 +97,8 @@ archive-summary delta and builds/audits private candidate v5. It then invokes
 manifest, matched to upload receipts, are removed from the disabled public index.
 Local document copies and the prior receipts are retained in a removal audit, so
 these index objects can be rebuilt. Current keys and unknown identities fail
-closed. It waits for clean indexing and never invokes activation or site deployment.
+closed. It records indexing status without waiting for completion and never invokes
+activation or site deployment.
 Inspect `finalization-status.json`; failures pause rather than resubmit blindly.
 
 After activation, `research/cloudflare-rag/public-v1/public-client.json` contains
@@ -122,11 +152,11 @@ explicitly constructed synthetic signed-URL fixtures. `npm run build` passes its
 public boundary, Astro, production build, corpus indexing and search-isolation
 checks. The 109 affected Python tests and 40 static-tool tests also pass.
 
-The production corpus and summary manifests are still empty placeholders; this
-successful build does not publish the populated local preview. Remaining launch
-steps are cloud indexing completion, promotion of the approved corpus/source pages,
-and the real-domain Turnstile/source-link test. RAG publication approval does not
-automatically promote unrelated preview content. No public site was deployed.
+The source checkout's corpus and summary manifests intentionally remain empty
+placeholders. `npm run build:pages` restores the approved checksum-pinned R2 bundle
+before building; plain `npm run build` alone does not publish the local preview.
+The real-domain Turnstile/source-link check must be repeated after each cutover.
+See the release handoff for current publication approval and deployment status.
 
 `npm run test:rag` covers private/public guards, input bounds, removal of global caps,
 cooldown, caching, Turnstile failure/hostname/action, client limits and cleanup.

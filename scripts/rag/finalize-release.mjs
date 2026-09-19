@@ -2,6 +2,7 @@
 import {readFile} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {save,read,api,instance} from './cloudflare.mjs';
+import {requireAcceptedUploads,indexingAdvisory} from './release-readiness.mjs';
 if(process.env.RAG_PROFILE!=='public')throw Error('Public profile required');
 const [preview,candidate]=process.argv.slice(2);
 if(!/^release-[a-z0-9-]+$/.test(preview||'')||!/^candidate-[a-z0-9-]+$/.test(candidate||''))throw Error('Expected fresh preview and candidate names');
@@ -23,13 +24,8 @@ try{
   await run(['scripts/rag/reconcile-stale.mjs','--apply']);
   await run(['scripts/prepare-release-candidate.mjs',candidate,preview]);
   await run(['scripts/audit-release-candidate.mjs',candidate]);
-  while(true){
-    const stats=await api(`ai-search/instances/${instance}/stats`),manifest=await read('manifest.json');
-    if(stats.error||stats.skipped)throw Error('Remote index contains failed or skipped items; inspect before activation');
-    if(stats.completed===manifest.documents.length&&!stats.queued&&!stats.running)break;
-    await save('finalization-status.json',{state:'candidate_ready_waiting_for_index',preview,candidate,stats,expected:manifest.documents.length});
-    if(Date.now()>deadline)throw Error('Remote indexing did not complete within 24 hours');
-    await new Promise(resolve=>setTimeout(resolve,60000));
-  }
-  await save('finalization-status.json',{state:'candidate_and_index_ready_public_disabled',preview,candidate,remaining:['Pages access and domain launch checks','explicit website publication approval'],completed_at:new Date().toISOString()});
+  const manifest=await read('manifest.json');
+  requireAcceptedUploads(manifest,await read('uploads.json'));
+  const indexing=await indexingAdvisory(manifest.documents.length,()=>api(`ai-search/instances/${instance}/stats`));
+  await save('finalization-status.json',{state:'candidate_ready_public_disabled',preview,candidate,indexing,remaining:['Pages access and domain launch checks','explicit website publication approval'],completed_at:new Date().toISOString()});
 }catch(error){await save('finalization-status.json',{state:'paused',preview,candidate,error:error.message,updated_at:new Date().toISOString()});throw error;}

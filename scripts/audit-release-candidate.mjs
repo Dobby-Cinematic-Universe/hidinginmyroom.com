@@ -1,5 +1,6 @@
 import {readFile,writeFile,readdir} from 'node:fs/promises';
 import path from 'node:path';
+import {summaryQualityFindings} from './summary-quality.mjs';
 const name=process.argv[2];
 if(!/^candidate-[a-z0-9-]+$/.test(name||''))throw Error('Expected candidate-NAME');
 const root=path.resolve('research/site-release-candidates',name),dist=path.join(root,'dist');
@@ -27,7 +28,8 @@ for(const f of files){
   }
 }
 const graph=JSON.parse(await readFile(root+'/src/data/corpus/graph/manifest.json','utf8'));
-const value={publication_approved:false,deployable:false,pages_checked:pages,broken_links:[...links].map(([href,source])=>({href,source})),private_path_or_credential_name_findings:leaks,production_graph_counts:graph.counts,free_pages_fit:report.free_pages_fit,held_summaries:report.held_summaries,remaining:['Archive overview pending; refresh summaries after completion.','Missing transcript has one zero-duration segment; retain source and resolve timing before admitting it.','Derived entity/event graph is local-only and needs explicit release packaging.','Attribution must be projected publicly without review artifacts.','Public RAG indexing and real-domain launch checks remain outstanding.']};
+const summaryFindings=summaryQualityFindings(JSON.parse(await readFile(root+'/src/data/summaries/release.json','utf8')));
+const value={publication_approved:false,deployable:false,pages_checked:pages,broken_links:[...links].map(([href,source])=>({href,source})),private_path_or_credential_name_findings:leaks,production_graph_counts:graph.counts,free_pages_fit:report.free_pages_fit,held_summaries:report.held_summaries,remaining:['Archive overview pending; refresh summaries after completion.','Missing transcript has one zero-duration segment; retain source and resolve timing before admitting it.','Derived entity/event graph is local-only and needs explicit release packaging.','Attribution must be projected publicly without review artifacts.','Real-domain launch checks remain outstanding.'],advisories:['Cloud indexing is non-blocking; search coverage may be incomplete while items are queued or reindexed.']};
 if(!report.held_summaries.length)value.remaining=value.remaining.filter(s=>!s.startsWith('Missing transcript'));
 if(!report.release_blockers.some(s=>s.startsWith('Archive overview')))value.remaining=value.remaining.filter(s=>!s.startsWith('Archive overview'));
 if(report.graph){
@@ -35,6 +37,8 @@ if(report.graph){
   value.remaining=value.remaining.filter(s=>!s.startsWith('Derived entity'));
 }
 if(report.public_attribution_records){value.public_attribution_records=report.public_attribution_records;value.remaining=value.remaining.filter(s=>!s.startsWith('Attribution'));}
+value.summary_quality_findings=summaryFindings;
+if(summaryFindings.length)value.remaining.push(`${summaryFindings.length} placeholder-only summary items require targeted recovery before release.`);
 await writeFile(root+'/release-audit.json',JSON.stringify(value,null,2)+'\n',{mode:0o600});
 console.log(JSON.stringify(value));
-if(links.size||leaks.length||!report.free_pages_fit)process.exitCode=1;
+if(links.size||leaks.length||!report.free_pages_fit||summaryFindings.length)process.exitCode=1;

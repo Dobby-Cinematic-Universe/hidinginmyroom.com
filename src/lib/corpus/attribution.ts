@@ -1,6 +1,6 @@
 import {readFile} from 'node:fs/promises';
 import {previewAnnotation} from '../local-preview';
-interface Attribution {origin:string;attribution:string|null;model:string|null;coverage_note?:string|null;speaker_review_complete?:boolean;}
+interface Attribution {origin:string;attribution:string|null;model:string|null;coverage_note?:string|null;speaker_review_complete?:boolean;media_status?:'no_audio'|'transcript_only';}
 let cached:Promise<{recordings:Record<string,Attribution>}>|undefined;
 export async function recordingAttribution(id:string):Promise<Attribution|undefined>{
   const local=previewAnnotation(id);if(local)return local;

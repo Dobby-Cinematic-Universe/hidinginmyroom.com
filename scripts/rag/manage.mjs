@@ -1,12 +1,13 @@
 import {randomBytes} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {api,instance,save,read,credentials} from './cloudflare.mjs';
+import {configureIndex} from './index-configuration.mjs';
 const command=process.argv[2];
 if(command==='configure'){
   const config={embedding_model:'@cf/qwen/qwen3-embedding-0.6b',index_method:{keyword:true,vector:true},fusion_method:'rrf',chunk:true,chunk_size:400,chunk_overlap:10,rewrite_query:false,reranking:false,max_num_results:6,public_endpoint_params:{enabled:false,mcp:{disabled:true},search_endpoint:{disabled:true},chat_completions_endpoint:{disabled:true}}};
-  const r=await api(`ai-search/instances/${instance}`,{method:'PUT',body:config});
+  const {instance:r,changed}=await configureIndex({api,instance,config,allowIndexRebuild:process.argv.includes('--allow-index-rebuild')});
   if(r.public_endpoint_params?.enabled!==false)throw Error('Instance privacy not confirmed');
-  await save('instance.json',{id:r.id,embedding_model:r.embedding_model,index_method:r.index_method,private:true});console.log('Private hybrid index configured.');
+  await save('instance.json',{id:r.id,embedding_model:r.embedding_model,index_method:r.index_method,private:true});console.log(changed?'Private hybrid index configured.':'Index configuration already matches; no remote write or reindex requested.');
 }else if(command==='deploy'){
   if(process.env.RAG_PROFILE==='public')throw Error('Use production.mjs for guarded public deployment');
   const manifest=await read('manifest.json');if(!manifest.freeOnlyConfirmed||!manifest.uploadAuthorized)throw Error('Missing authorization');

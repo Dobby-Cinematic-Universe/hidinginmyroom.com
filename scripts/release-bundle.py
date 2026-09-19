@@ -3,6 +3,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import re
 from pathlib import Path, PurePosixPath
 import shutil
 import tarfile
@@ -11,6 +12,15 @@ import urllib.request
 
 MAX_BYTES=2_000_000_000
 MAX_FILES=20000
+
+
+def verify_summary_quality(summaries):
+    for row in summaries['summaries']:
+        for section,items in row['sections'].items():
+            for item in items:
+                if (re.fullmatch(r'(?:placeholder\d*|skip|todo|tbd|n/?a|null|undefined|\.{2,}|…)[.!?]?',item['text'].strip(),re.IGNORECASE)
+                        or (section=='summary' and item['text'].strip().lower()=='x') or 'text_dup_removed' in item['text']):
+                    raise ValueError('Unresolved placeholder summary: '+row['id'])
 
 
 def digest(path):
@@ -27,6 +37,7 @@ def allowed(name):
 def verify(root,manifest):
     corpus=json.loads((root/'src/data/corpus/manifest.json').read_text())
     summaries=json.loads((root/'src/data/summaries/release.json').read_text())
+    verify_summary_quality(summaries)
     search=json.loads((root/'.release-data/search/search-manifest.json').read_text())
     if corpus['release_id']!=manifest['corpus_release'] or summaries['release_id']!=manifest['summary_release']:
         raise ValueError('Bundle release identity mismatch')
@@ -41,6 +52,8 @@ def verify(root,manifest):
 def pack(candidate,search,output):
     report=json.loads((candidate/'candidate-report.json').read_text())
     if report['build']!='passed' or report['held_summaries']:raise ValueError('Unvalidated candidate')
+    summaries=json.loads((candidate/'src/data/summaries/release.json').read_text())
+    verify_summary_quality(summaries)
     output.mkdir(parents=True,exist_ok=True)
     archive=output/'corpus.tar.gz'
     roots=[(candidate/'src/data/corpus','src/data/corpus'),(candidate/'src/data/summaries','src/data/summaries'),(search,'.release-data/search')]

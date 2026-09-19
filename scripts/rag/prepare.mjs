@@ -4,6 +4,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {root,save} from './cloudflare.mjs';
 import {validateSummaryRelease} from '../../src/lib/summaries/schema.mjs';
+import {summaryQualityFindings} from '../summary-quality.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const full=process.argv.includes('--full');
 if(process.env.RAG_PROFILE==='public'&&(!full||!process.argv.includes('--publication-approved')))throw Error('Public export requires --full --publication-approved');
@@ -24,6 +25,7 @@ const records=(await Promise.all(manifest.catalog_shards.map(bound))).flatMap(s=
 const annotations=JSON.parse(await readFile(path.join(base,'corpus/annotations.json'),'utf8')).recordings;
 const summaries=JSON.parse(await readFile(path.join(base,'summaries/refreshed.json'),'utf8'));
 validateSummaryRelease(summaries,new Set(records.map(r=>r.recording_id)),{allowPrepared:true});
+if(summaryQualityFindings(summaries).length)throw Error('Placeholder summary content must be recovered before indexing');
 const byId=new Map(records.map(r=>[r.recording_id,r]));
 const docs=[];await mkdir(path.join(root,'documents'),{recursive:true,mode:0o700});
 async function document(text,meta){const sha=hash(text),key=`${meta.kind}-${sha.slice(0,32)}.txt`;await writeFile(path.join(root,'documents',key),text,{mode:0o600});docs.push({key,sha256:sha,bytes:Buffer.byteLength(text),...meta});}
@@ -38,7 +40,8 @@ const selected=full?eligible:[...new Map(Array.from({length:Math.min(100,eligibl
 if(full){
   for(const r of records){
     const href=`/corpus/videos/${r.slug}/`;
-    await document(`TITLE: ${r.title}\nRECORDING DATE: ${r.date_label||'Unknown'} (not necessarily event date)\nSOURCE: ${href}\nTYPE: Catalog metadata only; this entry is not evidence of what was said.\n`,{kind:'metadata',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
+    const availability=annotations[r.recording_id]?.media_status==='no_audio'?'AUDIO: This video has no audio stream; no spoken transcript is expected.\n':'';
+    await document(`TITLE: ${r.title}\nRECORDING DATE: ${r.date_label||'Unknown'} (not necessarily event date)\nSOURCE: ${href}\nTYPE: Catalog metadata only; this entry is not evidence of what was said.\n${availability}`,{kind:'metadata',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
   }
   for(const s of summaries.summaries.filter(s=>s.kind!=='transcript')){
     if(!/^[a-z0-9_-]+$/.test(s.id))throw Error('Unsafe summary ID');

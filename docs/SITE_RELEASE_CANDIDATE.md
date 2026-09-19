@@ -1,6 +1,47 @@
 # Private populated release rehearsal
 
-## Latest candidate: 2026-09-17 v4
+## Latest candidate: 2026-09-19 quality v13 — publication authorized
+
+`candidate-20260919-quality-v13` contains 4,103 recordings, 4,033 transcripts,
+2,731 transcript summaries and all 139 broader summaries. Targeted recovery
+refreshed 19 broader scopes (10 monthly, eight yearly, one archive), including
+the missing 2026 coverage, without changing any transcript summary. Original
+captures and lossless representation-repair receipts were preserved privately.
+
+Build, link, search-isolation and summary-quality checks pass: 8,813 HTML pages,
+16,516 files, zero broken root-relative links, zero scoped private-path findings,
+zero filler/repair-marker findings, and no held summaries. The refreshed graph has
+895 entities, 15,825 descriptions and 519 account groups. Local HTTP smoke checks
+confirm recovered monthly, 2026 yearly and archive pages render the new content.
+
+All 24,495 index documents have accepted upload receipts; this recovery uploaded
+19 changed documents and reused 24,476 unchanged ones. Indexing continues in the
+background and is not a release gate. The 232,424,050-byte R2 bundle passed remote
+restoration and checksum/content verification at 21:22:55 UTC; the local release
+pin now references that verified bundle. Nothing was
+pushed or deployed during candidate preparation. The owner subsequently authorized
+push and deployment once the bundle is verified. See `RELEASE_HANDOFF_20260919.md`
+for the deployment receipt location and coordinated publication steps.
+
+## Rejected candidate: 2026-09-19 coverage v11
+
+`candidate-20260919-coverage-v11` packages 4,103 recordings, 4,033 transcripts,
+2,731 transcript summaries and 139 broader summaries. Build/link/search-isolation
+checks passed, with 8,813 HTML pages and 16,516 output files.
+
+Subsequent real-domain browser QA found placeholder-only prose in the old live
+site. The new candidate has 15 such items across 11 broader summaries, including
+three placeholder-only overviews. The updated release audit reports these and
+exits unsuccessfully. Packing/restoration also refuses this content before
+promotion. **Do not deploy this artifact or treat completed provider jobs as
+proof that every summary is release-ready.** No transcript summary was affected.
+
+Live-domain ordinary search, chat answer, and citation navigation passed for the
+previous populated release. This does not certify the unpublished v11 data.
+See `RELEASE_HANDOFF_20260919.md` for the exact remaining actions and index handoff.
+All candidate and provider records are retained for targeted recovery.
+
+## Historical candidate: 2026-09-17 v4
 
 `candidate-20260917-v4` supersedes v1–v3 below. It is served privately at
 `http://127.0.0.1:4322/corpus/`. Nothing has been deployed.
@@ -36,13 +77,13 @@ Monthly and yearly scopes are complete. No evidence checks were relaxed.
 `himr-sonnet-evidence-recovery-20260917.service` collects that final request.
 `himr-release-finalization-v2-20260917.service` waits for it and the existing RAG
 follow-up, then refreshes the delta, reconciles backed-up superseded index objects,
-builds/audits `candidate-20260917-v5`, and waits for clean remote indexing. It is
+builds/audits `candidate-20260917-v5`, and records remote indexing status. It is
 bounded to 24 hours and pauses on errors. It never publishes or activates AI.
 State is in `research/cloudflare-rag/public-v1/finalization-status.json`.
 The v4 preview stays unchanged until the new candidate has been checked.
 
 Remaining: recover the archive overview, refresh the immutable summary snapshot,
-build/audit a final candidate, finish indexing and reconcile stale index items,
+build/audit a final candidate and reconcile stale index items,
 and obtain explicit site publication approval. Earlier results below are historical.
 
 ## Rollout and rollback
@@ -104,7 +145,7 @@ are not publication decisions. Do not deploy its `dist` directory directly.
    require a more compact static representation to stay on Free.
 4. Project public attribution/provenance fields without copying private review
    artifacts, identity maps, or source paths.
-5. Finish public RAG indexing, refresh newly available summaries, reconcile stale
+5. Refresh newly available summaries, upload the public RAG delta, reconcile stale
    document receipts, and test Turnstile/search/answers on the approved domain.
 6. Run final browser/mobile/media/source-link checks on the populated build and
    obtain deployment approval. The original production placeholders are unchanged.
@@ -115,8 +156,11 @@ To include the configured production chat UI in a private candidate, pass
 `--production-chat` after the explicit preview directory. This reads only the
 public endpoint and Turnstile site key from the approved public RAG configuration.
 It does not activate the Worker or deploy Pages. The report records whether the
-backend was enabled at build time. The owner requested that activation wait for
-indexing to finish; retain the complete/clean indexing gate in `production.mjs`.
+backend was enabled at build time. As of September 19, the owner removed the
+index-complete release gate: activation and finalization require accepted uploads,
+not an idle indexing queue. Indexing progress and failures are advisory; coverage
+may remain incomplete while Cloudflare processes or requeues items. Publication,
+source allowlist, private endpoint and real-domain checks remain required.
 
 The September 17 v8 candidate includes the removal of repetitive “Uncertain”
 labels and the production chat UI, with its backend intentionally still disabled.

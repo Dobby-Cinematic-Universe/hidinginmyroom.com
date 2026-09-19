@@ -38,6 +38,7 @@ const transcripts = searchableTranscripts(recording);
 const annotation = await recordingAttribution(recording.recording_id);
 const linkedSummary = (await loadSummaryRelease()).summaries.find((r) => r.recording_id === recording.recording_id);
 const platforms = [...new Set(recording.sources.map((source) => source.platform))];
+const noAudio = annotation?.media_status === 'no_audio';
 ---
 
 <CorpusLayout
@@ -60,17 +61,18 @@ const platforms = [...new Set(recording.sources.map((source) => source.platform)
         </p>
       </div>
       <div class="recording__badges" aria-label="Recording status">
+        {noAudio && <span class="corpus-badge">No audio</span>}
         {platforms.map((platform) => <span class="corpus-badge">{platform}</span>)}
       </div>
     </header>
 
-    <details class="recording__scope">
+    {transcripts.length > 0 && <details class="recording__scope">
       <summary>Machine transcript · wording, timing and speaker attribution may be wrong</summary>
       <p>
         Wording, speaker labels, and timestamps can still be wrong. A transcript does not establish
         that statements in the recording are factual. Use the source links and surrounding context.
       </p>
-    </details>
+    </details>}
 
     {linkedSummary && <InlineSummary id={linkedSummary.id} />}
     <details class="recording__technical">
@@ -79,11 +81,11 @@ const platforms = [...new Set(recording.sources.map((source) => source.platform)
       <section class="recording__metadata" aria-labelledby="metadata-title">
         <h2 id="metadata-title">Provenance</h2>
         {annotation && <aside>
-          <p><strong>{annotation.origin === 'third_party' ? 'Third-party machine transcript' : 'Cloud machine transcript'}</strong></p>
+          <p><strong>{annotation.origin === 'catalog' ? 'Catalog source' : annotation.origin === 'third_party' ? 'Third-party machine transcript' : 'Cloud machine transcript'}</strong></p>
           {annotation.attribution && <p>{annotation.attribution}</p>}
           {annotation.model && <p>{annotation.model}</p>}
-          {annotation.coverage_note && <p><strong>Transcript coverage:</strong> {annotation.coverage_note}</p>}
-          <p>{annotation.speaker_review_complete ? 'Speaker labels were manually reviewed; transcription accuracy remains unverified.' : 'Transcription and speaker attribution remain unverified.'} Full recording coverage has not been verified.</p>
+          {annotation.coverage_note && <p><strong>{noAudio ? 'Audio availability:' : 'Transcript coverage:'}</strong> {annotation.coverage_note}</p>}
+          {transcripts.length > 0 && <p>{annotation.speaker_review_complete ? 'Speaker labels were manually reviewed; transcription accuracy remains unverified.' : 'Transcription and speaker attribution remain unverified.'} Full recording coverage has not been verified.</p>}
         </aside>}
         <dl>
           <div>
@@ -176,7 +178,7 @@ const platforms = [...new Set(recording.sources.map((source) => source.platform)
             </div>
           </div>
           <div class="transcript__empty">
-            <p>No transcript segments have been published for this recording.</p>
+            <p>{noAudio ? 'This video has no audio stream. It remains in the archive, but no spoken transcript is expected.' : 'No transcript segments have been published for this recording.'}</p>
           </div>
         </section>
       ) : (

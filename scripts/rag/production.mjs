@@ -2,6 +2,7 @@ import {readFile,writeFile,mkdir,copyFile} from 'node:fs/promises';
 import {createHash,randomBytes} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {api,instance,root,read,save,credentials} from './cloudflare.mjs';
+import {requireAcceptedUploads,indexingAdvisory} from './release-readiness.mjs';
 if(process.env.RAG_PROFILE!=='public')throw Error('Set RAG_PROFILE=public');
 const configPath='workers/corpus-rag/wrangler.production.jsonc';
 const config=JSON.parse(await readFile(configPath,'utf8'));
@@ -40,10 +41,10 @@ if(command==='prepare'){
   const sources=JSON.parse(await readFile('workers/corpus-rag/public-sources.json','utf8'));if(sources.release!==m.release)throw Error('Release mismatch');
   const remote=await api(`ai-search/instances/${instance}`);if(remote.public_endpoint_params?.enabled!==false)throw Error('Raw search endpoint must remain private');
   if(command==='activate'){
-    const receipts=await read('uploads.json');if(!m.documents.every(d=>receipts[d.key]?.accepted))throw Error('Uploads incomplete');
-    const s=await api(`ai-search/instances/${instance}/stats`);
-    if(s.completed!==m.documents.length||s.error||s.queued||s.running||s.skipped)throw Error('Indexing not complete/clean');
     if(!process.argv.includes('--publish'))throw Error('Explicit --publish required');
+    requireAcceptedUploads(m,await read('uploads.json'));
+    const indexing=await indexingAdvisory(m.documents.length,()=>api(`ai-search/instances/${instance}/stats`));
+    console.log(JSON.stringify({indexing}));
   }
   const widget=await read('turnstile.json'),e=await credentials();
   let secrets;try{secrets=await read('production-secrets.json');}catch(err){if(err.code!=='ENOENT')throw err;secrets={CLIENT_HASH_SECRET:randomBytes(32).toString('hex')};await save('production-secrets.json',secrets);}
