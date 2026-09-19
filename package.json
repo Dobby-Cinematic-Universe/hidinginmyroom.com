@@ -7,6 +7,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "build:pages": "node scripts/check-pages-corpus.mjs && npm run build",
     "test:rag": "node --test scripts/rag/*.test.mjs",
     "dev": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "build": "npm run check && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build && npm run build:corpus-index && npm run check:search-isolation",

@@ -48,11 +48,18 @@ Create a Pages project, connect
 | Framework preset | `Astro` |
 | Production branch | The repository's default branch |
 | Root directory | Repository root (leave blank) |
-| Build command | `npm run build` |
+| Build command | `npm run build:pages` |
 | Build output directory | `dist` |
 | Node.js version | `22.16.0` from `.node-version` |
 
-Keep the full `npm run build` command. It checks the public release boundary and
+`npm run build:pages` refuses empty corpus/summary placeholders before running
+`npm run build`. The source-only repository does not contain the populated archive:
+deploy the approved candidate's `dist/` using Wrangler Pages direct upload. A Git
+build must first receive the approved public corpus and summary artifacts; until
+then it intentionally fails and leaves the last successful deployment serving.
+Never bypass this guard to deploy placeholders over the populated corpus.
+
+The underlying `npm run build` checks the public release boundary and
 referenced local images, runs Astro diagnostics, and creates the static site, so
 Cloudflare will not deploy a change that fails the same gate as GitHub Actions.
 
