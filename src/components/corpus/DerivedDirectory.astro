@@ -52,8 +52,10 @@ const payload=JSON.stringify(items).replaceAll('<','\\u003c').replaceAll('\u2028
   .directory-toggle{display:flex;align-items:center;gap:.5rem;margin:.8rem 0;font-size:.85rem}
   input { padding: .7rem; background: var(--corpus-bg); color: var(--corpus-text); border: 1px solid var(--corpus-line); border-radius: .3rem; min-width: 0; }
   ol { display: grid; gap: .8rem; list-style: none; padding: 0; }
-  li { display: grid; gap: .35rem; padding: .6rem 0; border-top: 1px solid var(--corpus-line); }
-  a { color: var(--corpus-accent); overflow-wrap: anywhere; }
-  span,p { color: var(--corpus-muted); font-size: .85rem; }
+  /* Client-rendered rows have no Astro scope attributes. Scope their styles
+     through the persistent list instead, including filtering and pagination. */
+  [data-items] :global(li) { display: grid; gap: .35rem; padding: .6rem 0; border-top: 1px solid var(--corpus-line); min-width: 0; }
+  [data-items] :global(a) { color: var(--corpus-accent); overflow-wrap: anywhere; }
+  [data-items] :global(span),p { color: var(--corpus-muted); font-size: .85rem; }
   button { padding: .7rem 1rem; cursor: pointer; color: var(--corpus-text); background: var(--corpus-panel); border: 1px solid var(--corpus-line); }
 </style>
