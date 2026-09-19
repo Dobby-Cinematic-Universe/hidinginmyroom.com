@@ -17,6 +17,13 @@ verification; no API keys are exposed to the browser. Production client settings
 are captured in the private `research/cloudflare-rag/public-v1/public-client.json`.
 The candidate includes the production chat UI and its non-secret configuration.
 
+The repository is now site-focused: frontend/assets, release and search tooling,
+the chat Worker, corpus validation code, optional event grouping, tests, and
+relevant documentation. Acquisition/ASR/diarization, private consoles, evaluation
+tooling, historical recovery scripts and operational diaries were removed from
+tracking but preserved locally under ignore rules. The earlier commits remain
+in Git history; this cleanup does not rewrite history or delete local pipelines.
+
 The source repository intentionally retains empty public corpus placeholders.
 Do not deploy an ordinary repository build expecting it to contain this archive:
 use the prepared candidate output. Research, provider receipts, transcripts,

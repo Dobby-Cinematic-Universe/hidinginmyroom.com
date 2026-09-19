@@ -1,9 +1,0 @@
-#!/bin/sh
-set -eu
-
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-repository_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
-
-export PYTHONNOUSERSITE=1
-cd "$repository_root"
-exec python3 -B -m operator_console.pipeline_statistics "$@"

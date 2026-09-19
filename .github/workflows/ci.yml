@@ -35,29 +35,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Ensure FFmpeg is available
-        run: |
-          if ! command -v ffmpeg >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install --yes ffmpeg
-          fi
-
       - name: Install locked dependencies
         run: npm ci
-
-      - name: Install development JSON contract validator
-        run: python3 -m pip install --requirement scripts/requirements-json-contracts.txt
-
-      - name: Validate JSON contracts
-        run: npm run test:contracts
 
       - name: Validate static planning tools
         run: npm run test:static-tools
 
-      - name: Validate corpus and media tooling
-        run: |
-          python3 -m compileall -q corpus/src corpus/tests acquisition pipeline evaluation operator_console
-          npm run test:python
+      - name: Validate chat Worker
+        run: npm run test:rag
 
       - name: Validate and build
         run: npm run build

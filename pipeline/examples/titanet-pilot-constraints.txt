@@ -1,5 +1,0 @@
-# Keep the copied CPU wheels; never replace a live screening environment.
-torch==2.8.0+cpu
-torchaudio==2.8.0+cpu
-numpy==1.26.4
-nemo_toolkit==2.4.0

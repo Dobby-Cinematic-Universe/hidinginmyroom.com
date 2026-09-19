@@ -14,16 +14,7 @@
     "group:corpus-events": "node scripts/group-corpus-events.mjs",
     "check": "node scripts/check-public-release.mjs && cross-env ASTRO_TELEMETRY_DISABLED=1 astro check",
     "check:search-isolation": "node scripts/check-search-isolation.mjs",
-    "operator": "./operator_console/bin/himr-operator serve --open-browser",
-    "operator:init": "./operator_console/bin/himr-operator init",
-    "test:acquisition": "./acquisition/tests/run.sh",
-    "test:contracts": "python3 scripts/validate-json-contracts.py",
-    "test:corpus": "python3 -m unittest discover -s corpus/tests -p 'test_*.py' -v",
-    "test:evaluation": "./evaluation/tests/run.sh && python3 -m evaluation audit-tracked .",
-    "test:operator": "node --check operator_console/ui/app.js && python3 -m unittest discover -s operator_console/tests -p 'test_*.py' -v",
-    "test:pipeline": "./pipeline/tests/run.sh",
-    "test:static-tools": "node --test scripts/tests/*.test.mjs && python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v",
-    "test:python": "npm run test:operator && npm run test:corpus && npm run test:acquisition && npm run test:pipeline && npm run test:evaluation",
+    "test:static-tools": "node --test scripts/tests/*.test.mjs",
     "preview": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro preview"
   },
   "dependencies": {

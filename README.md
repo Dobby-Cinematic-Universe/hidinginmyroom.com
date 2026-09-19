@@ -25,7 +25,6 @@ Hiding In My Room, built with Astro and Starlight.
 - [Corpus rights, privacy, and takedown policy](./docs/CORPUS_RIGHTS_AND_TAKEDOWN.md)
 - [Corpus engineering risk register](./docs/CORPUS_RISK_REGISTER.md)
 - [Corpus static-release scale benchmark](./docs/CORPUS_SCALE_BENCHMARK.md)
-- [Local pipeline operator console](./operator_console/README.md)
 - [Cloudflare Pages deployment guide](./docs/CLOUDFLARE_PAGES.md)
 - [Security and private-reporting guidance](./SECURITY.md)
 - [Rights and reuse status](./RIGHTS.md)
@@ -56,11 +55,8 @@ successful build to inspect that output locally.
 | `npm run dev`            | Start the local Astro development server                               |
 | `npm run check`          | Check release hygiene, referenced local images, and Astro types        |
 | `npm run build`          | Run all checks and create the production site in `dist/`               |
-| `npm run operator:init`  | Initialize the private local pipeline-console workspace                |
-| `npm run operator`       | Open the loopback-only registered pipeline operator console            |
-| `npm run test:contracts` | Validate JSON Schemas and tracked work-order examples                  |
-| `npm run test:operator`  | Run console registry, supervisor, HTTP, and UI contract tests          |
-| `npm run test:python`    | Run the corpus, acquisition, preprocessing, and evaluation test suites |
+| `npm run test:static-tools` | Test site rendering, search, summaries, and packaging               |
+| `npm run test:rag`       | Test the separately deployed chat Worker and abuse protection         |
 | `npm run preview`        | Serve an existing production build locally                             |
 
 Networked source-acquisition commands, private transcripts, and raw evidence bundles
@@ -77,12 +73,17 @@ setup or deployment inputs for this public repository.
   content-addressed, publication-gated corpus release (v1 `release.json` remains a
   migration fallback)
 - `corpus/` — schema, import, validation, and export code; never raw media
-- `acquisition/` — guarded local, public-HTTP, and public-YouTube acquisition contracts
-- `pipeline/` — reproducible media-processing contracts; outputs stay private
-- `operator_console/` — loopback-only registered pipeline controls; state stays private
+- `pipeline/event_embedding_groups.py` — optional local event grouping for release preparation
+- `workers/corpus-rag/` — separately deployed chat Worker; not part of Pages assets
 - `src/components/` and `src/styles/` — shared interface and styling
 - `public/` — static assets shipped with the site
 - `scripts/` — build and public-content validation tooling
+
+Acquisition, ASR, diarization, private review consoles and historical recovery
+scripts are excluded from this site-focused tree. Existing local copies are
+preserved and ignored. Corpus validators remain because the publication gate
+depends on them. Historical architecture documents may describe the separate
+processing workspace; those tools are not site deployment dependencies.
 
 The public repository does not contain raw platform snapshots, NotebookLM drafts,
 review queues, private Discord captures, local review videos, biometric embeddings,

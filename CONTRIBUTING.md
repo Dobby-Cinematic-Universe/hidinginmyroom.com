@@ -161,17 +161,16 @@ and runs Astro diagnostics. `npm run build` runs those checks and generates `dis
 it is the required pre-PR command and the CI gate. Neither command fetches or reads
 private research.
 
-Corpus, acquisition, pipeline, or evaluation changes also require Python 3.12,
-FFmpeg/FFprobe, and the pinned development-only schema validator:
+Static corpus validation uses Python 3.12 with its standard library. Site and
+Worker regression tests run with Node.js:
 
 ```sh
-python3 -m pip install -r scripts/requirements-json-contracts.txt
-npm run test:contracts
-npm run test:python
+npm run test:static-tools
+npm run test:rag
 ```
 
-`jsonschema` is used only by tests and CI. The acquisition, preprocessing, and corpus
-runtimes do not depend on it.
+Media acquisition, transcription and private review tooling are maintained outside
+the static-site source tree and are not required to build or deploy this site.
 
 Use `npm install` only when intentionally changing dependencies. Commit the
 resulting `package.json` and `package-lock.json` changes together. Do not commit
