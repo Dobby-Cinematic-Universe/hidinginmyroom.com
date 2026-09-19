@@ -1,0 +1,12 @@
+import {spawnSync} from 'node:child_process';
+import {cp,readFile} from 'node:fs/promises';
+const run=(cmd,args,env={})=>{const p=spawnSync(cmd,args,{stdio:'inherit',env:{...process.env,...env}});if(p.status!==0)process.exit(p.status||1);};
+run('python3',['scripts/release-bundle.py','restore']);
+run(process.execPath,['scripts/check-pages-corpus.mjs']);
+run('npm',['run','check']);
+const manifest=JSON.parse(await readFile('corpus-release.json','utf8'));
+const client=manifest.public_client||{};
+if(Object.keys(client).some(key=>!['PUBLIC_RAG_ENABLED','PUBLIC_RAG_ENDPOINT','PUBLIC_TURNSTILE_SITE_KEY'].includes(key)))throw Error('Unexpected public client setting');
+run(process.execPath,['node_modules/astro/bin/astro.mjs','build'],{ASTRO_TELEMETRY_DISABLED:'1',...client});
+await cp('.release-data/search','dist/corpus',{recursive:true});
+run(process.execPath,['scripts/check-search-isolation.mjs']);

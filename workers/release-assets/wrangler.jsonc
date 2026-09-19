@@ -1,0 +1,9 @@
+{
+  "name":"himr-corpus-release-assets",
+  "main":"worker.mjs",
+  "compatibility_date":"2026-09-19",
+  "workers_dev":true,
+  "preview_urls":false,
+  "r2_buckets":[{"binding":"RELEASES","bucket_name":"himr-corpus-releases"}],
+  "observability":{"enabled":false}
+}

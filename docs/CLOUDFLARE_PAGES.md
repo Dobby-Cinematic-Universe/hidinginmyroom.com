@@ -51,7 +51,7 @@ Create a Pages project, connect
 | Root directory | Repository root (leave blank) |
 | Build command | `npm run build:pages` |
 | Build output directory | `dist` |
-| Node.js version | `22.16.0` from `.node-version` |
+| Node.js version | `22.21.1` from `.node-version` |
 
 `npm run build:pages` downloads the approved R2 bundle pinned in
 `corpus-release.json`, checks its SHA-256, size, paths, release identities and counts,
@@ -104,7 +104,7 @@ commands are intentionally not part of deployment.
 Treat preview builds as public. Never use one to review private evidence, unpublished
 research, secret-bearing logs, or content that would violate the editorial policy.
 
-GitHub Actions also runs `npm run build`, but it does not deploy. In repository
+GitHub Actions also runs `npm run build:pages`, but it does not deploy. In repository
 settings, make the CI build a required status check before merging to the production
 branch. Keep workflow token permissions read-only unless a future job has a documented
 need for more access.
@@ -136,7 +136,7 @@ private evidence bundle into the public tree.
 ### The Node.js version differs
 
 Confirm that `.node-version` is committed and that the Pages project is using the
-current build image. If the dashboard overrides `NODE_VERSION`, set it to `22.16.0`
+current build image. If the dashboard overrides `NODE_VERSION`, set it to `22.21.1`
 or remove the conflicting override.
 
 ### Canonical URLs or the sitemap are missing

@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "sha256": "2548635521c7b20cf9e50e03e53cde8772e190afd1335b9d7d7047a1a7dc63c1",
+  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/2548635521c7b20cf9e50e03e53cde8772e190afd1335b9d7d7047a1a7dc63c1.tar.gz",
+  "bytes": 230546542,
+  "unpacked_bytes": 955075068,
+  "files": 8840,
+  "corpus_release": "release_3c2cf8328d3ac39b59bbc177",
+  "summary_release": "summaries_413f88227746da51cfb71201",
+  "recordings": 4064,
+  "transcripts": 3991,
+  "summaries": 2830,
+  "public_client": {
+    "PUBLIC_RAG_ENABLED": true,
+    "PUBLIC_RAG_ENDPOINT": "https://himr-public-corpus-rag.a-xauiw.workers.dev/query",
+    "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAAE52y_sF0jO7gQPz"
+  }
+}
