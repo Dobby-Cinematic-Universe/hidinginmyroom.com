@@ -11,7 +11,7 @@
   "vars": {
     "ACCESS_MODE":"public", "ENABLED":"false", "PUBLIC_RELEASE_APPROVED":"false",
     "INSTANCE":"himr-public-NOT-CONFIGURED", "ALLOWED_ORIGIN":"https://hidinginmyroom.com",
-    "FREE_REVIEW_BEFORE":"2026-09-24T00:00:00Z", "CORPUS_VERSION":"NOT-CONFIGURED"
+    "CORPUS_VERSION":"NOT-CONFIGURED"
   },
   "observability": {"enabled":false}
 }

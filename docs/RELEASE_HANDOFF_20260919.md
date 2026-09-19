@@ -30,9 +30,10 @@ After explicit deployment approval, publish the candidate and test a real
 Turnstile challenge, search/answer and source link from the approved HTTPS origin.
 Unauthenticated API checks and unit tests do not substitute for that browser test.
 
-The existing `FREE_REVIEW_BEFORE` safeguard pauses chat on
-**2026-09-24 at 00:00 UTC**. Review the intended Workers plan and billing settings
-before extending it. The temporary paid indexing plan was not changed.
+The production chat expiry was removed at the owner's request on September 19.
+Production chat has no scheduled shutdown; the private pilot retains its separate
+review gate. Spam protection and the manual enable/disable switch remain intact.
+The temporary paid indexing plan was not changed.
 
 For an emergency chat rollback, run
 `RAG_PROFILE=public node scripts/rag/production.mjs stage`.

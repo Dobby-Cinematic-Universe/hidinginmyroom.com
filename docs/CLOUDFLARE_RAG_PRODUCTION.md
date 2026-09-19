@@ -100,10 +100,10 @@ Distributed attackers can exhaust the free allowance: ordinary search must remai
 available. Free-tier protection sacrifices availability; this is not an unlimited
 public chat service or an SLA.
 
-The account must remain Workers Free with no paid AI billing/prepaid credits.
-There is no paid fallback. Limits are account-shared. Querying is paused at
-`FREE_REVIEW_BEFORE` (initially 2026-09-24 UTC); review Cloudflare's beta pricing
-before extending it. Expiry does not delete data or stop managed indexing.
+The owner temporarily upgraded Workers for indexing; plan changes are manual.
+Limits are account-shared. Production chat has no scheduled expiry as of the
+owner's September 19 request. `FREE_REVIEW_BEFORE` applies only to the private
+pilot. Spam protections and the manual enable/disable switch remain intact.
 Operational logs do not include questions, answers, credentials or raw IPs.
 
 ## Rollback / takedown

@@ -32,7 +32,8 @@ export default {async fetch(request,env){
 }};
 async function handleQuery(request,env,isPublic){
   const expiry=Date.parse(env.FREE_REVIEW_BEFORE||'');
-  if(env.ENABLED!=='true'||!Number.isFinite(expiry)||Date.now()>expiry)return json({error:'Search paused pending free-tier review.'},503);
+  if(env.ENABLED!=='true')return json({error:'Search is disabled.'},503);
+  if(!isPublic&&(!Number.isFinite(expiry)||Date.now()>expiry))return json({error:'Pilot paused pending free-tier review.'},503);
   if(request.method!=='POST'||new URL(request.url).pathname!=='/query')return json({error:'Not found.'},404);
   if(!request.headers.get('Content-Type')?.startsWith('application/json'))return json({error:'JSON required.'},415);
   let body,raw;try{raw=await readBody(request);const input={...raw};if(isPublic)delete input.turnstileToken;body=validateInput(input);}catch{return json({error:'Invalid or oversized request. Use a question of 3–600 characters.'},400);}

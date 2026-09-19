@@ -1,10 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import publicSources from '../../workers/corpus-rag/public-sources.json' with {type:'json'};
 import worker,{PilotBudget,readBody} from '../../workers/corpus-rag/worker.mjs';
 import {publicReady,publicAdmission,Admission,clientKey} from '../../workers/corpus-rag/public-access.mjs';
 const state=()=>{const data=new Map();let alarm=null;return {data,storage:{get:async k=>data.get(k),put:async(k,v)=>data.set(k,structuredClone(v)),getAlarm:async()=>alarm,setAlarm:async a=>{alarm=a;},list:async()=>new Map([...data].filter(([k])=>k.startsWith('cache:'))),delete:async keys=>keys.forEach(k=>data.delete(k)),deleteAll:async()=>data.clear()}};};
 const publicEnv={PUBLIC_RELEASE_APPROVED:'true',INSTANCE:'himr-public-test',CORPUS_VERSION:'release',ALLOWED_ORIGIN:'https://hidinginmyroom.com',TURNSTILE_SECRET:'test',CLIENT_HASH_SECRET:'x'.repeat(64)};
 const sources={release:'release',documents:{a:{title:'Allowed'}}};
+test('production has no expiry but retains verification and manual disable',async()=>{
+  const env={...publicEnv,ACCESS_MODE:'public',ENABLED:'true',CORPUS_VERSION:publicSources.release};
+  const request=()=>new Request('https://test/query',{method:'POST',headers:{Origin:env.ALLOWED_ORIGIN,'Content-Type':'application/json'},body:JSON.stringify({question:'Archive question',mode:'search'})});
+  for(const expiry of [undefined,'2000-01-01T00:00:00Z','invalid']){
+    const response=await worker.fetch(request(),{...env,FREE_REVIEW_BEFORE:expiry});
+    assert.equal(response.status,403);
+    assert.equal((await response.json()).error,'Verification required.');
+  }
+  assert.equal((await worker.fetch(request(),{...env,ENABLED:'false'})).status,503);
+});
 test('body reader rejects oversized or malformed input',async()=>{
   await assert.rejects(readBody(new Request('https://test',{method:'POST',body:'x'.repeat(6145)})));
   await assert.rejects(readBody(new Request('https://test',{method:'POST',body:'not json'})));
