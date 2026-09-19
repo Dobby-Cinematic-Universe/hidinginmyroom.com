@@ -5,7 +5,8 @@ This project is a fully static Astro site for
 directly from
 [Dobby-Cinematic-Universe/hidinginmyroom.com](https://github.com/Dobby-Cinematic-Universe/hidinginmyroom.com)
 and publish only the generated `dist/` directory. No Cloudflare adapter, Pages
-Function, Worker, database, or application secret is required.
+Function or application secret is required for the site. A separate read-only
+Worker serves approved build data from R2; the chat Worker remains independent.
 
 ## Repository publication safety
 
@@ -52,12 +53,25 @@ Create a Pages project, connect
 | Build output directory | `dist` |
 | Node.js version | `22.16.0` from `.node-version` |
 
-`npm run build:pages` refuses empty corpus/summary placeholders before running
-`npm run build`. The source-only repository does not contain the populated archive:
-deploy the approved candidate's `dist/` using Wrangler Pages direct upload. A Git
-build must first receive the approved public corpus and summary artifacts; until
-then it intentionally fails and leaves the last successful deployment serving.
-Never bypass this guard to deploy placeholders over the populated corpus.
+`npm run build:pages` downloads the approved R2 bundle pinned in
+`corpus-release.json`, checks its SHA-256, size, paths, release identities and counts,
+then restores corpus data, summaries and cached search. It refuses empty data,
+runs the public-release and Astro checks, builds the site, and copies the matching
+cached search into `dist/corpus`. Download or validation failures stop deployment;
+never bypass the guard to publish placeholders.
+
+The R2 bucket `himr-corpus-releases` is private. The read-only Worker in
+`workers/release-assets` serves only content-addressed approved bundles. No storage
+credentials are provided to Pages. Python 3 and Node 22 are required by this build.
+
+Frontend changes reuse the pinned bundle. For corpus changes, prepare and validate
+a new candidate, then package it with `scripts/release-bundle.py pack --candidate
+<candidate> --search <cached-search-directory> --output <output-directory>`.
+Upload the result under `releases/<sha256>.tar.gz`, verify a remote restore, and
+update `corpus-release.json` with the generated manifest, URL and public chat
+settings. Commit the small manifest, not the archive. Each retained version is a
+complete compressed bundle, not a delta; do not delete versions still referenced
+by deployed or rollback commits. No automatic retention deletion is configured.
 
 The underlying `npm run build` checks the public release boundary and
 referenced local images, runs Astro diagnostics, and creates the static site, so

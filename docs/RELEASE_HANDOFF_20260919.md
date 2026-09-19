@@ -25,15 +25,19 @@ tracking but preserved locally under ignore rules. The earlier commits remain
 in Git history; this cleanup does not rewrite history or delete local pipelines.
 
 The source repository intentionally retains empty public corpus placeholders.
-Do not deploy an ordinary repository build expecting it to contain this archive:
-use the prepared candidate output. Research, provider receipts, transcripts,
+Do not deploy an ordinary `npm run build` expecting it to contain this archive:
+the Pages command `npm run build:pages` restores the checksum-pinned approved R2
+bundle from `corpus-release.json` first. Research, provider receipts, transcripts,
 private reviews, embeddings and credentials are not committed. The Worker source
 allowlist contains approved public titles and URLs, not private credentials.
 
 ## Remaining launch actions
 
-No website deployment, DNS change, Git push or plan downgrade was performed.
-After explicit deployment approval, publish the candidate and test a real
+The old direct upload stopped without publishing the populated candidate. The
+replacement uses the R2 bundle and automatic Pages builds from main. The new
+workflow must be pushed and successfully built before the empty live corpus is
+replaced. No DNS change or plan downgrade was performed.
+After the automatic deployment, test a real
 Turnstile challenge, search/answer and source link from the approved HTTPS origin.
 Unauthenticated API checks and unit tests do not substitute for that browser test.
 

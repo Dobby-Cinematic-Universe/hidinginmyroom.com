@@ -5,6 +5,7 @@
 /.astro/
 /.cache/
 /.wrangler/
+/.release-data/
 /coverage/
 *.tsbuildinfo
 *.log
