@@ -59,19 +59,18 @@ test('old global counters cannot block retrieval',async()=>{
   const r=await b.fetch(new Request('https://test',{method:'POST',body:JSON.stringify({question:'a valid question',mode:'search'})}));
   assert.equal(r.status,200);assert.equal('remaining' in await r.json(),false);
 });
-test('empty retrieval does not retry; manual resubmission can find newly indexed sources',async()=>{
+test('empty retrieval retries once before answering and caches the recovered result',async()=>{
   let searches=0,answers=0;const s=state();
   const b=new PilotBudget(s,{AI_SEARCH:{get:()=>({search:async()=>++searches===1?{chunks:[]}:{chunks:[{text:'Supported passage',item:{key:'source'}}]}})},AI:{run:async()=>{answers++;return {response:'Supported answer [1]'};}}});
   const req=()=>new Request('https://test',{method:'POST',body:JSON.stringify({question:'test question',mode:'answer'})});
-  const empty=await (await b.fetch(req())).json();assert.deepEqual(empty.chunks,[]);assert.equal(searches,1);assert.equal(answers,0);
   const result=await (await b.fetch(req())).json();assert.equal(result.answer,'Supported answer [1]');assert.equal(searches,2);assert.equal(answers,1);
   assert.equal((await (await b.fetch(req())).json()).cached,true);assert.equal(searches,2);
 });
 test('persistent empty retrieval is bounded and never cached',async()=>{
   let calls=0;const s=state();const b=new PilotBudget(s,{AI_SEARCH:{get:()=>({search:async()=>{calls++;return {chunks:[]};}})}});
   const req=()=>new Request('https://test',{method:'POST',body:JSON.stringify({question:'test question',mode:'search'})});
-  assert.deepEqual((await (await b.fetch(req())).json()).chunks,[]);assert.equal(calls,1);
-  await b.fetch(req());assert.equal(calls,2);assert.equal([...s.data.keys()].some(k=>k.startsWith('cache:')),false);
+  assert.deepEqual((await (await b.fetch(req())).json()).chunks,[]);assert.equal(calls,2);
+  await b.fetch(req());assert.equal(calls,4);assert.equal([...s.data.keys()].some(k=>k.startsWith('cache:')),false);
 });
 test('malformed retrieval is unavailable, not no matches',async()=>{
   let calls=0;const b=new PilotBudget(state(),{AI_SEARCH:{get:()=>({search:async()=>{calls++;return {};}})}});

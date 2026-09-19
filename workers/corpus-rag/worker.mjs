@@ -45,15 +45,24 @@ async function handleQuery(request,env,isPublic){
   }catch{return json({error:'Service unavailable. Ordinary corpus search is still available.'},503);}
 }
 export async function questionKey(env,{question,mode}){
-  return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`retrieval-v2|${env.ACCESS_MODE||'private'}|${env.CORPUS_VERSION}|${mode}|${question}`)))).map(n=>n.toString(16).padStart(2,'0')).join('');
+  return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`retrieval-v3|${env.ACCESS_MODE||'private'}|${env.CORPUS_VERSION}|${mode}|${question}`)))).map(n=>n.toString(16).padStart(2,'0')).join('');
 }
 export async function retrieve(env,question){
-    // One retrieval per uncached question. An incomplete index can return empty.
-    const found=await deadline(env.AI_SEARCH.get(env.INSTANCE).search({messages:[{role:'user',content:question}],ai_search_options:{retrieval:{retrieval_type:'hybrid',max_num_results:6},query_rewrite:{enabled:false}}}),25000);
+  // Keep the whole retrieval phase bounded below the browser's 60-second timeout.
+  // Exact-question successes are cached by PilotBudget; do not reuse upstream
+  // similarity-cache misses or answers belonging to merely similar questions.
+  const end=Date.now()+30000;
+  for(let attempt=0;attempt<2;attempt++){
+    if(attempt)await new Promise(resolve=>setTimeout(resolve,750));
+    const found=await deadline(env.AI_SEARCH.get(env.INSTANCE).search({messages:[{role:'user',content:question}],ai_search_options:{cache:{enabled:false},retrieval:{retrieval_type:'hybrid',max_num_results:6,return_on_failure:false},query_rewrite:{enabled:false}}}),Math.min(20000,Math.max(1,end-Date.now())));
     if(!found||!Array.isArray(found.chunks))throw Error('Malformed retrieval response');
+    if(found.errors&&(Array.isArray(found.errors)?found.errors.length:Object.keys(found.errors).length))throw Error('Provider retrieval failed');
     const allowed=found.chunks.filter(c=>c&&typeof c.text==='string'&&c.text.trim()&&typeof c.item?.key==='string'&&c.item.key
       &&(env.ACCESS_MODE!=='public'||Object.hasOwn(publicSources.documents,c.item.key)));
     if(allowed.length)return allowed.slice(0,6).map((c,i)=>({id:i+1,key:c.item.key,text:c.text.slice(0,4000),...(env.ACCESS_MODE==='public'?publicSources.documents[c.item.key]:{})}));
+    // A publication filter rejection is not a transient empty provider response.
+    if(found.chunks.length)return [];
+  }
   return [];
 }
 export class PilotBudget {
