@@ -8,11 +8,12 @@ sidebar:
 import { Aside } from "@astrojs/starlight/components";
 import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+import ArchiveImage from "../../../../components/wiki/ArchiveImage.astro";
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="27 August 2026"
-  note="Eight 2024 transcript records are reconciled, the April 9 title directly verifies public use of the handle, and the later 'granny' / encounter rumour is source-bounded. A later one-pass stream denial is narrower than the rumour; age wording, the alleged encounter, and every denial remain unverified machine-text or community-source leads."
+  reviewedAt="19 September 2026"
+  note="Eight legacy 2024 records have raw-source mappings. AI frame inspection adds restaurant and owl-display context for the titled April 9 stream, without identifying participants or verifying audio. Age wording, nickname origin, the alleged encounter, and later denials remain unverified machine-text or community-source leads."
 />
 
 “Blood Bucket” is a public viewer handle that became part of Daniel's April 2024
@@ -21,11 +22,12 @@ an April 9 record titled _Dinner and Owl Cafe with Blood Bucket_. That verifies 
 handle's use in a creator-supplied public title. It does **not** verify a legal name,
 home address, nationality, private biography, or every story told around the person.
 
-<Aside type="caution" title="Raw files recovered; contents still unchecked">
+<Aside type="caution" title="Raw files recovered; limited visual review only">
   The August 25 legacy index gave all eight core records a null video URL and
   the flag `missing_video_url`. The supplemental Internet Archive inventory
   reconciled on August 27 now maps a raw MP4 candidate for every row. None of
-  those long files has been directly listened to for this page, so the old
+  those long files has been directly listened to for this page. Selected frames
+  from the dinner-and-owl-cafe stream have now been inspected by AI, but the old
   generated text still cannot establish exact words, speakers, edits, or events.
   This page therefore separates title facts from machine-text leads throughout.
 </Aside>
@@ -92,7 +94,12 @@ the newly recovered raw stream has not been listened to.
 
 ## Eight-record 2024 chronology
 
-The table keeps the records in source-label order. “Machine link” means the title
+The table keeps the records in legacy source-label order and preserves that index's
+displayed durations, which are not reliable retained-file runtimes. For example,
+the recovered _Staying at my viewers house_ file runs **04:14:59**, rather than the
+legacy **02:22:59** below. The completed corpus leaves its date unknown; the April 4
+label is retained as legacy catalogue context, not independently established timing.
+“Machine link” means the title
 does not name Blood Bucket, but generated transcript text or its summary appears to
 connect the record to that handle. Those links are research leads, not corroboration.
 
@@ -102,7 +109,7 @@ connect the record to that handle. Those links are research leads, not corrobora
 | 22 March    | [_japanese woman came to my hotel room_](https://archive.org/download/hidinginmyroom/japanese%20woman%20came%20to%20my%20hotel%20room%20%5BQFRiGoeRbis%5D.mp4)                         |           03:48:49 | The generic, creator-supplied title exists. Its nationality and visit framing are not independently proven, and the Blood Bucket link is machine-derived. |
 | 4 April     | [_Staying at my viewers house_](https://archive.org/download/hidinginmyroom/Staying%20at%20my%20viewers%20house%20%5BQA8bpJbBEKA%5D.mp4)                                               |           02:22:59 | The generic title exists; the generated text supplies the proposed handle origin described below.                                                         |
 | 5 April     | [_walking to Japanese Sun Tower (21km walkathon)_](https://archive.org/download/hidinginmyroom/walking%20to%20Japanese%20Sun%20Tower%20%2821km%20walkathon%29%20%5BbLLuzNREUQ8%5D.mp4) |           11:49:40 | The walkathon title and duration exist. The generated summary links the later portion to the viewer's home.                                               |
-| 9 April     | [_Dinner and Owl Cafe with Blood Bucket_](https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4)                          |           06:58:11 | **Direct title fact:** the public handle appears in the source title. The dinner and outing remain creator framing, not independently checked events.     |
+| 9 April     | [_Dinner and Owl Cafe with Blood Bucket_](https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4)                          |           06:58:11 | **Direct title fact:** the public handle appears in the source title. Sampled raw frames show a restaurant table and an indoor owl display; participant identity remains unverified. |
 | 11 April    | [_Cooking dinner for her_](https://archive.org/download/hidinginmyroom/Cooking%20dinner%20for%20her%20%5BPJBFnY1cVt8%5D.mp4)                                                           |           10:30:05 | One of two separate April 11 records; only generated text links “her” to Blood Bucket.                                                                    |
 | 11 April    | [_Japanese Woman let me come inside her house!_](https://archive.org/download/hidinginmyroom/Japanese%20Woman%20let%20me%20come%20inside%20her%20house%21%20%5BnDlsd1OJMnA%5D.mp4)     |           00:13:46 | A second, shorter April 11 record. The title is generic and sensationalized; generated text makes the handle link.                                        |
 | 14 April    | [_Exploring Kyoto_](https://archive.org/download/hidinginmyroom/Exploring%20Kyoto%20%5B8TAr1xDfgyE%5D.mp4)                                                                             |           11:39:28 | The Kyoto title exists; a later Blood Bucket visit is found only in generated text and summary.                                                           |
@@ -115,6 +122,18 @@ connect the record to that handle. Those links are research leads, not corrobora
   locator="Eight source-label dates from 2024-02-10 through 2024-04-14"
   evidence="Archive titles, displayed durations, and eight newly reconciled raw-file identities; stream contents remain unchecked"
   reviewState="source-matched"
+/>
+
+<SourceCitation
+  sourceId="blood-bucket-april4-retained-runtime"
+  claimId="HIMR-BLOOD-BUCKET-0014"
+  title="Staying at my viewers house — retained-file metadata"
+  href="https://archive.org/download/hidinginmyroom/Staying%20at%20my%20viewers%20house%20%5BQA8bpJbBEKA%5D.mp4"
+  locator="Retained rendition runtime 04:14:59.121; completed-corpus date unknown, legacy date label 4 April 2024"
+  evidence="Raw-file duration and reconciled catalogue metadata only; the legacy displayed runtime is not a reliable coordinate guide"
+  checked={false}
+  reviewState="source-matched"
+  reviewedAt="19 September 2026"
 />
 
 ### Why the two April 11 rows are not duplicates
@@ -135,6 +154,8 @@ its text renders a question about where the Blood Bucket name came from. At
 _Carrie_, in which a bucket of pig's blood is dropped on Carrie.
 
 <Aside type="caution" title="Unverified machine-transcript account">
+  **Machine-generated and unreviewed; may be wrong; not a verified quotation.**
+
   This is a paraphrase of generated text, not a quotation accepted from the
   audio. A raw-video link is now available, but it has not been listened to and
   the legacy text has no reliable speaker labels. There is no independent
@@ -206,7 +227,7 @@ mother's age. A 5 April record separately appears to place the full handle, “g
 wording, and the age **52** in one late-stream exchange.
 
 Those details are internally connected better than a random `BB` search hit, but the
-records have no mapped source video. The text cannot reliably separate Daniel,
+mapped raw videos have not received a human audio review for this account. The text cannot reliably separate Daniel,
 Blood Bucket, chat, or text-to-speech, and it cannot verify the exact age or wording.
 
 <SourceCitation
@@ -315,20 +336,61 @@ support for the community “granny” label.
   reviewedAt="27 August 2026"
 />
 
-## Why there is no portrait here
+## Image from the titled stream
 
-Raw video is now mapped, but no frame has been directly reviewed and identity-checked
-for this article. Publishing a guessed social-media image, an unchecked
-machine-selected face, or an illustration of a real viewer would imply an
-identification the evidence does not support. A future image should come only from
-reviewed public stream footage or another openly published, context-preserved
-source—and should be captioned as a public appearance, never proof of private identity.
+The outing title is not the only available context. Sampled frames in the retained
+video show a restaurant-table scene at **04:00:00** and several owls on indoor
+wooden perches at **04:42:30**. These observations support the stream's visible
+settings, not the identity of its participants, a precise venue, or any personal
+claim about Blood Bucket. The April 9 date remains a legacy catalogue label; the
+completed corpus does not independently establish a recording or publication date.
+
+<SourceCitation
+  sourceId="blood-bucket-dinner-owl-visual-context"
+  claimId="HIMR-BLOOD-BUCKET-0013"
+  title="Dinner and Owl Cafe with Blood Bucket — visible outing context"
+  href="https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4"
+  locator="Retained-rendition frames at 04:00:00 and 04:42:30; sampled images, not continuous playback"
+  evidence="AI visual inspection of a restaurant table and owls on indoor perches; no face identification, verified speech, venue identification or personal-conduct inference"
+  checked={false}
+  reviewState="source-matched"
+  reviewedAt="19 September 2026"
+/>
+
+<ArchiveImage
+  src="/images/wiki/blood-bucket-stream-dinner-2024.webp"
+  alt="A participant seated across a restaurant table with glasses and a water pitcher."
+  caption="A participant in the stream titled Dinner and Owl Cafe with Blood Bucket, at 04:00:00. The title alone does not verify the participant's identity."
+  sourceHref="https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4"
+  sourceLabel="Dinner and Owl Cafe with Blood Bucket — archived raw video"
+  locator="04:00:00 in the retained rendition; archive date label 9 April 2024"
+  rightsNote="One low-resolution editorial excerpt illustrating the titled stream's visible dinner setting, not a verified portrait or evidence of private conduct. Third-party rights retained; no licence, permission or ownership claimed. Complete frame reduced to 480×270 and encoded as WebP with metadata removed; no crop or generative alteration."
+  width={480}
+  height={270}
+/>
+
+The retained raw frame was inspected by AI on **19 September 2026**. This is a
+source-context illustration, not a face-based identification, human audiovisual
+verification, or support for the disputed personal claims elsewhere on this page.
+
+<SourceCitation
+  sourceId="blood-bucket-dinner-raw-frame-14400"
+  claimId="HIMR-BLOOD-BUCKET-0012"
+  title="Dinner and Owl Cafe with Blood Bucket — dinner-setting frame"
+  href="https://archive.org/download/hidinginmyroom/dinner%20and%20owl%20cafe%20with%20bloodbucket%20%5BG07oXmwgq3s%5D.mp4"
+  locator="Retained raw rendition at 04:00:00; selected contextual frames also inspected, not continuous playback"
+  evidence="AI inspection of a visible restaurant-table scene only; no participant identity, speech, relationship or off-camera-event verification"
+  checked={false}
+  reviewState="source-matched"
+  reviewedAt="19 September 2026"
+/>
 
 ## Fact, report, and unknown
 
 - **Source fact:** eight legacy transcript records form the February–April 2024
   research cluster; supplemental archive reconciliation now maps a candidate raw MP4
-  to all eight, but their contents remain unchecked.
+  to all eight. Selected dinner-stream frames have AI visual review, not human
+  audiovisual verification; the other narrative leads remain unchecked.
 - **Source fact:** _Dinner and Owl Cafe with Blood Bucket_ directly uses the handle
   in its April 9 title.
 - **Unverified report:** generated April 4 text attributes the handle to _Carrie_'s
