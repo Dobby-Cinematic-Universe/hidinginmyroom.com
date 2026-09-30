@@ -1,0 +1,56 @@
+<section id="analysis-relationships" class="analysis-relationships" data-analysis-relationships aria-labelledby="relationships-heading" hidden>
+  <h2 id="relationships-heading">Question relationships</h2>
+  <p class="relationship-intro">Explore how the scored questions relate within the analysis cohort. These are estimated relationships among transcript-text ratings; they do not establish traits or causal effects.</p>
+  <div class="relationship-control">
+    <label for="relationship-question">Choose a question</label>
+    <select id="relationship-question" data-relationship-question></select>
+  </div>
+  <p class="chart-note" data-relationship-summary aria-live="polite"></p>
+  <div class="relationship-ranks" data-relationship-ranks></div>
+  <details data-relationship-all-pairs>
+    <summary>Expand all pair estimates for the selected question</summary>
+    <div class="table-scroll" data-relationship-all-pairs-table></div>
+  </details>
+  <details data-matrix-details>
+    <summary>Expand the clustered correlation heatmap</summary>
+    <p class="chart-note">Average-linkage clustering arranges the questions using signed chord distance √(2 × (1 − r)). This order is a display aid; it does not establish factors or validate questionnaire groupings. Focus the question selector above to see its strongest positive and negative relationships with paired sample sizes.</p>
+    <div class="relationship-heatmap" data-relationship-matrix></div>
+  </details>
+  <details data-relationship-diagnostics>
+    <summary>Expand map-fit diagnostics</summary>
+  </details>
+</section>
+
+<script>
+  import { renderQuestionRelationships, validateMapDiagnostics } from '../../lib/analysis/relationships.mjs';
+  import type { AnalysisRelease } from '../../lib/analysis/explorer.mjs';
+
+  const root = document.querySelector<HTMLElement>('[data-analysis-relationships]');
+  if (root) {
+    document.addEventListener('analysis-release-ready', async (event) => {
+      const detail = (event as CustomEvent<{release: AnalysisRelease; diagnostics?: unknown}>).detail;
+      if (!detail?.release) return;
+      const diagnostics = await validateMapDiagnostics(detail.release, detail.diagnostics);
+      renderQuestionRelationships(root, detail.release, diagnostics);
+      root.hidden = false;
+    }, { once: true });
+  }
+</script>
+
+<style is:global>
+  .analysis-relationships{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;min-width:0}
+  .analysis-relationships .relationship-control{display:grid;gap:.35rem;min-width:0;max-width:32rem}
+  .analysis-relationships .relationship-control label{font-size:.85rem;color:var(--corpus-muted)}
+  .analysis-relationships .relationship-control select{width:100%;min-width:0}
+  .analysis-relationships .relationship-ranks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1rem}
+  .analysis-relationships .relationship-ranks section{padding:.75rem 1rem;border:1px solid var(--corpus-line);border-radius:.4rem;background:var(--corpus-panel)}
+  .analysis-relationships .relationship-ranks h4{margin:.1rem 0 .5rem}
+  .analysis-relationships .relationship-ranks ul{margin:.25rem 0;padding-inline-start:1.25rem}
+  .analysis-relationships details{border:1px solid var(--corpus-line);border-radius:.4rem;padding:.75rem;min-width:0}
+  .analysis-relationships summary{cursor:pointer;font-weight:650}
+  .analysis-relationships .relationship-heatmap{max-width:100%;overflow:auto;padding-block:.75rem}
+  .analysis-relationships svg{display:block;max-width:100%;height:auto;overflow:visible}
+  .analysis-explorer .analysis-relationships .relationship-heatmap svg{width:auto;max-width:none;max-height:none}
+  .analysis-relationships .diagnostic-table{margin-block:1rem}
+  .analysis-relationships .chart-note{overflow-wrap:anywhere}
+</style>

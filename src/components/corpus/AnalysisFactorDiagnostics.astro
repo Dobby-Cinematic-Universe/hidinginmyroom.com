@@ -1,0 +1,46 @@
+---
+import AnalysisChartFrame from './AnalysisChartFrame.astro';
+---
+<section id="analysis-factor-diagnostics" class="analysis-factor-diagnostics" data-factor-diagnostics hidden aria-labelledby="factor-diagnostics-heading">
+  <h2 id="factor-diagnostics-heading">How much does the factor model explain?</h2>
+  <h3>Predicting a withheld question</h3>
+  <p>Compare factor counts by hiding one question at a time in later recordings and predicting it from the other question scores. Lower error means better reconstruction.</p>
+  <p data-held-out-interpretation aria-live="polite"></p>
+  <AnalysisChartFrame label="Held-out reconstruction by factor count" minWidth="38rem"><div data-held-out-chart></div></AnalysisChartFrame>
+  <p class="chart-note">This comparison uses three temporal folds. It measures reconstruction of transcript ratings; it does not establish a true factor count or predict audience reception. No confidence intervals are asserted from three folds.</p>
+  <details><summary>Expand reconstruction errors and baseline values</summary><div data-held-out-summary></div></details>
+  <details><summary>Expand temporal folds, overlap checks and failed fits</summary><div data-held-out-folds></div></details>
+  <details><summary>Expand the reconstruction method and limitations</summary><p data-held-out-method></p><p class="chart-note" data-held-out-note></p></details>
+  <h3>Relationships left unexplained</h3>
+  <p data-factor-fit-summary aria-live="polite"></p>
+  <p class="chart-note">Residuals compare observed relationships with the correlations reproduced by the saved oblique factor model. Positive values indicate relationships stronger than the model reproduces; negative values indicate weaker relationships. Large pairs can reveal overlapping questions or structure left unexplained.</p>
+  <div class="residual-selector"><label for="factor-residual-question">Inspect residual relationships</label><select id="factor-residual-question" data-residual-question></select></div>
+  <p class="chart-note" data-residual-selection aria-live="polite"></p>
+  <details><summary data-residual-table-summary>Expand the largest 15 residual pairs</summary><div data-residual-pairs></div></details>
+  <details data-residual-matrix-details><summary>Expand the residual heatmap</summary><p class="chart-note">Orange: positive residual; blue: negative residual. Intensity uses the largest absolute residual in this model. Diagonals are gray. The selector above provides exact values.</p><div data-residual-matrix class="residual-matrix"></div></details>
+</section>
+<script>
+  import {validateFactorDiagnostics,renderFactorDiagnostics} from '../../lib/analysis/factor-diagnostics.mjs';
+  import type {AnalysisRelease} from '../../lib/analysis/explorer.mjs';
+  const root=document.querySelector<HTMLElement>('[data-factor-diagnostics]');
+  if(root)document.addEventListener('analysis-release-ready',async event=>{
+    const detail=(event as CustomEvent<{release:AnalysisRelease;supplement?:{factor_diagnostics?:unknown}}>).detail;
+    if(!detail?.release)return;
+    const data=await validateFactorDiagnostics(detail.release,detail.supplement?.factor_diagnostics);
+    if(!data)return;renderFactorDiagnostics(root,detail.release,data);root.hidden=false;
+  },{once:true});
+</script>
+<style is:global>
+  .analysis-factor-diagnostics{display:grid;gap:1rem;min-width:0}
+  .analysis-factor-diagnostics > *{min-width:0;max-width:100%}
+  .analysis-factor-diagnostics [data-held-out-folds],.analysis-factor-diagnostics [data-held-out-folds] > section{min-width:0;max-width:100%}
+  .analysis-factor-diagnostics[hidden]{display:none!important}
+  .analysis-factor-diagnostics .residual-selector{display:grid;gap:.4rem;min-width:0;max-width:32rem}
+  .analysis-factor-diagnostics .residual-selector select{min-width:0;width:100%;max-width:100%}
+  .analysis-factor-diagnostics details{padding:1rem;border:1px solid var(--corpus-line);border-radius:.6rem;min-width:0}
+  .analysis-factor-diagnostics summary{cursor:pointer;font-weight:650}
+  .analysis-factor-diagnostics .residual-matrix{overflow:auto;max-width:100%;padding-block:1rem}
+  .analysis-factor-diagnostics .residual-matrix svg{max-width:none!important;width:auto!important;max-height:none!important}
+  .analysis-factor-diagnostics svg{display:block;width:100%;height:auto;max-width:45rem}
+  .analysis-factor-diagnostics .table-scroll{overflow:auto;max-width:100%}
+</style>

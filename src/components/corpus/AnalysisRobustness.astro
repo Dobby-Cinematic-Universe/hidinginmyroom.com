@@ -1,0 +1,255 @@
+<section class="analysis-robustness" id="analysis-robustness" aria-labelledby="robustness-title" data-robustness-root>
+  <h2 id="robustness-title">How stable are these patterns?</h2>
+  <p class="intro">Compare plausible factor counts, refits on different subsets, and possible near duplicates. This checks whether patterns are sensitive to analysis choices; it does not establish a single true factor structure.</p>
+  <p data-robustness-status role="status" aria-live="polite">Waiting for the validated analysis supplement…</p>
+  <div data-robustness-content hidden>
+    <p class="release-note" data-release-note></p>
+    <section aria-labelledby="retention-title">
+      <h3 id="retention-title">Alternative factor counts</h3>
+      <p class="explanation">Convergence and admissibility matter alongside residual fit. A failed fit is shown for context and should not be treated as a usable solution.</p>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Factors</th><th scope="col">Fit status</th><th scope="col">Converged</th><th scope="col">Sample</th><th scope="col">Iterations</th><th scope="col">Heywood cases</th><th scope="col">Residual RMS</th></tr></thead><tbody data-retention-rows></tbody></table></div>
+      <div data-cross-k></div>
+    </section>
+    <details class="robustness-details">
+      <summary>Compare same factor count across refits</summary>
+      <p class="explanation">Each refit is aligned to the primary solution. Congruence compares loading patterns; score rank correlation compares recording order. Both are descriptive and can vary by axis. The full Pearson row reproduces the primary calculation; it is a baseline, not independent validation.</p>
+      <div class="table-scroll"><table class="congruence-matrix"><caption>Loading congruence after matching each refit axis to its primary-solution axis. Cells show numeric congruence; color is a visual aid, not a pass/fail grade.</caption><thead data-congruence-head></thead><tbody data-refit-rows></tbody></table></div>
+      <details class="nested-table"><summary>View factor score rank correlations</summary><p class="explanation">Spearman correlations compare the ordering of recordings between each refit and the primary solution.</p><div class="table-scroll"><table><thead data-rank-head></thead><tbody data-rank-rows></tbody></table></div></details>
+      <p data-refit-limit class="explanation" hidden></p>
+    </details>
+    <details class="robustness-details">
+      <summary>Near-duplicate transcript candidates</summary>
+      <div data-duplicate-summary></div>
+    </details>
+    <details class="robustness-details">
+      <summary>Length, date, and genre associations</summary>
+      <p class="explanation">These are descriptive associations. They can reflect recording format, topic, transcript quality, or other differences; they do not show that one feature caused a score.</p>
+      <div data-association-summary></div>
+    </details>
+    <details class="robustness-details" data-joint-trends hidden>
+      <summary>Trend sensitivity to time grouping</summary>
+      <div data-joint-summary></div>
+    </details>
+  </div>
+</section>
+
+<script>
+  import { summarizeRobustness, formatRobustnessNumber, factorNames } from '../../lib/analysis/robustness-ui.mjs';
+  import { resolveFactorDescriptions, factorDisplayLabel } from '../../lib/analysis/factor-descriptions.mjs';
+  import factorAnnotations from '../../data/analysis/factor-descriptions.json';
+  import type { RobustnessSupplement } from '../../lib/analysis/robustness-ui.mjs';
+  import type { AnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  const root = document.querySelector<HTMLElement>('[data-robustness-root]')!;
+  const status = root.querySelector<HTMLElement>('[data-robustness-status]')!;
+  const content = root.querySelector<HTMLElement>('[data-robustness-content]')!;
+  const el = (tag: string, text?: string) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; return node; };
+  const fmt = (value: unknown) => typeof value === 'number' && Number.isFinite(value) ? formatRobustnessNumber(value) : '—';
+  const titleCase = (value: string) => value.replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
+
+  function addKeyValues(host: HTMLElement, values: Array<[string, unknown]>) {
+    const list = el('dl'); list.className = 'robustness-stats';
+    for (const [label, value] of values) {
+      if (value === null || value === undefined || value === '') continue;
+      list.append(el('dt', titleCase(label)), el('dd', typeof value === 'number' ? Number.isInteger(value) ? value.toLocaleString() : fmt(value) : typeof value === 'string' || typeof value === 'boolean' ? String(value) : JSON.stringify(value)));
+    }
+    host.append(list);
+  }
+
+  function numericLeaves(value: unknown, prefix = '', out: Array<[string, number]> = [], limit = 120): Array<[string, number]> {
+    if (out.length >= limit || value === null || value === undefined) return out;
+    if (typeof value === 'number' && Number.isFinite(value)) { out.push([prefix || 'Value', value]); return out; }
+    if (Array.isArray(value)) { value.slice(0, limit).forEach((child, i) => numericLeaves(child, `${prefix || 'Item'} ${i + 1}`, out, limit)); return out; }
+    if (typeof value === 'object') for (const [key, child] of Object.entries(value as Record<string, unknown>)) numericLeaves(child, prefix ? `${prefix} · ${titleCase(key)}` : titleCase(key), out, limit);
+    return out;
+  }
+
+  function addNumericDisclosure(host: HTMLElement, label: string, value: unknown, caption: string) {
+    const details = el('details') as HTMLDetailsElement; details.className = 'nested-table';
+    details.append(el('summary', label));
+    const note = el('p', caption); note.className = 'explanation'; details.append(note);
+    details.addEventListener('toggle', () => {
+      if (!details.open || details.dataset.rendered === 'true') return;
+      details.dataset.rendered = 'true';
+      const rows = numericLeaves(value);
+      if (!rows.length) { details.append(el('p', 'No numeric values were reported for this section.')); return; }
+      const table = el('table'), head = el('thead'), hr = el('tr'), body = el('tbody');
+      hr.append(el('th', 'Measure'), el('th', 'Estimate')); head.append(hr);
+      for (const [name, estimate] of rows) { const tr = el('tr'); tr.append(el('th', name), el('td', fmt(estimate))); body.append(tr); }
+      table.append(head, body); const scroll = el('div'); scroll.className = 'table-scroll'; scroll.append(table); details.append(scroll);
+      if (rows.length >= 120) details.append(el('p', 'Showing the first 120 numeric values.'));
+    });
+    host.append(details);
+  }
+
+  async function render(supplement: RobustnessSupplement, eventRelease: AnalysisRelease, jointTrends?: Record<string, unknown>) {
+    const data = summarizeRobustness(supplement);
+    if (!data || !eventRelease.corpus_release_id || data.corpusReleaseId !== eventRelease.corpus_release_id) {
+      content.hidden = true; status.textContent = 'The robustness supplement is unavailable or belongs to a different corpus release.'; return;
+    }
+    const descriptions = await resolveFactorDescriptions(eventRelease, factorAnnotations);
+    status.textContent = ''; status.hidden = true; content.hidden = false;
+    root.querySelector<HTMLElement>('[data-release-note]')!.textContent = `Release-matched supplementary analyses for corpus release ${data.corpusReleaseId}. The primary solution uses ${data.factorCount ?? 'an unreported number of'} factors.`;
+
+    const retentionBody = root.querySelector<HTMLTableSectionElement>('[data-retention-rows]')!; retentionBody.replaceChildren();
+    const crossHost = root.querySelector<HTMLElement>('[data-cross-k]')!; crossHost.replaceChildren();
+    for (const fit of data.fits) {
+      const tr = el('tr');
+      const values = [fit.factorCount ?? '—', fit.status, fit.converged ? 'Yes' : 'No', fit.n ?? '—', fit.iterations ?? '—', fit.heywoodCases ?? '—', fmt(fit.residualRms)];
+      values.forEach((value, index) => tr.append(index === 0 ? Object.assign(el('th', String(value)), { scope: 'row' }) : el('td', String(value))));
+      retentionBody.append(tr);
+      if (fit.crossK) renderCrossK(crossHost, fit.factorCount, fit.crossK);
+    }
+    if (!data.fits.length) { const tr = el('tr'), td = el('td', 'No alternative fits were reported.'); td.setAttribute('colspan', '7'); tr.append(td); retentionBody.append(tr); }
+
+    const factorCount = Math.max(0, ...data.sameK.map(refit => Math.max(refit.congruence.length, refit.scoreRank.length)));
+    const axisIds = factorNames(Array.from({ length: factorCount }, (_, index) => `F${index + 1}`));
+    const axisLabels = axisIds.map((id) => {
+      const factor = eventRelease.analysis?.factors?.find(item => item.id === id);
+      return factor ? factorDisplayLabel(factor, descriptions) : id;
+    });
+    const congruenceHead = root.querySelector<HTMLTableSectionElement>('[data-congruence-head]')!; congruenceHead.replaceChildren();
+    const congruenceHeader = el('tr'); congruenceHeader.append(el('th', 'Refit'));
+    for (const label of axisLabels) { const th = el('th', label); th.setAttribute('scope', 'col'); congruenceHeader.append(th); }
+    congruenceHeader.append(el('th', 'n')); congruenceHead.append(congruenceHeader);
+    const rankHead = root.querySelector<HTMLTableSectionElement>('[data-rank-head]')!; rankHead.replaceChildren();
+    const rankHeader = el('tr'); rankHeader.append(el('th', 'Refit'));
+    for (const label of axisLabels) { const th = el('th', label); th.setAttribute('scope', 'col'); rankHeader.append(th); }
+    rankHeader.append(el('th', 'n')); rankHead.append(rankHeader);
+    const refitBody = root.querySelector<HTMLTableSectionElement>('[data-refit-rows]')!; refitBody.replaceChildren();
+    const rankBody = root.querySelector<HTMLTableSectionElement>('[data-rank-rows]')!; rankBody.replaceChildren();
+    for (const refit of data.sameK.slice(0, 100)) {
+      const row = el('tr'), rankRow = el('tr'); row.append(el('th', `${titleCase(refit.key)} · ${refit.status}`)); rankRow.append(el('th', titleCase(refit.key)));
+      axisIds.forEach((id, index) => {
+        const value = refit.congruence[index], cell = el('td', fmt(value)); cell.setAttribute('aria-label', `${id} loading congruence: ${fmt(value)}`);
+        if (value != null) cell.style.backgroundColor = `color-mix(in srgb, var(--corpus-accent) ${Math.max(0, Math.min(1, value)) * 32}%, var(--corpus-bg))`;
+        row.append(cell); const rank = el('td', fmt(refit.scoreRank[index])); rank.setAttribute('aria-label', `${id} score rank correlation: ${fmt(refit.scoreRank[index])}`); rankRow.append(rank);
+      });
+      row.append(el('td', String(refit.n ?? '—'))); rankRow.append(el('td', String(refit.n ?? '—')));
+      refitBody.append(row); rankBody.append(rankRow);
+    }
+    const refitLimit = root.querySelector<HTMLElement>('[data-refit-limit]')!;
+    refitLimit.hidden = data.sameK.length <= 100;
+    refitLimit.textContent = `Showing 100 of ${data.sameK.length} refits. The remaining results are omitted from this view.`;
+    if (!data.sameK.length) { const tr = el('tr'), td = el('td', 'No same-count refits were reported.'); td.setAttribute('colspan', String(axisIds.length + 2)); tr.append(td); refitBody.append(tr); }
+    if (axisLabels.some(label => label.includes('(provisional)'))) root.querySelector<HTMLElement>('.congruence-matrix caption')!.textContent += ' Factor descriptions are provisional summaries of this fitted solution.';
+
+    const duplicateHost = root.querySelector<HTMLElement>('[data-duplicate-summary]')!; duplicateHost.replaceChildren();
+    if (data.duplicates) {
+      addKeyValues(duplicateHost, [['Method', data.duplicates.method], ['Eligible recordings', data.duplicates.eligibleRecordings], ['Candidate pairs', data.duplicates.pairCount], ['Candidate clusters', data.duplicates.clusterCount], ['Largest cluster', data.duplicates.largestCluster], ['Recordings in candidate clusters', data.duplicates.recordingsInClusters]]);
+      if (isRecord(data.duplicates.thresholds)) addKeyValues(duplicateHost, Object.entries(data.duplicates.thresholds));
+      addKeyValues(duplicateHost, [['Median candidate containment', data.duplicates.medianContainment], ['Representative rule', data.duplicates.definition]]);
+      if (data.duplicates.interpretation) duplicateHost.append(el('p', data.duplicates.interpretation));
+      duplicateHost.prepend(el('p', 'These are threshold-based text similarity candidates, not verified duplicate recordings or identity matches.'));
+      if (data.duplicates.limitations) duplicateHost.append(el('p', data.duplicates.limitations));
+    } else duplicateHost.append(el('p', 'Near-duplicate analysis was not reported.'));
+
+    const associationHost = root.querySelector<HTMLElement>('[data-association-summary]')!; associationHost.replaceChildren();
+    if (data.associations) {
+      if (data.associations.caveat) associationHost.append(el('p', data.associations.caveat));
+      if (data.associations.byFactor) {
+        for (const [label, key] of [['Length associations by factor', 'length'], ['Date associations by factor', 'date_year']] as Array<[string, string]>) {
+          const values = Object.fromEntries(Object.entries(data.associations.byFactor).flatMap(([factor, item]) => isRecord(item) && item[key] !== undefined ? [[factor, item[key]]] : []));
+          addNumericDisclosure(associationHost, label, values, `Descriptive estimates from the offline analysis. ${data.associations.method}.`);
+        }
+        if (data.associations.genreMeans !== undefined) addNumericDisclosure(associationHost, 'Genre group means by factor', data.associations.genreMeans, `Descriptive group averages; genre groups may differ in size and composition. ${data.associations.method}.`);
+      } else {
+        for (const [label, value] of [['Length associations', data.associations.length], ['Date associations', data.associations.dateYear], ['Genre associations', data.associations.genre]] as Array<[string, unknown]>) addNumericDisclosure(associationHost, label, value, `Descriptive estimates from the offline analysis. ${data.associations.method}.`);
+      }
+    } else associationHost.append(el('p', 'Length, date, and genre associations were not reported.'));
+
+    const jointDetails = root.querySelector<HTMLDetailsElement>('[data-joint-trends]')!; const jointHost = root.querySelector<HTMLElement>('[data-joint-summary]')!; jointHost.replaceChildren();
+    jointDetails.hidden = !jointTrends;
+    if (jointTrends) renderJointTrends(jointHost, jointTrends);
+  }
+
+  function isRecord(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+  function periodRows(value: unknown): Array<{period:string;data:Record<string,unknown>}> {
+    if (Array.isArray(value)) return value.flatMap((entry,index) => isRecord(entry) ? [{period:String(entry.period ?? entry.label ?? index + 1),data:entry}] : []);
+    if (isRecord(value)) return Object.entries(value).filter(([,entry]) => isRecord(entry)).map(([period,data]) => ({period,data: data as Record<string,unknown>}));
+    return [];
+  }
+  function renderJointTrends(host: HTMLElement, joint: Record<string,unknown>) {
+    const methods = isRecord(joint.methods) ? joint.methods : {};
+    const methodSpecs = [
+      ['month_cluster','Month-cluster bootstrap'],
+      ['adjacent_month_blocks_3','Three observed-month blocks'],
+    ] as const;
+    const methodsTable = el('table'), methodHead = el('thead'), header = el('tr'), body = el('tbody');
+    for (const label of ['Time grouping', 'Requested refits', 'Successful proper refits', 'Failed refits', 'Dated months']) header.append(el('th',label)); methodHead.append(header);
+    let anyMethod = false;
+    for (const [key,label] of methodSpecs) {
+      const method = methods[key]; if (!isRecord(method)) continue; anyMethod = true;
+      const row = el('tr'), months = finiteNumber(method.distinct_dated_months) ? method.distinct_dated_months : null;
+      row.append(el('th',label),el('td',fmt(method.requested_refits)),el('td',fmt(method.successful_proper_converged_refits)),el('td',fmt(method.failed_refits)),el('td',fmt(months))); body.append(row);
+    }
+    if (anyMethod) { methodsTable.append(methodHead,body);const scroll=el('div');scroll.className='table-scroll';scroll.append(methodsTable);host.append(scroll); }
+    const note = typeof joint.interpretation === 'string' ? joint.interpretation : typeof joint.note === 'string' ? joint.note : 'These fixed-cohort model-fit stability bands compare time resampling schemes. They are not sampling confidence intervals or causal estimates.';
+    host.append(el('p',note));
+    for (const [key,label] of methodSpecs) {
+      const method=methods[key];if(!isRecord(method))continue;
+      const details=el('details') as HTMLDetailsElement;details.className='nested-table';details.append(el('summary',`${label}: inspect period estimates`));
+      const periods=isRecord(method.periods)?method.periods:{};
+      const timeSelect=el('select') as HTMLSelectElement;timeSelect.setAttribute('aria-label',`${label} period grouping`);
+      const available=['monthly','yearly'].filter(name=>periods[name]!==undefined);
+      for(const name of available){const option=el('option',titleCase(name)) as HTMLOptionElement;option.value=name;timeSelect.append(option);}
+      const factorSelect=el('select') as HTMLSelectElement;factorSelect.setAttribute('aria-label',`${label} factor`);
+      const current=periodRows(periods[available[0]??'']);const firstFactors=isRecord(current[0]?.data.factors)?current[0].data.factors:{};
+      const factorIds=Object.keys(firstFactors);
+      for(const id of factorIds){const option=el('option',id) as HTMLOptionElement;option.value=id;factorSelect.append(option);}
+      const controls=el('div');controls.className='period-controls';
+      const timeLabel=el('label','Grouping ');timeLabel.append(timeSelect);const factorLabel=el('label','Factor ');factorLabel.append(factorSelect);controls.append(timeLabel,factorLabel);details.append(controls);
+      const table=el('table'),thead=el('thead'),hr=el('tr'),tbody=el('tbody');
+      for(const name of ['Period','Recordings','Mean score','Lower bound','Upper bound','Refit status','Aligned refits'])hr.append(el('th',name));thead.append(hr);table.append(thead,tbody);const scroll=el('div');scroll.className='table-scroll';scroll.append(table);details.append(scroll);
+      const update=()=>{tbody.replaceChildren();const rows=periodRows(periods[timeSelect.value]),fid=factorSelect.value;for(const item of rows){const factor=isRecord(item.data.factors)&&isRecord(item.data.factors[fid])?item.data.factors[fid] as Record<string,unknown>:{};const tr=el('tr');for(const value of [item.period,fmt(item.data.n),fmt(factor.mean),fmt(factor.low),fmt(factor.high),String(factor.status??'—'),fmt(factor.aligned_refits)])tr.append(el('td',String(value)));tbody.append(tr);}};
+      timeSelect.addEventListener('change',update);factorSelect.addEventListener('change',update);details.addEventListener('toggle',()=>{if(details.open&&details.dataset.loaded!=='yes'){details.dataset.loaded='yes';update();}});host.append(details);
+    }
+    if (!anyMethod) host.append(el('p','No validated time-grouping sensitivity summaries were reported.'));
+  }
+  function finiteNumber(value:unknown):value is number{return typeof value==='number'&&Number.isFinite(value);}
+  function renderCrossK(host: HTMLElement, factorCount: number | null, comparison: Record<string, unknown>) {
+    const details = el('details') as HTMLDetailsElement; details.className = 'nested-table';
+    details.append(el('summary', `Cross-count loading similarity for ${factorCount ?? 'alternative'} factors`));
+    const interpretation = typeof comparison.interpretation === 'string' ? ` ${comparison.interpretation}` : '';
+    const method = typeof comparison.method === 'string' ? `${comparison.method}. ` : '';
+    details.append(el('p', `${method}Absolute loading cosine uses a one-to-one descriptive match between axes from different factor counts. It is not factor congruence, factor-count validation, or evidence that the axes are equivalent.${interpretation}`));
+    const matches = Array.isArray(comparison.matches) ? comparison.matches.filter(isRecord).slice(0, 12) : [];
+    if (matches.length) {
+      const table = el('table'), head = el('thead'), hr = el('tr'), body = el('tbody'); hr.append(el('th', 'Primary axis'), el('th', 'Alternative axis'), el('th', 'Absolute loading cosine')); head.append(hr);
+      for (const match of matches) { const tr = el('tr'); tr.append(el('td', String(match.reference_factor ?? '—')), el('td', String(match.candidate_axis ?? '—')), el('td', fmt(match.absolute_loading_cosine))); body.append(tr); }
+      table.append(head, body); const scroll = el('div'); scroll.className = 'table-scroll'; scroll.append(table); details.append(scroll);
+    } else details.append(el('p', 'No cross-count matches were reported.'));
+    const unmatchedPrimary = Array.isArray(comparison.unmatched_reference_factors) ? comparison.unmatched_reference_factors.join(', ') : '';
+    const unmatchedAlternative = Array.isArray(comparison.unmatched_candidate_axes) ? comparison.unmatched_candidate_axes.join(', ') : '';
+    if (unmatchedPrimary || unmatchedAlternative) details.append(el('p', `Unmatched primary axes: ${unmatchedPrimary || 'none reported'}. Unmatched alternative axes: ${unmatchedAlternative || 'none reported'}.`));
+    host.append(details);
+  }
+
+  document.addEventListener('analysis-release-ready', event => {
+    const detail = (event as CustomEvent<{release?: AnalysisRelease; supplement?: {robustness?: RobustnessSupplement; joint_trends?: Record<string, unknown>}}>).detail;
+    if (!detail?.supplement?.robustness || !detail.release) { status.textContent = 'No validated robustness supplement is available for this release.'; return; }
+    render(detail.supplement.robustness, detail.release, detail.supplement.joint_trends);
+  });
+</script>
+
+<style is:global>
+  .analysis-robustness{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;min-width:0;max-width:100%}
+  .analysis-robustness>[data-robustness-content]{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .analysis-robustness .period-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));align-items:end;gap:.75rem;min-width:0}
+  .analysis-robustness .period-controls label{display:grid;gap:.35rem;min-width:0;font-size:.85rem;color:var(--corpus-muted)}
+  .analysis-robustness .period-controls select{width:100%;min-width:0}
+  .analysis-robustness select{max-width:100%;padding:.5rem;color:var(--corpus-text);background:var(--corpus-bg);border:1px solid var(--corpus-line);border-radius:.35rem;font:inherit}
+  .analysis-robustness .intro,.analysis-robustness .explanation{color:var(--corpus-muted);max-width:78ch}
+  .analysis-robustness section{min-width:0}
+  .analysis-robustness details{border:1px solid var(--corpus-line);border-radius:.45rem;background:var(--corpus-panel);padding:.65rem .8rem}
+  .analysis-robustness summary{cursor:pointer;font-weight:650}
+  .analysis-robustness details[open]>summary{margin-bottom:.8rem}
+  .analysis-robustness .table-scroll{max-width:100%;overflow:auto;margin:.6rem 0 1rem}
+  .analysis-robustness table{border-collapse:collapse;width:100%;font-size:.92rem}
+  .analysis-robustness th,.analysis-robustness td{padding:.4rem .55rem;border:1px solid var(--corpus-line);text-align:left;vertical-align:top}
+  .analysis-robustness tbody th{font-weight:600}
+  .analysis-robustness .nested-table{margin:.65rem 0}
+  .analysis-robustness .robustness-stats{display:grid;grid-template-columns:minmax(12rem,1fr) 2fr;gap:.25rem .8rem}
+  .analysis-robustness .robustness-stats dt{font-weight:650}
+  .analysis-robustness .robustness-stats dd{margin:0;overflow-wrap:anywhere}
+  @media(max-width:40rem){.analysis-robustness .robustness-stats{grid-template-columns:1fr}.analysis-robustness .robustness-stats dd{margin:0 0 .5rem}}
+</style>

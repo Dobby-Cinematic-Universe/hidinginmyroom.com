@@ -1,7 +1,14 @@
 import {spawnSync} from 'node:child_process';
-import {cp,readFile} from 'node:fs/promises';
+import {cp,readFile,lstat} from 'node:fs/promises';
 const run=(cmd,args,env={})=>{const p=spawnSync(cmd,args,{stdio:'inherit',env:{...process.env,...env}});if(p.status!==0)process.exit(p.status||1);};
 run('python3',['scripts/release-bundle.py','restore']);
+let analysisManifest;
+try { analysisManifest=await lstat('analysis-release.json'); }
+catch(error) { if(error.code!=='ENOENT')throw error; }
+if(analysisManifest){
+  if(!analysisManifest.isFile()||analysisManifest.isSymbolicLink())throw Error('Invalid analysis release manifest');
+  run('python3',['scripts/analysis-release-bundle.py','restore']);
+}
 run(process.execPath,['scripts/check-pages-corpus.mjs']);
 run('npm',['run','check']);
 const manifest=JSON.parse(await readFile('corpus-release.json','utf8'));

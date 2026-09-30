@@ -1,0 +1,46 @@
+---
+import AnalysisChartFrame from './AnalysisChartFrame.astro';
+---
+<section id="analysis-passage-insights" data-analysis-passage-insights class="analysis-passage-insights" aria-labelledby="passage-insights-heading" hidden>
+  <h2 id="passage-insights-heading">Inside recordings: variation and ambiguity</h2>
+  <p>Find recordings whose average conceals changes across passages, then inspect the passages with the lowest and highest expected scores.</p>
+  <div class="insights-controls">
+    <label>Question <select data-insights-question></select></label>
+    <label>Rank by <select data-insights-metric><option value="sd">Passage variability</option><option value="delta">Absolute end-to-start change</option><option value="adjacent">Adjacent passage change</option></select></label>
+    <label>Recording category <select data-insights-category><option value="">All categories</option></select></label>
+    <label>Minimum scored passages <select data-insights-minimum><option value="3">3</option><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></label>
+  </div>
+  <p data-insights-summary aria-live="polite"></p>
+  <AnalysisChartFrame label="Passage variability distribution" minWidth="40rem"><div data-insights-plot></div></AnalysisChartFrame>
+  <details><summary>Expand recording rankings and passage links</summary><div class="table-scroll" data-insights-ranks></div></details>
+  <p class="chart-note">Means and passage variability use word-count weights, differing from the original recording averages’ character weights. Rankings include every recording with at least three scored passages. Unequal chunk lengths, missing passages, and topic changes affect these descriptive comparisons.</p>
+  <h3>Ambiguity and coverage</h3>
+  <label>Compare by <select data-insights-dimension><option value="all">Whole archive</option><option value="year">Year</option><option value="genre">Recording category</option><option value="quality">Transcript quality rating</option></select></label>
+  <div class="table-scroll" data-insights-dashboard></div>
+  <details><summary>How to read these diagnostics</summary>
+    <p>Model entropy ranges from 0 (one rating receives all probability) to 1 (equal probability across all five ratings). Model variance describes the spread of the returned rating distribution in squared score units. Passage variance describes differences among passage expected scores within recordings. Ambiguity does not measure rating accuracy.</p>
+    <p>Entropy and model variance pool available distributions using passage word counts. Passage variance averages recording variances equally, using recordings with at least two scored passages. Coverage counts scored passages out of all passages. Insufficient means the applicability gate prevented rating; missing means a passage was applicable but lacked a numeric value. Category and transcript quality groups use the model’s recording-level classifications.</p>
+  </details>
+</section>
+<script>
+  import { validatePassageInsights,renderPassageInsights } from '../../lib/analysis/passage-insights.mjs';
+  import type { AnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  const root=document.querySelector<HTMLElement>('[data-analysis-passage-insights]');
+  if(root)document.addEventListener('analysis-release-ready',async(event)=>{
+    const detail=(event as CustomEvent<{release:AnalysisRelease;supplement?:{passage_insights?:unknown}}>).detail;
+    if(!detail?.release||!detail.supplement?.passage_insights)return;
+    const data=await validatePassageInsights(detail.supplement.passage_insights,detail.release);
+    if(data)renderPassageInsights(root,detail.release,data);
+  },{once:true});
+</script>
+<style is:global>
+  .analysis-passage-insights{display:grid;gap:1rem;min-width:0}
+  .analysis-passage-insights[hidden]{display:none!important}
+  .analysis-passage-insights .insights-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));align-items:end;gap:1rem;min-width:0}
+  .analysis-passage-insights label{display:grid;gap:.35rem;min-width:0}
+  .analysis-passage-insights select{width:100%;min-width:0;max-width:100%}
+  .analysis-passage-insights > label{max-width:30rem}
+  .analysis-passage-insights details{padding:.75rem;border:1px solid var(--corpus-line);border-radius:.5rem;min-width:0}
+  .analysis-passage-insights summary{cursor:pointer;font-weight:650}
+  .analysis-passage-insights svg{display:block;width:100%;height:auto}
+</style>

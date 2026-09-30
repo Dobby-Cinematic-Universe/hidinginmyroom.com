@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "type": "transcript-analysis",
+  "sha256": "a95dd9bde57c2b9bdd7efbf036237a02ee300f91ef97b71740f89da71615a527",
+  "bytes": 27025909,
+  "unpacked_bytes": 323099345,
+  "files": 4043,
+  "corpus_release": "release_3340f5629ddf5664f4dd749d",
+  "questionnaire_version": "himr-transcript-analysis-questions-v1",
+  "model": "jev-1.13.0",
+  "source_generated_at": "2026-09-30T19:32:42.746048+00:00",
+  "scored_recordings": 4034,
+  "scored_passages": 13589,
+  "loadings_sha256": "59b4b3ee6ca461a1f6d005b9ec7948abcd6716f75b6545fc5d4fd8b5fed158da",
+  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/a95dd9bde57c2b9bdd7efbf036237a02ee300f91ef97b71740f89da71615a527.tar.gz"
+}

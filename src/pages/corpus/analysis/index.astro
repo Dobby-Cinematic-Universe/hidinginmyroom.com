@@ -1,0 +1,20 @@
+---
+import AnalysisExplorer from '../../../components/corpus/AnalysisExplorer.astro';
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import { loadAnalysisRelease } from '../../../lib/analysis/release';
+const release = await loadAnalysisRelease();
+---
+<CorpusLayout title="Transcript scoring and dimensions | HIMR" description="Explore transcript-based model scores, temporal patterns, question correlations, and exploratory dimensions across public recordings.">
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb"><a href="/corpus/">Corpus</a><span aria-hidden="true">/</span><span aria-current="page">Transcript analysis</span></nav>
+  <header class="analysis-header">
+    <p class="corpus-eyebrow">Transcript research explorer</p>
+    <h1>Explore the scored archive</h1>
+    <p>Rank recordings by a dimension, explore their similarities, and follow patterns over time. Each recording links to its source passages.</p>
+    <div class="analysis-actions"><a href="/corpus/analysis/methods/">Methods and interpretation</a></div>
+  </header>
+  {release && <dl class="analysis-summary"><div><dt>Scored recordings</dt><dd>{release.coverage.scored_recordings.toLocaleString()}</dd><small>of {release.coverage.total_recordings.toLocaleString()} in this release</small></div><div><dt>Scored passages</dt><dd>{release.coverage.scored_chunks.toLocaleString()}</dd><small>source-linked transcript chunks</small></div><div><dt>Scoring questions</dt><dd>{release.questions.length.toLocaleString()}</dd><small>ratings and classifications</small></div><div><dt>Exploratory factors</dt><dd>{release.analysis.factors.length.toLocaleString()}</dd><small>fitted across {release.analysis.n.toLocaleString()} recordings</small></div></dl>}
+  <AnalysisExplorer />
+</CorpusLayout>
+<style>
+  .analysis-header{max-width:62rem;padding-block:.4rem .7rem}.analysis-header h1{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.08;letter-spacing:-.04em;margin-block:.45rem .65rem}.analysis-header>p:last-of-type{max-width:75ch;color:var(--corpus-muted);font-size:.95rem;line-height:1.55;margin-block:.5rem}.analysis-actions{display:flex;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:.45rem;font-size:.85rem}.analysis-actions a{color:var(--corpus-accent)}.analysis-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin:0 0 .8rem}.analysis-summary div{padding:.65rem .8rem;border:1px solid var(--corpus-line);border-radius:.5rem;background:var(--corpus-panel);min-width:0}.analysis-summary dt{font-size:.7rem;color:var(--corpus-muted)}.analysis-summary dd{margin:.2rem 0;font-size:1.35rem;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}.analysis-summary small{display:block;color:var(--corpus-muted);font-size:.72rem}@media(max-width:40rem){.analysis-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-summary div{padding:.6rem .7rem}.analysis-header{padding-top:0}}
+</style>

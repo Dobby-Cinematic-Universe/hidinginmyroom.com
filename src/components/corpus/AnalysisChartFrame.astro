@@ -1,0 +1,34 @@
+---
+interface Props { label: string; minWidth?: string }
+const { label, minWidth = '44rem' } = Astro.props;
+---
+<div class="analysis-chart" data-analysis-chart style={`--analysis-chart-min:${minWidth}`}>
+  <div class="analysis-chart-toolbar">
+    <span data-chart-size-note aria-live="polite">Scroll the chart horizontally to see all values.</span>
+    <button type="button" data-chart-fit-toggle aria-pressed="false" aria-label={`${label}: fit whole chart`} title="Toggle between readable size and fitting the whole chart">Fit whole chart</button>
+  </div>
+  <div class="analysis-chart-frame" role="region" aria-label={label} tabindex="0"><slot /></div>
+</div>
+<script>
+  for (const chart of document.querySelectorAll<HTMLElement>('[data-analysis-chart]')) {
+    const toggle = chart.querySelector<HTMLButtonElement>('[data-chart-fit-toggle]')!;
+    const note = chart.querySelector<HTMLElement>('[data-chart-size-note]')!;
+    toggle.addEventListener('click', () => {
+      const fit = chart.classList.toggle('is-fit');
+      toggle.setAttribute('aria-pressed', String(fit));
+      note.textContent = fit ? 'Whole chart fitted; labels are smaller. Turn off Fit whole chart for readable size.' : 'Scroll the chart horizontally to see all values.';
+    });
+  }
+</script>
+<style is:global>
+  .analysis-explorer .analysis-chart{min-width:0;max-width:100%}
+  .analysis-explorer .analysis-chart:has(svg[hidden]){display:none}
+  .analysis-explorer .analysis-chart-frame{min-width:0;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;border-radius:.4rem}
+  .analysis-explorer .analysis-chart-frame svg{min-width:var(--analysis-chart-min);max-height:none}
+  .analysis-explorer .analysis-chart.is-fit .analysis-chart-frame svg{min-width:0}
+  .analysis-explorer .analysis-chart-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.65rem;font-size:.8rem;color:var(--corpus-muted)}
+  .analysis-explorer .analysis-chart-toolbar button{min-height:2.75rem;padding:.5rem .65rem;border:1px solid var(--corpus-line);border-radius:.35rem;background:var(--corpus-bg);color:var(--corpus-accent);cursor:pointer}
+  .analysis-explorer .analysis-chart-toolbar button[aria-pressed="true"]{border-color:var(--corpus-accent);background:var(--corpus-panel)}
+  .analysis-explorer .analysis-chart-frame:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:2px}
+  @media(min-width:56rem){.analysis-explorer .analysis-chart-toolbar{display:none}}
+</style>

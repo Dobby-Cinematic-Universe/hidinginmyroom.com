@@ -6,6 +6,17 @@
 /.cache/
 /.wrangler/
 /.release-data/
+# Approved scoring data is restored from the pinned analysis bundle at build time.
+/src/data/analysis/release.json
+/src/data/analysis/extended-robustness.json
+/src/data/analysis/joint-trends.json
+/src/data/analysis/map-diagnostics.json
+/src/data/analysis/recording-discovery.json
+/src/data/analysis/recording-umap.json
+/src/data/analysis/passage-insights.json
+/src/data/analysis/factor-diagnostics.json
+/src/data/analysis/temporal-comparisons.json
+/src/data/analysis/passages/
 /coverage/
 *.tsbuildinfo
 *.log

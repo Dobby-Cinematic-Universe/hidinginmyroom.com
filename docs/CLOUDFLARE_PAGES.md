@@ -64,6 +64,22 @@ The R2 bucket `himr-corpus-releases` is private. The read-only Worker in
 `workers/release-assets` serves only content-addressed approved bundles. No storage
 credentials are provided to Pages. Python 3 and Node 22 are required by this build.
 
+Transcript scoring is pinned independently in `analysis-release.json`. When this
+manifest is present, the build restores its approved analysis bundle after the
+corpus bundle. It verifies the archive inventory, hashes, corpus identity,
+questionnaire, model, factor solution and every recording's passage scores before
+building. An invalid analysis manifest stops deployment. Existing commits without
+an analysis pin retain their original build behavior.
+
+Prepare this bundle with `python3 scripts/analysis-release-bundle.py pack --source
+<approved-analysis-directory> --output <fresh-output-directory>`. Upload the archive
+to the same content-addressed `releases/<sha256>.tar.gz` prefix, verify a remote
+restore, then commit only the small manifest and frontend source. Generated analysis
+JSON is ignored; authored questions and factor descriptions remain in Git. Analysis
+releases preserve the existing corpus pin and cached search. Publication must check
+the complete restored build against the 20,000-file and 25 MiB per-file Pages limits;
+passage responses are grouped into bounded static shards to stay within those limits.
+
 Frontend changes reuse the pinned bundle. For corpus changes, prepare and validate
 a new candidate, then package it with `scripts/release-bundle.py pack --candidate
 <candidate> --search <cached-search-directory> --output <output-directory>`.

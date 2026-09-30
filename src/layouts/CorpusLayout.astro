@@ -55,6 +55,7 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
           <a href="/corpus/" aria-current={Astro.url.pathname === '/corpus/' ? 'page' : undefined}>Corpus</a>
           <a href="/corpus/browse/1/" aria-current={Astro.url.pathname.startsWith('/corpus/browse/') ? 'page' : undefined}>Browse</a>
           <a href="/corpus/summaries/" aria-current={Astro.url.pathname.startsWith('/corpus/summaries/') ? 'page' : undefined}>Summaries</a>
+          <a href="/corpus/analysis/" aria-current={Astro.url.pathname.startsWith('/corpus/analysis/') ? 'page' : undefined}>Text analysis</a>
           {(isLocalPreview || import.meta.env.PUBLIC_RAG_ENABLED==='true') && <a href="/corpus/ask/" aria-current={Astro.url.pathname === '/corpus/ask/' ? 'page' : undefined}>{isLocalPreview?'Ask (pilot)':'Ask'}</a>}
           <a href="/corpus/graph/" aria-current={/^\/corpus\/(graph|entities|events|event-groups)\//.test(Astro.url.pathname) ? 'page' : undefined}>Entities &amp; events</a>
           <a href="/wiki/">Reviewed wiki</a>

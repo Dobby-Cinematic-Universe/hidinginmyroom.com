@@ -1,0 +1,64 @@
+---
+import AnalysisChartFrame from './AnalysisChartFrame.astro';
+---
+<section id="analysis-discovery" class="analysis-discovery" data-analysis-discovery aria-labelledby="discovery-heading" hidden>
+  <h2 id="discovery-heading">Explore recording profiles</h2>
+  <p>Find recordings with similar combinations of factor scores and inspect the passages behind their ratings.</p>
+  <p data-discovery-summary class="chart-note" aria-live="polite"></p>
+  <div class="discovery-controls">
+    <label>Find a recording <input type="search" data-discovery-search placeholder="Title, year, or category" /></label>
+    <label>Selected recording <select data-discovery-recording></select></label>
+    <label for="recording-map-view">Map view <select id="recording-map-view" data-discovery-view><option value="pca">PCA · broad variation</option><option value="umap" disabled>UMAP · local neighborhoods</option></select></label>
+    <label>Color points by <select data-discovery-color><option value="year">Year</option><option value="category">Category</option></select></label>
+  </div>
+  <p class="chart-note" data-discovery-result-count role="status" aria-live="polite"></p>
+  <p class="chart-note">Search narrows the recording selector. The map continues to display the complete analysis cohort.</p>
+  <AnalysisChartFrame label="Recording profile map" minWidth="45rem"><div class="discovery-map" data-discovery-map></div></AnalysisChartFrame>
+  <div class="discovery-legend" data-discovery-legend></div>
+  <p class="chart-note">Select a recording above or click a map point. Similar-recording lists always use all nine standardized factor dimensions, not distances in either map. Changing the map preserves your selection and neighbors. Visual groups do not establish personality types or verified categories.</p>
+  <p class="chart-note" data-discovery-selection role="status" aria-live="polite"></p>
+  <div class="discovery-detail" data-discovery-detail></div>
+  <details><summary>Map methods and projection details</summary><p>Correlated factors receive separate equal weight in the full-profile distances. The maps are views of those saved ratings, not new factor models.</p><h4>PCA variance retained</h4><div class="discovery-table-scroll" data-discovery-variance></div><h4>UMAP settings</h4><p data-discovery-umap-method>UMAP is unavailable for this release; PCA and full-profile neighbors remain available.</p><p>UMAP is stochastic and parameter-dependent. The saved map uses a fixed seed and one computation thread for reproducibility. It is not a clustering test or a stability interval. See the <a href="https://umap-learn.readthedocs.io/en/latest/parameters.html">UMAP parameter guide</a> and <a href="https://umap-learn.readthedocs.io/en/latest/reproducibility.html">reproducibility notes</a>.</p></details>
+  <details><summary>Inspect the ten profiles farthest from the cohort center</summary><p>These are unusual combinations of saved scores. Their position may reflect subject matter, recording conditions, score ambiguity, or content; distance alone does not establish the explanation.</p><div data-discovery-outliers></div></details>
+</section>
+
+<script>
+  import { renderDiscovery, validateDiscovery } from '../../lib/analysis/discovery.mjs';
+  import { validateRecordingUmap } from '../../lib/analysis/recording-umap.mjs';
+  import type { AnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  import factorAnnotations from '../../data/analysis/factor-descriptions.json';
+  import { factorDisplayLabel, resolveFactorDescriptions } from '../../lib/analysis/factor-descriptions.mjs';
+  const root = document.querySelector<HTMLElement>('[data-analysis-discovery]');
+  if (root) document.addEventListener('analysis-release-ready', async event => {
+    const detail = (event as CustomEvent<{release: AnalysisRelease; supplement?: { discovery?: unknown; recording_umap?: unknown }}>).detail;
+    if (!detail?.release || !detail.supplement?.discovery) return;
+    const data = await validateDiscovery(detail.release, detail.supplement.discovery);
+    if (!data) return;
+    const umap = await validateRecordingUmap(detail.release, data, detail.supplement.recording_umap);
+    const descriptions = await resolveFactorDescriptions(detail.release, factorAnnotations);
+    const labeledRelease = { ...detail.release, analysis: { ...detail.release.analysis, factors: detail.release.analysis.factors.map(factor => ({ ...factor, label: factorDisplayLabel(factor, descriptions) })) } };
+    renderDiscovery(root, labeledRelease, data, umap);
+    root.hidden = false;
+  }, { once: true });
+</script>
+
+<style is:global>
+  .analysis-discovery{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;min-width:0}
+  .analysis-discovery[hidden]{display:none!important}
+  .analysis-discovery .discovery-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));align-items:end;gap:1rem}
+  .analysis-discovery label{display:grid;gap:.4rem;min-width:0}
+  .analysis-discovery input,.analysis-discovery select{width:100%;min-width:0;max-width:100%}
+  .analysis-discovery svg{display:block;width:100%;height:auto;max-height:none!important;overflow:visible}
+  .analysis-discovery .discovery-map{border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);padding:.5rem}
+  .analysis-discovery .discovery-legend{display:flex;gap:.7rem;flex-wrap:wrap;font-size:.85rem}
+  .analysis-discovery .discovery-legend span{display:flex;gap:.3rem;align-items:center}
+  .analysis-discovery .discovery-legend i{width:.7rem;height:.7rem;border-radius:50%;display:inline-block}
+  .analysis-discovery .discovery-detail{padding:1rem;border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);min-width:0}
+  .analysis-discovery .discovery-detail>a{margin-right:1rem}
+  .analysis-discovery li{margin-block:.5rem;overflow-wrap:anywhere}
+  .analysis-discovery li button{text-align:left;white-space:normal;height:auto}
+  .analysis-discovery details{padding:.75rem;border:1px solid var(--corpus-line);border-radius:.5rem;min-width:0}
+  .analysis-discovery summary{cursor:pointer;font-weight:650}
+  .analysis-discovery .discovery-table-scroll{overflow:auto;max-width:100%;margin-block:.75rem}
+  .analysis-discovery .discovery-table-scroll th{white-space:normal;min-width:8rem}
+</style>

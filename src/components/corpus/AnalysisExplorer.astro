@@ -1,0 +1,507 @@
+---
+import AnalysisRelationships from './AnalysisRelationships.astro';
+import AnalysisRobustness from './AnalysisRobustness.astro';
+import AnalysisDiscovery from './AnalysisDiscovery.astro';
+import AnalysisPassageInsights from './AnalysisPassageInsights.astro';
+import AnalysisFactorDiagnostics from './AnalysisFactorDiagnostics.astro';
+import AnalysisTemporalComparisons from './AnalysisTemporalComparisons.astro';
+import AnalysisChartFrame from './AnalysisChartFrame.astro';
+---
+<section class="analysis-explorer" data-analysis-root aria-label="Transcript score explorer">
+  <p role="status" aria-live="polite" data-status>Loading the score release…</p>
+  <div data-content hidden>
+    <aside class="scope-note"><p>Scores are model judgments about transcript text; predicted reception is not an observed audience response. Open a recording's evidence to inspect its source passages.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. Classification outputs, including text-to-speech indicators, are model inferences and may be false positives; they do not independently verify audio or production methods. Short excerpts may provide especially weak evidence. Speaker labels and transcript wording may be wrong. The score ranges shown follow the release method and are not automatically statistical confidence intervals. Factor names are provisional descriptions of this fitted model.</p></details></aside>
+    <details class="section-jumps"><summary>Jump to an analysis</summary><nav class="explorer-nav" aria-label="Analysis sections">
+      <div><span>Browse and explore</span><a href="#analysis-videos">Video rankings</a><a href="#analysis-trend">Scores over time</a><a href="#analysis-discovery">Recording maps and similarity</a><a href="#analysis-relationships">Question relationships</a><a href="#analysis-map">Question map</a></div>
+      <div><span>Look more closely</span><a href="#analysis-passage-insights">Passage variability</a><a href="#analysis-temporal-comparisons">Time, genre and candidate shifts</a><a href="#analysis-correlations">Full correlations</a></div>
+      <div><span>Model and methods</span><a href="#analysis-factors">Factor loadings</a><a href="#analysis-factor-diagnostics">Residuals and dimensionality</a><a href="#analysis-robustness">Robustness</a><a href="/corpus/analysis/methods/">Methods</a></div>
+    </nav></details>
+    <section id="analysis-videos" aria-labelledby="video-scores-title"><h2 id="video-scores-title">Videos by dimension</h2>
+    <p class="chart-note">These filters apply to this table and <a href="#analysis-trend">Scores over time</a>. Other views use their own selectors and analysis cohorts.</p>
+    <form class="controls" data-controls>
+      <fieldset class="dimension-controls"><legend>Choose what to compare</legend>
+      <label>Dimension type<select name="kind"><option value="question">Numeric question</option><option value="factor">Estimated factor</option><option value="classification">Classification / yes-no</option></select></label>
+      <label>Dimension<select name="metric"></select></label>
+      </fieldset>
+      <fieldset><legend>Choose recordings</legend>
+      <label>Year<select name="year"><option value="">All years</option></select></label>
+      <label>Category<select name="category"><option value="">All categories</option></select></label>
+      <label>Find a video<input name="text" type="search" placeholder="Search title or category" /></label>
+      </fieldset>
+      <details class="dimension-explanation" data-rubric><summary data-rubric-title>Question rubric</summary><aside class="factor-description" data-factor-description hidden aria-live="polite"></aside><div data-rubric-content></div></details>
+      <div class="table-toolbar" aria-label="Table sorting and size">
+      <label>Sort<select name="sort"><option value="score">Score</option><option value="date">Recording date</option><option value="title">Title</option></select></label>
+      <label>Order<select name="direction"><option value="desc">Highest score first</option><option value="asc">Lowest score first</option></select></label>
+      <label>Rows per page<select data-page-size><option value="20" selected>20 recordings</option><option value="50">50 recordings</option><option value="100">100 recordings</option></select></label>
+      </div>
+    </form>
+      <p data-video-count role="status"></p>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Recording</th><th scope="col">Date</th><th scope="col">Recording category</th><th scope="col">Score / outcome</th><th scope="col">Range / option probabilities</th><th scope="col">Coverage</th></tr></thead><tbody data-video-rows></tbody></table></div>
+      <nav class="analysis-pager" data-pager aria-label="Score results pages" hidden><button type="button" data-prev>Previous</button><span data-page role="status"></span><button type="button" data-next>Next</button></nav>
+      <details data-selected hidden><summary data-selected-title>Selected recording evidence</summary><div data-evidence></div></details>
+    </section>
+    <section id="analysis-trend" aria-labelledby="trend-title"><h2 id="trend-title">Scores over time</h2>
+      <p class="trend-context" data-trend-context aria-live="polite"></p><a class="trend-change" href="#analysis-videos">Change dimension or filters</a>
+      <div class="trend-controls"><label for="trend-interval"><span>Time interval</span><select id="trend-interval" data-interval><option value="year">Year</option><option value="month">Month</option></select></label><label for="trend-stability" data-trend-method-control hidden><span>Factor stability method</span><select id="trend-stability" data-trend-method aria-describedby="trend-method-status"><option value="month_cluster">Whole-month resampling</option><option value="adjacent_month_blocks_3">Three observed-month blocks (sensitivity)</option></select></label></div>
+      <p id="trend-method-status" class="chart-note" data-trend-method-status hidden></p>
+      <p class="chart-note" data-trend-summary></p><p class="trend-empty" data-trend-empty role="status" hidden></p>
+      <AnalysisChartFrame label="Scores over time chart" minWidth="48rem"><svg data-trend viewBox="0 0 760 320" role="img" aria-label="Mean dimension scores over recording time"></svg></AnalysisChartFrame>
+      <details data-trend-values><summary>View all period values and recording mix</summary><div class="table-scroll"><table><thead><tr><th scope="col">Period</th><th scope="col">Mean</th><th scope="col">Range (see trend method)</th><th scope="col">Recordings</th><th scope="col">Mean coverage</th><th scope="col">Recording categories</th></tr></thead><tbody data-trend-rows></tbody></table></div></details>
+      <details><summary>Trend method, uncertainty and date coverage</summary><p class="chart-note" data-trend-note></p><p class="warning" data-date-warning></p></details>
+    </section>
+    <AnalysisDiscovery />
+    <AnalysisRelationships />
+    <section id="analysis-map" aria-labelledby="mds-title"><h2 id="mds-title">Question map</h2><p class="chart-note" data-mds-note></p><AnalysisChartFrame label="Question map" minWidth="48rem"><svg data-mds viewBox="0 0 760 600" role="img" aria-label="Two-dimensional map of question short names"></svg></AnalysisChartFrame><ul class="mds-legend" data-mds-legend aria-label="Question domain colors"></ul><p data-map-selection role="status"></p></section>
+    <AnalysisPassageInsights />
+    <AnalysisTemporalComparisons />
+    <section id="analysis-correlations" aria-labelledby="correlation-title"><h2 id="correlation-title">Question correlations</h2><p data-correlation-note class="chart-note"></p><p class="chart-note">Open the full matrix to inspect exact pair values.</p><details data-correlation-details><summary>Open full correlation matrix (loads on demand)</summary><div class="table-scroll"><table class="matrix"><caption>Hover, focus, or select a cell to see the correlation and paired sample size. Diagonal values are self-correlations.</caption><thead data-correlation-head></thead><tbody data-correlation-body></tbody></table></div><p role="status" data-pair-detail></p></details></section>
+    <section id="analysis-factors" aria-labelledby="factor-title"><h2 id="factor-title">Exploratory factor loadings</h2><p class="chart-note">Loadings are oblique pattern coefficients, not correlations; depending on the fitted model, they may exceed −1 to +1. Intervals and factor labels follow the release method and are not proof of a universal or “true” personality dimension.</p><div data-factors></div><details><summary>Analysis diagnostics</summary><pre data-diagnostics></pre></details></section>
+    <AnalysisFactorDiagnostics />
+    <AnalysisRobustness />
+    <details class="release-details"><summary>Release identity and provenance</summary><div class="release-meta" data-release-meta></div></details>
+  </div>
+</section>
+
+<script>
+  import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  import type { AnalysisQuestion, AnalysisRelease, AnalysisVideo } from '../../lib/analysis/explorer.mjs';
+  import factorAnnotations from '../../data/analysis/factor-descriptions.json';
+  import { factorDisplayLabel, resolveFactorDescriptions } from '../../lib/analysis/factor-descriptions.mjs';
+  import type { FactorDescription } from '../../lib/analysis/factor-descriptions.mjs';
+  import { validatePassageData } from '../../lib/analysis/passage-data.mjs';
+  import type { AnalysisPassageData } from '../../lib/analysis/passage-data.mjs';
+  import { validatePassageShardIndex, validatePassageShardBytes } from '../../lib/analysis/passage-shards.mjs';
+  import type { PassageShardDescriptor } from '../../lib/analysis/passage-shards.mjs';
+  import { loadAnalysisSupplement } from '../../lib/analysis/supplement.mjs';
+  import type { AnalysisSupplement } from '../../lib/analysis/supplement.mjs';
+  import { selectJointTrendSeries } from '../../lib/analysis/joint-trend-ui.mjs';
+  const root = document.querySelector<HTMLElement>('[data-analysis-root]')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+    const content = root.querySelector<HTMLElement>('[data-content]')!;
+    const controls = root.querySelector<HTMLFormElement>('[data-controls]')!;
+    const kindSelect = controls.elements.namedItem('kind') as HTMLSelectElement;
+    const metricSelect = controls.elements.namedItem('metric') as HTMLSelectElement;
+    const yearSelect = controls.elements.namedItem('year') as HTMLSelectElement;
+    const categorySelect = controls.elements.namedItem('category') as HTMLSelectElement;
+    let release: AnalysisRelease;
+    let supplement: AnalysisSupplement | null = null;
+    let factorDescriptions: Record<string, FactorDescription> = {};
+    let selectedId: string | undefined;
+    let selectedVideo: AnalysisVideo | undefined;
+    const passageCache = new Map<string, PassageRelease>();
+    let passageShardIndex: Map<string, PassageShardDescriptor> | null = null;
+    const passageShardCache = new Map<string, Map<string, PassageRelease>>();
+    const selectedNode = root.querySelector<HTMLDetailsElement>('[data-selected]')!;
+    const pager=root.querySelector<HTMLElement>('[data-pager]')!;
+    const pageSizeSelect=root.querySelector<HTMLSelectElement>('[data-page-size]')!;
+    const previous=root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next=root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const intervalSelect=root.querySelector<HTMLSelectElement>('[data-interval]')!;
+    const trendMethodSelect=root.querySelector<HTMLSelectElement>('[data-trend-method]')!;
+    let currentPage=1;
+      let pageSize=Number(pageSizeSelect.value);
+    const n = (tag: string, text?: string) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; return e; };
+    const fmt = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? '—' : value.toLocaleString(undefined, { maximumFractionDigits: 3 });
+    const fmtTime = (milliseconds:number) => { const total=Math.floor(milliseconds/1000),hours=Math.floor(total/3600),minutes=Math.floor(total%3600/60),seconds=total%60;return `${hours}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`; };
+    const humanize = (value:string) => value.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toLocaleUpperCase()).replace(/\bTts\b/g,'TTS').replace(/\bNoul\b/g,'No/Yes');
+    const dateBasisLabel = (value:string) => ({unknown:'Unknown / unverified',retained_archive_metadata:'Archive metadata',archive_filename:'Archive filename'} as Record<string,string>)[value]??humanize(value);
+    const uncertaintyLabel = (value:string|null|undefined) => ({model_rating_range:'Passage-mixture rating range (not a mean interval)',bootstrap_stability:'Bootstrap stability range',bootstrap_stability_range:'Bootstrap stability range',bootstrap_stability_unavailable:'Stability range unavailable',insufficient_or_inapplicable:'Insufficient evidence or not applicable',passage_distribution_not_video_probability:'Passage-score distribution (not a video probability)'} as Record<string,string>)[value??'']??(value?humanize(value):'Uncertainty not stated');
+    const option = (label: string, value: string) => { const e=n('option',label) as HTMLOptionElement; e.value=value; return e; };
+    function metrics() { return kindSelect.value === 'factor' ? release.analysis.factors.map(f => ({id:f.id,label:factorDisplayLabel(f,factorDescriptions)})) : release.questions.filter(q=>kindSelect.value==='classification'?q.type==='choice'||q.type==='noul':q.type==='score').map(q => ({id:q.id,label:`${q.short_name} · ${humanize(q.domain)}`})); }
+    function activeQuestions() { const allowed = new Set(release.analysis.question_ids); return release.questions.filter(q => allowed.has(q.id)&&q.type==='score'); }
+    function updateRubric(){
+      const question=release.questions.find(q=>q.id===metricSelect.value);
+      const factor=release.analysis.factors.find(f=>f.id===metricSelect.value);
+      const description=factor&&kindSelect.value==='factor'?factorDescriptions[factor.id]:undefined;
+      const interpretation=root.querySelector<HTMLElement>('[data-factor-description]')!;interpretation.replaceChildren();interpretation.hidden=!description;
+      if(description&&factor){
+        interpretation.append(n('h3',`${factor.id} · ${description.label}`),n('p',`Provisional interpretation: ${description.description}`));
+        for(const [label,text] of [['Higher scores',description.higher],['Lower scores',description.lower]]){const p=n('p');p.append(n('strong',`${label}: `),n('span',text));interpretation.append(p);}
+        interpretation.append(n('p','These descriptions summarize this fitted text model, not verified personal traits. Signs are arbitrary; higher is not inherently better or worse.'));
+      }
+      const host=root.querySelector<HTMLElement>('[data-rubric-content]')!;host.replaceChildren();
+      root.querySelector<HTMLElement>('[data-rubric-title]')!.textContent=question?`Question rubric: ${question.short_name}`:`Factor definition: ${factor?.id??'No dimension selected'}`;
+      if(question){host.append(n('p',question.instructions));if(Array.isArray(question.criteria)){const list=n('ol');for(const [i,anchor] of question.criteria.entries())list.append(n('li',`${i}: ${anchor}`));host.append(list);}else{const list=n('dl');for(const [key,description] of Object.entries(question.criteria)){list.append(n('dt',humanize(key)),n('dd',description));}host.append(list);}}
+      else if(factor){
+        host.append(n('p',`${factor.label===factor.id?'':`${factor.id}: `}${factor.label}. Loadings summarize the estimated relation between eligible numeric questions and this exploratory factor. Factor scores are regression-estimated coordinates from standardized questions, not 0–4 rubric ratings. Their sign is arbitrary; higher is not inherently better or worse.`));
+        const leaders=largestFactorLoadings(factor,release.questions),label=n('p','Six largest absolute pattern coefficients (sign retained):'),list=n('ul');
+        for(const item of leaders){const signed=item.loading>0?`+${fmt(item.loading)}`:fmt(item.loading);list.append(n('li',`${item.short_name}: ${signed}`));}
+        host.append(label,list);const link=n('a','Jump to the full factor loading tables') as HTMLAnchorElement;link.href='#analysis-factors';host.append(link);
+      }
+    }
+    function renderVideos() {
+      const selectedMetric=metricSelect.value, kind=kindSelect.value as 'question'|'factor'|'classification';
+      const values=Object.fromEntries(new FormData(controls)) as Record<string,string>;
+      const nominal=kind==='classification'&&release.questions.find(q=>q.id===selectedMetric)?.type==='choice';
+      const sortSelect=controls.elements.namedItem('sort') as HTMLSelectElement;
+      sortSelect.querySelector<HTMLOptionElement>('option[value="score"]')!.textContent=nominal?'Outcome':'Score';
+      const directionLabels=values.sort==='title'||(values.sort==='score'&&nominal)?['Z–A','A–Z']:values.sort==='date'?['Newest first','Oldest first']:['Highest score first','Lowest score first'];
+      const directionSelect=controls.elements.namedItem('direction') as HTMLSelectElement;
+      for(const choice of Array.from(directionSelect.options))choice.textContent=directionLabels[choice.value==='desc'?0:1];
+      const rows=filterAndSortVideos(release.videos,values,kind,selectedMetric);
+      const body=root.querySelector<HTMLTableSectionElement>('[data-video-rows]')!; body.replaceChildren();
+      const pages=Math.max(1,Math.ceil(rows.length/pageSize));currentPage=Math.min(currentPage,pages);
+      for(const video of rows.slice((currentPage-1)*pageSize,currentPage*pageSize)) {
+        const score=scoreFor(video,selectedMetric,kind), tr=n('tr');
+        const titleCell=n('th') as HTMLTableCellElement; titleCell.scope='row'; const a=n('a',video.title) as HTMLAnchorElement; a.href=video.href; titleCell.append(a);
+        const link=n('button','Evidence') as HTMLButtonElement; link.type='button'; link.className='evidence-button'; link.addEventListener('click',()=>showEvidence(video)); titleCell.append(link);
+        const date=n('td',`${video.date ?? 'Date unresolved'} · ${dateBasisLabel(video.date_basis)}`);
+        const category=n('td',video.category ? humanize(video.category) : 'Unclassified');
+        const descriptor=release.questions.find(q=>q.id===selectedMetric);
+        const value=n('td',kind==='classification'&&descriptor?.type==='choice'?(score?.choice?humanize(score.choice):'Unknown'):kind==='classification'&&descriptor?.type==='noul'?(score?.value==null?'—':`${fmt(score.value*100)}%`):fmt(score?.value));
+        const range=n('td',kind==='classification'&&descriptor?.type==='choice'?Object.entries(score?.probabilities??{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,p])=>`${humanize(key)} ${fmt(p*100)}%`).join(' · ')||'—':score?.low != null || score?.high != null ? `${fmt(score.low)}–${fmt(score.high)} · ${uncertaintyLabel(score.uncertainty)}` : score?.uncertainty?uncertaintyLabel(score.uncertainty):'—');
+        const coverage=n('td',`${fmt(video.coverage*100)}% transcript coverage${score?.coverage == null ? '' : ` · ${fmt(score.coverage*100)}% item coverage`}`);
+        tr.append(titleCell,date,category,value,range,coverage); body.append(tr);
+      }
+      root.querySelector<HTMLElement>('[data-video-count]')!.textContent=`${rows.length.toLocaleString()} of ${release.videos.length.toLocaleString()} recordings · showing ${rows.length?(currentPage-1)*pageSize+1:0}–${Math.min(currentPage*pageSize,rows.length)} · sorted by ${values.sort==='score'&&nominal?'outcome':values.sort} · missing sort values last`;
+      pager.hidden=pages<=1;previous.disabled=currentPage===1;next.disabled=currentPage===pages;pager.querySelector<HTMLElement>('[data-page]')!.textContent=`Page ${currentPage} of ${pages}`;
+      if(selectedId&&!rows.some(v=>v.recording_id===selectedId)) { selectedNode.hidden=true; selectedId=undefined; }
+    }
+    function showEvidence(video: AnalysisVideo) {
+      selectedId=video.recording_id; selectedVideo=video; selectedNode.hidden=false; selectedNode.open=true;
+      root.querySelector<HTMLElement>('[data-selected-title]')!.textContent=`Evidence and question scores: ${video.title}`;
+      const panel=root.querySelector<HTMLElement>('[data-evidence]')!; panel.replaceChildren();
+      const p=n('p',`Recording date: ${video.date??'unresolved'} (${dateBasisLabel(video.date_basis)}). Scores refer to transcript revision ${video.revision_id}. Overall transcript coverage: ${fmt(video.coverage*100)}%.`); panel.append(p);
+      const textQuality=video.classifications?.class_transcript_quality?.choice;
+      if(textQuality==='substantial_noise'||textQuality==='unintelligible') {
+        const warning=n('p',`Text-quality caution: the model classified this recording's text as ${humanize(textQuality).toLowerCase()}. Transcription problems may affect every score, including hypothetical audience confusion. This quality label is itself unverified.`);
+        warning.className='warning'; panel.append(warning);
+      }
+      if(video.scored_passage) {
+        const source=n('p'),anchor=video.scored_passage,link=n('a',`${anchor.label} [${fmtTime(anchor.start_ms)}–${fmtTime(anchor.end_ms)}]`) as HTMLAnchorElement;
+        source.append(n('strong','Shared source passage: '),link);
+        link.href=hrefAtTime(anchor.href,anchor.start_ms,video.revision_id,anchor.segment_id);link.target='_blank';link.rel='noopener noreferrer';panel.append(source);
+      }
+      const list=n('ul');
+      for(const question of release.questions) {
+        if(question.type!=='score') continue;
+        const score=scoreFor(video,question.id,'question'); if(!score) continue;
+        const li=n('li'),strong=n('strong',`${question.short_name}: ${fmt(score.value)}${score.low!=null||score.high!=null?` (${fmt(score.low)}–${fmt(score.high)})`:''}`);
+        li.append(strong,n('span',` — ${humanize(question.domain)}; item coverage ${score.coverage==null?'not reported':`${fmt(score.coverage*100)}%`}; ${uncertaintyLabel(score.uncertainty)}`));
+        list.append(li);
+      }
+      for(const question of release.questions.filter(q=>q.type==='choice')){
+        const classification=video.classifications?.[question.id];if(!classification)continue;
+        const li=n('li'),choice=classification.choice??'Unknown',description=typeof question.criteria==='object'&&!Array.isArray(question.criteria)?question.criteria[choice]:'',strong=n('strong',`${question.short_name}: ${humanize(choice)}`);
+        li.append(strong,n('span',` — ${description}; item coverage ${classification.coverage==null?'not reported':`${fmt(classification.coverage*100)}%`}; confidence ${fmt(classification.confidence)}`));
+        const options=n('ul');for(const [key,probability] of Object.entries(classification.probabilities))options.append(n('li',`${humanize(key)}: ${fmt(probability*100)}%`));li.append(options);list.append(li);
+      }
+      for(const question of release.questions.filter(q=>q.type==='noul')){
+        const probability=video.noul_scores?.[question.id];if(probability===undefined||probability===null)continue;
+        const li=n('li');li.append(n('strong',`${question.short_name}: ${fmt(probability*100)}% probability`),n('span',` — ${question.instructions}`));list.append(li);
+      }
+      if(!list.childElementCount) list.append(n('li','No question scores or classifications are included for this recording.'));
+      const scoreDetails=n('details') as HTMLDetailsElement,scoreSummary=n('summary','All included question scores and classifications');scoreDetails.append(scoreSummary,list);panel.append(scoreDetails);
+      const passageDetails=n('details') as HTMLDetailsElement;passageDetails.className='passage-details';
+      const passageSummary=n('summary','Explore passage scores within this recording');
+      const passagePanel=n('div');passagePanel.className='passage-panel';passagePanel.setAttribute('data-passage-panel','');
+      passageDetails.append(passageSummary,passagePanel);panel.append(passageDetails);
+      passageDetails.addEventListener('toggle',()=>{if(passageDetails.open)void loadPassages(video,passagePanel);},{once:true});
+      selectedNode.scrollIntoView({block:'nearest',behavior:'smooth'});
+    }
+    type PassageRelease=AnalysisPassageData;
+    function numericPassageQuestions(){return release.questions.filter(q=>q.type==='score');}
+    async function loadPassages(video:AnalysisVideo,host:HTMLElement){
+      host.replaceChildren(n('p','Loading passage scores…'));
+      try{
+        let data=passageCache.get(video.recording_id);
+        if(!data){
+          if(passageShardIndex){
+            const descriptor=passageShardIndex.get(video.recording_id);
+            if(!descriptor)throw new Error('Passage scores are incompatible with this release.');
+            let recordings=passageShardCache.get(descriptor.id);
+            if(!recordings){
+              const response=await fetch(descriptor.url);
+              if(!response.ok)throw new Error('Passage scores could not be loaded.');
+              recordings=await validatePassageShardBytes(new Uint8Array(await response.arrayBuffer()),descriptor,release);
+              passageShardCache.set(descriptor.id,recordings);
+              while(passageShardCache.size>2)passageShardCache.delete(passageShardCache.keys().next().value!);
+            }
+            data=recordings.get(video.recording_id);
+            if(!data)throw new Error('Passage scores are incompatible with this release.');
+          }else{
+            const response=await fetch(`/corpus/analysis/passages/${encodeURIComponent(video.recording_id)}.json`);
+            if(!response.ok)throw new Error(response.status===404?'Passage scores are unavailable for this recording.':'Passage scores could not be loaded.');
+            data=validatePassageData(await response.json(),release,video);
+          }
+          passageCache.set(video.recording_id,data);
+          while(passageCache.size>32)passageCache.delete(passageCache.keys().next().value!);
+        }
+        if(selectedVideo?.recording_id!==video.recording_id)return;
+        if(!data.passages.length){host.replaceChildren(n('p','No passage scores are available for this recording.'));return;}
+        drawPassageExplorer(data,host);
+      }catch(error){host.replaceChildren(n('p',error instanceof Error?error.message:'Passage scores could not be loaded.'));}
+    }
+    function drawPassageExplorer(data:PassageRelease,host:HTMLElement){
+      data.passages.sort((a,b)=>a.start_ms-b.start_ms||a.chunk_index-b.chunk_index);
+      const questions=numericPassageQuestions().filter(q=>data.passages.some(p=>p.scores[q.id]?.value!=null));
+      if(!questions.length){host.replaceChildren(n('p','No applicable scored question values are available for this recording.'));return;}
+      const toolbar=n('div');toolbar.className='passage-toolbar';const label=n('label','Scored question');label.className='passage-question-label';const select=n('select') as HTMLSelectElement;select.setAttribute('aria-label','Passage timeline question');
+      for(const question of questions){const opt=option(`${question.short_name} · ${humanize(question.domain)}`,question.id);select.append(opt);}
+      const activeQuestion=release.questions.some(q=>q.id===metricSelect.value&&questions.some(pq=>pq.id===q.id))?metricSelect.value:questions[0]?.id;
+      if(activeQuestion)select.value=activeQuestion;label.append(select);toolbar.append(label);
+      const note=n('p','The horizontal axis uses recording time. Points show passage scores; vertical bars show score levels with nonzero probability, not confidence intervals. Gaps in available scores break the line. Select a point or table heading to open that timestamp and transcript revision.');note.className='chart-note';
+      const chart=document.createElementNS('http://www.w3.org/2000/svg','svg');chart.setAttribute('viewBox','0 0 760 246');chart.setAttribute('role','img');chart.setAttribute('aria-label','Passage score timeline');chart.classList.add('passage-timeline');
+      const chunkSize=20;let chunkPage=0;const pager=n('nav');pager.className='passage-pager';pager.setAttribute('aria-label','Passage heatmap pages');const back=n('button','Earlier passages') as HTMLButtonElement,forward=n('button','Later passages') as HTMLButtonElement,chunkLabel=n('span');back.type=forward.type='button';pager.append(back,chunkLabel,forward);
+      const gridHost=n('div');gridHost.className='table-scroll passage-grid-scroll';
+      const drawChart=(questionId:string)=>{
+        chart.replaceChildren();const q=questions.find(item=>item.id===questionId);if(!q)return;
+        const all=data.passages.map(p=>({passage:p,score:p.scores[questionId]})),valid=all.filter(row=>row.score?.value!=null&&row.score.applicable);
+        if(!valid.length){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','24');t.setAttribute('y','42');t.textContent='No applicable passage scores for this question.';chart.append(t);return;}
+        const low=0,high=4,x0=44,x1=740,y0=18,y1=190,minTime=Math.min(...data.passages.map(p=>p.start_ms)),maxTime=Math.max(...data.passages.map(p=>p.start_ms));
+        const X=(time:number)=>maxTime===minTime?(x0+x1)/2:x0+(time-minTime)/(maxTime-minTime)*(x1-x0),Y=(value:number)=>y1-(value-low)/(high-low)*(y1-y0);
+        const svg=(tag:string,attrs:Record<string,string>)=>{const item=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attrs))item.setAttribute(key,value);return item;};
+        for(const value of [low,2,high]){const y=Y(value),line=svg('line',{x1:String(x0),x2:String(x1),y1:String(y),y2:String(y),stroke:'currentColor','stroke-opacity':'.2'});chart.append(line);const tick=svg('text',{x:'27',y:String(y+4),'text-anchor':'end','font-size':'11'});tick.textContent=String(value);chart.append(tick);}
+        const timeTicks=[...new Set([minTime,minTime+(maxTime-minTime)/2,maxTime])];for(const time of timeTicks){const x=X(time),tick=svg('line',{x1:String(x),x2:String(x),y1:String(y1),y2:String(y1+4),stroke:'currentColor','stroke-opacity':'.55'});chart.append(tick);const labelTick=svg('text',{x:String(x),y:'222','text-anchor':'middle','font-size':'11'});labelTick.textContent=fmtTime(time);chart.append(labelTick);}
+        for(const {passage,score} of valid){if(score.low==null||score.high==null)continue;const x=X(passage.start_ms),bottom=Y(score.low),top=Y(score.high);if(score.high>score.low){chart.append(svg('line',{x1:String(x),x2:String(x),y1:String(top),y2:String(bottom),stroke:'var(--corpus-accent)','stroke-width':'3','stroke-opacity':'.48'}),svg('line',{x1:String(x-3),x2:String(x+3),y1:String(top),y2:String(top),stroke:'var(--corpus-accent)','stroke-opacity':'.7'}),svg('line',{x1:String(x-3),x2:String(x+3),y1:String(bottom),y2:String(bottom),stroke:'var(--corpus-accent)','stroke-opacity':'.7'}));}}
+        let segment:Array<{passage:PassageRelease['passages'][number];score:PassageRelease['passages'][number]['scores'][string]}>=[];
+        const flush=()=>{if(segment.length>1)chart.append(svg('polyline',{points:segment.map(row=>`${X(row.passage.start_ms)},${Y(row.score.value!)}`).join(' '),fill:'none',stroke:'var(--corpus-accent)','stroke-width':'2'}));segment=[];};
+        for(const row of all){if(row.score?.value==null||!row.score.applicable){flush();continue;}segment.push(row);}
+        flush();
+        for(const {passage,score} of valid){const x=X(passage.start_ms),link=svg('a',{href:passage.source.href,target:'_blank',rel:'noopener noreferrer','aria-label':`${q.short_name}, passage ${passage.chunk_index+1}, ${fmtTime(passage.start_ms)} to ${fmtTime(passage.end_ms)}, score ${fmt(score.value)}`}),circle=svg('circle',{cx:String(x),cy:String(Y(score.value!)),r:'5',fill:'var(--corpus-accent)'}),title=svg('title',{});title.textContent=`Passage ${passage.chunk_index+1} · ${fmtTime(passage.start_ms)}–${fmtTime(passage.end_ms)} · ${q.short_name}: ${fmt(score.value)} · support ${score.low==null||score.high==null?'not reported':`${fmt(score.low)}–${fmt(score.high)}`}`;circle.append(title);link.append(circle);chart.append(link);}
+      };
+      const drawGrid=()=>{
+        const start=chunkPage*chunkSize,visible=data.passages.slice(start,start+chunkSize),table=n('table'),caption=n('caption',`Passage scores by scored question · passages ${start+1}–${Math.min(start+chunkSize,data.passages.length)} of ${data.passages.length}`),head=n('thead'),headrow=n('tr');headrow.append(n('th','Scored question'));
+        for(const p of visible){const th=n('th'),a=n('a',`#${p.chunk_index+1} · ${fmtTime(p.start_ms)}`) as HTMLAnchorElement;a.href=p.source.href;a.target='_blank';a.rel='noopener noreferrer';a.title=`Open passage ${p.chunk_index+1}, ${fmtTime(p.start_ms)}–${fmtTime(p.end_ms)}, revision ${p.revision_id}`;th.append(a);headrow.append(th);}head.append(headrow);const body=n('tbody');
+        for(const q of questions){const row=n('tr'),name=n('th') as HTMLTableCellElement;name.scope='row';name.textContent=`${q.short_name} · ${humanize(q.domain)}`;row.append(name);for(const p of visible){const score=p.scores[q.id],cell=n('td');if(!score||score.value==null||!score.applicable){cell.textContent='—';cell.setAttribute('aria-label',`${q.short_name}: not applicable or unavailable`);}else{cell.textContent=fmt(score.value);const intensity=Math.max(0,Math.min(1,score.value/4));cell.style.backgroundColor=`color-mix(in srgb, var(--corpus-accent) ${Math.round(intensity*35)}%, var(--corpus-bg))`;cell.title=`${q.short_name}: ${cell.textContent}; nonzero score support ${score.low==null?'—':fmt(score.low)}–${score.high==null?'—':fmt(score.high)}; coverage ${fmt(score.coverage*100)}%`;cell.setAttribute('aria-label',cell.title);}row.append(cell);}body.append(row);}
+        table.append(caption,head,body);gridHost.replaceChildren(table);chunkLabel.textContent=`Passages ${start+1}–${Math.min(start+chunkSize,data.passages.length)} of ${data.passages.length}`;back.disabled=chunkPage===0;forward.disabled=(chunkPage+1)*chunkSize>=data.passages.length;
+      };
+      const gridDetails=n('details') as HTMLDetailsElement;gridDetails.className='passage-grid-details';gridDetails.append(n('summary','Expand passage-by-question heatmap (paged)'));
+      gridDetails.addEventListener('toggle',()=>{if(gridDetails.open&&gridDetails.dataset.rendered!=='true'){gridDetails.dataset.rendered='true';drawGrid();}});
+      select.addEventListener('change',()=>drawChart(select.value));back.addEventListener('click',()=>{chunkPage=Math.max(0,chunkPage-1);drawGrid();});forward.addEventListener('click',()=>{chunkPage++;drawGrid();});
+      gridDetails.append(pager,gridHost);host.replaceChildren(toolbar,note,chart,gridDetails);drawChart(select.value);
+    }
+    function drawTrend() {
+      const metric=metricSelect.value,kind=kindSelect.value as 'question'|'factor'|'classification';
+      const descriptor=release.questions.find(q=>q.id===metric);
+      const filters=Object.fromEntries(new FormData(controls)) as Record<string,string>;
+      const visible=filterAndSortVideos(release.videos,filters,kind,metric);
+      const context=root.querySelector<HTMLElement>('[data-trend-context]')!;
+      const selections=[yearSelect.selectedOptions[0]?.textContent??'All years',categorySelect.selectedOptions[0]?.textContent??'All categories',...(filters.text?[`Title/category search: “${filters.text}”`]:[])];
+      context.textContent=`${metricSelect.selectedOptions[0]?.textContent??'No dimension selected'} · ${selections.join(' · ')} · ${visible.length.toLocaleString()} matching recordings`;
+      const svg=root.querySelector<SVGSVGElement>('[data-trend]')!,empty=root.querySelector<HTMLElement>('[data-trend-empty]')!,values=root.querySelector<HTMLElement>('[data-trend-values]')!;
+      const dateWarning=root.querySelector<HTMLElement>('[data-date-warning]')!,summary=root.querySelector<HTMLElement>('[data-trend-summary]')!,methodStatus=root.querySelector<HTMLElement>('[data-trend-method-status]')!;
+      const nominal=kind==='classification'&&descriptor?.type==='choice';
+      intervalSelect.disabled=nominal;trendMethodSelect.disabled=true;dateWarning.textContent='';empty.hidden=true;values.hidden=false;svg.toggleAttribute('hidden',false);
+      methodStatus.hidden=true;methodStatus.textContent='';summary.textContent='';svg.replaceChildren();root.querySelector('[data-trend-rows]')!.replaceChildren();
+      svg.setAttribute('aria-label',`Mean ${metricSelect.selectedOptions[0]?.textContent??'dimension'} scores over recording time`);
+      root.querySelector<HTMLElement>('[data-trend-method-control]')!.hidden=kind!=='factor'||!supplement?.joint_trends;
+      root.querySelector<HTMLElement>('[data-trend-note]')!.textContent=trendInterpretation(kind,descriptor?.type);
+      if(nominal) { empty.textContent='This dimension contains category labels, not numeric scores. Review its outcomes in the table above, or choose a numeric question, factor, or yes/no probability to see a time series.';empty.hidden=false;values.hidden=true;svg.toggleAttribute('hidden',true);return; }
+      const interval=intervalSelect.value as 'year'|'month';
+      const joint=kind==='factor'?selectJointTrendSeries(supplement,metric,interval,filters,trendMethodSelect.value):null;
+      const series=joint?.series??groupTimeSeries(visible,metric,kind,interval).map(row=>({...row,...(kind==='factor'?{low:null,high:null}:{}),genre_counts:{} as Record<string,number>}));
+      trendMethodSelect.disabled=!joint||!series.length;
+      if(kind==='factor'&&trendMethodSelect.disabled){methodStatus.hidden=false;methodStatus.textContent='Factor stability ranges are unavailable for this selection. Clear category/title filters and select dated recordings to use the saved cohort ranges when available.';}
+      summary.textContent=kind==='factor'?(joint?'Period means with model-fit stability ranges, not conventional confidence intervals.':'Period means; no factor stability range is available for this selection.'):descriptor?.type==='noul'?'Mean model-estimated yes/no probabilities, not observed event rates.':'Period means with passage-mixture model-rating ranges, not confidence intervals for the mean.';
+      if(kind==='factor')root.querySelector<HTMLElement>('[data-trend-note]')!.textContent=joint?`Equal-recording period means on the fixed, dated primary-factor cohort. Shading is a 95% model-fit stability range: period averages are computed within each shared aligned refit before taking quantiles (${joint.successful_refits}/${joint.requested_refits} proper refits; ${trendMethodSelect.selectedOptions[0].textContent}). It is not a sampling confidence interval, a true-trait interval, or uncertainty about the factor count. Three-month blocks use consecutive observed months, skipping calendar gaps; circular wraparound is a sensitivity assumption.`:'Equal-recording period means. Joint fixed-cohort factor stability bands are unavailable for this selection. Clear category and title filters to use them when provided; individual-recording ranges are not averaged into a period confidence interval.';
+      const ns='http://www.w3.org/2000/svg', el=(tag:string,attrs:Record<string,string>)=>{const x=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))x.setAttribute(k,v);return x;};
+      const scores=series.flatMap(s=>[s.mean,...(s.low==null?[]:[s.low]),...(s.high==null?[]:[s.high])]);
+      if(!series.length){empty.textContent='No dated scores are available for this dimension and selection. Change the filters or time interval to inspect another cohort.';empty.hidden=false;values.hidden=true;summary.textContent='';svg.toggleAttribute('hidden',true);return;}
+      const min=Math.min(...scores),max=Math.max(...scores),pad=(max-min)*.12||1,x0=62,x1=738,y0=26,y1=268,minDate=Math.min(...series.map(s=>s.x)),maxDate=Math.max(...series.map(s=>s.x));
+      const X=(i:number)=>maxDate===minDate?(x0+x1)/2:x0+(series[i].x-minDate)/(maxDate-minDate)*(x1-x0),Y=(v:number)=>y1-(v-min+pad)/(max-min+2*pad)*(y1-y0);
+      for(const v of [min,max]) {const y=Y(v),line=el('line',{x1:String(x0),x2:String(x1),y1:String(y),y2:String(y),stroke:'currentColor','stroke-opacity':'.18'});svg.append(line);const t=el('text',{x:'4',y:String(y+4),fill:'currentColor','font-size':'12'});t.textContent=fmt(v);svg.append(t);}
+      const ticks=[...new Set([0,Math.floor((series.length-1)/2),series.length-1])];
+      for(const i of ticks){const t=el('text',{x:String(X(i)),y:'298',fill:'currentColor','font-size':'12','text-anchor':'middle'});t.textContent=series[i].period;svg.append(t);}
+      const band=series.map((s,i)=>s.low==null?null:`${X(i)},${Y(s.low)}`).filter(Boolean); const high=series.map((s,i)=>s.high==null?null:`${X(i)},${Y(s.high)}`).filter(Boolean).reverse();
+      if(band.length===series.length&&high.length===series.length) svg.append(el('polygon',{points:[...band,...high].join(' '),fill:'var(--corpus-accent)','fill-opacity':'.18'}));
+      if(series.length>1) svg.append(el('polyline',{points:series.map((s,i)=>`${X(i)},${Y(s.mean)}`).join(' '),fill:'none',stroke:'var(--corpus-accent)','stroke-width':'3'}));
+      series.forEach((s,i)=>{const c=el('circle',{cx:String(X(i)),cy:String(Y(s.mean)),r:'5',fill:'var(--corpus-accent)'});const title=el('title',{});title.textContent=`${s.period}: mean ${fmt(s.mean)}, n=${s.n}`;c.append(title);svg.append(c);});
+      const body=root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!;body.replaceChildren(...series.map(s=>{const tr=n('tr'),composition=Object.entries(s.genre_counts).sort((a,b)=>b[1]-a[1]).map(([category,count])=>`${humanize(category)}: ${count} (${fmt(count/s.n*100)}%)`).join(' · ');for(const val of [s.period,fmt(s.mean),s.low==null&&s.high==null?'—':`${fmt(s.low)}–${fmt(s.high)}`,String(s.n),s.coverage==null?'—':`${fmt(s.coverage*100)}%`,composition||'Available with full-cohort factor trends'])tr.append(n('td',val));return tr;}));
+      const dateBases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);root.querySelector<HTMLElement>('[data-date-warning]')!.textContent=`Date bases represented: ${dateBases.join(', ')||'none'}. Periods use catalog recording dates. ${joint?'Joint factor trends require a known month, including in yearly view.':'Year-only dates are omitted from month view.'}`;
+    }
+    function drawCorrelations() {
+      const questions=activeQuestions(), ids=questions.map(q=>release.analysis.question_ids.indexOf(q.id));
+      const head=root.querySelector<HTMLTableSectionElement>('[data-correlation-head]')!; const body=root.querySelector<HTMLTableSectionElement>('[data-correlation-body]')!;head.replaceChildren();body.replaceChildren();
+      const hr=n('tr');hr.append(n('th','Short name'));for(const q of questions){const th=n('th',q.short_name) as HTMLTableCellElement;th.scope='col';hr.append(th);}head.append(hr);
+      questions.forEach((q,i)=>{const tr=n('tr'),rowhead=n('th',q.short_name) as HTMLTableCellElement;rowhead.scope='row';tr.append(rowhead);questions.forEach((other,j)=>{const ii=ids[i],jj=ids[j],value=release.analysis.correlations[ii]?.[jj]??null,count=release.analysis.pair_counts[ii]?.[jj]??0,td=n('td'),button=n('button',value==null?'—':fmt(value)) as HTMLButtonElement;button.type='button';button.className='matrix-cell';button.setAttribute('aria-label',`${q.short_name} and ${other.short_name}: correlation ${fmt(value)}, n ${count}`);button.title=`${q.short_name} × ${other.short_name} · r=${fmt(value)} · n=${count}`;if(value!==null)button.style.backgroundColor=`color-mix(in srgb, ${value<0?'var(--corpus-danger)':'var(--corpus-accent)'} ${Math.abs(value)*35}%, var(--corpus-bg))`;button.addEventListener('focus',()=>setPair(q,other,value,count));button.addEventListener('mouseenter',()=>setPair(q,other,value,count));button.addEventListener('click',()=>selectQuestion(q));td.append(button);tr.append(td);});body.append(tr);});
+      root.querySelector<HTMLElement>('[data-correlation-note]')!.textContent=`Release-provided exploratory correlation estimates on the analyzed cohort (n=${release.analysis.n}). Gaps mean the release did not estimate that pair. Video filters affect the sortable table and time series, not this matrix or the MDS map. Select a cell to rank videos by its row question.`;
+      function setPair(a:AnalysisQuestion,b:AnalysisQuestion,v:number|null,count:number){root.querySelector<HTMLElement>('[data-pair-detail]')!.textContent=`${a.short_name} × ${b.short_name}: r=${fmt(v)}; paired recordings n=${count}. Correlation does not imply causation.`;}
+    }
+    function drawMds() {
+      const svg=root.querySelector<SVGSVGElement>('[data-mds]')!,ns='http://www.w3.org/2000/svg',el=(tag:string,attrs:Record<string,string>)=>{const x=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))x.setAttribute(k,v);return x;};svg.replaceChildren();
+      const points=release.analysis.mds,byId=new Map(release.questions.map(q=>[q.id,q]));
+      if(!points.length){const t=el('text',{x:'30',y:'50',fill:'currentColor'});t.textContent='No question coordinates in this release';svg.append(t);return;}
+      const xs=points.map(p=>p.x),ys=points.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),cx=(xmin+xmax)/2,cy=(ymin+ymax)/2,scale=Math.min(650/(xmax-xmin||1),500/(ymax-ymin||1)),X=(v:number)=>380+(v-cx)*scale,Y=(v:number)=>285-(v-cy)*scale;
+      const palette=['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc949','#af7aa1','#ff9da7','#9c755f','#bab0ab','#6f4e7c','#2f8f9d'];
+      const domains=[...new Set(points.map(p=>byId.get(p.id)?.domain).filter((d):d is string=>Boolean(d)))].sort(),domainColor=new Map(domains.map((d,i)=>[d,palette[i%palette.length]]));
+      const labels=points.flatMap(p=>{const q=byId.get(p.id);if(!q)return[];const x=X(p.x)+12,y=Y(p.y)+4;return[{p,q,x,y,w:Math.max(26,q.short_name.length*7.5),h:16}];});
+      // Repel only text labels: the MDS point coordinates remain untouched.
+      for(let pass=0;pass<180;pass++){
+        let moved=false;
+        for(let i=0;i<labels.length;i++)for(let j=i+1;j<labels.length;j++){
+          const a=labels[i],b=labels[j],ox=Math.min(a.x+a.w+3,b.x+b.w+3)-Math.max(a.x,b.x),oy=Math.min(a.y+3,b.y+3)-Math.max(a.y-a.h,b.y-b.h);
+          if(ox<=0||oy<=0)continue;
+          if(oy<=ox){const d=Math.min(8,oy/2+1)*(a.y<=b.y?-1:1);a.y=Math.max(22,Math.min(580-a.h,a.y+d));b.y=Math.max(22,Math.min(580-b.h,b.y-d));}
+          else {const d=Math.min(10,ox/2+1)*(a.x<=b.x?-1:1);a.x=Math.max(12,Math.min(748-a.w,a.x+d));b.x=Math.max(12,Math.min(748-b.w,b.x-d));}
+          moved=true;
+        }
+        if(!moved)break;
+      }
+      const byQuestion=new Map(labels.map(l=>[l.q.id,l]));
+      for(const p of points){const q=byId.get(p.id),label=byQuestion.get(p.id);if(!q||!label)continue;const px=X(p.x),py=Y(p.y),g=el('g',{tabindex:'0',role:'button','aria-label':`${q.short_name}, ${humanize(q.domain)}`,'data-question':q.id});
+        if(Math.hypot(label.x-(px+12),label.y-(py+4))>18)g.append(el('line',{x1:String(px),y1:String(py),x2:String(label.x),y2:String(label.y-4),stroke:domainColor.get(q.domain)??'currentColor','stroke-opacity':'.5','stroke-width':'1'}));
+        const c=el('circle',{cx:String(px),cy:String(py),r:'8',fill:domainColor.get(q.domain)??'var(--corpus-accent)','fill-opacity':'.9',stroke:'var(--corpus-bg)','stroke-width':'2'});g.append(c);
+        const t=el('text',{x:String(label.x),y:String(label.y),fill:'currentColor','font-size':'12'});t.textContent=q.short_name;g.append(t);g.addEventListener('click',()=>selectPoint(q));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPoint(q);}});svg.append(g);
+      }
+      const legend=root.querySelector<HTMLElement>('[data-mds-legend]')!;legend.replaceChildren(...domains.map(domain=>{const li=n('li'),swatch=n('span');swatch.className='mds-swatch';swatch.style.backgroundColor=domainColor.get(domain)!;swatch.setAttribute('aria-hidden','true');li.append(swatch,n('span',humanize(domain)));return li;}));
+      root.querySelector<HTMLElement>('[data-mds-note]')!.textContent=`Method: ${release.analysis.mds_method}; normalized RMS distance error: ${release.analysis.mds_stress==null?'not reported':`${fmt(release.analysis.mds_stress*100)}%`} (smaller is better; this is not a statistical confidence measure). ${release.analysis.mds_stress!=null&&release.analysis.mds_stress>.3?'This two-dimensional map has substantial distance distortion; use actual correlation values for detailed comparisons. ':''}Nearby points represent similar question profiles under this mapping; axis orientation and distances are approximate. Select a point to show its question.`;
+      function selectPoint(q:AnalysisQuestion){root.querySelector<HTMLElement>('[data-map-selection]')!.textContent=`${q.short_name} · ${humanize(q.domain)}: ${q.instructions}`;selectQuestion(q);}
+    }
+    function drawFactors() {
+      const rootFactors=root.querySelector<HTMLElement>('[data-factors]')!;rootFactors.replaceChildren();
+      const diagnostic=release.analysis.diagnostics;
+      if(typeof diagnostic.factor_count_selected==='number'){
+        const count=(value:unknown)=>typeof value==='number'?fmt(value):'not reported';
+        const note=n('p',`Primary retained count: ${count(diagnostic.factor_count_selected)}. Alternative diagnostics: Velicer MAP ${count(diagnostic.velicer_map_suggested_factor_count)}; initial reduced-correlation roots ${count(diagnostic.common_factor_sensitivity_count)}. These are different retention rules, not proof of one true dimensionality. Bootstrap ranges assess stability at the fixed primary count.`);
+        note.className='chart-note';rootFactors.append(note);
+      }
+      if(!release.analysis.factors.length){rootFactors.append(n('p','No factor solution was reported.'));return;}
+      if(release.analysis.status==='insufficient_data')rootFactors.append(n('p',`Factor loadings are shown as provisional exploratory output; the release did not establish a stable factor solution. Eligible-question sample: ${release.analysis.primary_factor_n??'not reported'} recordings.`));
+      for(const factor of release.analysis.factors){const section=n('section'),details=n('details') as HTMLDetailsElement,leaders=largestFactorLoadings(factor,release.questions),summaryText=leaders.slice(0,3).map(item=>`${item.short_name} ${item.loading>0?'+':''}${fmt(item.loading)}`).join(' · '),summary=n('summary',`${factorDisplayLabel(factor,factorDescriptions)} · strongest: ${summaryText||'not reported'}`),table=n('table'),head=n('thead'),tr=n('tr');for(const text of ['Question','Pattern coefficient','Reported interval'])tr.append(n('th',text));head.append(tr);const body=n('tbody');for(const q of release.questions){const loading=factor.loadings[q.id];if(loading===undefined)continue;const row=n('tr'),interval=factor.loading_intervals[q.id];for(const text of [q.short_name,fmt(loading),interval?`${fmt(interval[0])}–${fmt(interval[1])}`:'—'])row.append(n('td',text));body.append(row);}table.append(head,body);const scroll=n('div');scroll.className='table-scroll';scroll.append(table);details.append(summary);const description=factorDescriptions[factor.id];if(description)details.append(n('p',description.description));details.append(scroll);section.append(details);rootFactors.append(section);}
+    }
+    function selectQuestion(q:AnalysisQuestion){kindSelect.value='question';metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));metricSelect.value=q.id;currentPage=1;render();}
+    function render() { currentPage=1;updateRubric();renderVideos();drawTrend(); }
+    async function shardDigest(videos:AnalysisVideo[]) {
+      const bytes=new TextEncoder().encode(JSON.stringify(videos)),digest=await crypto.subtle.digest('SHA-256',bytes);
+      return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('').slice(0,16);
+    }
+    async function init() {
+      try {
+        const response=await fetch('/corpus/analysis/data.json',{cache:'no-cache'}); if(!response.ok) throw new Error('release unavailable');
+        const payload=await response.json() as {available:boolean;release?:Omit<AnalysisRelease,'videos'>;video_shards?:{id:string;url:string;count:number}[];passage_shards?:unknown};
+        if(!payload.available||!payload.release){status.textContent='No transcript scoring release is published yet. This explorer will show results after a reviewed score release is prepared.';return;}
+        if(import.meta.env.PROD&&payload.passage_shards===undefined)throw new Error('Published passage index is missing or incompatible with this release.');
+        if(!Array.isArray(payload.video_shards)||payload.video_shards.some((s,i)=>!/^\d{3,}-[a-f0-9]{16}$/.test(s.id)||!s.id.startsWith(`${String(i).padStart(3,'0')}-`)||s.url!==`/corpus/analysis/shards/${s.id}.json`||!Number.isInteger(s.count)||s.count<1||s.count>100))throw new Error('Invalid score shard index.');
+        const videos:AnalysisVideo[]=[];
+        for(let start=0;start<payload.video_shards.length;start+=3){
+          const batch=payload.video_shards.slice(start,start+3);
+          const responses=await Promise.all(batch.map(async shard=>{status.textContent=`Loading transcript analysis data… ${Math.min(start+batch.length,payload.video_shards!.length)} of ${payload.video_shards!.length} groups`;const result=await fetch(shard.url);if(!result.ok)throw new Error('score shard unavailable');const data=await result.json();if(data.schema_version!==1||data.shard_id!==shard.id||data.corpus_release_id!==payload.release!.corpus_release_id||!Array.isArray(data.videos)||data.videos.length!==shard.count||await shardDigest(data.videos as AnalysisVideo[])!==shard.id.slice(shard.id.indexOf('-')+1))throw new Error('invalid or stale score shard');return data.videos as AnalysisVideo[]}));
+          for(const shardRows of responses)videos.push(...shardRows);
+        }
+        release=validateAnalysisRelease({...payload.release,videos});passageShardIndex=validatePassageShardIndex(payload.passage_shards,release);factorDescriptions=await resolveFactorDescriptions(release,factorAnnotations);supplement=await loadAnalysisSupplement(release);document.dispatchEvent(new CustomEvent('analysis-release-ready',{detail:{release,supplement,diagnostics:supplement?.map_diagnostics}})); status.textContent='';status.hidden=true;content.hidden=false;
+        const meta=root.querySelector<HTMLElement>('[data-release-meta]')!;meta.textContent=`${release.status==='pilot'?'Pilot':'Complete'} · ${release.coverage.scored_recordings.toLocaleString()} / ${release.coverage.total_recordings.toLocaleString()} recordings scored · ${release.coverage.scored_chunks.toLocaleString()} / ${release.coverage.total_chunks.toLocaleString()} transcript chunks · ${release.model} · ${release.generated_at} · questionnaire ${release.questionnaire_version}`;
+        metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));
+        const years=[...new Set(release.videos.flatMap(v=>v.date?[v.date.slice(0,4)]:[]))].sort().reverse();yearSelect.append(...years.map(y=>option(y,y)),option('Undated','undated'));
+        const categories=[...new Set(release.videos.flatMap(v=>v.category?[v.category]:[]))].sort();categorySelect.append(...categories.map(c=>option(humanize(c),c)));
+        controls.addEventListener('input',()=>{currentPage=1;render();});controls.addEventListener('change',(event)=>{if(event.target===kindSelect){metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));}currentPage=1;render();});
+        pageSizeSelect.addEventListener('change',()=>{pageSize=Number(pageSizeSelect.value);currentPage=1;renderVideos();});
+        intervalSelect.addEventListener('change',()=>drawTrend());
+        trendMethodSelect.addEventListener('change',()=>drawTrend());
+        previous.addEventListener('click',()=>{currentPage=Math.max(1,currentPage-1);renderVideos();pager.scrollIntoView({block:'nearest'});});
+        next.addEventListener('click',()=>{currentPage++;renderVideos();pager.scrollIntoView({block:'nearest'});});
+        document.addEventListener('analysis-select-recording',(event)=>{
+          const id=(event as CustomEvent<{recording_id?:unknown}>).detail?.recording_id;
+          if(typeof id!=='string')return;
+          const video=release.videos.find(item=>item.recording_id===id);
+          if(video)showEvidence(video);
+        });
+      const correlationDetails=root.querySelector<HTMLDetailsElement>('[data-correlation-details]')!;correlationDetails.addEventListener('toggle',()=>{if(correlationDetails.open&&correlationDetails.dataset.rendered!=='true'){drawCorrelations();correlationDetails.dataset.rendered='true';}});
+      drawMds();drawFactors();render();
+        root.querySelector<HTMLElement>('[data-diagnostics]')!.textContent=JSON.stringify(release.analysis.diagnostics,null,2);
+      } catch (error) { if(import.meta.env.DEV) console.error('Analysis preview load failed',error); status.hidden=false;status.textContent='The transcript scoring release could not be loaded or failed validation.'; }
+    }
+    void init();
+</script>
+
+<style is:global>
+  .analysis-explorer{display:grid;gap:1.5rem;min-width:0;max-width:100%}
+  .analysis-explorer [hidden]{display:none!important}
+  .analysis-explorer>[data-content]{display:grid;gap:1.1rem;min-width:0;max-width:100%;width:100%}
+  .analysis-explorer section{min-width:0;max-width:100%;scroll-margin-top:1.2rem}
+  .analysis-explorer>[data-content]>section{padding:clamp(.85rem,2vw,1.4rem);border:1px solid var(--corpus-line);border-radius:.7rem;background:var(--corpus-panel)}
+  .analysis-explorer h2{font-size:clamp(1.2rem,2.5vw,1.55rem);letter-spacing:-.025em;line-height:1.3;margin-top:0}
+  .analysis-explorer h3{line-height:1.35}
+  .analysis-explorer .chart-note{font-size:.88rem;line-height:1.65;max-width:95ch}
+  .analysis-explorer .release-meta,.analysis-explorer .scope-note{padding:1rem;border:1px solid var(--corpus-line);border-radius:.5rem;background:var(--corpus-panel);overflow-wrap:anywhere}
+  .analysis-explorer .scope-note{border-left:3px solid var(--corpus-accent);padding-block:.9rem}
+  .analysis-explorer .scope-note>p{font-size:.88rem;line-height:1.6;margin:.45rem 0}
+  .analysis-explorer .scope-note details{font-size:.85rem;margin:.55rem 0 0}
+  .analysis-explorer .scope-note details p{line-height:1.65}
+  .analysis-explorer .factor-description{margin-block:1rem;padding:1rem;border:1px solid var(--corpus-line);border-left:3px solid var(--corpus-accent);border-radius:.5rem;background:var(--corpus-panel);overflow-wrap:anywhere}
+  .analysis-explorer .factor-description h3{margin-top:0}
+  .analysis-explorer .factor-description p:last-child{margin-bottom:0;color:var(--corpus-muted);font-size:.85rem}
+  .analysis-explorer .section-jumps{margin:0;font-size:.85rem}
+  .analysis-explorer .explorer-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;padding:.85rem;border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel)}
+  .analysis-explorer .explorer-nav>div{display:flex;flex-direction:column;gap:.4rem;min-width:0}
+  .analysis-explorer .explorer-nav span{font-size:.72rem;letter-spacing:.055em;text-transform:uppercase;color:var(--corpus-muted);margin-bottom:.1rem}
+  .analysis-explorer .explorer-nav a{font-size:.84rem;text-decoration:none;line-height:1.4}
+  .analysis-explorer .explorer-nav a:hover{text-decoration:underline}
+  .analysis-explorer .scope-note p,.analysis-explorer .chart-note,.analysis-explorer .warning{color:var(--corpus-muted)}
+  .analysis-explorer .controls{display:grid;grid-template-columns:1fr;gap:.75rem;align-items:end;padding:0;margin:.8rem 0 0;min-width:0}
+  .analysis-explorer .controls fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.8rem;border:0;padding:0;margin:0;min-width:0}
+  .analysis-explorer .controls .dimension-controls{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+  .analysis-explorer .controls legend{color:var(--corpus-text);font-size:.85rem;font-weight:650;padding:0;margin-bottom:.65rem}
+  .analysis-explorer .dimension-explanation{margin:0;padding:.55rem .7rem;border:1px solid var(--corpus-line);border-radius:.4rem;font-size:.85rem}
+  .analysis-explorer .table-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.75rem;border-top:1px solid var(--corpus-line);padding-top:.75rem;min-width:0}
+  .analysis-explorer .controls label,.analysis-explorer .table-toolbar>*{min-width:0}
+  .analysis-explorer .trend-controls{display:grid;grid-template-columns:minmax(8rem,12rem) minmax(0,28rem);align-items:end;gap:.8rem;margin-block:1rem;min-width:0}
+  .analysis-explorer .trend-controls label{display:grid;gap:.35rem;color:var(--corpus-muted);font-size:.85rem;min-width:0;max-width:100%;margin:0}
+  .analysis-explorer .trend-controls select{width:100%;margin:0}
+  .analysis-explorer .trend-context{font-weight:600;font-size:.9rem;margin-bottom:.35rem;overflow-wrap:anywhere}
+  .analysis-explorer .trend-change{font-size:.85rem}
+  .analysis-explorer .trend-empty{padding:1rem;border:1px solid var(--corpus-line);border-radius:.45rem;color:var(--corpus-muted);line-height:1.65}
+  .analysis-explorer .controls label{display:grid;gap:.35rem;color:var(--corpus-muted);font-size:.85rem}
+  .analysis-explorer .controls input,.analysis-explorer .controls select{min-width:0;width:100%;padding:.65rem;color:var(--corpus-text);background:var(--corpus-bg);border:1px solid var(--corpus-line);border-radius:.35rem;font:inherit}
+  .analysis-explorer .table-scroll{overflow:auto;max-width:100%;min-width:0;border:1px solid var(--corpus-line);border-radius:.45rem}
+  .analysis-explorer .table-scroll:focus-within{border-color:var(--corpus-accent)}
+  .analysis-explorer table{width:100%;border-collapse:collapse;min-width:38rem;font-size:.86rem}
+  .analysis-explorer th,.analysis-explorer td{padding:.55rem .65rem;border-bottom:1px solid var(--corpus-line);text-align:left;vertical-align:top}
+  .analysis-explorer tbody tr:last-child>*{border-bottom:0}
+  .analysis-explorer tbody tr:hover{background:color-mix(in srgb,var(--corpus-accent) 5%,transparent)}
+  .analysis-explorer th{background:var(--corpus-panel)}
+  .analysis-explorer thead th{position:sticky;top:0;z-index:1}
+  .analysis-explorer td{overflow-wrap:anywhere}
+  .analysis-explorer td:nth-child(4),.analysis-explorer td:nth-child(5){font-variant-numeric:tabular-nums}
+  .analysis-explorer a{color:var(--corpus-accent)}
+  .analysis-explorer .evidence-button{margin-left:.6rem;padding:.25rem .4rem;color:var(--corpus-accent);background:transparent;border:1px solid var(--corpus-line);border-radius:.25rem;cursor:pointer}
+  .analysis-explorer [data-selected]{margin-block:1rem;padding:1rem;border:1px solid var(--corpus-line);border-radius:.4rem}
+  .analysis-explorer [data-evidence] li{margin:.55rem 0}
+  .analysis-explorer svg{display:block;width:100%;height:auto;max-height:28rem;overflow:visible;color:var(--corpus-muted)}
+  .analysis-explorer svg text{fill:currentColor}
+  .analysis-explorer svg[data-mds]{max-height:40rem}
+  .analysis-explorer [data-mds] [role=button]{cursor:pointer;outline:none}
+  .analysis-explorer [data-mds] [role=button]:focus circle,.analysis-explorer [data-mds] [role=button]:hover circle{stroke:var(--corpus-warning);stroke-width:4}
+  .analysis-explorer .matrix{min-width:0;width:max-content}
+  .analysis-explorer .matrix th:first-child{position:sticky;left:0;z-index:2}
+  .analysis-explorer .matrix td{padding:.15rem}
+  .analysis-explorer .matrix-cell{min-width:4rem;padding:.45rem .25rem;border:1px solid var(--corpus-line);border-radius:.2rem;color:var(--corpus-text);background:var(--corpus-bg);font:inherit;cursor:pointer}
+  .analysis-explorer .matrix-cell:focus-visible,.analysis-explorer .evidence-button:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:2px}
+  .analysis-explorer summary{cursor:pointer;font-weight:650}
+  .analysis-explorer section>details{border:1px solid var(--corpus-line);border-radius:.45rem;padding:.75rem;background:var(--corpus-bg)}
+  .analysis-explorer details[open]>summary{margin-bottom:.75rem}
+  .analysis-explorer .release-details{margin:0;padding:.7rem .9rem;border-top:1px solid var(--corpus-line);font-size:.8rem;color:var(--corpus-muted)}
+  .analysis-explorer .release-meta{font-size:.78rem;line-height:1.6}
+  .analysis-explorer button,.analysis-explorer select,.analysis-explorer input{font:inherit}
+  .analysis-explorer select,.analysis-explorer input{min-width:0;max-width:100%;min-height:2.75rem;line-height:1.4;padding:.6rem .7rem;color:var(--corpus-text);background:var(--corpus-bg);border:1px solid var(--corpus-line);border-radius:.4rem}
+  .analysis-explorer select:disabled,.analysis-explorer input:disabled{opacity:.55;cursor:not-allowed}
+  .analysis-explorer .analysis-discovery>h2,.analysis-explorer .analysis-discovery>p,.analysis-explorer .analysis-passage-insights>h2,.analysis-explorer .analysis-passage-insights>h3,.analysis-explorer .analysis-passage-insights>p,.analysis-explorer .analysis-factor-diagnostics>h2,.analysis-explorer .analysis-factor-diagnostics>h3,.analysis-explorer .analysis-factor-diagnostics>p{margin-block:0}
+  .analysis-explorer .discovery-detail button,.analysis-explorer [data-discovery-outliers] button,.analysis-explorer [data-insights-ranks] button{padding:.45rem .65rem;color:var(--corpus-accent);background:var(--corpus-bg);border:1px solid var(--corpus-line);border-radius:.35rem;cursor:pointer}
+  .analysis-explorer .discovery-detail button:hover,.analysis-explorer [data-discovery-outliers] button:hover,.analysis-explorer [data-insights-ranks] button:hover{border-color:var(--corpus-accent)}
+  .analysis-explorer button:focus-visible,.analysis-explorer select:focus-visible,.analysis-explorer input:focus-visible,.analysis-explorer a:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:2px}
+  .analysis-explorer .analysis-pager{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.75rem;margin-block:1rem;font-size:.85rem}
+  .analysis-explorer .analysis-pager button{padding:.55rem .8rem;background:var(--corpus-bg);color:var(--corpus-text);border:1px solid var(--corpus-line);border-radius:.4rem;cursor:pointer}
+  .analysis-explorer .analysis-pager button:disabled{opacity:.45;cursor:default}
+  .analysis-explorer summary:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:3px}
+  .analysis-explorer .passage-details{margin-block:1rem;padding:1rem;border:1px solid var(--corpus-line);border-radius:.45rem}
+  .analysis-explorer .passage-panel{margin-top:.75rem;min-width:0}
+  .analysis-explorer .passage-toolbar{display:flex;align-items:center;gap:.75rem;margin-block:.75rem;min-width:0;max-width:100%}
+  .analysis-explorer .passage-question-label{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;min-width:0;max-width:100%}
+  .analysis-explorer .passage-question-label select{min-width:0;max-width:100%;padding:.5rem;color:var(--corpus-text);background:var(--corpus-bg);border:1px solid var(--corpus-line);border-radius:.35rem;font:inherit}
+  .analysis-explorer .passage-pager{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-block:.65rem}
+  .analysis-explorer .passage-pager button{padding:.45rem .65rem;color:var(--corpus-text);background:var(--corpus-panel);border:1px solid var(--corpus-line);border-radius:.3rem;font:inherit;cursor:pointer}
+  .analysis-explorer .passage-pager button:disabled{opacity:.5;cursor:not-allowed}
+  .analysis-explorer .passage-grid-scroll table{min-width:max-content;font-size:.78rem}
+  .analysis-explorer .passage-grid-details{margin-block:.9rem;padding:.75rem;border:1px solid var(--corpus-line);border-radius:.4rem}
+  .analysis-explorer .passage-grid-scroll th:first-child{position:sticky;left:0;z-index:2;min-width:12rem}
+  .analysis-explorer .passage-grid-scroll thead th:not(:first-child){min-width:5.5rem}
+  .analysis-explorer .mds-legend{display:flex;flex-wrap:wrap;gap:.35rem .8rem;list-style:none;padding:0;margin:.5rem 0}
+  .analysis-explorer .mds-legend li{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:var(--corpus-muted)}
+  .analysis-explorer .mds-swatch{width:.75rem;height:.75rem;flex:0 0 .75rem;border-radius:50%;display:inline-block}
+  .analysis-explorer details{margin-block:.8rem}
+  .analysis-explorer pre{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--corpus-muted);font-size:.78rem}
+  @media(max-width:55rem){.analysis-explorer .explorer-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:40rem){.analysis-explorer .trend-controls{grid-template-columns:minmax(0,1fr)}}
+  @media(max-width:40rem){.analysis-explorer table{font-size:.77rem}.analysis-explorer .matrix-cell{min-width:3.2rem;font-size:.75rem}.analysis-explorer section{overflow-wrap:anywhere}.analysis-explorer .controls fieldset{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-explorer .controls fieldset>label:last-child{grid-column:1/-1}.analysis-explorer .controls .dimension-controls{grid-template-columns:1fr}.analysis-explorer .table-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-explorer .explorer-nav{gap:1rem .75rem;padding:.85rem}.analysis-explorer .explorer-nav a{font-size:.8rem}.analysis-explorer>[data-content]>section{padding:.85rem}.analysis-explorer .scope-note{padding:.85rem}}
+  @media(prefers-reduced-motion:reduce){.analysis-explorer *{scroll-behavior:auto!important}}
+</style>
