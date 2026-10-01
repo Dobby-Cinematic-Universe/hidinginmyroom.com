@@ -9,18 +9,19 @@ import { Aside } from "@astrojs/starlight/components";
 import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
 import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 
-<VerificationBadge status="source-matched" reviewedAt="19 September 2026" note="Four distinct source items were reconciled with retained raw videos and machine transcripts. Seventeen raw frames were inspected; the soundtrack was not human-reviewed. Dates are archive filename labels, not established travel dates." />
+<VerificationBadge status="source-matched" reviewedAt="1 October 2026" note="Four earlier source items retain their frame-review limits. A fifth Korea-labelled outing adds warned tower-view and ice-skating machine passages with recorded participant-label attribution and a rechecked retained raw hash. No new speech wording was human-reviewed. Dates are archive filename labels, not established travel dates." />
 
 The **South Korea era** is editorial shorthand for an early-2020 run of Korea-labelled HIMR videos. It combines a proposed move, urban outings and everyday room-and-cooking content. It is not a claim about continuous residence, immigration status or the exact beginning and end of a trip. Earlier Korea recollections belong to the [Japan-era retrospective chronology](/wiki/eras/japan-era/#retrospective-20102014-japan-and-korea-accounts).
 
 ## The preserved sequence
 
-The following are four distinct source IDs, not four aliases of one upload. Dated and undated archive filenames sometimes point to the same retained copy; those aliases are not counted as extra events. All dates below are **archive filename dates**.
+The following are five distinct video IDs, not five aliases of one upload. Dated and undated archive filenames sometimes point to the same retained copy; those aliases are not counted as extra events. All dates below are **archive filename dates**.
 
 | Filename date | Source item | Place in the sequence |
 | --- | --- | --- |
 | 31 January 2020 | [Why I'm moving to South Korea](https://www.youtube.com/watch?v=DUH2vhKu1Ig) | An announcement of travel intentions, not evidence that the proposed itinerary happened exactly as stated. |
 | 7 February 2020 | [Exploring Seoul with my New Friend](https://www.youtube.com/watch?v=bKtgUaz3IcY) | An outing-labelled video with streets, a night view and a restaurant sequence. |
+| 10 February 2020 | [Hanging out with my friend in Korea](https://archive.org/download/hidinginmyroom/Hanging%20out%20with%20my%20friend%20in%20Korea%20%5B3PIOxuCKVmQ%5D.mp4) | A distinct outing-labelled source, with a separately warned tower-view and ice-skating machine account below. |
 | 28 February 2020 | [Korean Apartment Goshiwon Room Tour](https://www.youtube.com/watch?v=SCprgDsvbeE) | A room-tour-labelled item that also includes food preparation. “Goshiwon” is retained title wording, not an independently verified housing classification. |
 | 1 March 2020 | [Exploring Gangnam with my friend George](https://www.youtube.com/watch?v=Zl_5vZVToxI) | Another outing-labelled item, with scooter and shopping-interior footage. “George” is the title's public label, not an identity finding. |
 
@@ -41,6 +42,43 @@ In the announcement, the machine transcript renders Daniel proposing a stay of a
 The Seoul-labelled outing supplies a different format from the announcement. Sampled raw frames show an urban square at **03:10**, a night skyline at **05:45**, and food being handled over a tabletop grill at **07:50**. These are observations about the preserved footage, not confirmation of every place name or the accompanying conversation. Guest-related research is kept in the [friends directory](/wiki/characters/friends-and-guests/), separate from the era's travel sequence.
 
 <SourceCitation sourceId="rec_b7080ddeb33506aae1c669c8692a2f1d" claimId="HIMR-KOREA-0003" title="Exploring Seoul with my New Friend" href="https://archive.org/download/hidinginmyroom/[2020-02-07]%20Exploring%20Seoul%20with%20my%20New%20Friend%20[bKtgUaz3IcY].mp4" locator="Sampled raw frames at 03:10, 05:45 and 07:50; retained copy duration 12:54.681" evidence="AI visual inspection of exact frames showing an urban square, night skyline and tabletop grill; no soundtrack verification, guest identification or independent geolocation" checked={false} reviewState="source-matched" reviewedAt="19 September 2026" />
+
+### A tower-view and ice-skating outing
+
+<Aside type="caution" title="Unverified outing account">
+  Machine-generated and unreviewed; may be wrong; not a verified quotation.
+  The exact raw copy is retained and its hash was rechecked. A recorded participant
+  review supplies the Daniel speaker label; it does not verify the transcript
+  wording. Nobody directly heard these passages for this wiki review.
+</Aside>
+
+The separate February 10-labelled _Hanging out with my friend in Korea_
+adds an activity-focused outing to the sequence. At **03:40.639–04:00.074**, the
+machine text renders Daniel reacting to a high view.
+At **05:37.429–05:52.620**, it renders an exchange about going ice skating,
+distinguishing an outside rink from the planned indoor one. These are
+source-attributed machine accounts, not independently established landmarks,
+entry tickets or a completed itinerary.
+
+The later **08:14.854–08:39.178** passage adds a filming choice: Daniel is
+rendered saying he feels nervous and should put the camera away, followed by
+another participant offering to film. This gives the outing a collaborative
+filming context beyond a solo travel monologue. The other participant is left
+unnamed here, and the account does not independently verify that skating occurred.
+
+<SourceCitation
+  sourceId="src_cbbec31c98206293cec2bf321535896f"
+  claimId="HIMR-REFRESH-TRAVEL-0004"
+  title="Hanging out with my friend in Korea — tower view, skating plan and filming exchange"
+  href="https://archive.org/download/hidinginmyroom/Hanging%20out%20with%20my%20friend%20in%20Korea%20%5B3PIOxuCKVmQ%5D.mp4"
+  locator="03:40.639–04:00.074; 05:37.429–05:52.620; 08:14.854–08:39.178; rec_33e56a231df608d31f6fc50805543acc, rev_bcaef99071b38e666e3dd5ea3e7c5e00; filename label 2020-02-10"
+  evidence="Unverified machine-transcript outing and filming account, with Daniel attribution supplied by a recorded participant-label review; exact raw SHA-256 d1d753e681f4572850a46d594b6e10bd0179ca21402ce56302dc35686b1bd9d3 rechecked; speaker review does not verify wording, geolocation or completed activities"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="1 October 2026"
+/>
+
+### The room tour and later outing
 
 The room-tour item brings the sequence indoors. Frames at **01:40**, **02:15**, **03:45** and **05:10** show a compact interior with a kitchenette, low bed and desk. A later frame at **11:30** shows pasta on a plate beside a pan of sauce. The footage therefore provides room-layout and cooking context without needing to reproduce the window view, identify the building or publish a private address.
 
