@@ -1,5 +1,63 @@
 # Cloudflare RAG production handoff
 
+## Summary v19 contents and publication procedure (2026-10-01)
+
+The owner requested the summary refresh and publication, and subsequently selected
+Claude Sonnet 5.5 instead of Gemini for the broader-summary refresh.
+The screened public projection `release-20261001-summaries-v19-screened` and
+`candidate-20261001-summaries-v19` are the intended release/candidate, not a claim
+of deployment. Release coverage is 3,760 transcript summaries plus 139 broader
+summaries (3,899 total): 104 broader summaries refreshed with Sonnet 5.5 and 35
+retained from Sonnet 5. The 4,034 transcripts, 4,103 catalog recordings and separate
+Typesafe analysis of 4,034 recordings remain unchanged. Actual release counts,
+provider provenance and hashes must be taken from validated artifacts and receipts.
+
+The original assembled v19 snapshot remains private and unchanged. Four exact
+residential-location passages in two transcript summaries are generalized only
+in the screened projection, with separate editorial provenance and unchanged
+classifications and source citations. Use the screened projection for both the
+site bundle and public RAG export.
+
+The receipt-bound helper is `pipeline/publish_summary_refresh_20261001.mjs`; records
+are under `research/site-release-publications/release-20261001-summaries-v19/`.
+Baseline backups include public and private RAG manifests/receipts when present,
+the public Worker source allowlist, both release pins, preview pointer and prior
+Pages latest/canonical deployment identities. The private pilot must not be
+overwritten. The summary publication overlay must bind the approved candidate to
+the exact v19 preview bytes before preparing the public RAG manifest, so the site
+bundle and RAG export agree on summary release identity.
+The retained corpus baseline pin contains 4,103 recordings, 4,034 transcripts and
+2,870 summaries. The development preview pointer is not the deployed-site selector;
+use the pinned bundle, matching Worker release and canonical Pages/live receipts
+to establish publication state.
+
+Continue using the existing instance and content-addressed keys: prepare the full
+local manifest, retain accepted upload receipts and submit only its new/changed
+documents. The owner requires removal of duplicate superseded summaries/transcripts
+from the remote index. Reconcile only exact superseded keys absent from the current
+manifest, with identity matched to prior upload receipts; refuse current-manifest
+and unknown keys. Retain private recovery copies, prior manifests and upload/removal
+receipts, not duplicate old index items. The new public allowlist excludes all
+superseded keys. Do not clear current receipts, recreate the instance or trigger
+a global resync. No index configuration change is part of this handoff.
+
+The static site may deploy as soon as its audited bundle is remotely verified,
+without waiting for Cloudflare RAG indexing. Backend activation separately requires
+an accepted, matching upload receipt for every current document, the approved
+allowlist/release and a private raw search endpoint. Global indexing status remains
+advisory, not a completion gate; retrieval coverage may lag the static publication.
+
+Cutover requires successful candidate/publication QA, remote bundle restoration,
+matching approved allowlist/Worker release, Pages deployment and real-domain
+Turnstile/search/answer/citation checks. Preserve `analysis-release.json`
+byte-for-byte and verify its live identity, scored coverage and factor-loading hash.
+The retained Stakey transcript and its timing must also remain unchanged. Final
+publication receipts—not historical receipts or completed model jobs—establish
+whether v19 was deployed. Provider output remains machine-generated and unreviewed;
+citations do not independently establish the truth of Daniel's claims.
+
+## Historical September production handoff
+
 Approved origin: `https://hidinginmyroom.com`. On 2026-09-17 the owner approved
 the pilot snapshot, then expanded approval to all usable corpus text for public
 search and quoted answers. The September 19 quality-v13 snapshot contains 4,033

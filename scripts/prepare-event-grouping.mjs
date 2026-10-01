@@ -3,10 +3,12 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
 import {groupingInput,groupingDigest} from '../src/lib/corpus/event-groups.mjs';
+import {previewArgument,selectedPreviewDirectory} from './candidate-inputs.mjs';
 
 const base=path.resolve('research/corpus/site-previews');
-const {directory}=JSON.parse(await readFile(path.join(base,'current.json'),'utf8'));
-if(!/^release-[a-z0-9-]+$/.test(directory))throw new Error('Invalid preview');
+const explicitPreview=previewArgument(process.argv.slice(2));
+const pointer=explicitPreview?{}:JSON.parse(await readFile(path.join(base,'current.json'),'utf8'));
+const directory=selectedPreviewDirectory(pointer,explicitPreview);
 const root=path.join(base,directory),stat=await lstat(root);
 if(!stat.isDirectory()||stat.isSymbolicLink()||(stat.mode&0o077))throw new Error('Private preview required');
 const corpus=path.join(root,'corpus'),manifest=JSON.parse(await readFile(path.join(corpus,'manifest.json'),'utf8'));

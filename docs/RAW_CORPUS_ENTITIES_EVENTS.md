@@ -1,9 +1,11 @@
-# Automatically populated local Entities & events
+# Automatically populated Entities & events
 
-The operator requested a mostly raw/unreviewed corpus. In the active local preview,
-`loadCorpusGraph()` now builds a separate in-memory derived layer from the active
-corpus and transcript summaries. Original transcripts, speaker decisions, summary
-artifacts, and the reviewed public graph are not edited. No paid API is called.
+The operator requested a mostly raw/unreviewed corpus. When the derived graph is
+enabled, `loadCorpusGraph()` builds a separate in-memory layer from the selected
+corpus and transcript summaries. This is available in local previews and in
+approved production bundles. Original transcripts, speaker decisions, summary
+artifacts, and the reviewed wiki graph are not edited. Extraction makes no paid
+API calls.
 
 ## Extraction
 
@@ -43,9 +45,12 @@ active corpus/summary snapshot is picked up on the normal site restart; no separ
 graph-export or manual approval step is needed. A first request reads the active text
 shards but never hashes, decodes, screens, or retranscribes archive media.
 
-The automatic layer is currently **local-preview only**. Production continues to use
-the existing reviewed graph and release boundaries; this change does not deploy any
-content or assert publication rights. Local entity/event IDs are deterministic and
-can survive rebuilds when their name/description is unchanged.
+Production builds restore the approved corpus, summaries, derived configuration
+and event groups from the checksum-pinned release bundle. Preparing a local graph
+alone does not deploy content or assert publication rights. The release candidate
+and live verification receipts establish which snapshot is published. Entity/event
+IDs are deterministic and can survive rebuilds when their name/description is
+unchanged. The displayed corpus snapshot date is source metadata, not an event date
+or the time the derived graph was rebuilt.
 
 Tests: `node --test scripts/tests/derived-corpus-graph.test.mjs` and `npx astro check`.

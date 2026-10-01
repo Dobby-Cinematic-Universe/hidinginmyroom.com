@@ -1,6 +1,65 @@
 # Private populated release rehearsal
 
-## Latest candidate: 2026-09-19 quality v13 — publication authorized
+## Summary v19 release contents and publication procedure (2026-10-01)
+
+The owner requested the summary refresh and publication, then selected Claude
+Sonnet 5.5 rather than Gemini for the broader-summary refresh.
+The assembled snapshot is `release-20261001-summaries-v19`; the publication
+projection is `release-20261001-summaries-v19-screened`, with private candidate
+`candidate-20261001-summaries-v19`. The screened projection generalizes four
+residential-location passages in two transcript summaries, preserving the
+original snapshot, provider captures, classifications and citations. These local
+editorial changes are recorded separately from model output. Names and target counts do not certify
+that the candidate has passed its gates or reached the live site.
+
+The release scope is 3,899 summaries: 3,760 transcript summaries and all 139 broader
+summaries. Of the broader summaries, 104 use the Sonnet 5.5 refresh and 35 retain
+Sonnet 5 results. Validate these counts against the final artifacts. The 4,103
+catalog recordings, 4,034 transcripts and
+4,034 Typesafe-scored recordings are unchanged. Model provenance belongs to the
+actual captured request/result; a provider change is not a factual-verification
+claim. Source attribution and uncertainty must survive the refresh.
+
+`pipeline/publish_summary_refresh_20261001.mjs` provides receipt-bound release
+steps; its command names are not evidence that those steps have been executed.
+Publication records belong in
+`research/site-release-publications/release-20261001-summaries-v19/`.
+The baseline preserves both corpus and analysis pins, the preview pointer,
+public/private RAG state, the public source allowlist, and the previous Pages
+latest/canonical deployments. The retained v18 Stakey catalog row, transcript
+detail and speaker timing must remain unchanged, including no Daniel label before
+4:13:11. Do not impose old broader-summary prose as a requirement on new summaries.
+The retained baseline corpus pin has 4,103 recordings, 4,034 transcripts and 2,870 summaries.
+The local development preview pointer is not deployment authority;
+the approved pin, canonical Pages deployment and live checks serve distinct roles.
+
+Before promotion, complete the selected provider work and source/quality checks,
+build and audit the candidate, and record the exact counts and hosting limits.
+`approve-preview` permits only the audited public candidate's publication flags,
+printable Unicode normalization and derived summary release ID to replace the v19
+draft; the original draft and approval overlay are retained. A fresh
+`summary-publication-screen.json` must bind the approved summary bytes and release,
+not reuse v18's screen. Then verify the content-addressed R2 bundle by remote
+restoration before activating its pin.
+
+The static site may deploy once its audited bundle has passed remote verification;
+it need not wait for Cloudflare RAG indexing. Upload only new/changed RAG documents.
+Backend activation still requires accepted receipts for every current document,
+matching approved allowlist/release and a private raw search endpoint, not global
+indexing completion. At the owner's request, remove superseded summary/transcript
+index items rather than retaining duplicate old versions: reconcile only exact
+keys absent from the current manifest and bound to prior receipts. Never delete
+current-manifest or unknown keys. Retain recovery copies, prior manifests and
+upload/removal receipts privately; exclude superseded keys from public answers.
+Do not clear current receipts, recreate the index or trigger a global resync.
+Preserve the separate analysis pin byte-for-byte and verify live analysis identity,
+coverage and factor loadings after cutover. Pages success, real-domain browser/
+search checks, backend chat/citation checks and their publication receipts establish
+the respective site/backend state. Determine deployment status
+from those exact receipts; historical deployment receipts below do not prove this
+summary refresh is published. Unrelated `.kiro/` files are outside the release.
+
+## Historical candidate: 2026-09-19 quality v13 — publication authorized
 
 `candidate-20260919-quality-v13` contains 4,103 recordings, 4,033 transcripts,
 2,731 transcript summaries and all 139 broader summaries. Targeted recovery

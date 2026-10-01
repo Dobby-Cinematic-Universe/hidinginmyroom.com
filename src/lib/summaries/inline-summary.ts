@@ -1,6 +1,25 @@
 import type { PublicSummary } from './release';
+import {validateSummaryShardIndex,validateSummaryShardBytes,type SummaryShardDescriptor,type InlineSummary} from './shards.mjs';
 const labels = {summary:'Overview',topics:'Themes',events:'Developments',uncertainties:'Uncertainties & gaps'};
 const cache = new Map<string, Promise<Pick<PublicSummary,'id'|'sections'>>>();
+let indexPromise:Promise<{release:string;entries:Map<string,SummaryShardDescriptor>}>|undefined;
+const shardCache=new Map<string,Promise<Map<string,InlineSummary>>>();
+async function loadInlineSummary(id:string):Promise<InlineSummary>{
+  if(!indexPromise)indexPromise=fetch('/corpus/summaries/data/index.json',{cache:'no-cache'}).then(async response=>{
+    if(!response.ok)throw Error('Summary index unavailable');
+    const index=await response.json();
+    return {release:index.release_id,entries:validateSummaryShardIndex(index)};
+  }).catch(error=>{indexPromise=undefined;throw error;});
+  const index=await indexPromise,descriptor=index.entries.get(id);
+  if(!descriptor)throw Error('Summary unavailable');
+  if(!shardCache.has(descriptor.id))shardCache.set(descriptor.id,fetch(descriptor.url).then(async response=>{
+    if(!response.ok)throw Error('Summary shard unavailable');
+    return validateSummaryShardBytes(new Uint8Array(await response.arrayBuffer()),descriptor,index.release);
+  }).catch(error=>{shardCache.delete(descriptor.id);indexPromise=undefined;throw error;}));
+  const value=(await shardCache.get(descriptor.id))?.get(id);
+  if(!value)throw Error('Summary unavailable');
+  return value;
+}
 async function expand(details: HTMLDetailsElement) {
   if (!details.open || details.dataset.loaded || details.dataset.loading) return;
   const id = details.dataset.summaryId!;
@@ -8,9 +27,7 @@ async function expand(details: HTMLDetailsElement) {
   const body = details.querySelector<HTMLElement>('[data-summary-body]')!;
   details.dataset.loading = 'true'; body.setAttribute('aria-busy','true'); body.textContent = 'Loading summary…';
   try {
-    if (!cache.has(id)) cache.set(id, fetch(`/corpus/summaries/data/${id}.json`).then(async r => {
-      if (!r.ok) throw Error('Summary unavailable'); return r.json();
-    }));
+    if (!cache.has(id)) cache.set(id, loadInlineSummary(id));
     const value = await cache.get(id);
     if (!value) throw Error('Summary unavailable');
     const content = document.createDocumentFragment();

@@ -32,7 +32,7 @@ const eventItems=graph.derived?eventDirectoryItems(graph):[];
     <dl>
       <div><dt>Release</dt><dd>{graph.releaseId}</dd></div>
       <div>
-        <dt>Generated</dt>
+        <dt>{graph.derived ? 'Corpus snapshot date' : 'Generated'}</dt>
         <dd>
           {releaseDate && !Number.isNaN(releaseDate.getTime())
             ? releaseDate.toLocaleDateString('en-GB', {

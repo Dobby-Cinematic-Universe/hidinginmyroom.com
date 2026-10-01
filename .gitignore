@@ -84,6 +84,8 @@ pnpm-debug.log*
 # Editor, agent, and operating-system state
 /.agents/
 /.codex/
+/.kiro/
+/AGENTS.md
 /.idea/
 /.vscode/
 .DS_Store

@@ -17,9 +17,17 @@ available only for native video.
 
 Recording summaries expand on recording pages, corpus recording lists, summary
 cards and filtered summary search results. Full text is fetched only when expanded
-from `/corpus/summaries/data/[id].json`, projected from the same validated summary
-release. Production builds still exclude private-preview data. Model text is
-rendered as text, never injected HTML; uncertainty and allegation tags remain.
+through `/corpus/summaries/data/index.json` and content-hashed data shards,
+projected from the same validated summary release. Shared shards contain up to
+64 recording summaries and stay below 4 MiB; clients verify the release, entry
+mapping and checksum before displaying them. Failed loads can be retried by
+closing and reopening the summary. Production builds use only the approved public
+projection restored from the checksum-pinned release bundle; private draft exports
+and review artifacts remain excluded. The source checkout's empty corpus/summary
+placeholders and development preview pointer do not describe deployed content.
+The UI capabilities below describe implemented reader behavior; the exact deployed
+snapshot is established by its pin and Pages/live publication receipts. Model text
+is rendered as text, never injected HTML; uncertainty and allegation tags remain.
 Standalone summary links are retained, including as a no-JavaScript fallback.
 
 Verification: source-URL allowlist tests; Astro type checks; desktop/mobile browser

@@ -1,4 +1,5 @@
-// Private packaging rehearsal. Does not change live data, publish, or call paid APIs.
+// Private packaging rehearsal; restores approved public analysis when pinned.
+// Does not change live data, publish, or call paid APIs.
 import {cp,mkdir,readFile,writeFile,symlink,readdir,stat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
@@ -9,6 +10,7 @@ import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
 import {groupingInput,groupingDigest,attachEventGroups} from '../src/lib/corpus/event-groups.mjs';
+import {selectedPreviewDirectory,restorePinnedCandidateAnalysis} from './candidate-inputs.mjs';
 const project=process.cwd();
 const productionChat=process.argv.includes('--production-chat');
 let chatEnv={PUBLIC_RAG_ENABLED:'false'};
@@ -26,8 +28,7 @@ const root=path.join(project,'research/site-release-candidates',name);
 await mkdir(path.dirname(root),{recursive:true,mode:0o700});
 await mkdir(root,{mode:0o700});
 const pointer=JSON.parse(await readFile('research/corpus/site-previews/current.json','utf8'));
-if(process.argv[3])pointer.directory=process.argv[3];
-if(!/^release-[a-z0-9-]+$/.test(pointer.directory))throw Error('Unsafe preview');
+pointer.directory=selectedPreviewDirectory(pointer,process.argv[3]);
 const source=path.join(project,'research/corpus/site-previews',pointer.directory);
 const manifest=JSON.parse(await readFile(source+'/corpus/manifest.json','utf8'));
 const records=[];
@@ -64,7 +65,7 @@ await writeFile(root+'/src/data/corpus/graph/derived-config.json',JSON.stringify
 // New descriptions remain ungrouped; do not fabricate similarity decisions.
 const builder=createDerivedGraph({recordings:records,releaseId:manifest.release_id,generatedAt:manifest.generated_at,facets:manifest.facets},summaries.summaries);
 const graph=builder.finish();
-const groupSource=path.join(project,'research/corpus/site-previews',JSON.parse(await readFile('research/corpus/site-previews/current.json','utf8')).directory,'event-groups.json');
+const groupSource=path.join(source,'event-groups.json');
 let grouped=graph;
 try{
   const artifact=JSON.parse(await readFile(groupSource,'utf8'));
@@ -86,6 +87,7 @@ report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Derived
 await save();
 const run=(args)=>new Promise((resolve,reject)=>{const child=spawn(process.execPath,args,{cwd:root,env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1',...chatEnv},stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Candidate command exited '+code)));});
 try{
+  report.analysis_bundle_restored=await restorePinnedCandidateAnalysis({project,root});
   await run([path.join(project,'node_modules/astro/bin/astro.mjs'),'build','--config','candidate.config.mjs']);
   const search=JSON.parse(await readFile(source+'/search/search-manifest.json','utf8'));
   if(search.release_id!==manifest.release_id||search.recording_count!==available.size)throw Error('Cached search does not match corpus');
