@@ -1,5 +1,26 @@
 # Private populated release rehearsal
 
+## Speaker labels v20 (2026-10-02)
+
+The owner completed the 65 newly admitted, deduplicated speaker reviews and
+requested publication. The private preparation is
+`release-20261002-jev-speaker-labels-v20`; its source-bound audit records 65
+reviewed transcript replacements and 12 accepted one/zero-label replacements.
+The 46 duplicate results and two user-rejected Universal-2 results are excluded.
+Original provider results, manual reviews and the immutable v19 release remain
+retained privately. One provider point timestamp uses an audited 1 ms display
+interval; it does not establish an actual speech duration.
+
+The existing summary prose and model provenance are retained without
+recalculation. The source-selection audit identifies 76 transcript summaries,
+33 monthly summaries, eight yearly summaries and the archive overview that
+reference changed recordings. Summary notices explain that retained prose may
+reflect earlier transcript wording or speaker assignments; their recording-level
+links open current transcripts. The prior immutable v19 bundle preserves the
+historical public revision selection. Do not reintroduce older transcript
+duplicates into RAG. Preparation and local checks are not proof of publication;
+use the new publication receipts to establish the deployed state.
+
 ## Summary v19 release contents and publication procedure (2026-10-01)
 
 The owner requested the summary refresh and publication, then selected Claude

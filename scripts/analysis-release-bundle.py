@@ -23,6 +23,17 @@ MAX_FILES = 10009
 MANIFEST_KEYS = {'version', 'type', 'sha256', 'bytes', 'unpacked_bytes', 'files',
                  'corpus_release', 'questionnaire_version', 'model', 'source_generated_at',
                  'scored_recordings', 'scored_passages', 'loadings_sha256'}
+COMPATIBILITY_KEYS = {'compatible_corpus_release', 'compatibility_basis'}
+
+
+def compatible_corpus(m, corpus):
+    extra = set(m) & COMPATIBILITY_KEYS
+    if extra and (extra != COMPATIBILITY_KEYS
+                  or m['compatibility_basis'] != 'reviewed_transcript_update_historical_scores'
+                  or not re.fullmatch(r'release_[a-f0-9]{24}', str(m['compatible_corpus_release']))
+                  or m['compatible_corpus_release'] == m['corpus_release']):
+        raise ValueError('Invalid historical analysis compatibility')
+    return corpus == m['corpus_release'] or (extra and corpus == m['compatible_corpus_release'])
 
 
 def load(file):
@@ -59,9 +70,9 @@ def corpus_identity(manifest):
 
 
 def validate_manifest(m, corpus):
-    if set(m) not in (MANIFEST_KEYS, MANIFEST_KEYS | {'url'}):
+    if set(m) not in (MANIFEST_KEYS, MANIFEST_KEYS | {'url'}, MANIFEST_KEYS | COMPATIBILITY_KEYS, MANIFEST_KEYS | COMPATIBILITY_KEYS | {'url'}):
         raise ValueError('Unexpected analysis manifest fields')
-    if type(m['version']) is not int or m['version'] != 1 or m['type'] != 'transcript-analysis' or m['corpus_release'] != corpus:
+    if type(m['version']) is not int or m['version'] != 1 or m['type'] != 'transcript-analysis' or not compatible_corpus(m, corpus):
         raise ValueError('Analysis/corpus manifest identity mismatch')
     for key, limit in [('bytes', MAX_ARCHIVE), ('unpacked_bytes', MAX_UNPACKED), ('files', MAX_FILES),
                        ('scored_recordings', 10000), ('scored_passages', 1_000_000)]:
@@ -171,7 +182,7 @@ def restore(manifest, root, corpus_pin, local=None):
     m = load(manifest)
     validate_manifest(m, corpus_identity(corpus_pin))
     active = root/'src/data/corpus/manifest.json'
-    if active.exists() and load(active).get('release_id') != m['corpus_release']:
+    if active.exists() and not compatible_corpus(m, load(active).get('release_id')):
         raise ValueError('Restored corpus differs from analysis pin')
     with tempfile.TemporaryDirectory(prefix='himr-analysis-') as folder:
         temp = Path(folder)

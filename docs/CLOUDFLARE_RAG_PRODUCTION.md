@@ -1,5 +1,26 @@
 # Cloudflare RAG production handoff
 
+## Speaker-label release v20 (2026-10-02)
+
+The owner requested publication after completing the speaker reviews. The selected
+preview is `release-20261002-jev-speaker-labels-v20`. It changes 77 source-bound
+transcript selections, including 65 reviewed recordings; duplicate exclusions and
+both rejected Universal-2 results remain out of this update. Existing screened
+summary prose is retained, with earlier-input notices on the site. Analysis scores
+also retain their original inputs and bundle hash; an explicit compatibility binding
+permits the new corpus without claiming rescoring.
+
+The receipt-bound helper is
+`research/jev-label-release-20261002/tooling/publication.mjs`; its baseline,
+bundle verification, RAG delta, exact-key cleanup and Pages receipts are in
+`research/jev-label-release-20261002/publication/`. Retain accepted upload receipts,
+upload only new keys, activate only with complete accepted receipts, and remove
+only the baseline's superseded exact keys after verifying they are absent from the
+current manifest. Historical bundles and local recovery files remain preserved;
+older transcript copies should not remain as duplicate index entries. Indexing
+completion is advisory and does not gate the static site. Read the new receipts,
+not this procedure or historical v19 receipts, to establish live publication state.
+
 ## Summary v19 contents and publication procedure (2026-10-01)
 
 The owner requested the summary refresh and publication, and subsequently selected

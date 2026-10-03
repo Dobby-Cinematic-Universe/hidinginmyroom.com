@@ -6,6 +6,8 @@
   "unpacked_bytes": 323099345,
   "files": 4043,
   "corpus_release": "release_3340f5629ddf5664f4dd749d",
+  "compatible_corpus_release": "release_6c28d991eb1fc8941503457b",
+  "compatibility_basis": "reviewed_transcript_update_historical_scores",
   "questionnaire_version": "himr-transcript-analysis-questions-v1",
   "model": "jev-1.13.0",
   "source_generated_at": "2026-09-30T19:32:42.746048+00:00",

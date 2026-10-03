@@ -9,7 +9,11 @@ function requireValue(condition, field) {
 /** Validate the deliberately small, public-facing projection before the browser sees it. */
 export function validateAnalysisRelease(value) {
   requireValue(isObject(value), 'root');
-  exactKeys(value, ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis'], 'root');
+  exactKeys(value, ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis','historical_input'], 'root', ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis']);
+  if (value.historical_input !== undefined) {
+    exactKeys(value.historical_input, ['active_corpus_release_id','basis'], 'historical_input');
+    requireValue(/^release_[a-f0-9]{24}$/.test(value.historical_input.active_corpus_release_id) && value.historical_input.active_corpus_release_id !== value.corpus_release_id && value.historical_input.basis === 'reviewed_transcript_update_historical_scores', 'historical_input');
+  }
   requireValue(value.schema_version === 1, 'schema_version');
   requireValue(['pilot', 'complete'].includes(value.status), 'status');
   for (const key of ['corpus_release_id', 'questionnaire_version', 'model', 'generated_at']) requireValue(str(value[key]), key);

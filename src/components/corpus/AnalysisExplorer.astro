@@ -10,6 +10,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
 <section class="analysis-explorer" data-analysis-root aria-label="Transcript score explorer">
   <p role="status" aria-live="polite" data-status>Loading the score release…</p>
   <div data-content hidden>
+    <p data-historical-input hidden></p>
     <aside class="scope-note"><p>Scores are model judgments about transcript text; predicted reception is not an observed audience response. Open a recording's evidence to inspect its source passages.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. Classification outputs, including text-to-speech indicators, are model inferences and may be false positives; they do not independently verify audio or production methods. Short excerpts may provide especially weak evidence. Speaker labels and transcript wording may be wrong. The score ranges shown follow the release method and are not automatically statistical confidence intervals. Factor names are provisional descriptions of this fitted model.</p></details></aside>
     <details class="section-jumps"><summary>Jump to an analysis</summary><nav class="explorer-nav" aria-label="Analysis sections">
       <div><span>Browse and explore</span><a href="#analysis-videos">Video rankings</a><a href="#analysis-trend">Scores over time</a><a href="#analysis-discovery">Recording maps and similarity</a><a href="#analysis-relationships">Question relationships</a><a href="#analysis-map">Question map</a></div>
@@ -64,6 +65,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
 
 <script>
   import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  import { historicalPassageHref } from '../../lib/analysis/historical-compatibility.mjs';
   import type { AnalysisQuestion, AnalysisRelease, AnalysisVideo } from '../../lib/analysis/explorer.mjs';
   import factorAnnotations from '../../data/analysis/factor-descriptions.json';
   import { factorDisplayLabel, resolveFactorDescriptions } from '../../lib/analysis/factor-descriptions.mjs';
@@ -170,7 +172,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       if(video.scored_passage) {
         const source=n('p'),anchor=video.scored_passage,link=n('a',`${anchor.label} [${fmtTime(anchor.start_ms)}–${fmtTime(anchor.end_ms)}]`) as HTMLAnchorElement;
         source.append(n('strong','Shared source passage: '),link);
-        link.href=hrefAtTime(anchor.href,anchor.start_ms,video.revision_id,anchor.segment_id);link.target='_blank';link.rel='noopener noreferrer';panel.append(source);
+        link.href=release.historical_input?historicalPassageHref(anchor.href,anchor.start_ms):hrefAtTime(anchor.href,anchor.start_ms,video.revision_id,anchor.segment_id);link.target='_blank';link.rel='noopener noreferrer';panel.append(source);
       }
       const list=n('ul');
       for(const question of release.questions) {
@@ -258,11 +260,11 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         const flush=()=>{if(segment.length>1)chart.append(svg('polyline',{points:segment.map(row=>`${X(row.passage.start_ms)},${Y(row.score.value!)}`).join(' '),fill:'none',stroke:'var(--corpus-accent)','stroke-width':'2'}));segment=[];};
         for(const row of all){if(row.score?.value==null||!row.score.applicable){flush();continue;}segment.push(row);}
         flush();
-        for(const {passage,score} of valid){const x=X(passage.start_ms),link=svg('a',{href:passage.source.href,target:'_blank',rel:'noopener noreferrer','aria-label':`${q.short_name}, passage ${passage.chunk_index+1}, ${fmtTime(passage.start_ms)} to ${fmtTime(passage.end_ms)}, score ${fmt(score.value)}`}),circle=svg('circle',{cx:String(x),cy:String(Y(score.value!)),r:'5',fill:'var(--corpus-accent)'}),title=svg('title',{});title.textContent=`Passage ${passage.chunk_index+1} · ${fmtTime(passage.start_ms)}–${fmtTime(passage.end_ms)} · ${q.short_name}: ${fmt(score.value)} · support ${score.low==null||score.high==null?'not reported':`${fmt(score.low)}–${fmt(score.high)}`}`;circle.append(title);link.append(circle);chart.append(link);}
+        for(const {passage,score} of valid){const x=X(passage.start_ms),link=svg('a',{href:release.historical_input?historicalPassageHref(passage.source.href,passage.start_ms):passage.source.href,target:'_blank',rel:'noopener noreferrer','aria-label':`${q.short_name}, passage ${passage.chunk_index+1}, ${fmtTime(passage.start_ms)} to ${fmtTime(passage.end_ms)}, score ${fmt(score.value)}`}),circle=svg('circle',{cx:String(x),cy:String(Y(score.value!)),r:'5',fill:'var(--corpus-accent)'}),title=svg('title',{});title.textContent=`Passage ${passage.chunk_index+1} · ${fmtTime(passage.start_ms)}–${fmtTime(passage.end_ms)} · ${q.short_name}: ${fmt(score.value)} · support ${score.low==null||score.high==null?'not reported':`${fmt(score.low)}–${fmt(score.high)}`}`;circle.append(title);link.append(circle);chart.append(link);}
       };
       const drawGrid=()=>{
         const start=chunkPage*chunkSize,visible=data.passages.slice(start,start+chunkSize),table=n('table'),caption=n('caption',`Passage scores by scored question · passages ${start+1}–${Math.min(start+chunkSize,data.passages.length)} of ${data.passages.length}`),head=n('thead'),headrow=n('tr');headrow.append(n('th','Scored question'));
-        for(const p of visible){const th=n('th'),a=n('a',`#${p.chunk_index+1} · ${fmtTime(p.start_ms)}`) as HTMLAnchorElement;a.href=p.source.href;a.target='_blank';a.rel='noopener noreferrer';a.title=`Open passage ${p.chunk_index+1}, ${fmtTime(p.start_ms)}–${fmtTime(p.end_ms)}, revision ${p.revision_id}`;th.append(a);headrow.append(th);}head.append(headrow);const body=n('tbody');
+        for(const p of visible){const th=n('th'),a=n('a',`#${p.chunk_index+1} · ${fmtTime(p.start_ms)}`) as HTMLAnchorElement;a.href=release.historical_input?historicalPassageHref(p.source.href,p.start_ms):p.source.href;a.target='_blank';a.rel='noopener noreferrer';a.title=`Open passage ${p.chunk_index+1}, ${fmtTime(p.start_ms)}–${fmtTime(p.end_ms)}, scored revision ${p.revision_id}`;th.append(a);headrow.append(th);}head.append(headrow);const body=n('tbody');
         for(const q of questions){const row=n('tr'),name=n('th') as HTMLTableCellElement;name.scope='row';name.textContent=`${q.short_name} · ${humanize(q.domain)}`;row.append(name);for(const p of visible){const score=p.scores[q.id],cell=n('td');if(!score||score.value==null||!score.applicable){cell.textContent='—';cell.setAttribute('aria-label',`${q.short_name}: not applicable or unavailable`);}else{cell.textContent=fmt(score.value);const intensity=Math.max(0,Math.min(1,score.value/4));cell.style.backgroundColor=`color-mix(in srgb, var(--corpus-accent) ${Math.round(intensity*35)}%, var(--corpus-bg))`;cell.title=`${q.short_name}: ${cell.textContent}; nonzero score support ${score.low==null?'—':fmt(score.low)}–${score.high==null?'—':fmt(score.high)}; coverage ${fmt(score.coverage*100)}%`;cell.setAttribute('aria-label',cell.title);}row.append(cell);}body.append(row);}
         table.append(caption,head,body);gridHost.replaceChildren(table);chunkLabel.textContent=`Passages ${start+1}–${Math.min(start+chunkSize,data.passages.length)} of ${data.passages.length}`;back.disabled=chunkPage===0;forward.disabled=(chunkPage+1)*chunkSize>=data.passages.length;
       };
@@ -380,6 +382,9 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
           for(const shardRows of responses)videos.push(...shardRows);
         }
         release=validateAnalysisRelease({...payload.release,videos});passageShardIndex=validatePassageShardIndex(payload.passage_shards,release);factorDescriptions=await resolveFactorDescriptions(release,factorAnnotations);supplement=await loadAnalysisSupplement(release);document.dispatchEvent(new CustomEvent('analysis-release-ready',{detail:{release,supplement,diagnostics:supplement?.map_diagnostics}})); status.textContent='';status.hidden=true;content.hidden=false;
+        const historical=root.querySelector<HTMLElement>('[data-historical-input]')!;
+        historical.hidden=!release.historical_input;
+        historical.textContent=release.historical_input?`Scores use the earlier transcript inputs from ${release.generated_at.slice(0,10)}. Reviewed speaker labels and some transcripts have since changed; scores and fitted dimensions have not been recalculated. Passage links open the current recording at the original scored time, where wording or segmentation may differ.`:'';
         const meta=root.querySelector<HTMLElement>('[data-release-meta]')!;meta.textContent=`${release.status==='pilot'?'Pilot':'Complete'} · ${release.coverage.scored_recordings.toLocaleString()} / ${release.coverage.total_recordings.toLocaleString()} recordings scored · ${release.coverage.scored_chunks.toLocaleString()} / ${release.coverage.total_chunks.toLocaleString()} transcript chunks · ${release.model} · ${release.generated_at} · questionnaire ${release.questionnaire_version}`;
         metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));
         const years=[...new Set(release.videos.flatMap(v=>v.date?[v.date.slice(0,4)]:[]))].sort().reverse();yearSelect.append(...years.map(y=>option(y,y)),option('Undated','undated'));

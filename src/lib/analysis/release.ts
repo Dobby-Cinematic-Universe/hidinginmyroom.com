@@ -4,6 +4,7 @@ import { validateAnalysisRelease } from './explorer.mjs';
 import type { AnalysisRelease } from './explorer.mjs';
 import { analysisReleaseCacheKey, analysisReleaseIdentity, createAnalysisReleaseCache } from './release-cache.mjs';
 import { loadCorpusCatalog } from '../corpus/release';
+import { analysisMatchesCorpus } from './historical-compatibility.mjs';
 
 const publicReleasePath = path.resolve('src/data/analysis/release.json');
 let cached: Promise<AnalysisRelease | null> | undefined;
@@ -55,7 +56,11 @@ function validateReleaseFile(stat: Awaited<ReturnType<typeof releaseStat>>) {
 async function readAndValidateAnalysis(file: string, corpusReleaseId: string): Promise<AnalysisRelease> {
     const parsed: unknown = JSON.parse(await readFile(file, 'utf8'));
     const release = validateAnalysisRelease(parsed);
-    if (release.corpus_release_id !== corpusReleaseId) throw new Error('Transcript analysis release is based on a different corpus release.');
+    if (release.corpus_release_id !== corpusReleaseId) {
+      const pin = JSON.parse(await readFile(path.resolve('analysis-release.json'), 'utf8'));
+      if (!analysisMatchesCorpus(pin, release.corpus_release_id, corpusReleaseId)) throw new Error('Transcript analysis release is based on an unapproved corpus release.');
+      release.historical_input = { active_corpus_release_id: corpusReleaseId, basis: 'reviewed_transcript_update_historical_scores' };
+    }
     return release;
 }
 

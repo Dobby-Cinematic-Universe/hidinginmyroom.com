@@ -47,6 +47,17 @@ with tempfile.TemporaryDirectory() as folder:
         wrong=root/'wrong.json';wrong.write_text(json.dumps(dict(corpus_release='other')))
         try:b.restore(root/'one/manifest.json',root/'new',wrong);raise AssertionError('wrong corpus accepted')
         except ValueError as error:assert 'identity mismatch' in str(error)
+        compatible='release_'+'d'*24
+        historical=dict(m,compatible_corpus_release=compatible,compatibility_basis='reviewed_transcript_update_historical_scores')
+        b.validate_manifest(historical,compatible)
+        assert historical['corpus_release']=='corpus-a'
+        for bad in (dict(historical,compatibility_basis='anything'),dict(historical,compatible_corpus_release='other')):
+            try:b.validate_manifest(bad,compatible);raise AssertionError('unbound compatibility accepted')
+            except ValueError:pass
+        historical_manifest=root/'historical.json';historical_manifest.write_text(json.dumps(historical))
+        new_pin=root/'new-pin.json';new_pin.write_text(json.dumps(dict(corpus_release=compatible)))
+        b.restore(historical_manifest,root/'historical-dest',new_pin,root/'one/analysis.tar.gz')
+        assert b.load(root/'historical-dest/src/data/analysis/release.json')['corpus_release_id']=='corpus-a'
         corrupt=root/'corrupt.json';corrupt.write_text(json.dumps(dict(m,sha256='f'*64)))
         try:b.restore(corrupt,root/'corrupt-dest',pin,root/'one/analysis.tar.gz');raise AssertionError('bad checksum accepted')
         except ValueError as error:assert 'checksum mismatch' in str(error)

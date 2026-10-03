@@ -32,7 +32,7 @@ async function expand(details: HTMLDetailsElement) {
     if (!value) throw Error('Summary unavailable');
     const content = document.createDocumentFragment();
     const notice = document.createElement('p'); notice.className='summary-caution';
-    notice.textContent='AI-generated and unreviewed. Check the recording for context.'; content.append(notice);
+    notice.textContent='AI-generated and unreviewed. Retained summaries use the transcript and speaker assignments available when generated; later corrections may not yet be reflected. Source links open the currently released transcript. Check the recording for context.'; content.append(notice);
     for (const [key,label] of Object.entries(labels) as [keyof typeof labels,string][]) {
       const items = value.sections[key]; if (!items?.length) continue;
       const h = document.createElement('h4'); h.textContent=label; content.append(h);

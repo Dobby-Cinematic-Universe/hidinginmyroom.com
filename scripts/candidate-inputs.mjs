@@ -1,4 +1,4 @@
-import {lstat} from 'node:fs/promises';
+import {copyFile,lstat} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import path from 'node:path';
 
@@ -26,9 +26,16 @@ export async function restorePinnedCandidateAnalysis({project,root,run=runRestor
   let stat;
   try{stat=await lstat(manifest);}catch(error){if(error.code==='ENOENT')return false;throw error;}
   if(!stat.isFile() || stat.isSymbolicLink())throw Error('Invalid analysis release manifest');
+  const candidateManifest=path.join(root,'analysis-release.json');
+  try {
+    const target=await lstat(candidateManifest);
+    if(!target.isFile() || target.isSymbolicLink())throw Error('Invalid candidate analysis release manifest');
+  } catch(error) { if(error.code!=='ENOENT')throw error; }
+  // Restore and the subsequent Astro build consume the same exact approved pin.
+  await copyFile(manifest,candidateManifest);
   await run('python3',[
     path.join(project,'scripts/analysis-release-bundle.py'),'restore',
-    '--manifest',manifest,'--root',root,
+    '--manifest',candidateManifest,'--root',root,
     '--corpus-manifest',path.join(project,'corpus-release.json'),
   ]);
   return true;

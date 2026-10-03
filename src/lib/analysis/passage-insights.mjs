@@ -1,4 +1,5 @@
 import { matchesAnalysisIdentity, analysisLoadingHash } from './supplement.mjs';
+import { historicalPassageHref } from './historical-compatibility.mjs';
 
 export async function validatePassageInsights(data, release) {
   if (!matchesAnalysisIdentity(data,release) || data.loadings_sha256 !== await analysisLoadingHash(release)) return null;
@@ -41,11 +42,11 @@ export function rankPassageVariation(data, questionId, metric='sd') {
 export function coverageSummary(cell) {
   return {total:cell[0],scored:cell[2],insufficient:cell[3],missing:cell[4],coverage:cell[0]?cell[2]/cell[0]:null,entropy:cell[6],modelVariance:cell[7],betweenVariance:cell[8],recordings:cell[9]};
 }
-export function passageExtremeHref(data,video,row,kind='low') {
+export function passageExtremeHref(data,video,row,kind='low',historical=false) {
   const time=row[kind==='high'?9:8],chunk=row[kind==='high'?11:10];
   const locator=data.locators[row[0]].find(p=>p[0]===chunk&&p[1]===time);
   if(!locator)return null;
-  return `${video.href}?t=${Math.floor(time/1000)}#segment-${video.revision_id}-${locator[2]}`;
+  return historical ? historicalPassageHref(video.href,time) : `${video.href}?t=${Math.floor(time/1000)}#segment-${video.revision_id}-${locator[2]}`;
 }
 
 export function renderPassageInsights(root,release,data){
@@ -70,7 +71,7 @@ export function renderPassageInsights(root,release,data){
       const video=release.videos[r[0]],tr=document.createElement('tr'),title=cell(tr,'');title.append(link(video.href,video.title));
       const button=document.createElement('button');button.type='button';button.textContent='Inspect recording';button.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('analysis-select-recording',{detail:{recording_id:video.recording_id}})));title.append(document.createElement('br'),button);
       for(const v of [String(r[1]),format(r[2]),format(r[3]),format(r[6]),format(r[7])])cell(tr,v);
-      const extremes=cell(tr,'');extremes.append(link(passageExtremeHref(data,video,r,'low'),`Low ${format(r[4])}`),document.createElement('br'),link(passageExtremeHref(data,video,r,'high'),`High ${format(r[5])}`));body.append(tr);
+      const extremes=cell(tr,'');extremes.append(link(passageExtremeHref(data,video,r,'low',!!release.historical_input),`Low ${format(r[4])}`),document.createElement('br'),link(passageExtremeHref(data,video,r,'high',!!release.historical_input),`High ${format(r[5])}`));body.append(tr);
     }
     const controls=document.createElement('div');controls.className='insights-pagination';
     for(const [label,offset,disabled] of [['Previous page',-1,page===0],['Next page',1,(page+1)*20>=rows.length]]){const b=document.createElement('button');b.type='button';b.textContent=label;b.disabled=disabled;b.addEventListener('click',()=>{page+=offset;draw();});controls.append(b);}
