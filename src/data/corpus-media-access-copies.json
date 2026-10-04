@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "corpus_release": "release_46257f34c6a32f9af127d0cc",
+  "copies": [
+    {
+      "recording_id": "rec_2c34bde05e8b2f144743033ecceaf565",
+      "source_id": "src_910a766e80d390c6972bd7cda54cfd70",
+      "original_url": "https://archive.org/download/69999/20171025-I%20feel%20lonely%20and%20desperate.mkv",
+      "source_sha256": "0d51ad167289d26b4e2049d86a9e3f6ce460e0cb2b2170130cafabf7bfb91185",
+      "playback_url": "https://archive.org/download/69999/20171025-I%20feel%20lonely%20and%20desperate.mp4"
+    },
+    {
+      "recording_id": "rec_28cc0488c4e45377547726ef28ffec76",
+      "source_id": "src_f7365f5fd8521ec7ef42b74e40168477",
+      "original_url": "https://archive.org/download/69999/20171105-It%27s%20getting%20worse....mkv",
+      "source_sha256": "0e2ca18e97e43ba5467ba3420a67cd5af54440fba1e4d92cd0a4d5b892d279ef",
+      "playback_url": "https://archive.org/download/69999/20171105-It%27s%20getting%20worse....mp4"
+    },
+    {
+      "recording_id": "rec_e317dd28f262c17ee8bc7ecfb1970248",
+      "source_id": "src_d9d1c09523a131e1f58f0f3560132e0a",
+      "original_url": "https://archive.org/download/69999/20171021-I%20got%20a%20warning%20about%20my%20youtube%20channel...-NhbQ8GnGJqM.mkv",
+      "source_sha256": "101d9793607688211a699f9193526d4ba10f598ea2635edf33d79893fb0094a1",
+      "playback_url": "https://archive.org/download/69999/20171021-I%20got%20a%20warning%20about%20my%20youtube%20channel...-NhbQ8GnGJqM.mp4"
+    },
+    {
+      "recording_id": "rec_ac348bcc09c3d7dfd14b7c856779cf43",
+      "source_id": "src_d0c86bc1f422e2a7f310958b3a2f08b1",
+      "original_url": "https://archive.org/download/69999/9999999-Daniel%27s%20Family%20Photos%20Livestream%20(circa%2020181210).ogv",
+      "source_sha256": "1d7f1fbc843fcc1ed9e4a21f351c74cbab72f7679119eee152b3ef205e74a688",
+      "playback_url": "https://archive.org/download/69999/9999999-Daniel%27s%20Family%20Photos%20Livestream%20%28circa%2020181210%29.mp4"
+    },
+    {
+      "recording_id": "rec_410921cd2d1c5e8879c62b876af102e6",
+      "source_id": "src_c206693a4c811be2e82043220645b12a",
+      "original_url": "https://archive.org/download/69999/20171018-I%20had%20lunch%20with%20a%20beautiful%20japanese%20woman%20today.mkv",
+      "source_sha256": "434cfab0a4ec2a5489c1c910fd3286e9af26f4818dfdf22488bd4fed392395a2",
+      "playback_url": "https://archive.org/download/69999/20171018-I%20had%20lunch%20with%20a%20beautiful%20japanese%20woman%20today.mp4"
+    },
+    {
+      "recording_id": "rec_47b9c1dcc3e5c37dfb84d2f22b7455ee",
+      "source_id": "src_5104d87f1a584d552b93775bd16591a7",
+      "original_url": "https://archive.org/download/69999/20190606-I%27m%20back%20In%20Japan-F9Kxv1NXtX0-2.ts",
+      "source_sha256": "447294129492e9f9877db10e8157314264816ae268d84a33a17e4f1d7b628ce7",
+      "playback_url": "https://archive.org/download/69999/20190606-I%27m%20back%20In%20Japan-F9Kxv1NXtX0-2.mp4"
+    },
+    {
+      "recording_id": "rec_db230675997f97a40be788705e4a875e",
+      "source_id": "src_decb1cd60cf59fd0853d9ba00b929486",
+      "original_url": "https://archive.org/download/69999/20171026-GOOD%20NEWS%20EVERYONE%21.mkv",
+      "source_sha256": "5de8e7a6561d8a360e28e821150dd8c893cdb8487bf0d81097738bd4cdd531ca",
+      "playback_url": "https://archive.org/download/69999/20171026-GOOD%20NEWS%20EVERYONE%21.mp4"
+    },
+    {
+      "recording_id": "rec_826e1c0f5a7b73abc5c8868181a2ac8f",
+      "source_id": "src_8a4a0af87bdfc569909bd9797ada32cf",
+      "original_url": "https://archive.org/download/69999/20171018-I%20feel%20like%20everything%20i%20do%20in%20life%20fails-zz44C_RFyr4.mkv",
+      "source_sha256": "676fcf9b9d5f70fbff7822307cbc260061aeef86820b542b5f1dffa6f32836b0",
+      "playback_url": "https://archive.org/download/69999/20171018-I%20feel%20like%20everything%20i%20do%20in%20life%20fails-zz44C_RFyr4.mp4"
+    },
+    {
+      "recording_id": "rec_dceafd7531cea75dce8e1ee3ce3fadea",
+      "source_id": "src_c287eec498cdfd6fa0a75740a0ac7cee",
+      "original_url": "https://archive.org/download/69999/20171017-My%20response%20to%20Gimmeabreakman%27s%20video%20about%20me-aHSTZDX7i70.mkv",
+      "source_sha256": "b1b45fdf025ae417c7ac1a340aae97647118f591efa56280138310f9958e081b",
+      "playback_url": "https://archive.org/download/69999/20171017-My%20response%20to%20Gimmeabreakman%27s%20video%20about%20me-aHSTZDX7i70.mp4"
+    },
+    {
+      "recording_id": "rec_d4786609047037954b76236e306d946b",
+      "source_id": "src_09d6dbe6dfe75b9eddcb0a29dd0bf961",
+      "original_url": "https://archive.org/download/69999/20171104-I%20have%20a%20penile%20yeast%20infection.mkv",
+      "source_sha256": "f38d3c92846977920fca760b4f18077fc73f425be08426d654b319ff3003848b",
+      "playback_url": "https://archive.org/download/69999/20171104-I%20have%20a%20penile%20yeast%20infection.mp4"
+    },
+    {
+      "recording_id": "rec_0bea3e8239a87f44b563a2c286d93986",
+      "source_id": "src_823d15a46db2dcb209ecf4d34ad4ac23",
+      "original_url": "https://archive.org/download/69999/20190619-DansKitchen%20-%20Making%20Pizza-hZqV8PIfij0.ogv",
+      "source_sha256": "66379d968c8998929c097a0c4550c83ce1b6b9d0d76ddddf5213248631a13798",
+      "playback_url": "https://archive.org/download/69999/20190619-DansKitchen%20-%20Making%20Pizza-hZqV8PIfij0.mp4"
+    },
+    {
+      "recording_id": "rec_28a9d9a5846cd2377e2b95b3fdff046a",
+      "source_id": "src_9257343f9b237a06dc05472f40bc578a",
+      "original_url": "https://archive.org/download/69999/20190710-Got%20Some%20new%20Stuff%20On%20Amazon-dcSDjQS-3I0.ogv",
+      "source_sha256": "7946641051c80f1f3f26fe16d01e30e0f26f1d89a37d9324cb8fb941cd3ea306",
+      "playback_url": "https://archive.org/download/69999/20190710-Got%20Some%20new%20Stuff%20On%20Amazon-dcSDjQS-3I0.mp4"
+    },
+    {
+      "recording_id": "rec_0bb7863ec4b4a1bb31c9882dc1a90cd6",
+      "source_id": "src_52c18127ef9bc251e1bd9dd4bcd45373",
+      "original_url": "https://archive.org/download/69999/20190707-I%20Bought%20A%20Drone%20And%20A%20Gun%21-wP0p9G9G-pY.ogv",
+      "source_sha256": "c85302fd9c72404879e86e59387cc35cc0696e058a39aad325fa918e6c0648ba",
+      "playback_url": "https://archive.org/download/69999/20190707-I%20Bought%20A%20Drone%20And%20A%20Gun%21-wP0p9G9G-pY.mp4"
+    },
+    {
+      "recording_id": "rec_61349b5ecedb191bb94371884fccc02c",
+      "source_id": "src_92d1eee0613451ef87b23c5d4432ffe7",
+      "original_url": "https://archive.org/download/69999/20190920-I%20Dont%20Know%20What%20To%20Do%20About%20Everything-YpxZbnijO-o.ogv",
+      "source_sha256": "987027171c0e6ea8c05595b3dbcf82575255bc47a0dc695222333127e848595a",
+      "playback_url": "https://archive.org/download/69999/20190920-I%20Dont%20Know%20What%20To%20Do%20About%20Everything-YpxZbnijO-o.mp4"
+    },
+    {
+      "recording_id": "rec_d91ae5c5bf9de8c63d4e2b644040062c",
+      "source_id": "src_6a5135c4a1154899d1ee1956bc448b56",
+      "original_url": "https://archive.org/download/69999/20190827-i%20have%20a%20problem%20and%20i%20need%20some%20advice-eYzbVaMNSZY.ogv",
+      "source_sha256": "7867259e601629609cfe135ff23826f016039a985a777edd465b37f30aaff95a",
+      "playback_url": "https://archive.org/download/69999/20190827-i%20have%20a%20problem%20and%20i%20need%20some%20advice-eYzbVaMNSZY.mp4"
+    },
+    {
+      "recording_id": "rec_d173a99a6c38cc9d9403967ba22ce188",
+      "source_id": "src_53965909f18e235b1168d0a269cbdd49",
+      "original_url": "https://archive.org/download/69999/20191214-I%20Walked%20out%20On%20My%20Wife-5A6s-gC66Pg.ogv",
+      "source_sha256": "b21c81bdf335e13bb23e5e4ce43e7f7713e808a02d573b4ebbb9e27ec6357adc",
+      "playback_url": "https://archive.org/download/69999/20191214-I%20Walked%20out%20On%20My%20Wife-5A6s-gC66Pg.mp4"
+    },
+    {
+      "recording_id": "rec_cfb57c6026f9bb675139b43a92d363c5",
+      "source_id": "src_8d8587a3c68d60f9615b4ed557b5535e",
+      "original_url": "https://archive.org/download/69999/20191216-I%27m%20All%20Alone%20In%20A%20Hotel-rsIQ6IWu6oE.ogv",
+      "source_sha256": "2fcbb35a3b7461ef901fdc10153663373a6074ed90556852f41d5ae6d57b2613",
+      "playback_url": "https://archive.org/download/69999/20191216-I%27m%20All%20Alone%20In%20A%20Hotel-rsIQ6IWu6oE.mp4"
+    },
+    {
+      "recording_id": "rec_8c1f6368c600bdab89a99eeaabdd4a3e",
+      "source_id": "src_f31cd0902a96870e00c34b3da12af5dc",
+      "original_url": "https://archive.org/download/69999/20191212-I%27m%20Angry%20And%20Need%20To%20Vent-r2xXXSXB1sA.ogv",
+      "source_sha256": "63b2d4f4c12573efdc847f6aa95f9af3d7a63270fc5ab2cce7931e86b1a15c21",
+      "playback_url": "https://archive.org/download/69999/20191212-I%27m%20Angry%20And%20Need%20To%20Vent-r2xXXSXB1sA.mp4"
+    },
+    {
+      "recording_id": "rec_01180ebeeda4114bbe76747ea9ea9fba",
+      "source_id": "src_9faec2771101d7afd768896f59d300a2",
+      "original_url": "https://archive.org/download/69999/20190816-Live%20At%20The%20Zoo-ryM0dw_miu8.ogv",
+      "source_sha256": "27a7def092e132bf253f04560be40cc829f83578208454ac928c62f165bd9078",
+      "playback_url": "https://archive.org/download/69999/20190816-Live%20At%20The%20Zoo-ryM0dw_miu8.mp4"
+    },
+    {
+      "recording_id": "rec_71f01a17feb99de3eb41e6a24220b88d",
+      "source_id": "src_f4209d6ff14b56f170762f396d884a22",
+      "original_url": "https://archive.org/download/69999/20190718-Looking%20for%20Ice%20Poseidon-m3DKXvH_pXw.ogv",
+      "source_sha256": "b2e0823e9fc3fcf6484b3e16a4af770b17ae09fd192292e9e138a4a436c366bc",
+      "playback_url": "https://archive.org/download/69999/20190718-Looking%20for%20Ice%20Poseidon-m3DKXvH_pXw.mp4"
+    },
+    {
+      "recording_id": "rec_8acea91c78b7884198c49f23ee094a0f",
+      "source_id": "src_e00f3056f2262c8d6923dc5bea659090",
+      "original_url": "https://archive.org/download/69999/20190730-lunch%20with%20daniel-ZwbsGjNIHrs.ogv",
+      "source_sha256": "fccb2c0961d5908d04450742efc902c6805f080466d520c212892b18add24177",
+      "playback_url": "https://archive.org/download/69999/20190730-lunch%20with%20daniel-ZwbsGjNIHrs.mp4"
+    },
+    {
+      "recording_id": "rec_12c6830d95756a2d3ad4806d3d0ad94d",
+      "source_id": "src_385e9699523dd0090a8f0b161d43a846",
+      "original_url": "https://archive.org/download/69999/20190703-Lunch%20With%20Daniel%20-%20Sausage%20Sandwiches-7eQi4kp0jaA.ogv",
+      "source_sha256": "df0561d44b934def5a250f754915f6c987a7c94244c3c4356616dfce0597ef2b",
+      "playback_url": "https://archive.org/download/69999/20190703-Lunch%20With%20Daniel%20-%20Sausage%20Sandwiches-7eQi4kp0jaA.mp4"
+    },
+    {
+      "recording_id": "rec_c219bc7bb9a716ce25950c5884690bf5",
+      "source_id": "src_07228026d0f4df41b796602aedcba0c7",
+      "original_url": "https://archive.org/download/69999/20190718-Making%20Spring%20Rolls%20In%20My%20Kitchen%20)-x7eAL8_M-Ug.ogv",
+      "source_sha256": "cbb59f69585795164e81732d16e26331a399a6b8904440c56e1d8801e25f58fd",
+      "playback_url": "https://archive.org/download/69999/20190718-Making%20Spring%20Rolls%20In%20My%20Kitchen%20%29-x7eAL8_M-Ug.mp4"
+    },
+    {
+      "recording_id": "rec_a241a8edafe17f83827679ab371120b1",
+      "source_id": "src_023a04592e5e8b9e0fec97ea736908c2",
+      "original_url": "https://archive.org/download/69999/20190802-me%20and%20my%20wife%20had%20a%20HUGE%20argument%20yesterday-HPEPCXBpTMU.ogv",
+      "source_sha256": "256ff559423d3b1feacbc67f40ec3750127ec5264a5452d6abe460c6151503f1",
+      "playback_url": "https://archive.org/download/69999/20190802-me%20and%20my%20wife%20had%20a%20HUGE%20argument%20yesterday-HPEPCXBpTMU.mp4"
+    },
+    {
+      "recording_id": "rec_98219597b6ffbd67e6415fe27dcd8aa5",
+      "source_id": "src_136500257b92b66908536ad722a91ad6",
+      "original_url": "https://archive.org/download/69999/20190705-Muffin%20Burger%20And%20Vietnamese%20Rolls%20(Non%20Angry%20Stream)-7aoRJlcZVQI.ogv",
+      "source_sha256": "304e5a4cc1033672d92daf71ac05442586f07f58797ac4fe11d6abfbc259863b",
+      "playback_url": "https://archive.org/download/69999/20190705-Muffin%20Burger%20And%20Vietnamese%20Rolls%20%28Non%20Angry%20Stream%29-7aoRJlcZVQI.mp4"
+    },
+    {
+      "recording_id": "rec_e7fe1830f17de4c115c4acfd7fcd91db",
+      "source_id": "src_cf87c874d28b20477e3eaad66246bf62",
+      "original_url": "https://archive.org/download/69999/20191003-New%20Airbnb-KEi6-2pzrm0.ogv",
+      "source_sha256": "51005931d2bcd32f2336a9c204ef6d1eede0e744e685209cafdbe8362338aed0",
+      "playback_url": "https://archive.org/download/69999/20191003-New%20Airbnb-KEi6-2pzrm0.mp4"
+    },
+    {
+      "recording_id": "rec_a7ce8a167f231af169f76e4bd945adf9",
+      "source_id": "src_0bf9597577ba5491c71ce03dc602f902",
+      "original_url": "https://archive.org/download/69999/20190805-Playing%20minecraft%20with%20viewers%20-%20ANYONE%20CAN%20JOIN-XgHsalFTuCw.ogv",
+      "source_sha256": "8449e74dca108655d1eb4d6c571a35037cd2702f9b20b53cb151fd04eae1df85",
+      "playback_url": "https://archive.org/download/69999/20190805-Playing%20minecraft%20with%20viewers%20-%20ANYONE%20CAN%20JOIN-XgHsalFTuCw.mp4"
+    },
+    {
+      "recording_id": "rec_10d26bafc2ea93855e8208a7d97652a8",
+      "source_id": "src_48a96a387415fe43bb99412eddc749c7",
+      "original_url": "https://archive.org/download/69999/20190813-Setting%20Up%20New%20Fish%20tank-SWamUFAg2yY.ogv",
+      "source_sha256": "3c2a0674960b4a64b1dd0e75605b9fd38d8ebfa928ca2b4802448282b1829642",
+      "playback_url": "https://archive.org/download/69999/20190813-Setting%20Up%20New%20Fish%20tank-SWamUFAg2yY.mp4"
+    },
+    {
+      "recording_id": "rec_1f2c5e0c05d8c53ce9a7aa283175c6e8",
+      "source_id": "src_6ca945907ef4aa2a41d384506a872e65",
+      "original_url": "https://archive.org/download/69999/20190922-Syreaming%20By%20The%20River%20At%20Night-HrqHIVlnUO4.ogv",
+      "source_sha256": "9ba070476d72e8bcb46ae8be6f8ef55a787fe18a7e7a7bc726987140c3f57904",
+      "playback_url": "https://archive.org/download/69999/20190922-Syreaming%20By%20The%20River%20At%20Night-HrqHIVlnUO4.mp4"
+    },
+    {
+      "recording_id": "rec_f6ff73c12b97e0342876399652314b21",
+      "source_id": "src_e8484c493fac17804d01aa25ba497130",
+      "original_url": "https://archive.org/download/69999/20190922-Update%20on%20my%20current%20situation-0CZ9D-mNGIE.ogv",
+      "source_sha256": "9c7f522cf047b14b39315913508cb50d92091002e82a43b2d479d5bba06705d2",
+      "playback_url": "https://archive.org/download/69999/20190922-Update%20on%20my%20current%20situation-0CZ9D-mNGIE.mp4"
+    },
+    {
+      "recording_id": "rec_dc4a6c25bf62cb11b9efd1958d958279",
+      "source_id": "src_58a7aa15923a50975ee93ff31525d202",
+      "original_url": "https://archive.org/download/69999/20190922-Update%20On%20Things-VhaVYLkFo5E.ogv",
+      "source_sha256": "4e82cc6f906be7f7fa572c539bf711ce2287f760e21d91f3e80a04f4abc90acb",
+      "playback_url": "https://archive.org/download/69999/20190922-Update%20On%20Things-VhaVYLkFo5E.mp4"
+    },
+    {
+      "recording_id": "rec_b293e1c0f6dc2e03a6c9d45b3e7a50fb",
+      "source_id": "src_57d2c9c94374c198389105879545ace2",
+      "original_url": "https://archive.org/download/69999/20190615-Why%20I%20Forgive%20Daniel-sAkZXYrCLq8.ogv",
+      "source_sha256": "700084f4283bd9d4408106dca3d9c019584f66abdab4651e1ed9aba39fe1c153",
+      "playback_url": "https://archive.org/download/69999/20190615-Why%20I%20Forgive%20Daniel-sAkZXYrCLq8.mp4"
+    },
+    {
+      "recording_id": "rec_73cdc8c8d200095f36ecc472d383e530",
+      "source_id": "src_2fa20644be35e325e31dbfdd66d963b1",
+      "original_url": "https://archive.org/download/69999/20190831-wow%20classic%20day%201-AauX1VnLQt8.ogv",
+      "source_sha256": "2bf20440ddfba561e655a79c33eda8ab64b6c4197b7abe08a513038a1cda02d3",
+      "playback_url": "https://archive.org/download/69999/20190831-wow%20classic%20day%201-AauX1VnLQt8.mp4"
+    },
+    {
+      "recording_id": "rec_2531115eb8de93f2e25c465b9a786091",
+      "source_id": "src_8122241f697ab42d4c4641b56c74a427",
+      "original_url": "https://archive.org/download/699992/20220212-test%20stream%20in%20my%20cabin-v1295791751.mp4",
+      "source_sha256": "5251cffa3a71731423653c13f38a9a437aadd1a37bb99ad1b6b25cbec6444dda",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/e92237dd22947d1f618faf522494414be2f377598bed02646a64870f1f35b780.mp4"
+    },
+    {
+      "recording_id": "rec_1cdf34e3ed929adaa92075cd446698a6",
+      "source_id": "src_2b14ea9d09a8972296c7ea3edb5c3edb",
+      "original_url": "https://archive.org/download/699992/20220212-test%20stream%20in%20my%20cabin-v1295796079.mp4",
+      "source_sha256": "cbc99bcf1e64f99877303b63e3644b17ac463ddaebe88a6b1f46298a24737f84",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/6fbc50649e33ab758ccdeaea3e4f74a7f462747a43c8c57e6cfddf1d98d26bd1.mp4"
+    },
+    {
+      "recording_id": "rec_c099ef45e3e4b0eb673529ee9aaa61ba",
+      "source_id": "src_7d7b53a2037b0429e045a643604d9376",
+      "original_url": "https://archive.org/download/699992/20220204-test%20stream%20in%20new%20hotel-v1286752853.mp4",
+      "source_sha256": "df6109a443d6de86d664077388618f2385198c2aade0cba44799b04c7893991a",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/d01eba7b7bb640446395d653f2fd3af2e6f35b5f74c92878b1493130b5d42863.mp4"
+    },
+    {
+      "recording_id": "rec_eb6e3f12fd3e619dbf75ed4178045207",
+      "source_id": "src_2e127cc0c4c4da83c976d7aee2c2f037",
+      "original_url": "https://archive.org/download/699992/20220212-test%20stream%20in%20my%20cabin-v1295803026.mp4",
+      "source_sha256": "a47b77a2f1d337e35e5aed41c7f9efad2f990bb0de08d3524eb3d202f730cd6d",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/d6ddae3d55a38fdc108d42a797ec504f0b79f49bbf74b3d9aac906796e9314a7.mp4"
+    },
+    {
+      "recording_id": "rec_a5371213ae1e644f326ef4e89c11096e",
+      "source_id": "src_0e36282822c2a3662c37e0859e698990",
+      "original_url": "https://archive.org/download/699992/20220124-stream%20test%20in%20new%20plac%20ein%20scotland-v1274392265.mp4",
+      "source_sha256": "098bf6aa196a4e6ae00acac0082fe889e1e0253f68dbf858b973f4d6ed4a48e3",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/4d8828c88aa18128a1a0d3f615b0a5334a210df26f1a761efe60bbc222ebd6da.mp4"
+    },
+    {
+      "recording_id": "rec_49500cbe6a73e1b7082331596f9df99e",
+      "source_id": "src_3d9c78ae9e08ecfcd1418c848c077665",
+      "original_url": "https://archive.org/download/699992/20220207-Dying%20Light%202%20SUCKS%20-%20DO%20NOT%20BUY-v1290250758.mp4",
+      "source_sha256": "fc7d4016a2790473ee97d5f0b0f505b1d83c147695d67391694574ddef2ca7c3",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/72bb643082c82bda2535a8006d816dd2fc2c3822cce2444904437812ead737eb.mp4"
+    },
+    {
+      "recording_id": "rec_48561ff493f8aad6b9da6a4193c216d8",
+      "source_id": "src_ef7a0065722138b71b69a628ed42302a",
+      "original_url": "https://archive.org/download/699992/20220205-late%20night%20stream%20for%20a%20bit%20%2B%20doing%20some%20coding-v1288264564.mp4",
+      "source_sha256": "36486f07a8d240d109280c37a60c93277f9f6397d1ca80996ef7b0a23e8d099a",
+      "playback_url": "https://archive.org/download/himr-browser-access-20261002-b47e9a/a2d09e02e2733fcbba749db8f8fe657d8d804e332fac2a7ebba9fa6281c6be07.mp4"
+    }
+  ]
+}

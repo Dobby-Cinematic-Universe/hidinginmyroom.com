@@ -8,9 +8,14 @@ and cue playback without autoplay. Technical provenance, revisions and segment I
 remain available in collapsible details; original transcript text is unchanged.
 
 Players use only explicitly retained public HTTPS Archive download URLs or valid
-YouTube watch URLs. Archive video uses browser-native controls and `preload=none`.
+YouTube watch URLs. A finite [access-copy manifest](../src/data/corpus-media-access-copies.json)
+can prefer a verified MP4 copy, including existing Archive derivatives, when the
+release, recording, original source ID and exact original URL match. Original
+source links and transcript coordinates remain unchanged. The manifest carries
+only public URLs and source bindings; it contains no private processing state.
+Archive video uses browser-native controls and `preload=none`.
 YouTube uses a click-to-load privacy-enhanced embed. There is no local disk proxy,
-new media upload, or guessed filename. Source links remain available when files
+guessed filename or locally served video. Source links remain available when files
 are missing, embedding is disallowed, or codecs cannot be decoded. YouTube seeking
 reloads the embed at the requested timestamp; automatic transcript-following is
 available only for native video.

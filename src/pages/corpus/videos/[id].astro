@@ -166,7 +166,7 @@ const noAudio = annotation?.media_status === 'no_audio';
       <a href="#transcript-reading">Jump to transcript ↓</a>
     </nav>
     <div class="recording__workspace" id="recording-workspace">
-    <aside class="recording__watch"><RecordingPlayer sources={recording.sources} title={recording.title} /></aside>
+    <aside class="recording__watch"><RecordingPlayer sources={recording.sources} title={recording.title} recordingId={recording.recording_id} releaseId={releaseId} /></aside>
     <div class="recording__reading" id="transcript-reading">
     {
       transcripts.length === 0 ? (

@@ -1,9 +1,10 @@
 ---
 import { playableSources } from '../../lib/corpus/media.mjs';
 import type { CorpusSource } from '../../lib/corpus/types';
-interface Props { sources: CorpusSource[]; title: string }
-const {sources,title} = Astro.props;
-const choices = playableSources(sources);
+import accessCopies from '../../data/corpus-media-access-copies.json';
+interface Props { sources: CorpusSource[]; title: string; recordingId: string; releaseId: string }
+const {sources,title,recordingId,releaseId} = Astro.props;
+const choices = playableSources(sources, {recordingId,releaseId,accessCopies});
 ---
 <section class="recording-player" data-recording-player aria-label="Recording player">
   <h2>Watch the recording</h2>
@@ -19,7 +20,7 @@ const choices = playableSources(sources);
     <iframe data-youtube hidden title={`Video: ${title}`} loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
     <button type="button" data-load-youtube hidden>Load YouTube player</button>
     <p data-player-status role="status">Choose a timestamp to jump to that part of the recording.</p>
-    <p class="player-note">External video · source availability may vary.</p>
+    <p class="player-note">{choices[0].label === 'Browser-compatible copy' ? 'A browser-compatible copy is available. Original source links remain below.' : 'External video · source availability may vary.'}</p>
     <noscript><p>Enable JavaScript for playback here, or open a public source below.</p></noscript>
   </> : <p>No embeddable video source is attached. Use the public source links below.</p>}
   <details><summary>Open original source</summary><ul>{sources.map(source=><li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.platform} ↗</a></li>)}</ul></details>
