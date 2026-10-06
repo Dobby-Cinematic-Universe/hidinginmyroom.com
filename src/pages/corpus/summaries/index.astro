@@ -110,8 +110,8 @@ const initial = [...rows].sort((a,b) => (b.period ?? '').localeCompare(a.period 
   .summary-filters { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; }
   label { display: grid; gap: .4rem; font-size: .85rem; }
   label:first-child { flex: 1; min-width: min(100%,16rem); }
-  input, select, button { font: inherit; padding: .7rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); color: var(--corpus-text); border-radius: .4rem; }
+  input, select, button { box-sizing: border-box; font: inherit; font-size: .85rem; line-height: 1.3; height: 2.75rem; min-width: 0; max-width: 100%; padding: .6rem .75rem; border: 1px solid var(--corpus-line); background: var(--corpus-panel); color: var(--corpus-text); border-radius: .4rem; }
   button { cursor: pointer; } button:disabled { opacity: .45; cursor: default; }
-  .summary-pagination:not([hidden]) { display: flex; align-items: center; gap: 1rem; }
+  .summary-pagination:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
   #summary-results-status { color: var(--corpus-muted); }
 </style>

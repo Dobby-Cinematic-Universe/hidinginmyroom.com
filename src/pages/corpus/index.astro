@@ -35,34 +35,37 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
         revision and public source listing.
       </p>
     </div>
-    <details><summary>Dataset release details</summary><dl class="corpus-release">
-      <div>
-        <dt>Release</dt>
-        <dd>{hasPublicRecords ? catalog.releaseId : 'Awaiting first release'}</dd>
-      </div>
-      <div>
-        <dt>Generated</dt>
-        <dd>
-          {
-            hasReleaseDate ? (
-              <time datetime={catalog.generatedAt}>
-                {releaseDate.toLocaleDateString('en-GB', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </time>
-            ) : (
-              'Not yet generated'
-            )
-          }
-        </dd>
-      </div>
-      <div>
-        <dt>Schema</dt>
-        <dd>{catalog.schemaVersion}</dd>
-      </div>
-    </dl></details>
+    <details class="corpus-release-details">
+      <summary>Dataset release details</summary>
+      <dl class="corpus-release">
+        <div>
+          <dt>Release</dt>
+          <dd>{hasPublicRecords ? catalog.releaseId : 'Awaiting first release'}</dd>
+        </div>
+        <div>
+          <dt>Generated</dt>
+          <dd>
+            {
+              hasReleaseDate ? (
+                <time datetime={catalog.generatedAt}>
+                  {releaseDate.toLocaleDateString('en-GB', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+              ) : (
+                'Not yet generated'
+              )
+            }
+          </dd>
+        </div>
+        <div>
+          <dt>Schema</dt>
+          <dd>{catalog.schemaVersion}</dd>
+        </div>
+      </dl>
+    </details>
   </section>
 
   <nav class="corpus-shortcuts" aria-label="Explore the corpus">
@@ -145,7 +148,7 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.75fr);
     gap: clamp(1.5rem, 5vw, 4rem);
-    align-items: end;
+    align-items: start;
     margin-bottom: 1.5rem;
   }
 
@@ -164,10 +167,26 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
     font-size: clamp(1rem, 2vw, 1.2rem);
   }
 
+  .corpus-release-details {
+    min-width: 0;
+    margin: 2rem 0 0;
+    color: var(--corpus-muted);
+    font-size: 0.9rem;
+  }
+
+  .corpus-release-details summary {
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    margin-inline-start: auto;
+    padding: 0.65rem 0;
+  }
+
   .corpus-release {
     display: grid;
     gap: 0.7rem;
-    margin: 0;
+    margin: 0.75rem 0 0;
     padding: 1rem;
     border: 1px solid var(--corpus-line);
     border-radius: 0.5rem;
@@ -307,7 +326,19 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
   }
 
   @media (max-width: 52rem) {
-    .corpus-hero,
+    .corpus-hero {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .corpus-release-details {
+      margin-top: 0;
+    }
+
+    .corpus-release-details summary {
+      margin-inline-start: 0;
+    }
+
     .corpus-caution {
       grid-template-columns: 1fr;
     }

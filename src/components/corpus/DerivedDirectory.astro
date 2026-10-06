@@ -48,14 +48,18 @@ const payload=JSON.stringify(items).replaceAll('<','\\u003c').replaceAll('\u2028
   }
 </script>
 <style>
-  label { display: grid; gap: .4rem; color: var(--corpus-muted); }
-  .directory-toggle{display:flex;align-items:center;gap:.5rem;margin:.8rem 0;font-size:.85rem}
-  input { padding: .7rem; background: var(--corpus-bg); color: var(--corpus-text); border: 1px solid var(--corpus-line); border-radius: .3rem; min-width: 0; }
+  .derived-directory { display: flex; flex-wrap: wrap; align-items: end; gap: .65rem .75rem; min-width: 0; max-width: 100%; }
+  label { display: grid; flex: 1; gap: .4rem; min-width: min(100%, 16rem); color: var(--corpus-muted); font-size: .85rem; }
+  .directory-toggle { display: flex; flex: 0 1 auto; align-items: center; gap: .5rem; min-width: 0; max-width: 100%; min-height: 2.75rem; margin: 0; font-size: .85rem; }
+  input[type=search] { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; height: 2.75rem; padding: .6rem .75rem; font: inherit; line-height: 1.3; background: var(--corpus-bg); color: var(--corpus-text); border: 1px solid var(--corpus-line); border-radius: .4rem; }
+  input[type=checkbox] { flex-shrink: 0; }
+  p, ol { flex-basis: 100%; min-width: 0; margin: .25rem 0; }
   ol { display: grid; gap: .8rem; list-style: none; padding: 0; }
   /* Client-rendered rows have no Astro scope attributes. Scope their styles
      through the persistent list instead, including filtering and pagination. */
   [data-items] :global(li) { display: grid; gap: .35rem; padding: .6rem 0; border-top: 1px solid var(--corpus-line); min-width: 0; }
   [data-items] :global(a) { color: var(--corpus-accent); overflow-wrap: anywhere; }
   [data-items] :global(span),p { color: var(--corpus-muted); font-size: .85rem; }
-  button { padding: .7rem 1rem; cursor: pointer; color: var(--corpus-text); background: var(--corpus-panel); border: 1px solid var(--corpus-line); }
+  button { box-sizing: border-box; min-height: 2.75rem; max-width: 100%; padding: .6rem .85rem; font: inherit; font-size: .85rem; line-height: 1.3; border-radius: .4rem; cursor: pointer; color: var(--corpus-text); background: var(--corpus-panel); border: 1px solid var(--corpus-line); }
+  @media (max-width: 30rem) { label { flex-basis: 100%; } .directory-toggle { flex-basis: 100%; } }
 </style>

@@ -11,8 +11,10 @@ const {id} = Astro.props;
   import '../../lib/summaries/inline-summary';
 </script>
 <style is:global>
-  .inline-summary { margin: .8rem 0; border: 1px solid var(--corpus-line); border-radius: .5rem; padding: .85rem 1rem; background: var(--corpus-panel); }
-  .inline-summary > summary { cursor: pointer; font-weight: 700; color: var(--corpus-accent); }
+  .inline-summary { width: fit-content; max-width: 100%; box-sizing: border-box; margin: .8rem 0; border: 1px solid var(--corpus-line); border-radius: .5rem; background: var(--corpus-panel); }
+  .inline-summary[open] { width: auto; padding: .75rem 1rem; }
+  .inline-summary > summary { box-sizing: border-box; min-height: 44px; padding: .6rem .9rem; line-height: 1.4; cursor: pointer; font-weight: 700; color: var(--corpus-accent); }
+  .inline-summary[open] > summary { padding-inline: 0; }
   .inline-summary [data-summary-body] { max-height: 65vh; overflow-y: auto; scrollbar-gutter: stable; padding-right: .5rem; line-height: 1.7; }
   .inline-summary [data-summary-body] p { color: var(--corpus-text); white-space: pre-line; }
   .inline-summary h4 { margin: 1rem 0 .3rem; }

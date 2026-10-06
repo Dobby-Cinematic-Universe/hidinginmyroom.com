@@ -36,11 +36,12 @@ const parent = release.summaries.find((r) => summary.kind === 'monthly' && summa
   </article>
 </CorpusLayout>
 <style>
-  header { margin-top: 2rem; } h1 { font-size: clamp(2rem,4vw,3rem); line-height: 1.2; max-width: 30ch; }
+  header { margin-top: 2rem; } h1 { font-size: clamp(2rem,4vw,3rem); line-height: 1.2; max-width: 30ch; overflow-wrap: anywhere; }
+  nav[aria-label="Breadcrumb"] { overflow-wrap: anywhere; }
   .section-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
   .summary-prose { max-width: 78ch; font-size: 1.05rem; line-height: 1.8; }
   section { scroll-margin-top: 1.5rem; } .summary-point { margin: 1.4rem 0; } .summary-point p { white-space: pre-line; margin: .4rem 0; }
-  details { color: var(--corpus-muted); font-size: .85rem; } details summary { cursor: pointer; } details ul { max-height: 20rem; overflow: auto; }
+  details { color: var(--corpus-muted); font-size: .85rem; } details summary { cursor: pointer; } details ul { max-height: 20rem; overflow: auto; overflow-wrap: anywhere; }
   .evidence-label { font-size: .72rem; color: var(--corpus-warning); text-transform: uppercase; letter-spacing: .06em; }
-  .summary-release { color: var(--corpus-muted); border-top: 1px solid var(--corpus-line); margin-top: 3rem; padding-top: 1rem; font-size: .8rem; }
+  .summary-release { color: var(--corpus-muted); border-top: 1px solid var(--corpus-line); margin-top: 3rem; padding-top: 1rem; font-size: .8rem; overflow-wrap: anywhere; }
 </style>

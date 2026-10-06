@@ -108,6 +108,8 @@ if (notice && !warning?.trim()) {
 
 <style>
   .source-citation {
+    min-width: 0;
+    overflow-wrap: anywhere;
     margin-block: 1.25rem;
     border: 1px solid var(--sl-color-gray-5);
     border-left: 3px solid var(--sl-color-accent);
@@ -118,6 +120,7 @@ if (notice && !warning?.trim()) {
 
   .source-citation__header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 0.48rem;
@@ -214,6 +217,20 @@ if (notice && !warning?.trim()) {
   }
 
   dd {
+    min-width: 0;
     margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  dd code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 30rem) {
+    dl div {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: 0.5rem;
+    }
   }
 </style>

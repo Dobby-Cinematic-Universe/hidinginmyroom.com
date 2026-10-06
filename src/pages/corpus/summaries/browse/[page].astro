@@ -15,8 +15,17 @@ const { cards, page, pages } = Astro.props;
   <h1>Summary library</h1><p>Page {page} of {pages}</p>
   <SummaryNotice /><SummaryCards cards={cards} />
   {cards.length === 0 && <p>No summaries have been released yet.</p>}
-  <nav aria-label="Library pages">
-    {page > 1 && <a href={`/corpus/summaries/browse/${page-1}/`}>← Previous page</a>}
-    {' '}{page < pages && <a href={`/corpus/summaries/browse/${page+1}/`}>Next page →</a>}
+  <nav class="library-pagination" aria-label="Library pages">
+    {page > 1 ? <a rel="prev" href={`/corpus/summaries/browse/${page-1}/`}>← Previous</a> : <span aria-disabled="true">← Previous</span>}
+    <strong>Page {page} of {pages}</strong>
+    {page < pages ? <a rel="next" href={`/corpus/summaries/browse/${page+1}/`}>Next →</a> : <span aria-disabled="true">Next →</span>}
   </nav>
 </CorpusLayout>
+<style>
+  .library-pagination { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--corpus-line); }
+  .library-pagination a, .library-pagination span { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .6rem .9rem; border: 1px solid var(--corpus-line); border-radius: .4rem; background: var(--corpus-panel); font-size: .85rem; line-height: 1.3; text-decoration: none; }
+  .library-pagination span { color: var(--corpus-muted); opacity: .55; }
+  .library-pagination a:hover { border-color: var(--corpus-accent); }
+  .library-pagination strong { color: var(--corpus-muted); font-size: .85rem; font-weight: 500; }
+  @media (max-width: 30rem) { .library-pagination { justify-content: center; } .library-pagination strong { order: -1; flex-basis: 100%; text-align: center; } }
+</style>
