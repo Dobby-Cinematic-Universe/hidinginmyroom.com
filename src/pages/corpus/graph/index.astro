@@ -4,11 +4,14 @@ import { loadCorpusGraph } from '../../../lib/corpus/graph';
 import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
 import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
 import {eventDirectoryItems} from '../../../lib/corpus/event-groups.mjs';
+import {loadNetworkDynamics} from '../../../lib/corpus/network-dynamics-release';
+import NetworkDynamics from '../../../components/corpus/NetworkDynamics.astro';
 
 const graph = await loadCorpusGraph();
 const hasGraph = graph.entities.length > 0 || graph.events.length > 0;
 const releaseDate = hasGraph ? new Date(graph.generatedAt) : undefined;
 const eventItems=graph.derived?eventDirectoryItems(graph):[];
+const network=graph.derived?await loadNetworkDynamics():undefined;
 ---
 
 <CorpusLayout
@@ -56,7 +59,7 @@ const eventItems=graph.derived?eventDirectoryItems(graph):[];
     </p>
   </aside>}
 
-  {graph.derived && <nav class="graph-jumps" aria-label="Index sections"><a href="#entities">Names &amp; places ↓</a><a href="#events">Related accounts &amp; descriptions ↓</a></nav>}
+  {graph.derived && <nav class="graph-jumps" aria-label="Index sections"><a href="#entities">Names &amp; places ↓</a><a href="#events">Related accounts &amp; descriptions ↓</a>{network?.status==='ready'&&<a href="#mention-dynamics">Mention patterns &amp; dynamics ↓</a>}</nav>}
   {graph.derived && <div class="graph-columns">
     <section id="entities"><h2>Entities <small>{graph.counts.entities.toLocaleString()}</small></h2>
       <p>Speaker names, common places/platforms, and repeated name-like phrases. This is an incomplete mention index, not an identity register.</p>
@@ -104,6 +107,7 @@ const eventItems=graph.derived?eventDirectoryItems(graph):[];
       </div>
     )
   }
+  {network?.status==='ready'?<NetworkDynamics projection={network.projection}/>:network?.status==='withheld'?<aside class="graph-caution"><strong>Mention-dynamics research is not available for this snapshot.</strong><p>The aggregate research did not pass its validation or release bindings. The source index above remains available; stale research values are not shown.</p></aside>:null}
 </CorpusLayout>
 
 <style>

@@ -1,4 +1,5 @@
 import { analysisLoadingHash, matchesAnalysisIdentity } from './supplement.mjs';
+import { attachHeatmapZoom } from './heatmap-zoom.mjs';
 
 export async function validateFactorDiagnostics(release, candidate) {
   if (!matchesAnalysisIdentity(candidate, release) || candidate.loadings_sha256 !== await analysisLoadingHash(release)) return null;
@@ -64,7 +65,8 @@ export function renderFactorDiagnostics(root, release, data) {
     ids.forEach((id,i)=>{svg.append(svgNode('text',{x:left-6,y:top+i*cell+10,'text-anchor':'end','font-size':10,fill:'currentColor'},label(id)));
       svg.append(svgNode('text',{x:left+i*cell+9,y:top-6,transform:`rotate(-60 ${left+i*cell+9} ${top-6})`,'font-size':10,fill:'currentColor'},label(id)));
       ids.forEach((other,j)=>{const value=data.residual.residuals[i][j],amount=Math.min(1,Math.abs(value)/max);const rect=svgNode('rect',{x:left+j*cell,y:top+i*cell,width:cell,height:cell,fill:i===j?'#777':`hsl(${value>=0?12:210} 65% ${95-amount*55}%)`});rect.append(svgNode('title',{},`${label(id)} / ${label(other)}: ${number(value)}`));svg.append(rect);});});
-    root.querySelector('[data-residual-matrix]').append(svg);
+    const viewport=root.querySelector('[data-residual-matrix]');viewport.append(svg);
+    attachHeatmapZoom({viewport,content:svg,controls:root.querySelector('[data-residual-zoom]'),width:size,height:size,label:'Residual correlation heatmap'});
   });
   root.querySelector('[data-held-out-method]').textContent=data.held_out.method;
   root.querySelector('[data-held-out-note]').textContent=data.held_out.note+' '+data.grouping.note;

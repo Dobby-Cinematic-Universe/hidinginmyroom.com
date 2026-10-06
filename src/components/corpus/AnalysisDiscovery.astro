@@ -13,9 +13,18 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   </div>
   <p class="chart-note" data-discovery-result-count role="status" aria-live="polite"></p>
   <p class="chart-note">Search narrows the recording selector. The map continues to display the complete analysis cohort.</p>
+  <div class="map-view-controls" data-discovery-map-controls role="group" aria-label="Recording map view controls">
+    <button type="button" data-map-action="out" aria-label="Zoom recording map out">−</button>
+    <span data-map-zoom aria-live="polite">100%</span>
+    <button type="button" data-map-action="in" aria-label="Zoom recording map in">+</button>
+    <button type="button" data-map-action="fit">Fit all recordings</button>
+    <button type="button" data-map-action="reset">Reset view</button>
+  </div>
+  <p class="chart-note">Drag to pan; hold Ctrl or Alt while scrolling to zoom. Focus the map for arrow-key panning, +/− zoom, or 0 to reset. Each map remembers its own view. Viewing controls never move saved points or change scores.</p>
   <AnalysisChartFrame label="Recording profile map" minWidth="45rem"><div class="discovery-map" data-discovery-map></div></AnalysisChartFrame>
+  <section class="discovery-picking" data-discovery-picking aria-label="Nearby map recordings" hidden></section>
   <div class="discovery-legend" data-discovery-legend></div>
-  <p class="chart-note">Select a recording above or click a map point. Similar-recording lists always use all nine standardized factor dimensions, not distances in either map. Changing the map preserves your selection and neighbors. Visual groups do not establish personality types or verified categories.</p>
+  <p class="chart-note">Select a recording above or click near a visible map point. Crowded locations open a title-and-date chooser, ordered by screen distance; zoom in to separate dots. Similar-recording lists always use all nine standardized factor dimensions, not distances in either map. Changing the map preserves your selection and neighbors. Visual groups do not establish personality types or verified categories.</p>
   <p class="chart-note" data-discovery-selection role="status" aria-live="polite"></p>
   <div class="discovery-detail" data-discovery-detail></div>
   <details><summary>Map methods and projection details</summary><p>Correlated factors receive separate equal weight in the full-profile distances. The maps are views of those saved ratings, not new factor models.</p><h4>PCA variance retained</h4><div class="discovery-table-scroll" data-discovery-variance></div><h4>UMAP settings</h4><p data-discovery-umap-method>UMAP is unavailable for this release; PCA and full-profile neighbors remain available.</p><p>UMAP is stochastic and parameter-dependent. The saved map uses a fixed seed and one computation thread for reproducibility. It is not a clustering test or a stability interval. See the <a href="https://umap-learn.readthedocs.io/en/latest/parameters.html">UMAP parameter guide</a> and <a href="https://umap-learn.readthedocs.io/en/latest/reproducibility.html">reproducibility notes</a>.</p></details>
@@ -50,10 +59,19 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   .analysis-discovery input,.analysis-discovery select{width:100%;min-width:0;max-width:100%}
   .analysis-discovery svg{display:block;width:100%;height:auto;max-height:none!important;overflow:visible}
   .analysis-discovery .discovery-map{border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);padding:.5rem}
+  .analysis-discovery .discovery-map svg{touch-action:pan-y;cursor:grab;outline-offset:3px}
+  .analysis-discovery .discovery-map svg:active{cursor:grabbing}
+  .analysis-discovery .map-view-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+  .analysis-discovery .map-view-controls button{min-width:2.75rem;min-height:2.75rem}
+  .analysis-discovery [data-map-zoom]{min-width:3.5rem;text-align:center;font-variant-numeric:tabular-nums}
   .analysis-discovery .discovery-legend{display:flex;gap:.7rem;flex-wrap:wrap;font-size:.85rem}
   .analysis-discovery .discovery-legend span{display:flex;gap:.3rem;align-items:center}
   .analysis-discovery .discovery-legend i{width:.7rem;height:.7rem;border-radius:50%;display:inline-block}
   .analysis-discovery .discovery-detail{padding:1rem;border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);min-width:0}
+  .analysis-discovery .discovery-picking{padding:1rem;border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);min-width:0}
+  .analysis-discovery .discovery-picking[hidden]{display:none}
+  .analysis-discovery .discovery-picking ol{max-height:18rem;overflow:auto;padding-right:.5rem}
+  .analysis-discovery .discovery-picking button{min-height:2.75rem;width:100%}
   .analysis-discovery .discovery-detail>a{margin-right:1rem}
   .analysis-discovery li{margin-block:.5rem;overflow-wrap:anywhere}
   .analysis-discovery li button{text-align:left;white-space:normal;height:auto}

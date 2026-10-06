@@ -52,10 +52,15 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     </section>
     <AnalysisDiscovery />
     <AnalysisRelationships />
-    <section id="analysis-map" aria-labelledby="mds-title"><h2 id="mds-title">Question map</h2><p class="chart-note" data-mds-note></p><AnalysisChartFrame label="Question map" minWidth="48rem"><svg data-mds viewBox="0 0 760 600" role="img" aria-label="Two-dimensional map of question short names"></svg></AnalysisChartFrame><ul class="mds-legend" data-mds-legend aria-label="Question domain colors"></ul><p data-map-selection role="status"></p></section>
+    <section id="analysis-map" aria-labelledby="mds-title"><h2 id="mds-title">Question map</h2><p class="chart-note" data-mds-note></p>
+      <div class="analysis-map-controls" data-mds-controls aria-label="Question map view controls"><button type="button" data-map-action="out" aria-label="Zoom out question map">−</button><button type="button" data-map-action="in" aria-label="Zoom in question map">+</button><button type="button" data-map-action="fit">Fit</button><button type="button" data-map-action="reset">Reset view</button><output data-map-zoom aria-live="polite">100%</output></div>
+      <p id="question-map-help" class="chart-note">Drag to pan; Ctrl or Alt + scroll to zoom. Focus the map for arrow keys, +/− and 0 to reset. Select a question with a click or Enter/Space; dragging never changes its saved position. Ordinary scrolling moves the page.</p>
+      <div class="question-map-frame"><svg data-mds viewBox="0 0 760 600" role="group" tabindex="0" aria-label="Interactive two-dimensional map of question short names" aria-describedby="question-map-help"></svg></div><ul class="mds-legend" data-mds-legend aria-label="Question domain colors"></ul><p data-map-selection role="status"></p></section>
     <AnalysisPassageInsights />
     <AnalysisTemporalComparisons />
-    <section id="analysis-correlations" aria-labelledby="correlation-title"><h2 id="correlation-title">Question correlations</h2><p data-correlation-note class="chart-note"></p><p class="chart-note">Open the full matrix to inspect exact pair values.</p><details data-correlation-details><summary>Open full correlation matrix (loads on demand)</summary><div class="table-scroll"><table class="matrix"><caption>Hover, focus, or select a cell to see the correlation and paired sample size. Diagonal values are self-correlations.</caption><thead data-correlation-head></thead><tbody data-correlation-body></tbody></table></div><p role="status" data-pair-detail></p></details></section>
+    <section id="analysis-correlations" aria-labelledby="correlation-title"><h2 id="correlation-title">Question correlations</h2><p data-correlation-note class="chart-note"></p><p class="chart-note">Open the full matrix to inspect exact pair values.</p><details data-correlation-details><summary>Open full correlation matrix (loads on demand)</summary>
+      <div class="analysis-map-controls" data-correlation-controls aria-label="Correlation matrix size controls"><button type="button" data-heatmap-zoom-out aria-label="Reduce correlation matrix size">−</button><button type="button" data-heatmap-zoom-in aria-label="Enlarge correlation matrix">+</button><button type="button" data-heatmap-zoom-reset>Reset size</button><output data-heatmap-zoom-level aria-live="polite">100%</output></div><p class="chart-note">Adjust cell size, then scroll the matrix horizontally or vertically. Exact values and keyboard-selectable cells remain available at every size.</p>
+      <div class="table-scroll correlation-scroll" tabindex="0" role="region" aria-label="Scrollable full correlation matrix"><table class="matrix"><caption>Hover, focus, or select a cell to see the correlation and paired sample size. Diagonal values are self-correlations.</caption><thead data-correlation-head></thead><tbody data-correlation-body></tbody></table></div><p role="status" data-pair-detail></p></details></section>
     <section id="analysis-factors" aria-labelledby="factor-title"><h2 id="factor-title">Exploratory factor loadings</h2><p class="chart-note">Loadings are oblique pattern coefficients, not correlations; depending on the fitted model, they may exceed −1 to +1. Intervals and factor labels follow the release method and are not proof of a universal or “true” personality dimension.</p><div data-factors></div><details><summary>Analysis diagnostics</summary><pre data-diagnostics></pre></details></section>
     <AnalysisFactorDiagnostics />
     <AnalysisRobustness />
@@ -77,6 +82,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   import { loadAnalysisSupplement } from '../../lib/analysis/supplement.mjs';
   import type { AnalysisSupplement } from '../../lib/analysis/supplement.mjs';
   import { selectJointTrendSeries } from '../../lib/analysis/joint-trend-ui.mjs';
+  import { attachMapViewport } from '../../lib/analysis/map-viewport.mjs';
   const root = document.querySelector<HTMLElement>('[data-analysis-root]')!;
     const status = root.querySelector<HTMLElement>('[data-status]')!;
     const content = root.querySelector<HTMLElement>('[data-content]')!;
@@ -318,6 +324,9 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       const hr=n('tr');hr.append(n('th','Short name'));for(const q of questions){const th=n('th',q.short_name) as HTMLTableCellElement;th.scope='col';hr.append(th);}head.append(hr);
       questions.forEach((q,i)=>{const tr=n('tr'),rowhead=n('th',q.short_name) as HTMLTableCellElement;rowhead.scope='row';tr.append(rowhead);questions.forEach((other,j)=>{const ii=ids[i],jj=ids[j],value=release.analysis.correlations[ii]?.[jj]??null,count=release.analysis.pair_counts[ii]?.[jj]??0,td=n('td'),button=n('button',value==null?'—':fmt(value)) as HTMLButtonElement;button.type='button';button.className='matrix-cell';button.setAttribute('aria-label',`${q.short_name} and ${other.short_name}: correlation ${fmt(value)}, n ${count}`);button.title=`${q.short_name} × ${other.short_name} · r=${fmt(value)} · n=${count}`;if(value!==null)button.style.backgroundColor=`color-mix(in srgb, ${value<0?'var(--corpus-danger)':'var(--corpus-accent)'} ${Math.abs(value)*35}%, var(--corpus-bg))`;button.addEventListener('focus',()=>setPair(q,other,value,count));button.addEventListener('mouseenter',()=>setPair(q,other,value,count));button.addEventListener('click',()=>selectQuestion(q));td.append(button);tr.append(td);});body.append(tr);});
       root.querySelector<HTMLElement>('[data-correlation-note]')!.textContent=`Release-provided exploratory correlation estimates on the analyzed cohort (n=${release.analysis.n}). Gaps mean the release did not estimate that pair. Video filters affect the sortable table and time series, not this matrix or the MDS map. Select a cell to rank videos by its row question.`;
+      const sizeControls=root.querySelector<HTMLElement>('[data-correlation-controls]')!,scroll=root.querySelector<HTMLElement>('.correlation-scroll')!;let matrixScale=1;
+      function setMatrixScale(next:number){matrixScale=Math.max(.75,Math.min(2,next));scroll.style.setProperty('--correlation-scale',String(matrixScale));sizeControls.querySelector<HTMLOutputElement>('[data-heatmap-zoom-level]')!.textContent=`${Math.round(matrixScale*100)}%`;sizeControls.querySelector<HTMLButtonElement>('[data-heatmap-zoom-out]')!.disabled=matrixScale<=.75;sizeControls.querySelector<HTMLButtonElement>('[data-heatmap-zoom-in]')!.disabled=matrixScale>=2;}
+      sizeControls.addEventListener('click',event=>{const button=(event.target as Element).closest<HTMLButtonElement>('button');if(!button)return;setMatrixScale(button.hasAttribute('data-heatmap-zoom-reset')?1:matrixScale+(button.hasAttribute('data-heatmap-zoom-in')?.25:-.25));});setMatrixScale(1);
       function setPair(a:AnalysisQuestion,b:AnalysisQuestion,v:number|null,count:number){root.querySelector<HTMLElement>('[data-pair-detail]')!.textContent=`${a.short_name} × ${b.short_name}: r=${fmt(v)}; paired recordings n=${count}. Correlation does not imply causation.`;}
     }
     function drawMds() {
@@ -341,11 +350,23 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         if(!moved)break;
       }
       const byQuestion=new Map(labels.map(l=>[l.q.id,l]));
+      const cameraLayer=el('g',{'data-mds-camera':''}) as SVGGElement;svg.append(cameraLayer);
       for(const p of points){const q=byId.get(p.id),label=byQuestion.get(p.id);if(!q||!label)continue;const px=X(p.x),py=Y(p.y),g=el('g',{tabindex:'0',role:'button','aria-label':`${q.short_name}, ${humanize(q.domain)}`,'data-question':q.id});
         if(Math.hypot(label.x-(px+12),label.y-(py+4))>18)g.append(el('line',{x1:String(px),y1:String(py),x2:String(label.x),y2:String(label.y-4),stroke:domainColor.get(q.domain)??'currentColor','stroke-opacity':'.5','stroke-width':'1'}));
-        const c=el('circle',{cx:String(px),cy:String(py),r:'8',fill:domainColor.get(q.domain)??'var(--corpus-accent)','fill-opacity':'.9',stroke:'var(--corpus-bg)','stroke-width':'2'});g.append(c);
-        const t=el('text',{x:String(label.x),y:String(label.y),fill:'currentColor','font-size':'12'});t.textContent=q.short_name;g.append(t);g.addEventListener('click',()=>selectPoint(q));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPoint(q);}});svg.append(g);
+        const c=el('circle',{cx:String(px),cy:String(py),r:'8',fill:domainColor.get(q.domain)??'var(--corpus-accent)','fill-opacity':'.9',stroke:'var(--corpus-bg)','stroke-width':'2','vector-effect':'non-scaling-stroke'});g.append(c);
+        const t=el('text',{x:String(label.x),y:String(label.y),fill:'currentColor','font-size':'12'});t.textContent=q.short_name;g.append(t);g.addEventListener('click',()=>selectPoint(q));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPoint(q);}});cameraLayer.append(g);
       }
+      const viewport=attachMapViewport({svg,layer:cameraLayer,controls:root.querySelector<HTMLElement>('[data-mds-controls]')!,width:760,height:600,onChange:(camera:{scale:number})=>{
+        // Let responsive overview labels grow with zoom until readable screen size.
+        // Beyond that size, compensate only the viewing scale, not saved anchors.
+        const rect=svg.getBoundingClientRect(),responsiveRatio=Math.min(rect.width/760,rect.height/600),denominator=Math.max(1,camera.scale*responsiveRatio);
+        for(const circle of cameraLayer.querySelectorAll('circle'))circle.setAttribute('r',String(8/denominator));
+        for(const text of cameraLayer.querySelectorAll('text'))text.setAttribute('font-size',String(12/denominator));
+        for(const line of cameraLayer.querySelectorAll('line'))line.setAttribute('stroke-width',String(1/denominator));
+      }});
+      if(typeof ResizeObserver!=='undefined'){const resize=new ResizeObserver(()=>viewport.setCamera(viewport.getCamera()));resize.observe(svg);}
+      // Keyboard traversal reveals clipped points by moving only the viewing camera.
+      for(const group of cameraLayer.querySelectorAll<SVGGElement>('[data-question]'))group.addEventListener('focus',()=>{const circle=group.querySelector('circle')!,camera=viewport.getCamera(),x=Number(circle.getAttribute('cx'))*camera.scale+camera.x,y=Number(circle.getAttribute('cy'))*camera.scale+camera.y;viewport.setCamera({...camera,x:camera.x+Math.max(40,Math.min(720,x))-x,y:camera.y+Math.max(40,Math.min(560,y))-y});});
       const legend=root.querySelector<HTMLElement>('[data-mds-legend]')!;legend.replaceChildren(...domains.map(domain=>{const li=n('li'),swatch=n('span');swatch.className='mds-swatch';swatch.style.backgroundColor=domainColor.get(domain)!;swatch.setAttribute('aria-hidden','true');li.append(swatch,n('span',humanize(domain)));return li;}));
       root.querySelector<HTMLElement>('[data-mds-note]')!.textContent=`Method: ${release.analysis.mds_method}; normalized RMS distance error: ${release.analysis.mds_stress==null?'not reported':`${fmt(release.analysis.mds_stress*100)}%`} (smaller is better; this is not a statistical confidence measure). ${release.analysis.mds_stress!=null&&release.analysis.mds_stress>.3?'This two-dimensional map has substantial distance distortion; use actual correlation values for detailed comparisons. ':''}Nearby points represent similar question profiles under this mapping; axis orientation and distances are approximate. Select a point to show its question.`;
       function selectPoint(q:AnalysisQuestion){root.querySelector<HTMLElement>('[data-map-selection]')!.textContent=`${q.short_name} · ${humanize(q.domain)}: ${q.instructions}`;selectQuestion(q);}
@@ -465,6 +486,14 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   .analysis-explorer svg{display:block;width:100%;height:auto;max-height:28rem;overflow:visible;color:var(--corpus-muted)}
   .analysis-explorer svg text{fill:currentColor}
   .analysis-explorer svg[data-mds]{max-height:40rem}
+  .analysis-explorer .question-map-frame{overflow:hidden;border:1px solid var(--corpus-line);border-radius:.45rem;background:var(--corpus-bg)}
+  .analysis-explorer .question-map-frame svg[data-mds]{overflow:hidden;max-height:none;cursor:grab;touch-action:pan-y;user-select:none}
+  .analysis-explorer .question-map-frame svg[data-mds]:active{cursor:grabbing}
+  .analysis-explorer .question-map-frame svg[data-mds]:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:-3px}
+  .analysis-explorer .analysis-map-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin-block:.65rem;min-width:0}
+  .analysis-explorer .analysis-map-controls button{min-width:2.75rem;min-height:2.75rem;padding:.45rem .7rem;border:1px solid var(--corpus-line);border-radius:.35rem;background:var(--corpus-bg);color:var(--corpus-accent);cursor:pointer}
+  .analysis-explorer .analysis-map-controls button:disabled{opacity:.45;cursor:default}
+  .analysis-explorer .analysis-map-controls output{min-width:3.5rem;font-size:.85rem;font-variant-numeric:tabular-nums;color:var(--corpus-muted)}
   .analysis-explorer [data-mds] [role=button]{cursor:pointer;outline:none}
   .analysis-explorer [data-mds] [role=button]:focus circle,.analysis-explorer [data-mds] [role=button]:hover circle{stroke:var(--corpus-warning);stroke-width:4}
   .analysis-explorer .matrix{min-width:0;width:max-content}
@@ -472,6 +501,12 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   .analysis-explorer .matrix td{padding:.15rem}
   .analysis-explorer .matrix-cell{min-width:4rem;padding:.45rem .25rem;border:1px solid var(--corpus-line);border-radius:.2rem;color:var(--corpus-text);background:var(--corpus-bg);font:inherit;cursor:pointer}
   .analysis-explorer .matrix-cell:focus-visible,.analysis-explorer .evidence-button:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:2px}
+  .analysis-explorer .correlation-scroll{--correlation-scale:1;max-height:36rem;font-size:calc(.86rem * var(--correlation-scale))}
+  .analysis-explorer .correlation-scroll:focus-visible{outline:3px solid var(--corpus-warning);outline-offset:2px}
+  .analysis-explorer .correlation-scroll .matrix{font-size:inherit}
+  .analysis-explorer .correlation-scroll .matrix th{padding:calc(.55rem * var(--correlation-scale)) calc(.65rem * var(--correlation-scale))}
+  .analysis-explorer .correlation-scroll .matrix td{padding:calc(.15rem * var(--correlation-scale))}
+  .analysis-explorer .correlation-scroll .matrix-cell{min-width:calc(4rem * var(--correlation-scale));min-height:2.75rem;padding:calc(.45rem * var(--correlation-scale)) calc(.25rem * var(--correlation-scale));font-size:inherit}
   .analysis-explorer summary{cursor:pointer;font-weight:650}
   .analysis-explorer section>details{border:1px solid var(--corpus-line);border-radius:.45rem;padding:.75rem;background:var(--corpus-bg)}
   .analysis-explorer details[open]>summary{margin-bottom:.75rem}

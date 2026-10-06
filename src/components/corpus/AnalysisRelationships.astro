@@ -14,6 +14,10 @@
   <details data-matrix-details>
     <summary>Expand the clustered correlation heatmap</summary>
     <p class="chart-note">Average-linkage clustering arranges the questions using signed chord distance √(2 × (1 − r)). This order is a display aid; it does not establish factors or validate questionnaire groupings. Focus the question selector above to see its strongest positive and negative relationships with paired sample sizes.</p>
+    <div class="heatmap-zoom-controls" data-relationship-zoom role="group" aria-label="Clustered correlation heatmap size">
+      <button type="button" data-heatmap-zoom-out aria-label="Zoom out clustered correlation heatmap">−</button><button type="button" data-heatmap-zoom-in aria-label="Zoom in clustered correlation heatmap">+</button><button type="button" data-heatmap-zoom-fit>Fit width</button><button type="button" data-heatmap-zoom-reset>Reset</button><output data-heatmap-zoom-level aria-live="polite">100%</output>
+    </div>
+    <p class="chart-note">Resize with the controls, then scroll to inspect. Focus the heatmap for keyboard scrolling; +/− change size, F fits width and 0 resets. Values and question order remain unchanged.</p>
     <div class="relationship-heatmap" data-relationship-matrix></div>
   </details>
   <details data-relationship-diagnostics>
@@ -48,7 +52,11 @@
   .analysis-relationships .relationship-ranks ul{margin:.25rem 0;padding-inline-start:1.25rem}
   .analysis-relationships details{border:1px solid var(--corpus-line);border-radius:.4rem;padding:.75rem;min-width:0}
   .analysis-relationships summary{cursor:pointer;font-weight:650}
-  .analysis-relationships .relationship-heatmap{max-width:100%;overflow:auto;padding-block:.75rem}
+  .analysis-relationships .relationship-heatmap{max-width:100%;max-height:36rem;overflow:auto;padding-block:.75rem}
+  .analysis-relationships .relationship-heatmap:focus-visible{outline:2px solid var(--corpus-accent);outline-offset:2px}
+  .heatmap-zoom-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-block:.75rem}
+  .heatmap-zoom-controls button{min-height:44px;min-width:44px;padding:.4rem .75rem}
+  .heatmap-zoom-controls output{min-width:4ch;font-variant-numeric:tabular-nums}
   .analysis-relationships svg{display:block;max-width:100%;height:auto;overflow:visible}
   .analysis-explorer .analysis-relationships .relationship-heatmap svg{width:auto;max-width:none;max-height:none}
   .analysis-relationships .diagnostic-table{margin-block:1rem}

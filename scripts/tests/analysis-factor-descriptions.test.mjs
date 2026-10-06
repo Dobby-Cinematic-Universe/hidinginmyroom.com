@@ -68,7 +68,9 @@ test('authored annotations cover nine factors with explicit saved-orientation ca
   assert.match(annotations.descriptions.F5.higher, /^Less expressed care/);
   assert.match(annotations.descriptions.F5.lower, /^More expressed care/);
   assert.match(annotations.descriptions.F6.higher, /^Calmer/);
-  assert.match(annotations.descriptions.F9.higher, /^Less rebuttal/);
+  assert.match(annotations.descriptions.F1.higher, /^Less rebuttal/);
+  assert.match(annotations.descriptions.F2.higher, /^More positive/);
+  assert.match(annotations.descriptions.F9.higher, /^More qualified/);
   assert.match(annotations.descriptions.F7.description, /not a diagnosis/);
-  assert.match(annotations.descriptions.F9.description, /not additional live speakers/);
+  assert.match(annotations.descriptions.F1.description, /not additional live speakers/);
 });

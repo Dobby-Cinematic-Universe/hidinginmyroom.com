@@ -17,9 +17,11 @@ test('prepared summaries require an explicit local-preview option', () => {
   assert.equal(validateSummaryRelease(value,released,{allowPrepared:true}).summaries.length,1);
 });
 
-test('accepts approved summary and empty initial release', async () => {
+test('accepts approved summary and empty initial release', () => {
   assert.equal(validateSummaryRelease(fixture(),released).summaries.length,1);
-  const empty=JSON.parse(await readFile(new URL('../../src/data/summaries/release.json',import.meta.url),'utf8'));
+  // A unit fixture must not assume the selected release is still unpopulated.
+  // Populated release/source coverage is validated by the release audit.
+  const empty={...fixture(),summaries:[]};
   assert.equal(validateSummaryRelease(empty).summaries.length,0);
 });
 test('rejects private fields, unapproved output and unresolved sources', () => {

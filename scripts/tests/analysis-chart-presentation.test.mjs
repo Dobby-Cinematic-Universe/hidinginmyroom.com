@@ -15,7 +15,7 @@ test('chart frame contains narrow-screen overflow, supports keyboard scrolling a
 
 test('all broad chart sections use readable-size frames without replacing existing data targets', async () => {
   const cases = [
-    ['AnalysisExplorer.astro', ['data-trend', 'data-mds']],
+    ['AnalysisExplorer.astro', ['data-trend']],
     ['AnalysisDiscovery.astro', ['data-discovery-map']],
     ['AnalysisPassageInsights.astro', ['data-insights-plot']],
     ['AnalysisTemporalComparisons.astro', ['data-trend', 'data-distribution', 'data-change-chart']],
@@ -25,4 +25,11 @@ test('all broad chart sections use readable-size frames without replacing existi
     const source = await readFile(new URL(`../../src/components/corpus/${file}`, import.meta.url), 'utf8');
     for (const attribute of attributes) assert.match(source, new RegExp(`<AnalysisChartFrame[^>]*><(?:div|svg)[^>]* ${attribute}(?:[ >])`), `${file}: ${attribute}`);
   }
+  const explorer = await readFile(new URL('../../src/components/corpus/AnalysisExplorer.astro', import.meta.url), 'utf8');
+  assert.match(explorer, /class="question-map-frame"><svg data-mds viewBox="0 0 760 600" role="group" tabindex="0"/);
+  assert.match(explorer, /aria-describedby="question-map-help"/);
+  assert.match(explorer, /\.question-map-frame svg\[data-mds\]\{overflow:hidden;max-height:none/);
+  assert.match(explorer, /attachMapViewport\(\{svg,layer:cameraLayer/);
+  assert.match(explorer, /data-map-action="fit"/);
+  assert.match(explorer, /data-map-action="reset"/);
 });

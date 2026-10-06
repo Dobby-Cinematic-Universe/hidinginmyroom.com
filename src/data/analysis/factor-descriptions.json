@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "corpus_release_id": "release_3340f5629ddf5664f4dd749d",
+  "corpus_release_id": "release_b57c7dcf673270141197da33",
   "questionnaire_version": "himr-transcript-analysis-questions-v1",
   "model": "jev-1.13.0",
-  "generated_at": "2026-09-30T19:32:42.746048+00:00",
-  "loadings_sha256": "59b4b3ee6ca461a1f6d005b9ec7948abcd6716f75b6545fc5d4fd8b5fed158da",
+  "generated_at": "2026-10-06T16:47:16.197239+00:00",
+  "loadings_sha256": "b744249ed37d8678a78f9ecdb1812deda5a45aa6d6c41007d43ed224ebcee6e6",
   "descriptions": {
     "F1": {
+      "label": "Lower rebuttal and conflict language",
+      "description": "Rebuttal, conflict, represented other voices and deflection have negative loadings in the saved orientation. Represented voices may be quotations, not additional live speakers.",
+      "higher": "Less rebuttal, conflict, other-voice representation or deflection.",
+      "lower": "More rebuttal, conflict, other-voice representation or deflection."
+    },
+    "F2": {
       "label": "Positive tone versus disappointment",
       "description": "Positive valence, joy, hope and pride cluster together, opposite expressed disappointment.",
       "higher": "More positive and hopeful language, with less expressed disappointment.",
       "lower": "Less positive language and more expressed disappointment."
-    },
-    "F2": {
-      "label": "Qualified exploration versus certainty",
-      "description": "Hedging, qualification, curiosity and open-minded language cluster opposite certainty.",
-      "higher": "More qualified, tentative or exploratory wording.",
-      "lower": "More certain wording and less qualification or exploration."
     },
     "F3": {
       "label": "Direct and organized argument or address",
@@ -55,10 +55,10 @@
       "lower": "Less narrative or scene setting, with relatively more persuasion."
     },
     "F9": {
-      "label": "Lower rebuttal and conflict language",
-      "description": "Rebuttal, conflict, represented other voices and deflection have negative loadings in the saved orientation. Represented voices may be quotations, not additional live speakers.",
-      "higher": "Less rebuttal, conflict, other-voice representation or deflection.",
-      "lower": "More rebuttal, conflict, other-voice representation or deflection."
+      "label": "Qualified exploration versus certainty",
+      "description": "Hedging, qualification, curiosity and open-minded language cluster opposite certainty.",
+      "higher": "More qualified, tentative or exploratory wording.",
+      "lower": "More certain wording and less qualification or exploration."
     }
   }
 }

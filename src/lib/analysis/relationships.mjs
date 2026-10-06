@@ -1,3 +1,5 @@
+import { attachHeatmapZoom } from './heatmap-zoom.mjs';
+
 const stable = (value) => Array.isArray(value)
   ? `[${value.map(stable).join(',')}]`
   : value && typeof value === 'object'
@@ -160,6 +162,7 @@ export function renderQuestionRelationships(root, release, diagnostics = null) {
     const colorKey = document.createElementNS(namespace, 'text'); colorKey.setAttribute('x', String(left)); colorKey.setAttribute('y', '20'); colorKey.setAttribute('font-size', '12');
     colorKey.textContent = 'Blue = positive · red = negative · stronger color = larger |r|'; svg.append(colorKey);
     matrix.replaceChildren(svg); matrix.dataset.drawn = 'yes';
+    attachHeatmapZoom({viewport:matrix,content:svg,controls:root.querySelector('[data-relationship-zoom]'),width,height,label:'Clustered correlation heatmap'});
   });
 
   const valid = diagnostics;
