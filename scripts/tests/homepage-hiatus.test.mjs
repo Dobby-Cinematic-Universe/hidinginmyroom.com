@@ -47,3 +47,37 @@ test('last-image presentation uses the local image and preserves the export boun
   assert.match(article,/not captioned as a farewell/);
   assert.doesNotMatch(article,/cdn\.discordapp\.com|media\.discordapp\.net/);
 });
+
+test('return article follows the dated sequence and ends with the departure',async()=>{
+  const article=await read('src/content/docs/wiki/events/2026-return-and-car-camping.mdx');
+  const sequence=[
+    '## Earlier 2026 return',
+    '## The visible return sequence',
+    '### Earlier July-labelled archive streams',
+    '### July 25: an additional archive-labelled entry',
+    '## July 30: why I quit YouTube',
+    '## August 4: life update and garden ritual',
+    '### Stargazing dome: title promise versus visible record',
+    '### The complete August 7 vehicle tour',
+    '### August 8: homeless in my car',
+    '### August 10: feeling sad and lonely',
+    '### August 20–23: dark car streams',
+    '## August 26: a later retained and machine-indexed stream',
+    '## September 4: life updates',
+    '## September 10: life updates',
+    '## September 13: claimed house-viewing enquiry',
+    '## September 17 public livestream',
+    '## September 24: dissatisfaction with the format',
+    '## September 24–28: further housing plans, not a confirmed move',
+    '## September 27–October 5: another departure',
+    '### Last preserved image'
+  ];
+  let previous=-1;
+  for(const heading of sequence){
+    const position=article.indexOf('\n'+heading+'\n');
+    assert.ok(position>previous,'Missing or out-of-order section: '+heading);
+    previous=position;
+  }
+  const sections=article.match(/^## .+$/gm);
+  assert.equal(sections.at(-1),'## September 27–October 5: another departure');
+});
