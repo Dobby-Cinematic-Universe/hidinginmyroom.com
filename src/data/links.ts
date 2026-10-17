@@ -15,20 +15,20 @@ export const officialLinks: SiteLink[] = [
   {
     label: 'YouTube',
     handle: '@hidinginmyroom1111',
-    description: 'Daniel’s main channel and the home of new Hiding in my room uploads.',
+    description: 'Daniel’s main channel; another YouTube break was announced on 27 September 2026.',
     href: 'https://www.youtube.com/@hidinginmyroom1111',
     mark: '▶',
     tone: 'signal',
-    note: 'Main channel',
+    note: 'On hiatus',
   },
   {
     label: 'Instagram',
     handle: '@danielhimr',
-    description: 'Daniel’s new Instagram account.',
+    description: 'Creator-linked profile. On 3 October 2026, Daniel said he had uninstalled the app; account deletion is not established.',
     href: 'https://www.instagram.com/danielhimr',
     mark: '◎',
     tone: 'warm',
-    note: 'New account',
+    note: 'Profile link',
   },
   {
     label: 'Amazon page',
@@ -83,11 +83,11 @@ export const communityLinks: SiteLink[] = [
     label: 'Unofficial Discord',
     handle: 'HIMR community server',
     description:
-      'Daniel is a member as notdaniel0594_05557, user ID 1528841527022059661.',
+      'Community-run server where Daniel previously posted. His departure is reported as 5 October 2026; the wiki preserves the source limits.',
     href: 'https://discord.gg/hgBhC5gNPU',
     mark: '#',
     tone: 'signal',
-    note: 'Daniel is a member',
+    note: 'Community server',
   },
   {
     label: 'Uncensored Discord',

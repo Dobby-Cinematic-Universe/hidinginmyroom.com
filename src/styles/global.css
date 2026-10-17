@@ -348,6 +348,12 @@
     animation: status-pulse 2.4s ease-out infinite;
   }
 
+  .status-dot--paused {
+    background: var(--muted);
+    box-shadow: none;
+    animation: none;
+  }
+
   .hero h1 {
     position: relative;
     z-index: 1;
@@ -384,6 +390,28 @@
     line-height: 1.65;
   }
 
+  .hero__update {
+    position: relative;
+    z-index: 1;
+    max-width: 39rem;
+    margin-top: 1.25rem;
+    border-left: 2px solid var(--muted);
+    padding-left: 1rem;
+    color: #c9c4ba;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .hero__update strong {
+    color: var(--paper);
+  }
+
+  .hero__update a {
+    color: var(--lime);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   .hero__actions {
     position: relative;
     z-index: 1;
@@ -391,6 +419,66 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 2rem;
+  }
+
+  .latest-update {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(1.5rem, 5vw, 5rem);
+    border-bottom: 1px solid var(--line-dark);
+  }
+
+  .latest-update__image {
+    min-width: 0;
+    max-width: 28rem;
+    margin: 0;
+    border: 1px solid var(--line-dark);
+    background: var(--ink-soft);
+  }
+
+  .latest-update__image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .latest-update__image figcaption {
+    padding: 0.85rem 1rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .latest-update__copy {
+    min-width: 0;
+  }
+
+  .latest-update__copy h2 {
+    margin-top: 1rem;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .latest-update__copy > p:not(.eyebrow) {
+    margin-top: 1.25rem;
+    color: #c9c4ba;
+    line-height: 1.7;
+  }
+
+  .latest-update__copy .button {
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 48rem) {
+    .latest-update {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .latest-update__image {
+      max-width: 100%;
+    }
   }
 
   .button {
@@ -483,6 +571,14 @@
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--lime);
+  }
+
+  .signal-panel__live--paused {
+    color: var(--muted);
+  }
+
+  .signal-panel__live--paused i {
+    background: currentColor;
   }
 
   .signal-screen {

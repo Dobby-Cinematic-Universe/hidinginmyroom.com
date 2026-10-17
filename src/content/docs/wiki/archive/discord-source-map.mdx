@@ -1,6 +1,6 @@
 ---
 title: Discord Source Map
-description: A publication-safe map of three supplied Discord exports, with 5,170 unique messages, dated attachment reviews and limits on account claims.
+description: A publication-safe map of supplied Discord exports, including the October 17-labelled full dump, 6,060 unique messages and the limits on departure and other account claims.
 sidebar:
   order: 5
 ---
@@ -11,8 +11,8 @@ import VerificationBadge from "../../../../components/wiki/VerificationBadge.ast
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="18 September 2026 (UTC)"
-  note="Three supplied exports now contain 5,170 unique messages and 469 attachments. The September 18-labelled package adds 1,897 messages through September 17 and 138 retained attachments. Its text was compared with existing stream coverage; sampled visuals and machine audio text were reviewed within the limits below. Account control, autobiographical claims, speech and missing participants' accounts remain unverified. The August 29 audit is preserved as a historical snapshot."
+  reviewedAt="16 October 2026"
+  note="The full export contains all 5,170 earlier message IDs unchanged, plus 890 additions: 6,060 unique messages through October 4 UTC. New typed text and the requested last image supply the additions below. One of 67 new attachments was inspected and reproduced; the remaining 66 were not reviewed. Earlier findings retain their boundaries. October 5 is the maintainer-reported Discord departure date, not a server event in this dump."
 />
 
 This page routes the HIMR-relevant material in the supplied Discord preservation set.
@@ -21,19 +21,88 @@ independent chronology. After the identity section, “Daniel said” is shortha
 “the exported account, which later identified itself as Daniel, said.”
 
 <Aside type="danger" title="Publication and privacy boundary">
-  Message permalinks and bounded paraphrases remain the default. One independently
-  reviewed, Pushkin-captioned cat image is reproduced on the pets page under the
-  contributor's public-source representation; its metadata was stripped and no
-  signed attachment URL is exposed. No other supplied image, audio, video, profile
+  Message permalinks and bounded paraphrases remain the default. The earlier
+  Pushkin-captioned cat image and the contributor-requested
+  [last preserved portrait](/wiki/events/2026-return-and-car-camping/#last-preserved-image)
+  are reproduced under the contributor's public-source representation, with
+  private metadata removed and no signed attachment URL exposed. No other supplied image, audio, video, profile
   identifier, plate, home, live location, employer clue, private-party identifier,
   file hash, or media metadata is reproduced. An attachment beside a self-identifying
   message is merely account-presented media, not biometric evidence. Allegations and
   boasts below establish only that the account made the claim.
 </Aside>
 
+## October 17-labelled full export
+
+The file labelled **2026-10-17_full** is a **full export, not another incremental
+batch**. Message-ID comparison against the three earlier supplied exports found
+all **5,170 previously preserved messages**, with **no missing IDs or changed
+message text**, plus **890 additional messages**. The total is therefore **6,060
+unique messages**, not 11,230. It still represents **one author in five channels**,
+not the conversations, other participants' responses or complete server activity.
+
+The full message range is **20 July, 19:18:13.418 UTC through 4 October,
+18:51:40.208 UTC**. The additions run from **18 September, 09:39:36.933 UTC** to
+that same final message; **823** contain text and **67 attachments** are recorded.
+The full attachment count is **536**. At the contributor's request, the **last image**
+was downloaded, directly inspected and included with its posting context; **the
+remaining 66 new attachments were not reviewed**. No new audio was transcribed.
+The new portrait review does not extend the earlier historical attachment audit.
+
+<SourceCitation
+  sourceId="discord-export-audit-2026-10-17-full"
+  claimId="HIMR-DISCORD-0006"
+  title="Supplied October 17-labelled full Discord export — overlap and coverage"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1556378289000546405"
+  locator="Author-only JSON filename label 2026-10-17_full; 6,060 unique IDs compared with the three earlier exports; 890 additions, 823 text-containing additions and 67 additional attachments; latest message 1556378289000546405 at 2026-10-04T18:51:40.208Z"
+  evidence="Direct export inventory and original typed-text source mapping; one separately documented last-image review, not full-server coverage, independent account authentication, a review of all attachments or a server-leave event"
+  reviewState="source-matched"
+  reviewedAt="16 October 2026"
+/>
+
+### Departure dates and the last preserved message
+
+The account announced a further period without content on **27 September**, then
+on **28 September** distinguished going quiet on YouTube from continuing to chat
+in Discord. The maintainer separately reports a **5 October Discord departure**.
+The final preserved post is dated **4 October UTC**; neither the filename's
+October 17 label nor the absence of later messages establishes an October 5
+server-leave time, account deletion or a permanent retirement. See the
+[departure chronology](/wiki/events/2026-return-and-car-camping/#september-27october-5-another-departure)
+for the individually attributed statements and date boundaries.
+
+<SourceCitation
+  sourceId="discord-message-1556378289000546405"
+  claimId="HIMR-DISCORD-0007"
+  title="Discord — final preserved post in the supplied full export"
+  href="https://discord.com/channels/821188728318984252/915403788343468053/1556378289000546405"
+  locator="4 October 2026, 18:51:40.208 UTC; message 1556378289000546405; last timestamp in the supplied author-only full export"
+  evidence="Last preserved message and its reflective wording only; not a farewell announcement, deletion notice, server audit event or independent October 5 departure record"
+  reviewState="source-matched"
+  reviewedAt="16 October 2026"
+/>
+
+### New context, rather than duplicated stream accounts
+
+| Topic | What the additional typed text contributes | Article |
+| --- | --- | --- |
+| Withdrawal from posting | September 24 production/audience dissatisfaction; September 27–28 break announcement; October 3 sharing limits | [2026 Return & Car Camping](/wiki/events/2026-return-and-car-camping/#september-27october-5-another-departure) |
+| Instagram | October 3 claim that he uninstalled the app, not evidence of deleting the profile | [Channel & Platform History](/wiki/events/channel-bans-and-platforms/#late-septemberoctober-2026-withdrawal-from-posting) |
+| Housing | Reported return-home offer, September 25 application and September 26–28 viewing plans; no completed move established | [Housing-plan update](/wiki/events/2026-return-and-car-camping/#september-2428-further-housing-plans-not-a-confirmed-move) |
+| Repayment | Explicit ordering of family debt, tax and credit cards; future balances distinguished from his claimed repaid-to-date total | [Debt & Repayment Claims](/wiki/events/debt-and-repayment-claims/#september-20october-3-priorities-and-plans-versus-payments) |
+| Trading | September 22–23 statements about stopping CFDs and favouring longer holding periods | [Markets & Crypto](/wiki/events/stock-market-and-crypto/#september-2223-discord-cfds-and-longer-holding-periods) |
+| Sunny | A later shared-game/picnic recollection and Amazon-delivery anecdote, with the van-crash story explicitly a dream | [Sunny](/wiki/characters/sunny/#september-2026-later-recollections-not-a-new-meeting) |
+| Work history | A compressed October 3 age-band retrospective; not an independently verified employment timeline | [Work & Income Claims](/wiki/events/work-and-income-claims/#october-3-discord-a-compressed-work-history) |
+| Jason persona | September 20 text personifying Daniel, Jason and James as a joke, not distinct authenticated people | [Jason & Dating Aliases](/wiki/events/jason-and-dating-aliases/#september-20-discord-persona-wordplay) |
+
+Recurrent earnings, repayment hopes and routine food or car-living updates are not
+counted as independent corroboration of the streams. Missing prompts, sensitive
+third-party details, precise property information and attachment delivery URLs
+remain excluded.
+
 ## September 18-labelled export
 
-The newest filename is dated **September 18**, but its messages run from
+The September filename is dated **September 18**, but its messages run from
 **August 30, 07:00:20.992 UTC to September 17, 21:26:55.544 UTC**. The last
 message precedes the September 17 livestream; this is not a post-stream reaction
 set. Message-ID reconciliation found **1,897 new messages with no overlap** with

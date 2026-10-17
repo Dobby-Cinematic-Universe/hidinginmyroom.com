@@ -14,8 +14,8 @@ import { communityLinks, officialLinks } from '../data/links';
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero__copy">
           <p class="eyebrow hero__eyebrow">
-            <span class="status-dot" aria-hidden="true"></span>
-            Current links · unofficial hub
+            <span class="status-dot status-dot--paused" aria-hidden="true"></span>
+            Creator on hiatus · unofficial hub
           </p>
 
           <h1 id="hero-title">
@@ -30,6 +30,15 @@ import { communityLinks, officialLinks } from '../data/links';
             a growing source-led archive of the public record.
           </p>
 
+          <p class="hero__update">
+            <strong>Away again.</strong> Daniel announced another YouTube break on{' '}
+            <time datetime="2026-09-27">27 September 2026</time>. His Discord departure
+            is reported as <time datetime="2026-10-05">5 October 2026</time>.{' '}
+            <a href="/wiki/events/2026-return-and-car-camping/#september-27october-5-another-departure">
+              Read the update and source limits ↗
+            </a>
+          </p>
+
           <div class="hero__actions">
             <a
               class="button button--primary"
@@ -38,7 +47,7 @@ import { communityLinks, officialLinks } from '../data/links';
               rel="noopener noreferrer"
             >
               <span class="button__play" aria-hidden="true">▶</span>
-              Watch on YouTube
+              Visit YouTube channel
             </a>
             <a class="button button--quiet" href="/wiki/">
               Enter the wiki
@@ -50,9 +59,9 @@ import { communityLinks, officialLinks } from '../data/links';
         <aside class="signal-panel" aria-label="Current HIMR status">
           <div class="signal-panel__topbar">
             <span>ROOM_FEED / 1111</span>
-            <span class="signal-panel__live">
+            <span class="signal-panel__live signal-panel__live--paused">
               <i aria-hidden="true"></i>
-              online
+              on hiatus
             </span>
           </div>
 
@@ -77,12 +86,12 @@ import { communityLinks, officialLinks } from '../data/links';
               <dd>@hidinginmyroom1111</dd>
             </div>
             <div>
-              <dt>Status</dt>
-              <dd>Current links</dd>
+              <dt>YouTube break</dt>
+              <dd><time datetime="2026-09-27">27 Sep 2026</time></dd>
             </div>
             <div>
-              <dt>Community</dt>
-              <dd>r/HIMRFAM2</dd>
+              <dt>Discord departure</dt>
+              <dd><time datetime="2026-10-05">5 Oct 2026</time> (reported)</dd>
             </div>
           </dl>
         </aside>
@@ -102,6 +111,41 @@ import { communityLinks, officialLinks } from '../data/links';
           <i aria-hidden="true">✦</i>
         </div>
       </div>
+
+      <section id="latest-update" class="section latest-update" aria-labelledby="latest-update-title">
+        <figure class="latest-update__image">
+          <img
+            src="/images/wiki/discord-last-image-2026-10-04.jpg"
+            alt="Account-posted portrait of a person wearing glasses and a blue jumper inside a car"
+            width="1232"
+            height="1232"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            Last image in the supplied Discord export ·{' '}
+            <time datetime="2026-10-04T15:33:10.578Z">4 October 2026, 15:33 UTC</time>.
+            Later text posts followed it.
+          </figcaption>
+        </figure>
+        <div class="latest-update__copy">
+          <p class="eyebrow">Latest update / September–October 2026</p>
+          <h2 id="latest-update-title">The last image in this export.</h2>
+          <p>
+            Daniel’s account posted this portrait on 4 October, shortly before
+            saying he had been trying a new smile. It was not captioned as a farewell.
+          </p>
+          <p>
+            The image belongs to the period after his 27 September YouTube-break
+            announcement. The maintainer reports his Discord departure as 5 October;
+            the preserved messages themselves end on 4 October UTC.
+          </p>
+          <a class="button button--quiet" href="/wiki/events/2026-return-and-car-camping/#last-preserved-image">
+            View the image source and context
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
 
       <section id="about" class="section about-section" aria-labelledby="about-title">
         <div class="section-heading">
@@ -131,11 +175,11 @@ import { communityLinks, officialLinks } from '../data/links';
             <ul>
               <li>
                 <span>01</span>
-                <p><strong>Main YouTube</strong>New HIMR uploads and livestreams appear on @hidinginmyroom1111.</p>
+                <p><strong>YouTube break</strong>Announced on 27 September 2026; the wiki preserves the source record.</p>
               </li>
               <li>
                 <span>02</span>
-                <p><strong>New Instagram</strong>Daniel’s current account is @danielhimr.</p>
+                <p><strong>Instagram</strong>On 3 October, Daniel said he had uninstalled the app; his profile link is retained below.</p>
               </li>
               <li>
                 <span>03</span>
