@@ -7,11 +7,12 @@ sidebar:
 
 import { Aside } from "@astrojs/starlight/components";
 import VerificationBadge from "../../../../components/wiki/VerificationBadge.astro";
+import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="29 August 2026"
-  note="The original lead inventory was checked on 27 August 2026; Patreon, Twitch, X, and the private-export boundary were reconciled on 29 August. Account ownership, completeness, access state, and copied-content authenticity remain separate questions."
+  reviewedAt="23 October 2026"
+  note="The original account checks retain their August dates. The ComicFury project descriptions were inspected again on 23 October; later supplied-export coverage is separately dated below. Account ownership, completeness, access state, and copied-content authenticity remain separate questions."
 />
 
 This page records supplementary places where HIMR material may be found. It is a
@@ -46,6 +47,25 @@ the catalogue does not publish bodies, comments, downloaded media, signed URLs, 
 executable attachments. Those counts describe source records and API type labels—not
 136 public or independently verified narratives.
 
+### ComicFury work and missing-media leads
+
+The ComicFury page lists seven project slugs: `theshoplifter`, `wheresmyparcel`,
+`hazelsplanetofice`, `Myintrovertedworld`, `Anotherboringnightshift`,
+`Drawinginmyroom`, and `shinjukulovehotel`. Those catalogue labels can help locate
+early creative-work records, but a comic title or synopsis is not evidence that its
+plot describes a real event. Its Shop Lifter material links YouTube ID
+`-5yKGW8SKeY`; that video is presently unavailable and has not been found in the
+sealed Archive.org inventory, so it remains an explicit missing-media lead.
+
+These entries are not all serialized comics. The `Drawinginmyroom` profile is
+titled *External* and explicitly describes an artwork collection rather than a
+webcomic. That distinction belongs alongside the fictional projects, rather than
+treating the URL slug as a channel name or the works as autobiography. The
+[drawing and painting article](/wiki/events/drawing-and-painting-videos/#early-webcomics-hazels-planet-of-ice-and-the-shop-lifter)
+now separates the serial-comic descriptions, portfolio and video-making formats.
+
+<SourceCitation sourceId="comicfury-drawinginmyroom-20261023" claimId="HIMR-GAP-ART-0005" title="External — the Drawinginmyroom portfolio on ComicFury" href="https://comicfury.com/comicprofile.php?url=Drawinginmyroom" locator="Title and Webcomic description; public text snapshot inspected 23 October 2026" evidence="Typed portfolio description and URL/title distinction only; no artwork, biography, channel-identity or licensing finding" checked={false} reviewState="source-matched" reviewedAt="23 October 2026" />
+
 ## Contributor-supplied Discord export
 
 The original August 29 snapshot comprised two local export files with
@@ -70,14 +90,6 @@ denial-to-self-identification sequence, events, controversies, denials, and char
 references. The counts establish the supplied dataset's shape, not the identity of a
 speaker, the truth of an off-platform event, or agreement by an absent participant.
 
-The ComicFury page lists seven webcomic slugs: `theshoplifter`, `wheresmyparcel`,
-`hazelsplanetofice`, `Myintrovertedworld`, `Anotherboringnightshift`,
-`Drawinginmyroom`, and `shinjukulovehotel`. Those catalogue labels can help locate
-early creative-work records, but a comic title or synopsis is not evidence that its
-plot describes a real event. Its Shop Lifter material links YouTube ID
-`-5yKGW8SKeY`; that video is presently unavailable and has not been found in the
-sealed Archive.org inventory, so it remains an explicit missing-media lead.
-
 ## Fan archives and commentary indexes
 
 These sources are useful for finding missing platform IDs, upload titles, dates, and
@@ -93,6 +105,8 @@ matched to an original upload, an archived raw file, or a complete reviewed repo
 | [HIMR Database on YouTube](https://www.youtube.com/@himrdatabase8358/)                                  | YouTube exposed channel ID `UCNPuIJlDZSYgCBvJnD4hSvg`, branding **HIMR Database**, and 25 currently enumerable videos. Titles include edited thematic series and commentary.                                      | Useful for finding passages and topic clusters. An edit or compilation is not a raw primary upload; its title is the editor's framing.                                                                                                                |
 | [HIMR / Daniel Lord playlist](https://www.youtube.com/playlist?list=PLNE4LYAUmMNPN1W8p4lnn7AwWfMRGqebL) | YouTube identified playlist `PLNE4LYAUmMNPN1W8p4lnn7AwWfMRGqebL` as **HIMR/Daniel Lord**. The extractor exposed 200 entries and warned that 152 unavailable entries were hidden.                                  | This is a mixed discovery map containing original platform IDs, reuploads, commentary, and unrelated-channel material—not one authenticated archive. Preserve playlist position and uploader for every imported candidate.                            |
 | [Tomo L on YouTube](https://www.youtube.com/@tomol6417)                                                 | YouTube exposed channel ID `UCmLFDbW1DPXkdIRpVfC8Asw`, branding **Tomo L**, and 42 currently enumerable videos.                                                                                                   | Supplied as Tomoko's channel, but the public label alone does not authenticate its holder or join it to the separately archived response candidate.                                                                                                   |
+
+### Substack mirrors and timeline tables
 
 The three Substack URLs are deliberately not called official Daniel pages. Two use
 his name in their HTML metadata, while the corrected Hidinginmyroom archive presents
@@ -133,6 +147,8 @@ it is useful for topic routing but cannot support an event or quotation until th
 linked raw video is checked. The page labels likewise do not prove that either 2015
 page is complete or that every date or summary is accurate.
 
+### YouTube inventory reconciliation
+
 A sealed, credential-free flat-list capture of the three YouTube leads above retained
 **267 occurrences representing 267 distinct stable video IDs**: 25 from HIMR Database,
 200 from the mixed playlist, and 42 from Tomo L. There were no repeated IDs among
@@ -144,6 +160,21 @@ title, duration, view count, or uploader metadata; those fields remain null rath
 than being inferred from thumbnails or the playlist warning. The intake downloaded
 no media and created no identity, relationship, content-review, or publication
 decision.
+
+### Tomo L channel lead
+
+The supplied [@tomol6417 YouTube address](https://www.youtube.com/@tomol6417) resolves
+to public channel ID `UCmLFDbW1DPXkdIRpVfC8Asw`, branded **Tomo L**. That branding is
+compatible with the `Tomo L` creator field on the separately preserved _Finally I Met
+Daniel_ Internet Archive item, but it is not sufficient to prove common upload
+control or that the channel holder is the woman the community calls Tomoko.
+
+One especially tempting title match does not survive the metadata check: the channel's current
+[_2018…Finally, I met him_ upload](https://www.youtube.com/watch?v=zfsxzCeQBnY) is an
+836-second 2018 video whose public description names another creator. It is not
+treated as a match to the 450.79-second, 2017-labelled _Finally I Met Daniel_
+response candidate. The [Tomoko source-trail page](/wiki/characters/tomoko/) keeps
+these records separate.
 
 ## Reddit archive search
 
@@ -209,21 +240,6 @@ terminal YouTube IDs. The first item alone has 412 extra rows that repeat one of
 267-ID YouTube inventory, and the scoped torrent inventory, 172 IDs were not seen in
 those particular inventories. That is a selective-acquisition queue, not a claim
 that the 172 recordings are globally unique.
-
-## Tomo L channel lead
-
-The supplied [@tomol6417 YouTube address](https://www.youtube.com/@tomol6417) resolves
-to public channel ID `UCmLFDbW1DPXkdIRpVfC8Asw`, branded **Tomo L**. That branding is
-compatible with the `Tomo L` creator field on the separately preserved _Finally I Met
-Daniel_ Internet Archive item, but it is not sufficient to prove common upload
-control or that the channel holder is the woman the community calls Tomoko.
-
-One especially tempting title match does not survive the metadata check: the channel's current
-[_2018…Finally, I met him_ upload](https://www.youtube.com/watch?v=zfsxzCeQBnY) is an
-836-second 2018 video whose public description names another creator. It is not
-treated as a match to the 450.79-second, 2017-labelled _Finally I Met Daniel_
-response candidate. The [Tomoko source-trail page](/wiki/characters/tomoko/) keeps
-these records separate.
 
 ## Intake rule for every lead
 

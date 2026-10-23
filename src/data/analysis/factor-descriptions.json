@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "corpus_release_id": "release_b57c7dcf673270141197da33",
+  "corpus_release_id": "release_3adcd996790b191e838207d0",
   "questionnaire_version": "himr-transcript-analysis-questions-v1",
   "model": "jev-1.13.0",
-  "generated_at": "2026-10-06T16:47:16.197239+00:00",
-  "loadings_sha256": "b744249ed37d8678a78f9ecdb1812deda5a45aa6d6c41007d43ed224ebcee6e6",
+  "generated_at": "2026-10-23T21:29:29.107766+00:00",
+  "loadings_sha256": "bbf2e4582beca1a6290c72422064f775eea600da2fd1dcf42406dc9a0797fa4b",
   "descriptions": {
     "F1": {
-      "label": "Lower rebuttal and conflict language",
-      "description": "Rebuttal, conflict, represented other voices and deflection have negative loadings in the saved orientation. Represented voices may be quotations, not additional live speakers.",
-      "higher": "Less rebuttal, conflict, other-voice representation or deflection.",
-      "lower": "More rebuttal, conflict, other-voice representation or deflection."
+      "label": "Certainty versus qualified exploration",
+      "description": "Certainty contrasts with hedging, qualification, curiosity and open-minded language in this saved orientation.",
+      "higher": "More certain wording and less qualification or exploration.",
+      "lower": "More qualified, tentative or exploratory wording."
     },
     "F2": {
-      "label": "Positive tone versus disappointment",
-      "description": "Positive valence, joy, hope and pride cluster together, opposite expressed disappointment.",
-      "higher": "More positive and hopeful language, with less expressed disappointment.",
-      "lower": "Less positive language and more expressed disappointment."
+      "label": "Disappointment versus positive tone",
+      "description": "Expressed disappointment contrasts with joy, positive valence, hope and pride in this saved orientation.",
+      "higher": "More expressed disappointment and less positive or hopeful language.",
+      "lower": "More positive and hopeful language, with less expressed disappointment."
     },
     "F3": {
       "label": "Direct and organized argument or address",
@@ -49,16 +49,16 @@
       "lower": "Less of these expressed self-critical or worried cues."
     },
     "F8": {
-      "label": "Narrative and scene setting versus persuasion",
-      "description": "Narrative and scene setting contrast most clearly with persuasion in this fitted pattern.",
-      "higher": "More narrative or scene-setting language relative to persuasion.",
-      "lower": "Less narrative or scene setting, with relatively more persuasion."
+      "label": "Lower rebuttal and conflict language",
+      "description": "Conflict, rebuttal, represented other voices and deflection have negative loadings in the saved orientation. Represented voices may be quotations, not additional live speakers.",
+      "higher": "Less conflict, rebuttal, other-voice representation or deflection.",
+      "lower": "More conflict, rebuttal, other-voice representation or deflection."
     },
     "F9": {
-      "label": "Qualified exploration versus certainty",
-      "description": "Hedging, qualification, curiosity and open-minded language cluster opposite certainty.",
-      "higher": "More qualified, tentative or exploratory wording.",
-      "lower": "More certain wording and less qualification or exploration."
+      "label": "Persuasion versus narrative and scene setting",
+      "description": "Persuasion contrasts with narrative and scene setting in this saved orientation, with narrative and scene-setting questions having the larger absolute loadings.",
+      "higher": "Less narrative or scene setting, with relatively more persuasion.",
+      "lower": "More narrative or scene-setting language relative to persuasion."
     }
   }
 }

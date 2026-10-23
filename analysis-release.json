@@ -1,16 +1,16 @@
 {
   "version": 1,
   "type": "transcript-analysis",
-  "sha256": "4f663cdabc053f074fbd2a8f0bedd24a156accfb60e85c17d027fff2e39b8a51",
-  "bytes": 26861212,
-  "unpacked_bytes": 320640725,
-  "files": 4044,
-  "corpus_release": "release_b57c7dcf673270141197da33",
+  "sha256": "e7f80f60dc8cac1fb5af9ffcecfaa15904e8a51193bc55f8d8ccf196f74cbd6e",
+  "bytes": 29834975,
+  "unpacked_bytes": 353421243,
+  "files": 4591,
+  "corpus_release": "release_3adcd996790b191e838207d0",
   "questionnaire_version": "himr-transcript-analysis-questions-v1",
   "model": "jev-1.13.0",
-  "source_generated_at": "2026-10-06T16:47:16.197239+00:00",
-  "scored_recordings": 4035,
-  "scored_passages": 13596,
-  "loadings_sha256": "b744249ed37d8678a78f9ecdb1812deda5a45aa6d6c41007d43ed224ebcee6e6",
-  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/4f663cdabc053f074fbd2a8f0bedd24a156accfb60e85c17d027fff2e39b8a51.tar.gz"
+  "source_generated_at": "2026-10-23T21:29:29.107766+00:00",
+  "scored_recordings": 4582,
+  "scored_passages": 15877,
+  "loadings_sha256": "bbf2e4582beca1a6290c72422064f775eea600da2fd1dcf42406dc9a0797fa4b",
+  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/e7f80f60dc8cac1fb5af9ffcecfaa15904e8a51193bc55f8d8ccf196f74cbd6e.tar.gz"
 }

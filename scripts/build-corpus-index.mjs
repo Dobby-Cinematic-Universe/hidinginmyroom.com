@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import * as pagefind from "pagefind";
 import { knownSpeakerLabel, showSpeakerLabels } from '../src/lib/corpus/presentation.mjs';
+import { corpusIndexLanguage, transcriptLanguage } from './corpus-index-language.mjs';
 
 const projectRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -294,14 +295,6 @@ function segmentFragment(revisionId, segmentId) {
   return `segment-${revisionId}-${segmentId}`;
 }
 
-function normalizeLanguage(language) {
-  const normalized = String(language || "")
-    .trim()
-    .toLowerCase();
-  const match = normalized.match(/^[a-z]{2}/);
-  return match?.[0] ?? "en";
-}
-
 function uniqueStrings(values, fallback) {
   const unique = [
     ...new Set(
@@ -429,7 +422,8 @@ try {
     );
     for (const revision of revisions) {
       const displaySpeakers = showSpeakerLabels(revision.segments);
-      const language = normalizeLanguage(revision.language);
+      const language = corpusIndexLanguage(revision.language);
+      const sourceLanguage = transcriptLanguage(revision.language);
       transcriptDisclaimer(revision);
       const disclaimerCode = safeText(revision.disclaimer_code);
       const reviewStates = uniqueStrings(
@@ -492,6 +486,7 @@ try {
               recording_id: recordingId,
               segment_id: segmentId,
               revision_id: revisionId,
+              transcript_language: sourceLanguage,
               date_label: safeText(recording.date_label, "Date unresolved"),
               timestamp,
               start_ms: String(startMs),
@@ -511,7 +506,7 @@ try {
                   ? String(recording.date_year)
                   : "Unknown year",
               ],
-              language: [safeText(revision.language, language)],
+              language: [sourceLanguage],
               speaker: previewOutput
                 ? [...new Set(revision.segments.map((s) => knownSpeakerLabel(s.speaker_label)).filter(Boolean))]
                 : [speaker],

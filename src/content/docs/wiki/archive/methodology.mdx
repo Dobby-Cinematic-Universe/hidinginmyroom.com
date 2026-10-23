@@ -16,67 +16,15 @@ import SourceCitation from "../../../../components/wiki/SourceCitation.astro";
 />
 
 The HIMR Wiki uses transcripts to **find** evidence, not as evidence by default. A
-published claim must say no more than its cited source can establish.
+published claim must say no more than its cited source can establish. The evidence
+rules come first below; the [August 2026 archive audit](#historical-archive-audit-august-2026)
+records the historical source-reconciliation work behind them.
 
 <Aside type="caution" title="A primary video is not automatic proof">
   A raw video can establish what a person said or what the recording visibly
   shows. If Daniel describes an off-camera event, the safe formulation is
   “Daniel said…” unless an independent source corroborates the event.
 </Aside>
-
-## Current archive audit
-
-On August 25, 2026, the project preserved the then-live transcript index and metadata for
-[Internet Archive item 69999](https://archive.org/details/69999) and
-[item 699992](https://archive.org/details/699992). The automated reconciliation found:
-
-| Finding                                      | Count |
-| -------------------------------------------- | ----: |
-| Transcript records                           | 2,227 |
-| Records with an Internet Archive video URL   | 2,043 |
-| Records without a video URL                  |   184 |
-| Distinct linked video URLs                   | 1,919 |
-| Shared video-URL groups                      |    67 |
-| Records participating in those shared groups |   191 |
-| Records over 250 displayed words per minute  |    55 |
-| Records with a malformed displayed duration  |     4 |
-
-These are **record counts**, not a verified count of distinct channel videos. A shared
-URL may be a duplicate, a chunk of a longer stream, or a mapping error. An implausible
-speech rate usually indicates suspect duration or timestamp metadata and triggers
-manual review.
-
-The table is a frozen audit of that legacy index, not a statement of present media
-availability. On August 27, the project reconciled the additional Internet Archive
-items [`hidinginmyroom`](https://archive.org/details/hidinginmyroom),
-[`hidinginmyroom2`](https://archive.org/details/hidinginmyroom2), and
-[`hidinginmyroom3`](https://archive.org/details/hidinginmyroom3). Exact normalized
-title/date/platform-ID matches repaired 119 distinct dead transcript endpoints used
-by the wiki. A repaired link establishes only that a candidate raw file is now
-addressable; it does not validate the old transcript, authenticate the title's claim,
-or mean that anyone has watched or listened to the file.
-
-The dated source responses, hashes, normalized manifest, and audit are retained in
-the maintainers' private evidence store. Future snapshots do not silently replace
-earlier ones.
-
-A separate [additional source-leads inventory](/wiki/archive/additional-source-leads/)
-records later Internet Archive containers, historical account pages, fan mirrors,
-commentary indexes, and unresolved URLs observed on 27 August 2026. Inclusion in that
-inventory means only that a lead was supplied or its public endpoint was observed. It
-does not authenticate account ownership, completeness, or copied-content accuracy.
-
-Two newer source layers remain deliberately separate. The [Patreon Source
-Catalogue](/wiki/archive/patreon-source-catalog/) distinguishes public metadata,
-signed-out bodies, and access-controlled bodies retained privately; a locked
-first-party body can establish what Daniel wrote, but it is paraphrased rather than
-copied and cannot verify the event he described. The complete available-body review
-and its corpus-wide limitations are documented separately in the [Patreon
-Longitudinal Analysis](/wiki/archive/patreon-longitudinal-analysis/). The [Discord Source
-Map](/wiki/archive/discord-source-map/) uses a contributor-supplied author-only export
-from channels represented as public. It can establish the exported account's posted
-text and message IDs, but missing replies and participants prevent it from becoming
-an independent event chronology or identity proof.
 
 ## Evidence ladder
 
@@ -144,23 +92,35 @@ as listening to the soundtrack.
 
 <Steps>
   1. **Draft one atomic claim.** Avoid combining several facts under one
-  citation. 2. **Locate candidate evidence.** Search the transcript archive and
-  source manifest. 3. **Bind the underlying source.** Preserve the exact raw
-  source, coordinates, and machine status. A human must open the segment with
-  surrounding context before its wording is called checked or quoted as
-  verified; unreviewed machine leads stay explicitly machine-only. 4. **If only
-  a repost survives, review the whole copy.** Preserve its direct media URL,
-  type, bytes, hash, post context, edit assessment, and any authenticity
-  dispute. 5. **Record the evidence scope.** Mark self-report, visible action,
-  metadata, independent record, corroboration, or contradiction. 6. **Resolve
-  the date basis.** Keep event, recording, publication, archive, and review
-  dates separate. 7. **Check sensitivity and conflicts.** Minimize private
-  information and preserve materially different accounts. 8. **Apply the
-  independent machine-publication gates.** Wording review is optional, but the
-  exact source, coordinates, canonical warning, rights, privacy, sensitivity,
-  identity, and allegation rules are not. Keep any failing material private. 9.
-  **Publish with a precise citation.** Record the source ID, locator, check
-  status, reviewer, and review date.
+     citation.
+
+  2. **Locate candidate evidence.** Search the transcript archive and
+     source manifest.
+
+  3. **Bind the underlying source.** Preserve the exact raw
+     source, coordinates, and machine status. A human must open the segment with
+     surrounding context before its wording is called checked or quoted as
+     verified; unreviewed machine leads stay explicitly machine-only.
+
+  4. **If only a repost survives, review the whole copy.** Preserve its direct media URL,
+     type, bytes, hash, post context, edit assessment, and any authenticity
+     dispute.
+
+  5. **Record the evidence scope.** Mark self-report, visible action,
+     metadata, independent record, corroboration, or contradiction.
+
+  6. **Resolve the date basis.** Keep event, recording, publication, archive, and review
+     dates separate.
+
+  7. **Check sensitivity and conflicts.** Minimize private
+     information and preserve materially different accounts.
+
+  8. **Apply the independent machine-publication gates.** Wording review is optional, but the
+     exact source, coordinates, canonical warning, rights, privacy, sensitivity,
+     identity, and allegation rules are not. Keep any failing material private.
+
+  9. **Publish with a precise citation.** Record the source ID, locator, check
+     status, reviewer, and review date.
 </Steps>
 
 <SourceCitation
@@ -235,3 +195,59 @@ image and no Discord audio or video payloads. Selected audio wording remains cle
 labelled machine transcription because no reviewer directly heard it.
 
 The complete contributor rules are maintained in the repository's editorial policy.
+
+<span id="current-archive-audit"></span>
+
+## Historical archive audit: August 2026
+
+On August 25, 2026, the project preserved the then-live transcript index and metadata for
+[Internet Archive item 69999](https://archive.org/details/69999) and
+[item 699992](https://archive.org/details/699992). The automated reconciliation found:
+
+| Finding                                      | Count |
+| -------------------------------------------- | ----: |
+| Transcript records                           | 2,227 |
+| Records with an Internet Archive video URL   | 2,043 |
+| Records without a video URL                  |   184 |
+| Distinct linked video URLs                   | 1,919 |
+| Shared video-URL groups                      |    67 |
+| Records participating in those shared groups |   191 |
+| Records over 250 displayed words per minute  |    55 |
+| Records with a malformed displayed duration  |     4 |
+
+These are **record counts**, not a verified count of distinct channel videos. A shared
+URL may be a duplicate, a chunk of a longer stream, or a mapping error. An implausible
+speech rate usually indicates suspect duration or timestamp metadata and triggers
+manual review.
+
+The table is a frozen audit of that legacy index, not a statement of present media
+availability. On August 27, the project reconciled the additional Internet Archive
+items [`hidinginmyroom`](https://archive.org/details/hidinginmyroom),
+[`hidinginmyroom2`](https://archive.org/details/hidinginmyroom2), and
+[`hidinginmyroom3`](https://archive.org/details/hidinginmyroom3). Exact normalized
+title/date/platform-ID matches repaired 119 distinct dead transcript endpoints used
+by the wiki. A repaired link establishes only that a candidate raw file is now
+addressable; it does not validate the old transcript, authenticate the title's claim,
+or mean that anyone has watched or listened to the file.
+
+The dated source responses, hashes, normalized manifest, and audit are retained in
+the maintainers' private evidence store. Future snapshots do not silently replace
+earlier ones.
+
+A separate [additional source-leads inventory](/wiki/archive/additional-source-leads/)
+records later Internet Archive containers, historical account pages, fan mirrors,
+commentary indexes, and unresolved URLs observed on 27 August 2026. Inclusion in that
+inventory means only that a lead was supplied or its public endpoint was observed. It
+does not authenticate account ownership, completeness, or copied-content accuracy.
+
+Two newer source layers remain deliberately separate. The [Patreon Source
+Catalogue](/wiki/archive/patreon-source-catalog/) distinguishes public metadata,
+signed-out bodies, and access-controlled bodies retained privately; a locked
+first-party body can establish what Daniel wrote, but it is paraphrased rather than
+copied and cannot verify the event he described. The complete available-body review
+and its corpus-wide limitations are documented separately in the [Patreon
+Longitudinal Analysis](/wiki/archive/patreon-longitudinal-analysis/). The [Discord Source
+Map](/wiki/archive/discord-source-map/) uses a contributor-supplied author-only export
+from channels represented as public. It can establish the exported account's posted
+text and message IDs, but missing replies and participants prevent it from becoming
+an independent event chronology or identity proof.

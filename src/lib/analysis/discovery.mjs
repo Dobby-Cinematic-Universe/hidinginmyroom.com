@@ -67,7 +67,7 @@ export function renderDiscovery(root,release,data,umap=null) {
   const umapOption=view.querySelector('option[value="umap"]');
   umapOption.disabled=!umap;
   if(!umap)umapOption.textContent='UMAP · unavailable for this release';
-  if(umap){const p=umap.method.parameters;root.querySelector('[data-discovery-umap-method]').textContent=`${umap.method.package} ${umap.method.package_version}; ${p.n_neighbors} neighbors; minimum distance ${p.min_dist}; ${p.metric} distance; seed ${p.random_state}. Precomputed from the same standardized nine-factor profiles as PCA. No scores or neighbors are recomputed when switching views.`;}
+  if(umap){const p=umap.method.parameters;root.querySelector('[data-discovery-umap-method]').textContent=`${umap.method.package} ${umap.method.package_version}; ${p.n_neighbors} neighbors; minimum distance ${p.min_dist}; ${p.metric} distance; seed ${p.random_state}. Precomputed from the same standardized ${data.factor_ids.length}-factor profiles as PCA. No scores or neighbors are recomputed when switching views.`;}
   let selected=release.videos[0]?.recording_id;
   let viewport=null;
   const cameras=new Map();
@@ -153,7 +153,7 @@ export function renderDiscovery(root,release,data,umap=null) {
       const heading=el('h3',candidates.length?'Choose a nearby map recording':'No recording at this map location');picker.append(heading);
       const dismiss=el('button','Dismiss map choices');dismiss.type='button';dismiss.addEventListener('click',dismissPicker);picker.append(dismiss);
       if(!candidates.length){picker.append(el('p','Click closer to a visible dot, zoom in, or use the recording selector.'));return;}
-      picker.append(el('p',`${candidates.length} recordings are within 8 screen pixels of this click, nearest first. These are two-dimensional map candidates, not the nine-factor closest-profile list. Zoom in or use the recording selector to narrow the choice.`));
+      picker.append(el('p',`${candidates.length} recordings are within 8 screen pixels of this click, nearest first. These are two-dimensional map candidates, not the ${data.factor_ids.length}-factor closest-profile list. Zoom in or use the recording selector to narrow the choice.`));
       const list=el('ol');for(const candidate of candidates){const video=videos.get(candidate.id),li=el('li'),button=el('button',`${video.title} · ${video.date??'Undated'} · ${candidate.distance.toFixed(1)} px from click`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(candidate.id));li.append(button);list.append(li);}picker.append(list);list.querySelector('button')?.focus();
     });
     const legend=root.querySelector('[data-discovery-legend]');legend.replaceChildren();

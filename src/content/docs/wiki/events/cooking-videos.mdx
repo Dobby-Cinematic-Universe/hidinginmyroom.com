@@ -8,17 +8,19 @@ sidebar:
 import SourceCitation from '../../../../components/wiki/SourceCitation.astro';
 import VerificationBadge from '../../../../components/wiki/VerificationBadge.astro';
 import ArchiveImage from '../../../../components/wiki/ArchiveImage.astro';
+import { Aside } from '@astrojs/starlight/components';
 
 <VerificationBadge
   status="source-matched"
-  reviewedAt="19 September 2026"
-  note="Three distinct archived raw videos were reconciled and twelve selected frames inspected by AI. This supports bounded visual descriptions, not human-reviewed speech or imagery, continuous action, recipe quality, food safety or a separate channel's ownership. Dates below are archive filename labels."
+  reviewedAt="23 October 2026"
+  note="The earlier three-video review supports only its sampled visual descriptions. This update adds three bounded machine-transcript leads. No new human-reviewed speech or imagery, recipe, food-safety, product-quality or channel-ownership claim is established. Dates are source filename labels unless otherwise stated."
 />
 
 **Cooking with Daniel** is a recurring content label, not just a single cooking
 incident. The preserved videos include a long kitchen livestream, a pie-making
-demonstration and a later budget-food presentation. This article follows what
-selected raw-video frames actually show. The separate
+demonstration and a later budget-food presentation. The dated demonstrations below
+describe sampled raw-video frames; the meal-ration and crumble sections are
+explicitly unreviewed transcript leads. The separate
 [platform history](/wiki/events/channel-bans-and-platforms/#cooking-with-daniel-confirmed-label-unconfirmed-account-bridge)
 retains the limits on treating the label as an authenticated standalone channel.
 
@@ -120,6 +122,77 @@ budget framing should not be converted into a claim about Daniel's finances.
   reviewState="source-matched"
   reviewedAt="19 September 2026"
 />
+
+## October 2025-labelled apple-crumble preparation
+
+<Aside type="caution" title="Unreviewed machine-transcript lead">
+  Machine-generated and unreviewed; may be wrong; not a verified quotation.
+</Aside>
+
+The stream labelled **post lunch pre dinnner SHow**, with the filename date
+**14 October 2025**, adds a later live-cooking lead. At
+**01:44:52.443–01:45:20.348**, its machine transcript describes preparing apple
+crumble and considering the oven. At **01:55:06.701–01:55:11.936**, it describes
+moving the food out of an enamel dish into a bowl before microwaving. These
+passages locate preparation talk; they are not a checked recipe, a conclusion
+about what was cooked, or advice about safe containers or cooking methods.
+
+<SourceCitation
+  sourceId="src_cc52de6d59f787a6c66031dee1339e3e"
+  claimId="HIMR-COOK-0007"
+  title="post lunch pre dinnner SHow — apple-crumble preparation lead"
+  href="https://archive.org/download/himr-public-torrent-20261016/9f87b002bdb1b7d43737ac2da335e3f60a8736f39dc502c17ed3916aa4dde6a8.mp4"
+  locator="Torrent filename date 2025-10-14, not a verified event date; machine revision rev_8c67d30012a303e8fe9ce8fcfe080f0c; candidates 01:44:52.443–01:45:20.348 and 01:55:06.701–01:55:11.936; exact public media copy available; no human listening"
+  evidence="Unreviewed machine-text preparation lead only; no speaker-identity, continuous-action, recipe, appliance-safety or finished-meal finding"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="23 October 2026"
+/>
+
+## Undated food clips: tasting and preparation
+
+<Aside type="caution" title="Unreviewed machine-transcript leads">
+  Machine-generated and unreviewed; may be wrong; not a verified quotation.
+</Aside>
+
+Two public archive clips labelled **CookingWithDaniel3** and **CookingWithDaniel4**
+add leads to a food-tasting format rather than a recipe demonstration. In the first,
+the machine transcript describes pasta with ketchup at **00:19.905–00:44.900**
+and refers to MREs at **01:51.748–01:59.134**. This is a candidate tasting passage,
+not a verified assessment of the meal.
+
+<SourceCitation
+  sourceId="src_fd152206bac93b2a2363dfd24006a6e3"
+  claimId="HIMR-COOK-0005"
+  title="Clips/CookingWithDaniel3 — meal-ration tasting lead"
+  href="https://archive.org/download/himr-public-torrent-20261016/da96882300e7bc96799e9e11ad71aa2d67d28ecd83c962d59368b152568612ab.mp4"
+  locator="Undated archive clip; machine revision rev_138d3a97fda6a4ac4d6d3e72355be7d7; candidates 00:19.905–00:44.900 and 01:51.748–01:59.134; exact public media copy available; no human listening"
+  evidence="Unreviewed machine-text lead to pasta, ketchup and MRE commentary; no speaker-identity, taste, product-quality or food-safety verification"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="23 October 2026"
+/>
+
+The second clip's **00:11.684–00:36.655** passage contains machine-rendered
+comments about MREs and beans. The numbers in these filenames do not establish
+recording dates, a continuous series, or two separate meals. The raw copies are
+linked for inspection; their soundtracks have not been human-reviewed here.
+
+<SourceCitation
+  sourceId="src_6ae40ce3cf67906a7013adae47b9e107"
+  claimId="HIMR-COOK-0006"
+  title="Clips/CookingWithDaniel4 — meal-ration and beans lead"
+  href="https://archive.org/download/himr-public-torrent-20261016/8db17e92dd174e8b37158b4969f0efa318c4a2056e0d0ec3ce6d00b5a946a628.mp4"
+  locator="Undated archive clip; machine revision rev_7291b82f17f61a694ba9920bc5e6caf9; candidate 00:11.684–00:36.655; exact public media copy available; no human listening"
+  evidence="Unreviewed machine-text lead to MRE and beans commentary; clip numbering is not a chronology and no meal quality or separate event is established"
+  checked={false}
+  reviewState="unverified-research-lead"
+  reviewedAt="23 October 2026"
+/>
+
+For food presented through sound-focused formats, see
+[ASMR and Low-Speech Videos](/wiki/events/asmr-and-low-speech-videos/), including
+the 2017 tonkatsu demonstration and later eating-sound titles.
 
 The earlier [Japan-era cooking appearance](/wiki/eras/japan-era/) and the
 [gaming/review videos](/wiki/events/gaming-and-review-videos/) supply other

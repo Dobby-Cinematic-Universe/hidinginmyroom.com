@@ -56,7 +56,7 @@ export function recordingProjection(discovery, umap, requested) {
     points: nonlinear ? umap.points : discovery.points,
     axes: nonlinear ? ['UMAP 1', 'UMAP 2'] : ['Principal component 1', 'Principal component 2'],
     summary: nonlinear
-      ? 'UMAP emphasizes local neighborhoods in the same nine-factor profiles. Its axes are arbitrary; gaps, cluster sizes and long-range distances are not calibrated, and it has no explained-variance percentage.'
+      ? `UMAP emphasizes local neighborhoods in the same ${discovery.factor_ids.length}-factor profiles. Its axes are arbitrary; gaps, cluster sizes and long-range distances are not calibrated, and it has no explained-variance percentage.`
       : `PCA retains ${(100 * discovery.pca.cumulative_variance_ratio[1]).toFixed(1)}% of standardized factor-score variation in two axes (PC1 ${(100 * discovery.pca.explained_variance_ratio[0]).toFixed(1)}%, PC2 ${(100 * discovery.pca.explained_variance_ratio[1]).toFixed(1)}%).`,
   };
 }
