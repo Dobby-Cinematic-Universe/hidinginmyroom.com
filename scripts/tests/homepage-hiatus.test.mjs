@@ -48,21 +48,26 @@ test('last-image presentation uses the local image and preserves the export boun
   assert.doesNotMatch(article,/cdn\.discordapp\.com|media\.discordapp\.net/);
 });
 
-test('return article follows the dated sequence and ends with the departure',async()=>{
+test('return article preserves dated sequence, closing caveats and legacy anchors',async()=>{
   const article=await read('src/content/docs/wiki/events/2026-return-and-car-camping.mdx');
   const sequence=[
-    '## Earlier 2026 return',
+    '## Scope of the return record',
     '## The visible return sequence',
+    '## July: archive-labelled streams',
     '### Earlier July-labelled archive streams',
     '### July 25: an additional archive-labelled entry',
     '## July 30: why I quit YouTube',
     '## August 4: life update and garden ritual',
+    '## August 6–7: camping trip and vehicle tour',
     '### Stargazing dome: title promise versus visible record',
     '### The complete August 7 vehicle tour',
+    '## August 8–23: longer car-based livestreams',
     '### August 8: homeless in my car',
     '### August 10: feeling sad and lonely',
     '### August 20–23: dark car streams',
-    '## August 26: a later retained and machine-indexed stream',
+    '## August 26: car setup, costs and plans',
+    '## July–August: parallel Discord accounts',
+    '### August 29: woodland and campsite proposal',
     '## September 4: life updates',
     '## September 10: life updates',
     '## September 13: claimed house-viewing enquiry',
@@ -70,7 +75,8 @@ test('return article follows the dated sequence and ends with the departure',asy
     '## September 24: dissatisfaction with the format',
     '## September 24–28: further housing plans, not a confirmed move',
     '## September 27–October 5: another departure',
-    '### Last preserved image'
+    '### Last preserved image',
+    '## What remains unresolved'
   ];
   let previous=-1;
   for(const heading of sequence){
@@ -79,5 +85,8 @@ test('return article follows the dated sequence and ends with the departure',asy
     previous=position;
   }
   const sections=article.match(/^## .+$/gm);
-  assert.equal(sections.at(-1),'## September 27–October 5: another departure');
+  assert.deepEqual(sections.slice(-2),['## September 27–October 5: another departure','## What remains unresolved']);
+  for(const anchor of ['earlier-2026-return','complete-review-of-the-three-short-public-uploads','from-camping-trip-to-car-living-titles','what-the-long-public-streams-add-visually','august-26-a-later-retained-and-machine-indexed-stream','discord-account-cross-check','same-day-woodland-and-campsite-proposal']){
+    assert.ok(article.includes(`<span id="${anchor}"></span>`),'Preserved legacy anchor: '+anchor);
+  }
 });

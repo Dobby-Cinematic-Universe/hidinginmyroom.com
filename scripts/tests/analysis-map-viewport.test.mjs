@@ -91,6 +91,6 @@ test('consumer camera update during rendering schedules only the following frame
 test('recording map preserves separate cameras, full-profile neighbors and equal-unit axes', () => {
   const source=readFileSync(new URL('../../src/lib/analysis/discovery.mjs',import.meta.url),'utf8'),ui=readFileSync(new URL('../../src/components/corpus/AnalysisDiscovery.astro',import.meta.url),'utf8');
   for (const marker of ['cameras.get(projection.id)','cameras.set(projection.id,camera)','viewport?.destroy()','unitScale=Math.min','(sx-camera.x)/camera.scale','clip-path','7/camera.scale','2.7/camera.scale']) assert.ok(source.includes(marker),marker);
-  for (const marker of ['data-map-action="in"','data-map-action="out"','data-map-action="fit"','data-map-action="reset"','Ctrl or Alt','touch-action:pan-y','min-height:2.75rem','Similar-recording lists always use all nine']) assert.ok(ui.includes(marker),marker);
+  for (const marker of ['data-map-action="in"','data-map-action="out"','data-map-action="fit"','data-map-action="reset"','Ctrl or Alt','touch-action:pan-y','min-height:2.75rem','Similar-recording lists always use all retained standardized factor dimensions, not distances in either map']) assert.ok(ui.includes(marker),marker);
   assert.ok(!source.includes('point.x=')); assert.ok(!source.includes('point.y='));
 });

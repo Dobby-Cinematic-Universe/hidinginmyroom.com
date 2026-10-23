@@ -64,13 +64,23 @@ test('unknown factors and incomplete annotations are excluded', async () => {
 
 test('authored annotations cover nine factors with explicit saved-orientation caveats', async () => {
   const annotations = JSON.parse(await readFile(new URL('../../src/data/analysis/factor-descriptions.json', import.meta.url), 'utf8'));
+  const pin = JSON.parse(await readFile(new URL('../../analysis-release.json', import.meta.url), 'utf8'));
+  assert.equal(annotations.corpus_release_id, pin.corpus_release);
+  assert.equal(annotations.questionnaire_version, pin.questionnaire_version);
+  assert.equal(annotations.model, pin.model);
+  assert.equal(annotations.generated_at, pin.source_generated_at);
+  assert.equal(annotations.loadings_sha256, pin.loadings_sha256);
   assert.deepEqual(Object.keys(annotations.descriptions), Array.from({ length: 9 }, (_, index) => `F${index + 1}`));
   assert.match(annotations.descriptions.F5.higher, /^Less expressed care/);
   assert.match(annotations.descriptions.F5.lower, /^More expressed care/);
   assert.match(annotations.descriptions.F6.higher, /^Calmer/);
-  assert.match(annotations.descriptions.F1.higher, /^Less rebuttal/);
-  assert.match(annotations.descriptions.F2.higher, /^More positive/);
-  assert.match(annotations.descriptions.F9.higher, /^More qualified/);
+  assert.match(annotations.descriptions.F1.higher, /^More certain/);
+  assert.match(annotations.descriptions.F1.lower, /^More qualified/);
+  assert.match(annotations.descriptions.F2.higher, /^More expressed disappointment/);
+  assert.match(annotations.descriptions.F2.lower, /^More positive/);
+  assert.match(annotations.descriptions.F8.higher, /^Less conflict, rebuttal/);
+  assert.match(annotations.descriptions.F9.higher, /^Less narrative or scene setting/);
+  assert.match(annotations.descriptions.F9.lower, /^More narrative or scene-setting/);
   assert.match(annotations.descriptions.F7.description, /not a diagnosis/);
-  assert.match(annotations.descriptions.F1.description, /not additional live speakers/);
+  assert.match(annotations.descriptions.F8.description, /not additional live speakers/);
 });
