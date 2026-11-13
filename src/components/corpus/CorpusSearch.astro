@@ -1,6 +1,7 @@
 ---
 import type { CorpusFacets } from '../../lib/corpus/types';
 import { knownSpeakerLabel } from '../../lib/corpus/presentation.mjs';
+import { durationOptions } from '../../lib/corpus/duration.mjs';
 
 interface Props {
   recordCount: number;
@@ -73,6 +74,13 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
             {facets.speakers.filter((value) => knownSpeakerLabel(value)).map((value) => <option value={value}>{value}</option>)}
           </select>
         </label>
+        <label>
+          Recording length
+          <select name="length" disabled={recordCount === 0}>
+            <option value="">Any length</option>
+            {durationOptions.map(option => <option value={option.value}>{option.label}</option>)}
+          </select>
+        </label>
       </div>
     </details>
   </form>
@@ -111,6 +119,7 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
       'year',
       'language',
       'speaker',
+      'length',
     ];
 
     for (const root of document.querySelectorAll('[data-corpus-search]')) {

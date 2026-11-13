@@ -50,9 +50,27 @@ The home page shows twelve recordings ordered by full date, direct search/browse
 summary shortcuts, and compact release metadata. Verified through the in-app
 browser at desktop and phone widths; processing jobs are unaffected.
 
+## Date estimates for undated recordings
+
+An undated recording can show an estimate under "Date unresolved". Estimates live
+in an optional sidecar beside the catalog (`date-estimates.json`, projected by
+[public-date-estimates.mjs](../src/lib/corpus/public-date-estimates.mjs)); the
+catalog date, date basis and URL are never changed, so estimates cannot enter
+chronologies or trends. A date taken from an exact or full copy is the dated
+copy's own catalog date and links to it. A matching transcript needs substantial
+literal overlap in both directions; a short excerpt does not date a long stream.
+Partial matches are shown as context only. An explicit date in a title can also
+be shown as an estimate, with its source identified.
+A wording-based estimate shows a month and an approximate range based on model
+errors. The details explain that these ranges can miss the true date, especially
+near the archive's earliest and latest years. Text matches can reflect re-uploads
+or reused material. Browse cards explicitly say "Estimated"; filters and sorting
+still treat these recordings as undated. Recordings without an entry keep
+"Date unresolved" alone.
+
 ## Corpus discovery pass
 
-- `/corpus/browse/1/` now provides whole-corpus title, year, content-availability
+- `/corpus/browse/1/` now provides whole-corpus title, year, recording length, content-availability
   and sort controls. It fetches a compact metadata-only `/corpus/recordings.json`
   projection, never transcript shards. Results are paginated in groups of 40;
   filters and page numbers survive reloads via the URL. Static 100-item pages
@@ -61,6 +79,13 @@ browser at desktop and phone widths; processing jobs are unaffected.
   longer imply that the first segment timestamp is the matching passage. The
   actual highlighted word (including Pagefind's stemming) is carried into the
   recording's transcript filter. Exact segment indexes keep their anchors.
+- Search and browse share an optional recording-length filter: under 5 minutes,
+  5–20 minutes, 20–60 minutes, 1–3 hours, 3+ hours, or unknown length. Ranges use
+  the full recording's duration, with each upper boundary excluded; a 20-minute
+  recording belongs to 20–60 minutes. Any length includes unknown durations.
+  The choice combines with other filters, survives reloads in the URL, and is
+  cleared by Reset. Static search bundles must be regenerated when adding this
+  facet; no Cloudflare chat reindex is needed.
 - Summary level shortcuts separate yearly/monthly/recording discovery; summary
   pagination is URL-backed. The visible caution expands for full limitations.
 - Entity/event directories retain their filters in URLs, offer clear controls

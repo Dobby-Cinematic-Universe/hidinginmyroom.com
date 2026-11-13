@@ -2,7 +2,7 @@
 interface Props {
   sourceId: string;
   title: string;
-  href: string;
+  href?: string;
   locator?: string;
   evidence?: string;
   checked?: boolean;
@@ -64,7 +64,7 @@ if (notice && !warning?.trim()) {
       {reviewLabels[resolvedReviewState]}
     </span>
   </div>
-  <a href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+  {href ? <a href={href} target="_blank" rel="noopener noreferrer">{title}</a> : <strong>{title}</strong>}
   {resolvedReviewState === 'unverified-research-lead' && (
     <div class="source-citation__machine-warning">
       <strong>Machine transcript warning</strong>

@@ -7,6 +7,7 @@ import path from 'node:path';
 import {validateSummaryRelease} from '../src/lib/summaries/schema.mjs';
 import {summaryQualityFindings} from './summary-quality.mjs';
 import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
+import {projectDateEstimates} from '../src/lib/corpus/public-date-estimates.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
 import {groupingInput,groupingDigest,attachEventGroups} from '../src/lib/corpus/event-groups.mjs';
@@ -39,6 +40,7 @@ for(const ref of manifest.catalog_shards){
 }
 const available=new Set(records.filter(r=>r.searchable_segment_count>0).map(r=>r.recording_id));
 const summaries=JSON.parse(await readFile(source+'/summaries/refreshed.json','utf8'));
+const originalSummaryContent=JSON.stringify(summaries.summaries);
 normalizeSummaryUnicode(summaries);
 const summaryFindings=summaryQualityFindings(summaries);
 if(summaryFindings.length)throw Error(`Unresolved summary quality findings: ${JSON.stringify(summaryFindings)}`);
@@ -50,7 +52,9 @@ summaries.summaries=summaries.summaries.filter(s=>{
 // Simulate approved schema ONLY in this private rehearsal; deployment approval
 // remains false in the candidate report. Never install this in the live repository.
 for(const s of summaries.summaries)s.publication='approved';
-summaries.release_id='summaries_'+createHash('sha256').update(JSON.stringify(summaries.summaries)).digest('hex').slice(0,24);
+// Preserve a published release identity when its contents are unchanged. Older
+// producers used different JSON key ordering; rehashing alone must not churn IDs.
+if(JSON.stringify(summaries.summaries)!==originalSummaryContent)summaries.release_id='summaries_'+createHash('sha256').update(JSON.stringify(summaries.summaries)).digest('hex').slice(0,24);
 validateSummaryRelease(summaries,available);
 for(const item of ['src','public','scripts','package.json','package-lock.json','tsconfig.json','astro.config.mjs'])await cp(path.join(project,item),path.join(root,item),{recursive:true});
 await symlink(path.join(project,'node_modules'),path.join(root,'node_modules'),'dir');
@@ -60,6 +64,10 @@ await cp(source+'/corpus/releases',root+'/src/data/corpus/releases',{recursive:t
 await writeFile(root+'/src/data/summaries/release.json',JSON.stringify(summaries));
 const annotations=projectAttribution(JSON.parse(await readFile(source+'/corpus/annotations.json','utf8')),new Set(records.map(r=>r.recording_id)));
 await writeFile(root+'/src/data/corpus/attribution.json',JSON.stringify(annotations));
+// Optional sidecar: estimated dates for undated recordings. Catalog dates are not changed.
+let dateEstimates={schema_version:1,recordings:{}};
+try{dateEstimates=projectDateEstimates(JSON.parse(await readFile(source+'/corpus/date-estimates.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
+await writeFile(root+'/src/data/corpus/date-estimates.json',JSON.stringify(dateEstimates));
 await writeFile(root+'/src/data/corpus/graph/derived-config.json',JSON.stringify({corpus_release:manifest.release_id,summary_release:summaries.release_id}));
 // Preserve existing similarity groups only for exact content-addressed event IDs.
 // New descriptions remain ungrouped; do not fabricate similarity decisions.
@@ -83,6 +91,7 @@ if(summaries.summaries.some(s=>s.kind==='archive'))report.release_blockers=repor
 if(!held.length){report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Catalog-only source'));await save();}
 report.graph={events:graph.events.length,groups:grouped.eventGroups?.length||0,compact_event_pages:true};
 report.public_attribution_records=Object.keys(annotations.recordings).length;
+report.date_estimate_records=Object.keys(dateEstimates.recordings).length;
 report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Derived Entities')&&!s.startsWith('Public attribution'));
 await save();
 const run=(args)=>new Promise((resolve,reject)=>{const child=spawn(process.execPath,args,{cwd:root,env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1',...chatEnv},stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Candidate command exited '+code)));});

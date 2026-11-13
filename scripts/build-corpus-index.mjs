@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import * as pagefind from "pagefind";
 import { knownSpeakerLabel, showSpeakerLabels } from '../src/lib/corpus/presentation.mjs';
+import { recordingLength } from '../src/lib/corpus/duration.mjs';
 import { corpusIndexLanguage, transcriptLanguage } from './corpus-index-language.mjs';
 
 const projectRoot = path.resolve(
@@ -500,6 +501,7 @@ try {
             },
             filters: {
               platform: platforms,
+              length: [recordingLength(recording.duration_ms)],
               year: [
                 typeof recording.date_year === "number" &&
                 Number.isFinite(recording.date_year)

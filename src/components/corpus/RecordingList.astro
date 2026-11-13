@@ -3,12 +3,15 @@ import { formatDuration } from '../../lib/corpus/release';
 import type { CorpusRecordingSummary } from '../../lib/corpus/types';
 import { loadSummaryRelease } from '../../lib/summaries/release';
 import InlineSummary from '../summaries/InlineSummary.astro';
+import { recordingDateEstimateCard } from '../../lib/corpus/date-estimates';
 
 interface Props {
   recordings: CorpusRecordingSummary[];
 }
 
 const { recordings } = Astro.props;
+// Undated recordings may carry an estimate; it is display text only and never used for ordering.
+const estimates = new Map(await Promise.all(recordings.filter(r=>!r.date_label).map(async r=>[r.recording_id,await recordingDateEstimateCard(r.recording_id)] as const)));
 const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kind==='transcript').map(s=>[s.recording_id,s.id]));
 ---
 
@@ -21,7 +24,7 @@ const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kin
             <div>
               <strong>{recording.title}</strong>
               <span>
-                {recording.date_label || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
+                {recording.date_label || estimates.get(recording.recording_id) || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
               </span>
             </div>
             <div class="recording-list__badges" aria-label="Recording metadata">

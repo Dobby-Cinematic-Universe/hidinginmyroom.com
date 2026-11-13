@@ -14,6 +14,7 @@ import {
 } from '../../../lib/corpus/release';
 import type { CorpusRecordingSummary } from '../../../lib/corpus/types';
 import { recordingAttribution } from '../../../lib/corpus/attribution';
+import { recordingDateEstimate } from '../../../lib/corpus/date-estimates';
 import { loadSummaryRelease } from '../../../lib/summaries/release';
 import { knownSpeakerLabel, showSpeakerLabels } from '../../../lib/corpus/presentation.mjs';
 import RecordingPlayer from '../../../components/corpus/RecordingPlayer.astro';
@@ -36,6 +37,11 @@ const { summary, releaseId } = Astro.props;
 const recording = await loadCorpusRecording(summary);
 const transcripts = searchableTranscripts(recording);
 const annotation = await recordingAttribution(recording.recording_id);
+// Estimates exist only for undated recordings and never replace the catalog date.
+const dateEstimate = recording.date_label ? undefined : await recordingDateEstimate(recording.recording_id);
+const dateCopy = dateEstimate?.copy
+  ? (await loadCorpusCatalog()).recordings.find((r) => r.recording_id === dateEstimate.copy!.recording_id)
+  : undefined;
 const linkedSummary = (await loadSummaryRelease()).summaries.find((r) => r.recording_id === recording.recording_id);
 const platforms = [...new Set(recording.sources.map((source) => source.platform))];
 const noAudio = annotation?.media_status === 'no_audio';
@@ -59,6 +65,7 @@ const noAudio = annotation?.media_status === 'no_audio';
         <p class="recording__summary">
           {recording.date_label || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
         </p>
+        {dateEstimate && <p class="recording__summary recording__date-estimate">{dateEstimate.short}</p>}
       </div>
       <div class="recording__badges" aria-label="Recording status">
         {noAudio && <span class="corpus-badge">No audio</span>}
@@ -96,6 +103,14 @@ const noAudio = annotation?.media_status === 'no_audio';
             <dt>Date basis</dt>
             <dd>{recording.date_basis || 'Not stated'}</dd>
           </div>
+          {dateEstimate && <div>
+            <dt>{dateEstimate.label}</dt>
+            <dd class="recording__date-explanation">
+              {dateEstimate.detail}
+              {dateEstimate.copyNote && <> {dateEstimate.copyNote}</>}
+              {dateCopy && <> <a href={`/corpus/videos/${dateCopy.slug}/`}>{dateCopy.title}</a></>}
+            </dd>
+          </div>}
           <div>
             <dt>Duration</dt>
             <dd>{formatDuration(recording.duration_ms)}</dd>
@@ -389,6 +404,12 @@ const noAudio = annotation?.media_status === 'no_audio';
     overflow-wrap: anywhere;
     font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
     font-size: 0.78rem;
+  }
+
+  .recording__metadata .recording__date-explanation {
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.55;
   }
 
   .source-list,

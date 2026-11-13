@@ -39,15 +39,7 @@ export const officialLinks: SiteLink[] = [
     mark: 'a',
     tone: 'muted',
     note: 'Affiliate storefront',
-  },
-  {
-    label: 'Merch store',
-    handle: "Daniel's Store",
-    description: 'HIMR shirts, mugs, stickers, and other community-era designs.',
-    href: 'https://daniels-store-154.creator-spring.com/',
-    mark: '✦',
-    tone: 'cool',
-    note: 'Creator Spring',
+    wide: true,
   },
 ];
 
