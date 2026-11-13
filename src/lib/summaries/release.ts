@@ -46,8 +46,15 @@ export function loadSummaryRelease(): Promise<Release> {
     return normalizeSummaryUnicode(value) as Release;
   })();
 }
+// Card previews end on a word boundary with an ellipsis instead of mid-word.
+function previewText(text: string, max = 240) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut.slice(0, max)).replace(/[\s,;:.–—-]+$/u, '')}…`;
+}
 export function summaryCard(row: PublicSummary) {
   return { id: row.id, kind: row.kind, period: row.period, title: row.title,
-    excerpt: row.sections.summary.map((i) => i.text).join(' ').slice(0, 240),
+    excerpt: previewText(row.sections.summary.map((i) => i.text).join(' ')),
     href: `/corpus/summaries/${row.id}/` };
 }

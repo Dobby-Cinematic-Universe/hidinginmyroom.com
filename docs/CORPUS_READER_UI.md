@@ -116,3 +116,20 @@ restart paid processing workers.
 
 Checked with scripted headless Chromium at 1366px and 390px against the local
 preview; no data, search index or processing job changed.
+
+## Site-wide scan follow-up
+
+- On screens up to 46rem the corpus navigation is one horizontally scrollable
+  row, centred on the current section, instead of four wrapped rows.
+- Breadcrumbs share one layout style, so analysis and related-account pages
+  have spaced separators like the rest of the corpus.
+- Summary card previews end at a word boundary with an ellipsis, and the
+  "Read summary" control sits at the bottom of each card. Summary totals use
+  singular nouns for a count of one.
+- Related-account headings use a smaller, width-capped size, since they are
+  full source sentences.
+- Wiki verification badges leave space before the article text that follows.
+
+Scanned the homepage, every corpus route type and all 65 wiki pages at 1366px
+and 390px with scripted headless Chromium against the local preview; 2,965
+internal links returned no errors.

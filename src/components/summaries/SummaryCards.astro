@@ -15,7 +15,9 @@ const { cards } = Astro.props;
 </ul>
 <style is:global>
   .summary-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(100%,19rem),1fr)); gap: 1rem; list-style: none; margin: 1rem 0; padding: 0; }
-  .summary-cards li { padding: 1.3rem; border: 1px solid var(--corpus-line); border-radius: .65rem; background: var(--corpus-panel); overflow-wrap: anywhere; }
+  .summary-cards li { display: flex; flex-direction: column; padding: 1.3rem; border: 1px solid var(--corpus-line); border-radius: .65rem; background: var(--corpus-panel); overflow-wrap: anywhere; }
+  .summary-cards li > .inline-summary { margin: auto 0 0; }
+  .summary-cards li > p { margin-bottom: .9rem; }
   .summary-cards li:hover { border-color: var(--corpus-accent); }
   .summary-cards h3 { margin: .5rem 0; font-size: 1.1rem; line-height: 1.4; }
   .summary-cards p { color: var(--corpus-muted); margin-bottom: 0; font-size: .9rem; }

@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const {group,members}=Astro.props;
 ---
 <CorpusLayout title={`Related accounts · ${group.label}`}>
-  <nav><a href="/corpus/">Corpus</a> / <a href="/corpus/graph/">Entities &amp; events</a> / Related accounts</nav>
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb"><a href="/corpus/">Corpus</a><span aria-hidden="true">/</span><a href="/corpus/graph/">Entities &amp; events</a><span aria-hidden="true">/</span><span aria-current="page">Related accounts</span></nav>
   <header><p class="corpus-eyebrow">Related accounts · local similarity grouping</p><h1>{group.label}</h1>
     <p>{members.length} original descriptions · {group.sourceRecordings.length} source recordings</p>
   </header>
@@ -32,7 +32,7 @@ const {group,members}=Astro.props;
 </CorpusLayout>
 <style>
   nav,p,span { color:var(--corpus-muted); }
-  h1 {font-size:clamp(1.8rem,4vw,3rem);line-height:1.2;overflow-wrap:anywhere;}
+  h1 {max-width:40ch;font-size:clamp(1.5rem,3vw,2.3rem);line-height:1.25;overflow-wrap:anywhere;}
   section {margin:1.5rem 0;padding:1rem;border:1px solid var(--corpus-line);background:var(--corpus-panel);}
   .accounts {display:grid;gap:1.3rem;padding-left:1.4rem;}
   .accounts>li {padding:.7rem;border-bottom:1px solid var(--corpus-line);}

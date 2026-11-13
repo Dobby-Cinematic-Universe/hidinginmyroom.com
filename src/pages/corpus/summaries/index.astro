@@ -13,7 +13,7 @@ const initial = [...rows].sort((a,b) => (b.period ?? '').localeCompare(a.period 
     <p class="summary-kicker">The archive, at a glance</p>
     <h1>Stories across the recordings.</h1>
     <p class="summaries-lede">Start with the bigger picture. Follow a year, explore a month, or return to the transcript behind a summary.</p>
-    <div class="summary-totals">{['archive','yearly','monthly','transcript'].map((kind) => <span><strong>{rows.filter((r) => r.kind === kind).length.toLocaleString('en')}</strong> {kind === 'transcript' ? 'recording summaries' : kind === 'archive' ? 'overviews' : `${kind} summaries`}</span>)}</div>
+    <div class="summary-totals">{['archive','yearly','monthly','transcript'].map((kind) => { const n = rows.filter((r) => r.kind === kind).length; const noun = kind === 'transcript' ? 'recording summar' : kind === 'archive' ? 'archive overview' : `${kind} summar`; return <span><strong>{n.toLocaleString('en')}</strong> {kind === 'archive' ? (n === 1 ? noun : `${noun}s`) : `${noun}${n === 1 ? 'y' : 'ies'}`}</span>; })}</div>
   </header>
   <SummaryNotice />
   <nav class="summary-levels" aria-label="Explore by summary level">

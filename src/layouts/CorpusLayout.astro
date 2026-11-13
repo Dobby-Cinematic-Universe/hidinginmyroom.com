@@ -76,6 +76,12 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
       </footer>
     </div>
     {Astro.url.pathname!=='/corpus/ask/' && <CorpusChat />}
+    <script>
+      // On narrow screens the nav scrolls sideways; keep the current section visible.
+      const current = document.querySelector<HTMLElement>('.corpus-header nav a[aria-current="page"]');
+      const nav = current?.parentElement;
+      if (current && nav && nav.scrollWidth > nav.clientWidth) nav.scrollLeft += current.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - current.offsetWidth) / 2;
+    </script>
   </body>
 </html>
 
@@ -147,6 +153,8 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
     transform: translateY(0);
   }
 
+  .corpus-breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .55rem; margin: 0 0 1rem; color: var(--corpus-muted); font-size: .82rem; }
+  .corpus-breadcrumbs a { display: inline-block; padding-block: .2rem; }
   .preview-notice { border: 1px solid var(--corpus-warning); padding: .6rem .85rem; margin-bottom: 1rem; border-radius: .5rem; color: var(--corpus-warning); font-size: .85rem; }
   .preview-notice summary { cursor: pointer; font-weight: 700; }
   .preview-notice p { margin: .6rem 0 0; }
@@ -289,6 +297,30 @@ const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : unde
 
     .corpus-brand small {
       display: none;
+    }
+
+    /* One swipeable row instead of four wrapped rows of links. */
+    .corpus-header {
+      gap: 0.6rem;
+      padding-bottom: 0.4rem;
+    }
+
+    .corpus-header nav {
+      flex-wrap: nowrap;
+      width: calc(100% + 2 * clamp(1rem, 4vw, 2.5rem));
+      margin-inline: calc(-1 * clamp(1rem, 4vw, 2.5rem));
+      padding-inline: clamp(1rem, 4vw, 2.5rem);
+      overflow-x: auto;
+      scrollbar-width: none;
+      white-space: nowrap;
+    }
+
+    .corpus-header nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .corpus-header nav a {
+      padding-block: 0.55rem;
     }
   }
 
