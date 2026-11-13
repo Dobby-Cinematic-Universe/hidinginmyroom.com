@@ -101,3 +101,18 @@ summary-level filters, entity and grouped-event detail routes. Unit tests cover
 date sorting, availability, title tokens and undated handling. This work does
 not rebuild the archive index, alter source transcripts, deploy the site or
 restart paid processing workers.
+
+## Layout polish pass
+
+- Transcript search keeps Search and a secondary "Clear search & filters" button
+  on the query row; Load more uses the same secondary style.
+- Recording provenance and revision panels wrap long release and revision IDs
+  instead of widening phone layouts. Wide player is hidden below the single-column
+  breakpoint, where it has no effect.
+- Transcript turns, browse results and recording-list cards use tighter spacing;
+  inline summaries in recording lists align with the card padding.
+- On screens up to 600px the floating chat launcher shows its icon only and keeps
+  its accessible name.
+
+Checked with scripted headless Chromium at 1366px and 390px against the local
+preview; no data, search index or processing job changed.

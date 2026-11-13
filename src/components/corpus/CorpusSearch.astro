@@ -358,7 +358,7 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
 
   .corpus-search__query {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 0.55rem;
   }
 
@@ -396,6 +396,18 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
     background: var(--corpus-accent);
     font-weight: 850;
     cursor: pointer;
+  }
+
+  .corpus-search button[type="reset"],
+  .corpus-search .corpus-search__more {
+    color: var(--corpus-text);
+    background: var(--corpus-bg);
+    font-weight: 650;
+  }
+
+  .corpus-search button[type="reset"]:hover:not(:disabled),
+  .corpus-search .corpus-search__more:hover:not(:disabled) {
+    border-color: var(--corpus-accent);
   }
 
   .corpus-search button:disabled,

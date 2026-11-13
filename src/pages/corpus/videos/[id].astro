@@ -290,9 +290,9 @@ const noAudio = annotation?.media_status === 'no_audio';
   .transcript__segments.is-full-height { max-height: none; overflow: visible; }
   .transcript__segments li[hidden] { display: none; }
   .transcript__segments li.is-playing { border-color: var(--corpus-accent); background: var(--corpus-panel-strong); }
-  .transcript__segment-detail { color: var(--corpus-muted); font-size: .75rem; margin-top: .5rem; }
-  .transcript__segment-detail summary { cursor: pointer; }
-  @media (max-width: 60rem) { .recording__workspace { grid-template-columns: minmax(0,1fr); } .recording__watch { position: static; } }
+  .transcript__segment-detail { color: var(--corpus-muted); font-size: .72rem; margin-top: .3rem; }
+  .transcript__segment-detail summary { cursor: pointer; width: max-content; }
+  @media (max-width: 60rem) { .recording__workspace { grid-template-columns: minmax(0,1fr); } .recording__watch { position: static; } .reader-actions [data-wide-player] { display: none; } }
   @media print { .recording__watch,.transcript__tools { display: none !important; } .recording__workspace { display: block; } .transcript__segments { max-height: none; overflow: visible; } }
   .corpus-breadcrumbs {
     display: flex;
@@ -361,6 +361,7 @@ const noAudio = annotation?.media_status === 'no_audio';
 
   .recording__metadata,
   .recording__revisions {
+    min-width: 0;
     padding: 1rem;
     border: 1px solid var(--corpus-line);
     border-radius: 0.5rem;
@@ -442,8 +443,13 @@ const noAudio = annotation?.media_status === 'no_audio';
   }
 
   .source-list a span,
+  .recording__revisions li > div:first-child strong,
   .recording__revisions li > div:first-child span {
     overflow-wrap: anywhere;
+  }
+
+  .source-list a span,
+  .recording__revisions li > div:first-child span {
     color: var(--corpus-muted);
     font-size: 0.75rem;
   }
@@ -502,7 +508,7 @@ const noAudio = annotation?.media_status === 'no_audio';
   .transcript__segments li,
   .transcript__empty {
     scroll-margin-top: 1rem;
-    padding: 1rem;
+    padding: 0.75rem 0.9rem;
     border: 1px solid var(--corpus-line);
     border-radius: 0.45rem;
     background: var(--corpus-panel);
@@ -532,7 +538,7 @@ const noAudio = annotation?.media_status === 'no_audio';
   }
 
   .transcript__segments p {
-    margin: 0.75rem 0 0;
+    margin: 0.35rem 0 0;
     white-space: pre-wrap;
   }
 

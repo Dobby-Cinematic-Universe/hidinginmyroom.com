@@ -81,6 +81,14 @@ const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kin
     overflow-wrap: anywhere;
   }
 
+  .recording-list li > :global(.inline-summary) {
+    margin: 0 1rem 0.85rem;
+  }
+
+  .recording-list li > :global(.inline-summary[open]) {
+    margin-top: 0.15rem;
+  }
+
   .recording-list a > div:first-child span {
     color: var(--corpus-muted);
     font-size: 0.8rem;
