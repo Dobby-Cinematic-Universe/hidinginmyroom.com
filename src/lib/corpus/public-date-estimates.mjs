@@ -13,9 +13,16 @@ export function projectDateEstimates(input,catalog){
   for(const [id,row] of Object.entries(input?.recordings||{})){
     const target=byId.get(id);
     if(!target||target.date_label)continue; // only undated recordings of this release
-    keys(row,['basis','date','copy','estimate'],'date estimate');
-    if(!['exact_copy','full_copy','text_estimate','title_date'].includes(row.basis))throw Error('Invalid date estimate basis');
-    let estimate=null,copy=null;
+    keys(row,['basis','date','copy','estimate','listing'],'date estimate');
+    if(!['exact_copy','full_copy','text_estimate','title_date','archived_listing'].includes(row.basis))throw Error('Invalid date estimate basis');
+    let estimate=null,copy=null,listing=null;
+    if(row.listing!=null){
+      // Publication window inferred from archived channel listings; full dates only.
+      const l=row.listing;keys(l,['from','to'],'listing');
+      if(![l.from,l.to].every(v=>validDate(v)&&v.length===10)||l.from>l.to)throw Error('Invalid archived listing window');
+      if(!['archived_listing','exact_copy','full_copy'].includes(row.basis))throw Error('Listing window does not fit this basis');
+      listing={from:l.from,to:l.to};
+    }
     if(row.estimate!=null){
       const e=row.estimate;keys(e,['month','low','high','confidence_band'],'estimate');
       if(![e.month,e.low,e.high].every(validMonth)||!(e.low<=e.month&&e.month<=e.high))throw Error('Invalid estimate range');
@@ -35,9 +42,11 @@ export function projectDateEstimates(input,catalog){
       const titleDate=match?match.slice(1).join('-'):christmas?`${christmas[1]}-12`:null;
       if(!validDate(row.date)||titleDate!==row.date||copy||estimate)throw Error('Invalid title date');
     }
+    else if(row.basis==='archived_listing'){if(!listing||row.date!==listing.from||copy||estimate)throw Error('Invalid archived listing date');}
     else if(row.basis==='text_estimate'){if(!estimate||row.date!==estimate.month)throw Error('Text estimate needs its month');}
     else if(!copy||row.date!==copy.date)throw Error('Copy-based date must be the copy date');
     recordings[id]={basis:row.basis,date:row.date,copy,estimate};
+    if(listing)recordings[id].listing=listing;
   }
   return {schema_version:1,recordings};
 }
@@ -54,16 +63,23 @@ export function describeDateEstimate(row){
     const display=validMonth(row.date)?month(row.date):row.date;
     return {label:'Date in title',card:`Estimated ${display} (title)`,short:`Estimated ${display} · date in title`,detail:`The title points to ${display}. This is a date clue, not a verified recording or upload date.`};
   }
+  if(row.basis==='archived_listing'){
+    const l=row.listing,span=l.from===l.to?l.from:`${l.from} to ${l.to}`;
+    return {label:'Date from archived listing',card:`Estimated ${span} (archived listing)`,short:`Estimated ${span} · archived channel listing`,
+      detail:`An archived copy of the channel's video listing shows this video as published ${l.from===l.to?`on ${l.from}`:`between ${l.from} and ${l.to}`}. `+
+        'The dates are worked out from the listing\'s relative age display (such as "3 weeks ago"), so they are approximate. Not a verified recording or upload date.'};
+  }
   if(row.basis==='text_estimate'){
     const e=row.estimate;
     return {label:'Estimated date',card:`Estimated ${month(e.month)}${row.copy?' (partial copy)':''}`,short:`Estimated ${month(e.month)} (not a verified date)`,
-      detail:`Estimated ${month(e.month)}; ${range(e)}. This range reflects the model's errors on dated recordings and can miss the true date. Estimates are less reliable near the earliest and latest years of the archive. Not a verified recording or upload date.`,
+      detail:`Estimated ${month(e.month)}; ${range(e)}. This range reflects the model's measured errors, including a check against archived listing dates, and can miss the true date. Estimates are less reliable near the earliest and latest years of the archive. Not a verified recording or upload date.`,
       copyNote:row.copy?`Partial text match with a recording dated ${row.copy.date}; this may be reused or replayed material and does not establish this recording's date.`:undefined,copy:row.copy??undefined};
   }
   const kind=row.basis==='exact_copy'?'Identical transcript':'Matching transcript';
   const how=row.basis==='exact_copy'?'has the same transcript text as':'shares most of its transcript with';
   return {label:'Date from matching text',card:`Estimated ${row.date} (${row.basis==='exact_copy'?'identical':'matching'} transcript)`,short:`Estimated ${row.date} · ${row.basis==='exact_copy'?'identical':'matching'} transcript`,
     detail:`${kind}: this recording ${how} a recording dated ${row.date}. That date is used here as an estimate; it is not a verified date for this recording.`+
-      ' Matching text can come from a re-upload or reused material.',
+      ' Matching text can come from a re-upload or reused material.'+
+      (row.listing?` An archived channel listing is consistent with this date (published ${row.listing.from===row.listing.to?`on ${row.listing.from}`:`between ${row.listing.from} and ${row.listing.to}`}).`:''),
     copyNote:undefined,copy:row.copy};
 }

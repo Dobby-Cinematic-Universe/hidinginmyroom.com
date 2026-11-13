@@ -52,3 +52,18 @@ test('a title date must match the title and remain an estimate',()=>{
   assert.equal(describeDateEstimate(christmas).card,'Estimated December 2023 (title)');
   assert.throws(()=>projectDateEstimates({recordings:{u:{...row,date:'2019-03-01'}}},rows),/Invalid title date/);
 });
+
+test('an archived listing window is shown as an estimated range and can back a copy date',()=>{
+  const row=project({basis:'archived_listing',date:'2022-03-01',copy:null,estimate:null,listing:{from:'2022-03-01',to:'2022-03-09'}});
+  const text=describeDateEstimate(row);
+  assert.equal(text.card,'Estimated 2022-03-01 to 2022-03-09 (archived listing)');
+  assert.equal(text.short,'Estimated 2022-03-01 to 2022-03-09 · archived channel listing');
+  assert.match(text.detail,/published between 2022-03-01 and 2022-03-09.*approximate.*Not a verified recording or upload date/);
+  assert.equal(describeDateEstimate(project({basis:'archived_listing',date:'2018-01-22',copy:null,estimate:null,listing:{from:'2018-01-22',to:'2018-01-22'}})).card,'Estimated 2018-01-22 (archived listing)');
+  const copy=project({basis:'exact_copy',date:'2018-02-14',copy:{kind:'exact',recording_id:'d',date:'2018-02-14'},estimate:null,listing:{from:'2018-02-10',to:'2018-02-17'}});
+  assert.match(describeDateEstimate(copy).detail,/archived channel listing is consistent.*between 2018-02-10 and 2018-02-17/);
+  assert.throws(()=>project({basis:'archived_listing',date:'2022-03-02',copy:null,estimate:null,listing:{from:'2022-03-01',to:'2022-03-09'}}),/Invalid archived listing date/);
+  assert.throws(()=>project({basis:'archived_listing',date:'2022-03-09',copy:null,estimate:null,listing:{from:'2022-03-09',to:'2022-03-01'}}),/Invalid archived listing window/);
+  assert.throws(()=>project({basis:'archived_listing',date:'2022-03',copy:null,estimate:null,listing:{from:'2022-03',to:'2022-04'}}),/Invalid archived listing window/);
+  assert.throws(()=>project({basis:'text_estimate',date:'2023-07',copy:null,estimate:est,listing:{from:'2022-03-01',to:'2022-03-09'}}),/does not fit/);
+});

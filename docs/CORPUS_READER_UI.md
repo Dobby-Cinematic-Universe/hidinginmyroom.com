@@ -61,8 +61,11 @@ copy's own catalog date and links to it. A matching transcript needs substantial
 literal overlap in both directions; a short excerpt does not date a long stream.
 Partial matches are shown as context only. An explicit date in a title can also
 be shown as an estimate, with its source identified.
+A publication window from an archived channel listing, matched by video ID, is
+shown as an estimated range; it is preferred over a wording estimate, is attached
+to a copy date it agrees with, and replaces a copy date that falls outside it.
 A wording-based estimate shows a month and an approximate range based on model
-errors. The details explain that these ranges can miss the true date, especially
+errors, widened after a check against archived listing dates. The details explain that these ranges can miss the true date, especially
 near the archive's earliest and latest years. Text matches can reflect re-uploads
 or reused material. Browse cards explicitly say "Estimated"; filters and sorting
 still treat these recordings as undated. Recordings without an entry keep

@@ -5,10 +5,11 @@ import {localPreviewRoot} from '../local-preview';
 import {describeDateEstimate} from './public-date-estimates.mjs';
 
 export interface DateEstimate {
-  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date';
+  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date'|'archived_listing';
   date:string;
   copy:{kind:'exact'|'full'|'partial';recording_id:string;date:string}|null;
   estimate:{month:string;low:string;high:string;confidence_band:number}|null;
+  listing?:{from:string;to:string};
 }
 type Release={recordings:Record<string,DateEstimate>};
 let cached:Promise<Release>|undefined;
