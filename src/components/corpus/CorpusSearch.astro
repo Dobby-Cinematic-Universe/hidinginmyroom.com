@@ -136,7 +136,25 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
       let renderedCount = 0;
       let searchGeneration = 0;
       let pagefindPromise;
+      let recordingsPromise;
       let activeQuery = '';
+
+      // Dates (including labelled estimates) and summary links come from the same
+      // metadata-only projection the browse page uses. Search still works without it.
+      const loadRecordings = () => {
+        recordingsPromise ??= fetch('/corpus/recordings.json')
+          .then(async (response) => {
+            if (!response.ok) throw new Error(`Recording index returned ${response.status}.`);
+            const rows = await response.json();
+            return new Map((Array.isArray(rows) ? rows : []).map((row) => [row.href, row]));
+          })
+          .catch((error) => {
+            console.error('Recording dates and summaries could not be loaded.', error);
+            recordingsPromise = undefined;
+            return new Map();
+          });
+        return recordingsPromise;
+      };
 
       const loadPagefind = () => {
         pagefindPromise ??= fetch('/corpus/search-manifest.json', { cache: 'no-cache' }).then(
@@ -197,7 +215,10 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
 
       const renderBatch = async (generation) => {
         const nextHandles = resultHandles.slice(renderedCount, renderedCount + pageSize);
-        const loaded = await Promise.all(nextHandles.map((handle) => handle.data()));
+        const [loaded, recordings] = await Promise.all([
+          Promise.all(nextHandles.map((handle) => handle.data())),
+          loadRecordings(),
+        ]);
         if (generation !== searchGeneration) return;
 
         for (const data of loaded) {
@@ -231,7 +252,14 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
             link.href=target.href;
           }
           title.textContent = data.meta?.title || 'Untitled recording';
+          const recording = recordings.get(new URL(link.href).pathname);
+          const dateText = recording?.date
+            || recording?.dateEstimate
+            || (data.meta?.date_label && data.meta.date_label !== 'Date unresolved' ? data.meta.date_label : null)
+            || 'Date unresolved';
           detail.textContent = [
+            dateText,
+            recording?.duration,
             root.dataset.recordingLevel==='true' ? null : data.meta?.timestamp,
             data.meta?.display_speaker_label,
           ].filter(Boolean).join(' · ');
@@ -241,6 +269,24 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
 
           link.append(title, detail, excerpt, disclaimer);
           item.append(link);
+          // Summaries stay outside the result link; they load only when opened.
+          const summaryId = typeof recording?.summaryId === 'string' && /^[a-z0-9-]+$/.test(recording.summaryId)
+            ? recording.summaryId
+            : null;
+          if (summaryId) {
+            const details = document.createElement('details');
+            const summary = document.createElement('summary');
+            const body = document.createElement('div');
+            const page = document.createElement('a');
+            details.className = 'inline-summary';
+            details.dataset.summaryId = summaryId;
+            summary.textContent = 'Read summary';
+            body.dataset.summaryBody = '';
+            page.href = `/corpus/summaries/${summaryId}/`;
+            page.textContent = 'Open summary page ↗';
+            details.append(summary, body, page);
+            item.append(details);
+          }
           results.append(item);
         }
 
@@ -277,6 +323,7 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
 
         status.textContent = 'Searching the transcript corpus…';
         try {
+          void loadRecordings();
           const indexes = await loadPagefind();
           const responses = await Promise.all(
             indexes.map((pagefind) => pagefind.search(query || null, { filters })),
@@ -332,6 +379,11 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
       if(filterKeys.some(key=>initial.get(key))) root.querySelector('.corpus-search__filters').open=true;
     }
   })();
+</script>
+
+<script>
+  // Delegated loader for result summaries; shared with recording lists.
+  import '../../lib/summaries/inline-summary';
 </script>
 
 <style is:global>
@@ -471,13 +523,28 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
     background: var(--corpus-panel-strong);
   }
 
-  .corpus-search__results span {
+  .corpus-search__results li > .inline-summary {
+    margin: 0 1rem 0.85rem;
+  }
+
+  .corpus-search__results li > .inline-summary > a {
+    display: inline-block;
+    padding: 0;
+    color: var(--corpus-accent);
+    text-decoration: underline;
+  }
+
+  .corpus-search__results li > .inline-summary > a:hover {
+    background: none;
+  }
+
+  .corpus-search__results a > span {
     color: var(--corpus-accent);
     font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
     font-size: 0.76rem;
   }
 
-  .corpus-search__results p {
+  .corpus-search__results a > p {
     margin: 0;
     color: var(--corpus-muted);
     font-size: 0.92rem;

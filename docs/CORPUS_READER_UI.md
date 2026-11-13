@@ -133,3 +133,14 @@ preview; no data, search index or processing job changed.
 Scanned the homepage, every corpus route type and all 65 wiki pages at 1366px
 and 390px with scripted headless Chromium against the local preview; 2,965
 internal links returned no errors.
+
+## Search result dates and summaries
+
+Transcript search results show the recording date and length. Undated recordings
+show their labelled estimate ("Estimated …") or "Date unresolved". Results with a
+recording summary get the same collapsible "Read summary" control used in
+recording lists; it sits outside the result link and loads only when opened. Both
+come from the metadata-only `/corpus/recordings.json` projection, fetched once per
+page alongside the search index. If it fails to load, results still appear with
+the index's own date label and without summary controls. No search index rebuild
+is needed.
