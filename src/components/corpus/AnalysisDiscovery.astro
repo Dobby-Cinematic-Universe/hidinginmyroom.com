@@ -46,7 +46,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     const umap = await validateRecordingUmap(detail.release, data, detail.supplement.recording_umap);
     const descriptions = await resolveFactorDescriptions(detail.release, factorAnnotations);
     const labeledRelease = { ...detail.release, analysis: { ...detail.release.analysis, factors: detail.release.analysis.factors.map(factor => ({ ...factor, label: factorDisplayLabel(factor, descriptions) })) } };
-    renderDiscovery(root, labeledRelease, data, umap);
+    const dateTexts = await fetch('/corpus/date-texts.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    renderDiscovery(root, labeledRelease, data, umap, dateTexts);
     root.hidden = false;
   }, { once: true });
 </script>

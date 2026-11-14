@@ -112,7 +112,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     const fmt = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? '—' : value.toLocaleString(undefined, { maximumFractionDigits: 3 });
     const fmtTime = (milliseconds:number) => { const total=Math.floor(milliseconds/1000),hours=Math.floor(total/3600),minutes=Math.floor(total%3600/60),seconds=total%60;return `${hours}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`; };
     const humanize = (value:string) => value.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toLocaleUpperCase()).replace(/\bTts\b/g,'TTS').replace(/\bNoul\b/g,'No/Yes');
-    const dateBasisLabel = (value:string) => ({unknown:'Unknown / unverified',retained_archive_metadata:'Archive metadata',archive_filename:'Archive filename'} as Record<string,string>)[value]??humanize(value);
+    const dateBasisLabel = (value:string) => ({unknown:'Unknown / unverified',retained_archive_metadata:'Archive metadata',archive_filename:'Archive filename',archived_video_page:'Archived video page',torrent_filename:'Archive filename',torrent_filename_utc:'Archive filename, converted to UTC',filename_date:'Archive filename'} as Record<string,string>)[value]??humanize(value);
     const uncertaintyLabel = (value:string|null|undefined) => ({model_rating_range:'Passage-mixture rating range (not a mean interval)',bootstrap_stability:'Bootstrap stability range',bootstrap_stability_range:'Bootstrap stability range',bootstrap_stability_unavailable:'Stability range unavailable',insufficient_or_inapplicable:'Insufficient evidence or not applicable',passage_distribution_not_video_probability:'Passage-score distribution (not a video probability)'} as Record<string,string>)[value??'']??(value?humanize(value):'Uncertainty not stated');
     const option = (label: string, value: string) => { const e=n('option',label) as HTMLOptionElement; e.value=value; return e; };
     function metrics() { return kindSelect.value === 'factor' ? release.analysis.factors.map(f => ({id:f.id,label:factorDisplayLabel(f,factorDescriptions)})) : release.questions.filter(q=>kindSelect.value==='classification'?q.type==='choice'||q.type==='noul':q.type==='score').map(q => ({id:q.id,label:`${q.short_name} · ${humanize(q.domain)}`})); }
@@ -153,7 +153,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         const score=scoreFor(video,selectedMetric,kind), tr=n('tr');
         const titleCell=n('th') as HTMLTableCellElement; titleCell.scope='row'; const a=n('a',video.title) as HTMLAnchorElement; a.href=video.href; titleCell.append(a);
         const link=n('button','Evidence') as HTMLButtonElement; link.type='button'; link.className='evidence-button'; link.addEventListener('click',()=>showEvidence(video)); titleCell.append(link);
-        const date=n('td',`${video.date ?? 'Date unresolved'} · ${dateBasisLabel(video.date_basis)}`);
+        const date=n('td',video.date?`${video.date} · ${dateBasisLabel(video.date_basis)}`:(dateTexts[video.recording_id]??'Date unresolved'));
         const category=n('td',video.category ? humanize(video.category) : 'Unclassified');
         const descriptor=release.questions.find(q=>q.id===selectedMetric);
         const value=n('td',kind==='classification'&&descriptor?.type==='choice'?(score?.choice?humanize(score.choice):'Unknown'):kind==='classification'&&descriptor?.type==='noul'?(score?.value==null?'—':`${fmt(score.value*100)}%`):fmt(score?.value));
@@ -169,7 +169,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       selectedId=video.recording_id; selectedVideo=video; selectedNode.hidden=false; selectedNode.open=true;
       root.querySelector<HTMLElement>('[data-selected-title]')!.textContent=`Evidence and question scores: ${video.title}`;
       const panel=root.querySelector<HTMLElement>('[data-evidence]')!; panel.replaceChildren();
-      const p=n('p',`Recording date: ${video.date??'unresolved'} (${dateBasisLabel(video.date_basis)}). Scores refer to transcript revision ${video.revision_id}. Overall transcript coverage: ${fmt(video.coverage*100)}%.`); panel.append(p);
+      const p=n('p',`Recording date: ${video.date?`${video.date} (${dateBasisLabel(video.date_basis)})`:(dateTexts[video.recording_id]??'unresolved')}. Scores refer to transcript revision ${video.revision_id}. Overall transcript coverage: ${fmt(video.coverage*100)}%.`); panel.append(p);
       const textQuality=video.classifications?.class_transcript_quality?.choice;
       if(textQuality==='substantial_noise'||textQuality==='unintelligible') {
         const warning=n('p',`Text-quality caution: the model classified this recording's text as ${humanize(textQuality).toLowerCase()}. Transcription problems may affect every score, including hypothetical audience confusion. This quality label is itself unverified.`);
@@ -389,8 +389,11 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       const bytes=new TextEncoder().encode(JSON.stringify(videos)),digest=await crypto.subtle.digest('SHA-256',bytes);
       return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('').slice(0,16);
     }
+    // Labelled estimates for recordings without a catalog date; display only, never used in trends or filters.
+    let dateTexts:Record<string,string>={};
     async function init() {
       try {
+        fetch('/corpus/date-texts.json').then(r=>r.ok?r.json():{}).then(v=>{dateTexts=v;}).catch(()=>{});
         const response=await fetch('/corpus/analysis/data.json',{cache:'no-cache'}); if(!response.ok) throw new Error('release unavailable');
         const payload=await response.json() as {available:boolean;release?:Omit<AnalysisRelease,'videos'>;video_shards?:{id:string;url:string;count:number}[];passage_shards?:unknown};
         if(!payload.available||!payload.release){status.textContent='No transcript scoring release is published yet. This explorer will show results after a reviewed score release is prepared.';return;}

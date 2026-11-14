@@ -74,6 +74,18 @@ const milestones = (readings: typeof all) => {
       </>; })}
     </section>
 
+    {channels.some((c) => c.names?.length > 0) && <section aria-labelledby="names-title">
+      <h2 id="names-title">Channel names</h2>
+      <p>The name each channel's page showed on the days it was archived. A change is known only as the interval between the last capture with the old name and the first with the new one.</p>
+      {channels.filter((c) => c.names?.length > 0).map((c) => <>
+        <h3>{c.label}</h3>
+        <table>
+          <thead><tr><th scope="col">Name shown</th><th scope="col">First seen</th><th scope="col">Last seen</th><th scope="col">Changed between</th><th scope="col">Source</th></tr></thead>
+          <tbody>{c.names.map((n) => <tr><td>{n.name ?? <span class="corpus-muted">Renamed (name not shown here)</span>}</td><td>{n.first_seen}</td><td>{n.last_seen}</td><td>{n.changed_after ? `${n.changed_after} and ${n.changed_before}` : '—'}</td><td><a href={n.source} target="_blank" rel="noopener noreferrer">Archived page</a></td></tr>)}</tbody>
+        </table>
+      </>)}
+    </section>}
+
     {views.length > 0 && <section aria-labelledby="views-title">
       <h2 id="views-title">Typical views about a month after upload</h2>
       <p>For each half-year, the median view count shown for a video roughly one month after it was published, across both channels. The bar is the median; the line spans the middle half of videos. Only videos with an archived reading at about that age are counted.</p>

@@ -7,7 +7,7 @@ const { cards } = Astro.props;
 ---
 <ul class="summary-cards">
   {cards.map((card) => <li>
-    <span class="summary-kicker">{card.kind === 'transcript' ? 'Recording' : card.kind} · {card.kind === 'archive' ? 'Selected archive' : periodLabel(card.period)}</span>
+    <span class="summary-kicker">{card.kind === 'transcript' ? 'Recording' : card.kind} · {card.kind === 'archive' ? 'Selected archive' : (!card.period && card.dateText) || periodLabel(card.period)}</span>
     <h3><a href={card.href}>{card.title}</a></h3>
     <p>{card.excerpt}</p>
     {card.kind === 'transcript' && <InlineSummary id={card.id} />}

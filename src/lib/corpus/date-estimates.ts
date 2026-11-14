@@ -5,12 +5,15 @@ import {localPreviewRoot} from '../local-preview';
 import {describeDateEstimate,circaDate,duplicateOf} from './public-date-estimates.mjs';
 
 export interface DateEstimate {
-  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date'|'archived_listing'|'archived_page';
+  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date'|'archived_listing'|'archived_page'|'evidence_date'|'collection_period';
   date:string;
   copy:{kind:'exact'|'full'|'partial';recording_id:string;date:string}|null;
   estimate:{month:string;low:string;high:string;confidence_band:number}|null;
   listing?:{from:string;to:string};
   page?:{date:string;captured:string;source:string};
+  evidence?:{from:string;to:string;sources:string[]};
+  narrowed_by?:string[];
+  period?:{from:string;to:string;collection:string;dated_members:number};
 }
 type Release={recordings:Record<string,DateEstimate>};
 let cached:Promise<Release>|undefined;
@@ -53,4 +56,12 @@ export async function browseOrder<T extends {recording_id:string;date_label:stri
   const {circa,duplicateOf:dup}=await recordingOverlay();
   const date=(r:T)=>r.date_label||circa.get(r.recording_id)||'';
   return recordings.filter(r=>!dup.has(r.recording_id)).sort((a,b)=>date(b).localeCompare(date(a))||a.title.localeCompare(b.title));
+}
+
+/** Date text for a recording wherever one is linked or listed: the catalog date, else the labelled
+ *  estimate, else the fallback. Estimates always say what they are ("Estimated …", "circa …"). */
+export async function recordingDateTexts():Promise<(id:string,catalogDate:string|null|undefined,fallback?:string)=>string>{
+  cached??=load();
+  const rows=(await cached).recordings;
+  return (id,catalogDate,fallback='Date unresolved')=>catalogDate||describeDateEstimate(rows[id])?.card||fallback;
 }

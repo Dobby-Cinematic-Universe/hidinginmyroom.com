@@ -55,7 +55,7 @@ export async function validateDiscovery(release, data) {
 const el=(tag,text)=>{const e=document.createElement(tag);if(text!=null)e.textContent=text;return e;};
 const svgEl=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attrs))e.setAttribute(key,String(value));return e;};
 const fmt=value=>value.toFixed(2);
-export function renderDiscovery(root,release,data,umap=null) {
+export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
   const videos=new Map(release.videos.map(v=>[v.recording_id,v]));
   const points=new Map(data.points.map(p=>[p.id,p]));
   const neighbors=new Map(data.neighbors.map(p=>[p.id,p.items]));
@@ -71,7 +71,7 @@ export function renderDiscovery(root,release,data,umap=null) {
   let selected=release.videos[0]?.recording_id;
   let viewport=null;
   const cameras=new Map();
-  const optionNodes=new Map(release.videos.map(v=>{const option=el('option',`${v.title} · ${v.date??'Undated'}${points.has(v.recording_id)?'':' · profile unavailable'}`);option.value=v.recording_id;return [v.recording_id,option];}));
+  const optionNodes=new Map(release.videos.map(v=>{const option=el('option',`${v.title} · ${v.date??dateTexts[v.recording_id]??'Undated'}${points.has(v.recording_id)?'':' · profile unavailable'}`);option.value=v.recording_id;return [v.recording_id,option];}));
   let lastQuery=null,matches=[];
   const picker=root.querySelector('[data-discovery-picking]');
   const clearPicker=()=>{if(picker){picker.replaceChildren();picker.hidden=true;}};
@@ -154,7 +154,7 @@ export function renderDiscovery(root,release,data,umap=null) {
       const dismiss=el('button','Dismiss map choices');dismiss.type='button';dismiss.addEventListener('click',dismissPicker);picker.append(dismiss);
       if(!candidates.length){picker.append(el('p','Click closer to a visible dot, zoom in, or use the recording selector.'));return;}
       picker.append(el('p',`${candidates.length} recordings are within 8 screen pixels of this click, nearest first. These are two-dimensional map candidates, not the ${data.factor_ids.length}-factor closest-profile list. Zoom in or use the recording selector to narrow the choice.`));
-      const list=el('ol');for(const candidate of candidates){const video=videos.get(candidate.id),li=el('li'),button=el('button',`${video.title} · ${video.date??'Undated'} · ${candidate.distance.toFixed(1)} px from click`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(candidate.id));li.append(button);list.append(li);}picker.append(list);list.querySelector('button')?.focus();
+      const list=el('ol');for(const candidate of candidates){const video=videos.get(candidate.id),li=el('li'),button=el('button',`${video.title} · ${video.date??dateTexts[video.recording_id]??'Undated'} · ${candidate.distance.toFixed(1)} px from click`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(candidate.id));li.append(button);list.append(li);}picker.append(list);list.querySelector('button')?.focus();
     });
     const legend=root.querySelector('[data-discovery-legend]');legend.replaceChildren();
     for(const [text,fill] of color.value==='year'?[[`${minyear} (purple) → ${maxyear} (orange)`,''],['Undated','#888']]:categories.map(c=>[c,paint({category:c})])){const span=el('span',text);if(fill){const marker=el('i');marker.style.backgroundColor=fill;span.prepend(marker);}legend.append(span);}

@@ -2,6 +2,7 @@
 import CorpusLayout from '../../../layouts/CorpusLayout.astro';
 import { loadCorpusGraph } from '../../../lib/corpus/graph';
 import { formatTimestamp } from '../../../lib/corpus/release';
+import { recordingDateTexts } from '../../../lib/corpus/date-estimates';
 import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
 import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
 import {eventDirectoryItems} from '../../../lib/corpus/event-groups.mjs';
@@ -43,6 +44,7 @@ export async function getStaticPaths() {
 }
 
 const { entity, appearances, participations, derived, relatedDescriptions } = Astro.props;
+const dateText = await recordingDateTexts();
 ---
 
 <CorpusLayout title={`${entity.label} · HIMR Public Corpus graph`}>
@@ -60,11 +62,11 @@ const { entity, appearances, participations, derived, relatedDescriptions } = As
       <DerivedNotice />
       <nav class="entity-jumps" aria-label="Entity sections"><a href="#mentions">Mentions ({(entity.mentions||[]).length})</a><a href="#speakers">Speaker-labeled recordings ({(entity.speakerRecordings||[]).length})</a><a href="#descriptions">Related descriptions</a></nav>
       <section id="mentions"><h2>Mentions</h2>
-        <DerivedDirectory label="mentions" items={(entity.mentions||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'} · Matched in ${(r.basis||[]).join(' and ')}`}))} />
+        <DerivedDirectory label="mentions" items={(entity.mentions||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${dateText(r.recording_id,r.recording_date,'unknown')} · Matched in ${(r.basis||[]).join(' and ')}`}))} />
       </section>
       <section id="speakers"><h2>Speaker labels in transcripts</h2>
         <p>These are existing transcript labels, not identities inferred from mentions. A label does not establish an on-camera appearance.</p>
-        <DerivedDirectory label="speaker-labeled recordings" items={(entity.speakerRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+        <DerivedDirectory label="speaker-labeled recordings" items={(entity.speakerRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${dateText(r.recording_id,r.recording_date,'unknown')}`}))} />
       </section>
       <section id="descriptions"><h2>Event descriptions mentioning this name</h2>
         <DerivedDirectory label="event descriptions" mode="events" items={relatedDescriptions} />

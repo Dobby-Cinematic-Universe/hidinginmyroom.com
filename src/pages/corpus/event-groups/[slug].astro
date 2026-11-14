@@ -4,6 +4,7 @@ import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
 import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
 import {loadCorpusGraph} from '../../../lib/corpus/graph';
 import {eventHref} from '../../../lib/corpus/event-links.mjs';
+import { recordingDateTexts } from '../../../lib/corpus/date-estimates';
 import type {RelatedAccountGroup,CorpusGraphEvent} from '../../../lib/corpus/types';
 interface Props {group:RelatedAccountGroup; members:CorpusGraphEvent[];}
 export async function getStaticPaths() {
@@ -11,6 +12,7 @@ export async function getStaticPaths() {
   return (graph.eventGroups||[]).map(group=>({params:{slug:group.slug},props:{group,members:group.members.map(id=>events.get(id)!)}}));
 }
 const {group,members}=Astro.props;
+const dateText=await recordingDateTexts();
 ---
 <CorpusLayout title={`Related accounts · ${group.label}`}>
   <nav class="corpus-breadcrumbs" aria-label="Breadcrumb"><a href="/corpus/">Corpus</a><span aria-hidden="true">/</span><a href="/corpus/graph/">Entities &amp; events</a><span aria-hidden="true">/</span><span aria-current="page">Related accounts</span></nav>
@@ -23,11 +25,11 @@ const {group,members}=Astro.props;
     <ol class="accounts">{members.map(e=><li>
       <p>{e.description}</p>
       <a href={eventHref(e.slug)}>Open original description and date mentions</a>
-      <ul>{(e.sourceRecordings||[]).map(r=><li><a href={`/corpus/videos/${r.slug}/`}>{r.title}</a><span> · Recording date: {r.recording_date||'unknown'}</span></li>)}</ul>
+      <ul>{(e.sourceRecordings||[]).map(r=><li><a href={`/corpus/videos/${r.slug}/`}>{r.title}</a><span> · Recording date: {dateText(r.recording_id,r.recording_date,'unknown')}</span></li>)}</ul>
     </li>)}</ol>
   </section>
   <section><h2>All source transcripts</h2>
-    <DerivedDirectory label="source transcripts" items={group.sourceRecordings.map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+    <DerivedDirectory label="source transcripts" items={group.sourceRecordings.map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${dateText(r.recording_id,r.recording_date,'unknown')}`}))} />
   </section>
 </CorpusLayout>
 <style>

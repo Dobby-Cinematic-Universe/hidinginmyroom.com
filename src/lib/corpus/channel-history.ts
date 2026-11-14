@@ -6,7 +6,7 @@ import {projectChannelHistory} from './public-channel-history.mjs';
 
 export interface SubscriberReading {date:string;subscribers:number;rounded_to:number;source:string}
 export interface ChannelHistory {
-  channels:{key:'main'|'second';label:string;readings:SubscriberReading[]}[];
+  channels:{key:'main'|'second';label:string;readings:SubscriberReading[];names:{name:string|null;first_seen:string;last_seen:string;changed_after:string|null;changed_before:string|null;source:string}[]}[];
   early_views:{period:string;videos:number;median_views:number;p25:number;p75:number;median_age_days:number;per_1000_subscribers:number|null}[];
 }
 

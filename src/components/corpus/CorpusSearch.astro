@@ -139,6 +139,31 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
       let recordingsPromise;
       let activeQuery = '';
 
+      // Other spellings of known game, product and place names. This inline script cannot import modules;
+      // expandQuery mirrors src/lib/corpus/public-reader-extras.mjs, which carries the tests.
+      let aliasesPromise;
+      const loadAliases = () => {
+        aliasesPromise ??= fetch('/corpus/search-aliases.json')
+          .then((response) => (response.ok ? response.json() : { sets: [] }))
+          .then((value) => (Array.isArray(value?.sets) ? value.sets : []))
+          .catch(() => []);
+        return aliasesPromise;
+      };
+      const expandQuery = (query, sets, limit = 6) => {
+        const q = ` ${String(query || '').toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}'\-]+/gu, ' ').trim()} `;
+        if (q.trim().length < 3) return [];
+        const out = [];
+        for (const set of sets || []) {
+          const hit = set.forms.filter((f) => q.includes(` ${f} `)).sort((a, b) => b.length - a.length)[0];
+          if (!hit) continue;
+          for (const f of set.forms) {
+            if (f === hit || out.length >= limit) continue;
+            out.push({ query: q.replace(` ${hit} `, ` ${f} `).trim(), form: f, canonical: set.canonical });
+          }
+        }
+        return out;
+      };
+
       // Dates (including labelled estimates) and summary links come from the same
       // metadata-only projection the browse page uses. Search still works without it.
       const loadRecordings = () => {
@@ -325,12 +350,18 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
         try {
           void loadRecordings();
           const indexes = await loadPagefind();
+          // Also search other spellings of a known game, product or place name (machine transcripts
+          // spell some names several ways). Each hit still shows the spelling its transcript uses.
+          const alternatives = query ? expandQuery(query, await loadAliases()) : [];
           const responses = await Promise.all(
-            indexes.map((pagefind) => pagefind.search(query || null, { filters })),
+            [query || null, ...alternatives.map((a) => a.query)].flatMap((text) =>
+              indexes.map((pagefind) => pagefind.search(text, { filters }))),
           );
           if (generation !== searchGeneration) return;
+          const seenResults = new Set();
           resultHandles = responses
             .flatMap((response) => response.results)
+            .filter((result) => !seenResults.has(result.id) && seenResults.add(result.id))
             .sort(
               (left, right) =>
                 (Number(right.score) || 0) - (Number(left.score) || 0) ||
@@ -338,7 +369,7 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
             );
           status.textContent = `${resultHandles.length.toLocaleString()} result${
             resultHandles.length === 1 ? '' : 's'
-          } found.`;
+          } found.${alternatives.length ? ` Also searched other spellings: ${alternatives.map((a) => a.form).join(', ')}.` : ''}`;
           await renderBatch(generation);
 
           const url = new URL(window.location.href);

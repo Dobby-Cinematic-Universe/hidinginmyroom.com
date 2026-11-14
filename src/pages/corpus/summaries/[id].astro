@@ -2,15 +2,17 @@
 import CorpusLayout from '../../../layouts/CorpusLayout.astro';
 import SummaryNotice from '../../../components/summaries/SummaryNotice.astro';
 import SummaryCards from '../../../components/summaries/SummaryCards.astro';
-import { loadSummaryRelease, summaryCard, type PublicSummary } from '../../../lib/summaries/release';
+import { loadSummaryRelease, summaryCards, type PublicSummary } from '../../../lib/summaries/release';
 import { loadCorpusCatalog } from '../../../lib/corpus/release';
 import { periodLabel } from '../../../lib/summaries/schema.mjs';
+import { recordingDateTexts } from '../../../lib/corpus/date-estimates';
 export async function getStaticPaths() {
   return (await loadSummaryRelease()).summaries.map((summary) => ({params:{id:summary.id},props:{summary}}));
 }
 const { summary } = Astro.props as { summary: PublicSummary };
 const release = await loadSummaryRelease();
 const records = new Map((await loadCorpusCatalog()).recordings.map((r) => [r.recording_id,r]));
+const dateText = await recordingDateTexts();
 const labels = {summary:'Overview',topics:'Themes',events:'Developments',uncertainties:'Uncertainties & gaps'};
 const sectionKeys = Object.keys(labels) as (keyof typeof labels)[];
 const related = release.summaries.filter((r) => r.id !== summary.id && (summary.kind === 'archive' ? r.kind === 'yearly' || (r.kind === 'monthly' && !r.period) : summary.kind === 'yearly' ? r.kind === 'monthly' && r.period?.startsWith(summary.period!+'-') : summary.kind === 'monthly' ? r.kind === 'transcript' && r.period === summary.period : false)).sort((a,b) => (a.period ?? '').localeCompare(b.period ?? ''));
@@ -28,10 +30,10 @@ const parent = release.summaries.find((r) => summary.kind === 'monthly' && summa
       {summary.sections[section].map((item) => <div class="summary-point">
         {item.classification === 'reported_allegation' && <span class="evidence-label">Reported allegation</span>}
         <p>{item.text}</p>
-        {summary.kind !== 'transcript' && <details><summary>Source recordings ({item.source_recording_ids.length})</summary><ul>{item.source_recording_ids.map((id) => <li><a href={`/corpus/videos/${records.get(id)!.slug}/`}>{records.get(id)!.title}</a>{records.get(id)!.transcript_revision_count === 0 && <span> — catalog only; transcript unavailable in this release</span>}</li>)}</ul></details>}
+        {summary.kind !== 'transcript' && <details><summary>Source recordings ({item.source_recording_ids.length})</summary><ul>{item.source_recording_ids.map((id) => <li><a href={`/corpus/videos/${records.get(id)!.slug}/`}>{records.get(id)!.title}</a><span> · {dateText(id,records.get(id)!.date_label,'date unresolved')}</span>{records.get(id)!.transcript_revision_count === 0 && <span> — catalog only; transcript unavailable in this release</span>}</li>)}</ul></details>}
       </div>)}
     </section>)}</div>
-    {related.length > 0 && <section><h2>Explore this period</h2><SummaryCards cards={related.map(summaryCard)} /></section>}
+    {related.length > 0 && <section><h2>Explore this period</h2><SummaryCards cards={await summaryCards(related)} /></section>}
     <footer class="summary-release">Release {release.release_id} · <time datetime={release.generated_at}>{release.generated_at.slice(0,10)}</time> · <a href="/wiki/archive/methodology/">Methodology</a></footer>
   </article>
 </CorpusLayout>

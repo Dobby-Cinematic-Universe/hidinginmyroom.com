@@ -10,4 +10,4 @@ export interface DiscoveryData {
 export function completeFactorProfile(video:AnalysisVideo,ids:string[]):number[]|null;
 export function standardizedFactorDistance(a:number[],b:number[],scales:number[]):number;
 export function validateDiscovery(release:AnalysisRelease,value:unknown):Promise<DiscoveryData|null>;
-export function renderDiscovery(root:HTMLElement,release:AnalysisRelease,data:DiscoveryData,umap?:RecordingUmap|null):void;
+export function renderDiscovery(root:HTMLElement,release:AnalysisRelease,data:DiscoveryData,umap?:RecordingUmap|null,dateTexts?:Record<string,string>):void;

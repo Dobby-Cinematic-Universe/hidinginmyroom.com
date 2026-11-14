@@ -3,6 +3,7 @@ import CorpusLayout from '../../../layouts/CorpusLayout.astro';
 import {localPreviewRoot} from '../../../lib/local-preview';
 import { loadCorpusGraph } from '../../../lib/corpus/graph';
 import { formatTimestamp } from '../../../lib/corpus/release';
+import { recordingDateTexts } from '../../../lib/corpus/date-estimates';
 import DerivedNotice from '../../../components/corpus/DerivedNotice.astro';
 import DerivedDirectory from '../../../components/corpus/DerivedDirectory.astro';
 import type {
@@ -55,6 +56,7 @@ export async function getStaticPaths() {
 }
 
 const { event, dates, evidence, participants, relations, derived, mentions, relatedGroup } = Astro.props;
+const dateText = await recordingDateTexts();
 const dateLabel = (date: CorpusGraphDate) =>
   date.value_start === null
     ? 'Date unresolved'
@@ -83,7 +85,7 @@ const dateLabel = (date: CorpusGraphDate) =>
         <p>These mentions are not assigned as the event date. Recording dates below describe the sources; relative dates and conflicting accounts remain unresolved.</p>
       </section>
       <section><h2>Source transcripts</h2>
-        <DerivedDirectory label="source transcripts" items={(event.sourceRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${r.recording_date||'unknown'}`}))} />
+        <DerivedDirectory label="source transcripts" items={(event.sourceRecordings||[]).map(r=>({href:`/corpus/videos/${r.slug}/`,title:r.title,detail:`Recording date: ${dateText(r.recording_id,r.recording_date,'unknown')}`}))} />
       </section>
       <section><h2>Source summaries</h2><ul>{(event.sourceSummaryIds||[]).map(id=><li><a href={`/corpus/summaries/${id}/`}>Transcript summary</a></li>)}</ul></section>
     </> : <>

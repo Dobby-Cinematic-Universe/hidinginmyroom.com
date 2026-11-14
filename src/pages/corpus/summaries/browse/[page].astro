@@ -2,11 +2,12 @@
 import CorpusLayout from '../../../../layouts/CorpusLayout.astro';
 import SummaryCards from '../../../../components/summaries/SummaryCards.astro';
 import SummaryNotice from '../../../../components/summaries/SummaryNotice.astro';
-import { loadSummaryRelease, summaryCard } from '../../../../lib/summaries/release';
+import { loadSummaryRelease, summaryCards } from '../../../../lib/summaries/release';
 export async function getStaticPaths() {
   const rows = [...(await loadSummaryRelease()).summaries].sort((a,b) => (b.period ?? '').localeCompare(a.period ?? ''));
   const pages = Math.max(1,Math.ceil(rows.length/48));
-  return Array.from({length:pages},(_,i) => ({params:{page:String(i+1)},props:{cards:rows.slice(i*48,(i+1)*48).map(summaryCard),page:i+1,pages}}));
+  const all = await summaryCards(rows);
+  return Array.from({length:pages},(_,i) => ({params:{page:String(i+1)},props:{cards:all.slice(i*48,(i+1)*48),page:i+1,pages}}));
 }
 const { cards, page, pages } = Astro.props;
 ---

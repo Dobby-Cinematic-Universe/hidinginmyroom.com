@@ -53,8 +53,15 @@ function previewText(text: string, max = 240) {
   const space = cut.lastIndexOf(' ');
   return `${(space > max * 0.6 ? cut.slice(0, space) : cut.slice(0, max)).replace(/[\s,;:.–—-]+$/u, '')}…`;
 }
-export function summaryCard(row: PublicSummary) {
-  return { id: row.id, kind: row.kind, period: row.period, title: row.title,
+/** Cards for a list of summaries; transcript summaries of undated recordings carry the labelled date estimate. */
+export async function summaryCards(rows: PublicSummary[]) {
+  const { recordingDateTexts } = await import('../corpus/date-estimates');
+  const text = await recordingDateTexts();
+  return rows.map((row) => summaryCard(row, row.kind === 'transcript' && !row.period && row.recording_id ? text(row.recording_id, null, '') || undefined : undefined));
+}
+/** `dateText` is the labelled date estimate of an undated recording's summary; display only. */
+export function summaryCard(row: PublicSummary, dateText?: string) {
+  return { id: row.id, kind: row.kind, period: row.period, title: row.title, ...(dateText ? { dateText } : {}),
     excerpt: previewText(row.sections.summary.map((i) => i.text).join(' ')),
     href: `/corpus/summaries/${row.id}/` };
 }
