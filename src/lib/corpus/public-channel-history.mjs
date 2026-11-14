@@ -2,7 +2,7 @@
 // it was read from) and typical early view counts per half-year. Aggregates only; no titles.
 // The archived URL keeps any query string it was captured with (e.g. ?disable_polymer=1); dropping it makes the
 // Wayback Machine redirect to a nearby capture of a different URL, which can show a different channel name.
-const DAY=/^\d{4}-\d{2}-\d{2}$/,SOURCE=/^https:\/\/web\.archive\.org\/web\/\d{14}\/https:\/\/www\.youtube\.com\/[\w@./%-]+(?:\?[\w=&%.-]+)?$/;
+const DAY=/^\d{4}-\d{2}-\d{2}$/,SOURCE=/^https:\/\/web\.archive\.org\/web\/\d{14}\/https:\/\/(?:www\.)?youtube\.com\/[\w@./%-]+(?:\?[\w=&%.-]+)?$/;
 const count=v=>Number.isInteger(v)&&v>=0;
 export function projectChannelHistory(input){
   if(!input)return {schema_version:1,channels:[],early_views:[]};
