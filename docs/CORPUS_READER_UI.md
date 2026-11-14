@@ -181,3 +181,31 @@ come from the metadata-only `/corpus/recordings.json` projection, fetched once p
 page alongside the search index. If it fails to load, results still appear with
 the index's own date label and without summary controls. No search index rebuild
 is needed.
+
+### Evidence dates, date notes and machine-derived reader aids (2026-11-14)
+
+Sidecars beside the catalog, each optional and projected by `scripts/prepare-release-candidate.mjs`:
+
+- `date-estimates.json` has two more forms. `basis: evidence_date` carries `evidence: {from, to, sources}` for a
+  range of a week or less from combined evidence and is shown as "circa <date> (<main source>)"; it orders and
+  filters like a circa date. A `text_estimate` may carry `narrowed_by`, and its explanation then names what narrowed
+  the range. Source names are a fixed list in `src/lib/corpus/public-date-estimates.mjs`.
+- `date-notes.json` explains a catalog date whose basis needs a sentence (`archived_video_page`,
+  `torrent_filename_utc`). The recording page shows a readable date basis for every recording.
+- `recordingDateTexts()` in `src/lib/corpus/date-estimates.ts` gives the date text for any linked recording: the
+  catalog date, else the labelled estimate, else a fallback. Event, event-group, entity, event-description and
+  summary pages use it, and `/corpus/date-texts.json` serves the same texts to client-rendered analysis views.
+- `search-aliases.json`: other spellings of game, product and place names found in the machine transcripts.
+  Transcript search also runs the other spellings and says which were added. No people.
+- `related-recordings.json`: a recording that names an earlier one. Shown as "Refers back to" and "Referred to in"
+  with a note that it is detected automatically.
+- `chapters.json`: machine-detected topic shifts in long recordings, each with up to four frequent words after
+  name-like and sensitive words are removed. Shown in a collapsed list that links into the transcript.
+- `mention-bursts.json`: stretches in which a game, product or platform is named unusually often
+  (`/corpus/mention-bursts/`). No people or places.
+- `channel-history.json` may carry `names` per channel; a name withheld by editorial choice is `null` and is
+  shown as a rename without the name.
+- `/corpus/dates/` explains where dates come from and how estimates are made; its counts are computed at build time.
+
+`--local-analysis=<run directory>` lets a candidate rehearse with a completed local analysis run before its bundle
+is pinned.

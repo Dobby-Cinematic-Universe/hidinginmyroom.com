@@ -9,6 +9,8 @@ import {summaryQualityFindings} from './summary-quality.mjs';
 import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
 import {projectDateEstimates} from '../src/lib/corpus/public-date-estimates.mjs';
 import {projectTitleHistory} from '../src/lib/corpus/public-title-history.mjs';
+import {projectDateNotes} from '../src/lib/corpus/public-date-notes.mjs';
+import {projectSearchAliases,projectRelatedRecordings,projectChapters,projectMentionBursts} from '../src/lib/corpus/public-reader-extras.mjs';
 import {projectChannelHistory} from '../src/lib/corpus/public-channel-history.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
@@ -70,6 +72,29 @@ await writeFile(root+'/src/data/corpus/attribution.json',JSON.stringify(annotati
 let dateEstimates={schema_version:1,recordings:{}};
 try{dateEstimates=projectDateEstimates(JSON.parse(await readFile(source+'/corpus/date-estimates.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
 await writeFile(root+'/src/data/corpus/date-estimates.json',JSON.stringify(dateEstimates));
+// Optional sidecar: how a catalog date was established, for the bases that need a sentence. Dates are not changed.
+let dateNotes={schema_version:1,recordings:{}};
+try{dateNotes=projectDateNotes(JSON.parse(await readFile(source+'/corpus/date-notes.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
+await writeFile(root+'/src/data/corpus/date-notes.json',JSON.stringify(dateNotes));
+const extraReport={}; // merged into the candidate report once it exists
+// Browser-playable media copies are listed per corpus release. A release that keeps every listed recording
+// (same ids, same sources) keeps the list; rehearse with it bound to the selected release.
+{
+  const file=root+'/src/data/corpus-media-access-copies.json';
+  const copies=JSON.parse(await readFile(file,'utf8'));
+  const ids=new Set(records.map(r=>r.recording_id));
+  if(copies.corpus_release!==manifest.release_id&&copies.copies.every(c=>ids.has(c.recording_id))){
+    await writeFile(file,JSON.stringify({...copies,corpus_release:manifest.release_id},null,2)+'\n');
+    extraReport.media_access_copies_rebound=copies.copies.length;
+  }
+}
+// Optional machine-derived reader aids: search spellings, "refers back to" links and topic-shift chapters.
+for(const [name,project_,empty] of [['search-aliases.json',v=>projectSearchAliases(v),{schema_version:1,sets:[]}],['related-recordings.json',v=>projectRelatedRecordings(v,records),{schema_version:1,recordings:{}}],['chapters.json',v=>projectChapters(v,records),{schema_version:1,recordings:{}}],['mention-bursts.json',v=>projectMentionBursts(v),{schema_version:1,bursts:[]}]]){
+  let value=empty;
+  try{value=project_(JSON.parse(await readFile(source+'/corpus/'+name,'utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
+  await writeFile(root+'/src/data/corpus/'+name,JSON.stringify(value));
+  extraReport['reader_'+name.replace('.json','').replace(/-/g,'_')]=name==='search-aliases.json'?value.sets.length:name==='mention-bursts.json'?value.bursts.length:Object.keys(value.recordings).length;
+}
 // Optional sidecar: earlier titles from archived channel listings. Catalog titles are not changed.
 let titleHistory={schema_version:1,recordings:{}};
 try{titleHistory=projectTitleHistory(JSON.parse(await readFile(source+'/corpus/title-history.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
@@ -102,13 +127,27 @@ report.date_estimate_records=Object.keys(dateEstimates.recordings).length;
 let channelHistory=projectChannelHistory(null);
 try{channelHistory=projectChannelHistory(JSON.parse(await readFile(source+'/corpus/channel-history.json','utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
 await writeFile(root+'/src/data/corpus/channel-history.json',JSON.stringify(channelHistory));
+Object.assign(report,extraReport);
 report.channel_history_readings=channelHistory.channels.reduce((n,c)=>n+c.readings.length,0);
 report.title_history_records=Object.keys(titleHistory.recordings).length;
 report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Derived Entities')&&!s.startsWith('Public attribution'));
 await save();
 const run=(args)=>new Promise((resolve,reject)=>{const child=spawn(process.execPath,args,{cwd:root,env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1',...chatEnv},stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Candidate command exited '+code)));});
 try{
-  report.analysis_bundle_restored=await restorePinnedCandidateAnalysis({project,root});
+  // --local-analysis=<run directory>: rehearse with a completed local analysis run that is not pinned yet
+  // (a new corpus release before its bundles exist). Otherwise the approved pinned bundle is restored.
+  const localAnalysis=process.argv.find(a=>a.startsWith('--local-analysis='))?.slice(17);
+  if(localAnalysis){
+    const from=path.resolve(project,localAnalysis),to=root+'/src/data/analysis';
+    const release=JSON.parse(await readFile(from+'/public-release.json','utf8'));
+    if(release.corpus_release_id!==manifest.release_id)throw Error('Local analysis does not cover the selected corpus release');
+    await cp(from+'/public-release.json',to+'/release.json');
+    for(const name of ['extended-robustness.json','joint-trends.json','map-diagnostics.json','recording-discovery.json','recording-umap.json','passage-insights.json','factor-diagnostics.json','temporal-comparisons.json'])await cp(from+'/'+name,to+'/'+name);
+    await cp(from+'/passages',to+'/passages',{recursive:true});
+    // Factor annotations are bound to the analysis they describe; the run directory carries the re-bound copy.
+    await cp(from+'/factor-descriptions.json',to+'/factor-descriptions.json');
+    report.analysis_bundle_restored=false;report.local_analysis_run=path.basename(from);
+  }else report.analysis_bundle_restored=await restorePinnedCandidateAnalysis({project,root});
   await run([path.join(project,'node_modules/astro/bin/astro.mjs'),'build','--config','candidate.config.mjs']);
   const search=JSON.parse(await readFile(source+'/search/search-manifest.json','utf8'));
   if(search.release_id!==manifest.release_id||search.recording_count!==available.size)throw Error('Cached search does not match corpus');

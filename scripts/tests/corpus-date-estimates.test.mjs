@@ -98,3 +98,27 @@ test('an archived video page gives a dated, ordered entry and can confirm or fol
   assert.throws(()=>project({basis:'exact_copy',date:'2018-02-14',copy:{kind:'exact',recording_id:'d',date:'2018-02-14'},estimate:null,page:{...page,date:'2018-01-02'}}),/disagrees/);
   assert.throws(()=>project({basis:'text_estimate',date:'2023-07',copy:null,estimate:est,page}),/does not fit/);
 });
+
+test('combined evidence gives a circa date of at most a week, and a wording range can say what narrowed it',()=>{
+  const ev=project({basis:'evidence_date',date:'2024-04-09',copy:null,estimate:null,evidence:{from:'2024-04-08',to:'2024-04-10',sources:['legacy_index_label','calendar_clue']}});
+  const text=describeDateEstimate(ev);
+  assert.equal(text.card,'circa 2024-04-09 (earlier index label)');
+  assert.match(text.detail,/between 2024-04-08 and 2024-04-10 using a date label in an earlier transcript index and a weekday or date said in the recording.*not a verified/);
+  assert.equal(circaDate(ev),'2024-04-09');assert.equal(duplicateOf(ev),undefined);
+  assert.throws(()=>project({basis:'evidence_date',date:'2024-04-09',copy:null,estimate:null,evidence:{from:'2024-04-01',to:'2024-04-20',sources:['calendar_clue']}}),/Invalid evidence date/);
+  assert.throws(()=>project({basis:'evidence_date',date:'2024-04-12',copy:null,estimate:null,evidence:{from:'2024-04-08',to:'2024-04-10',sources:['calendar_clue']}}),/Invalid evidence date basis/);
+  assert.throws(()=>project({basis:'evidence_date',date:'2024-04-09',copy:null,estimate:null,evidence:{from:'2024-04-08',to:'2024-04-10',sources:['guess']}}),/Invalid evidence date/);
+  const narrowed=project({basis:'text_estimate',date:'2023-07',copy:null,estimate:est,narrowed_by:['release_anchor']});
+  assert.match(describeDateEstimate(narrowed).detail,/narrowed using the release date of something mentioned\./);
+  assert.throws(()=>project({basis:'exact_copy',date:'2018-02-14',copy:{kind:'exact',recording_id:'d',date:'2018-02-14'},estimate:null,narrowed_by:['release_anchor']}),/Invalid narrowing/);
+});
+
+test('an undated clip of a dated collection gets the collection period, never a circa date',()=>{
+  const row=project({basis:'collection_period',date:'2017-06',copy:null,estimate:null,period:{from:'2017-06-03',to:'2019-01-27',collection:'twitch_clips',dated_members:389}});
+  const text=describeDateEstimate(row);
+  assert.equal(text.card,'Estimated 2017–2019 (clip collection)');
+  assert.match(text.detail,/389 dated clips.*2017-06-03 to 2019-01-27.*Not a verified date/);
+  assert.equal(circaDate(row),undefined);
+  assert.throws(()=>project({basis:'collection_period',date:'2018-01',copy:null,estimate:null,period:{from:'2017-06-03',to:'2019-01-27',collection:'twitch_clips',dated_members:389}}),/Invalid collection period basis/);
+  assert.throws(()=>project({basis:'collection_period',date:'2017-06',copy:null,estimate:null,period:{from:'2017-06-03',to:'2019-01-27',collection:'other',dated_members:389}}),/Invalid collection period/);
+});
