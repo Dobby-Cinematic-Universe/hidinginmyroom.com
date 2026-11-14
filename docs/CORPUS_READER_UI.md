@@ -203,8 +203,8 @@ Sidecars beside the catalog, each optional and projected by `scripts/prepare-rel
   name-like and sensitive words are removed. Shown in a collapsed list that links into the transcript.
 - `mention-bursts.json`: stretches in which a game, product or platform is named unusually often, shown as
   "What was talked about when" at the end of Entities & events (`/corpus/graph/#mention-bursts`). No people or places.
-- `channel-history.json` may carry `names` per channel; a name withheld by editorial choice is `null` and is
-  shown as a rename without the name. Channel history has its own corpus navigation link and home shortcut.
+- `channel-history.json` may carry `names` per channel; the projection still accepts `null` for a withheld name
+  (shown as a rename without the name), but the current export publishes every archived name. Channel history has its own corpus navigation link and home shortcut.
 - "How recordings are dated" is a collapsed note under Provenance on every recording page; its counts are computed
   once per build (`src/lib/corpus/dating-overview.ts`).
 
