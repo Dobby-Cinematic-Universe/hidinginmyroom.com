@@ -201,11 +201,12 @@ Sidecars beside the catalog, each optional and projected by `scripts/prepare-rel
   with a note that it is detected automatically.
 - `chapters.json`: machine-detected topic shifts in long recordings, each with up to four frequent words after
   name-like and sensitive words are removed. Shown in a collapsed list that links into the transcript.
-- `mention-bursts.json`: stretches in which a game, product or platform is named unusually often
-  (`/corpus/mention-bursts/`). No people or places.
+- `mention-bursts.json`: stretches in which a game, product or platform is named unusually often, shown as
+  "What was talked about when" at the end of Entities & events (`/corpus/graph/#mention-bursts`). No people or places.
 - `channel-history.json` may carry `names` per channel; a name withheld by editorial choice is `null` and is
-  shown as a rename without the name.
-- `/corpus/dates/` explains where dates come from and how estimates are made; its counts are computed at build time.
+  shown as a rename without the name. Channel history has its own corpus navigation link and home shortcut.
+- "How recordings are dated" is a collapsed note under Provenance on every recording page; its counts are computed
+  once per build (`src/lib/corpus/dating-overview.ts`).
 
 `--local-analysis=<run directory>` lets a candidate rehearse with a completed local analysis run before its bundle
 is pinned.

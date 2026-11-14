@@ -73,6 +73,7 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
     <a href="/corpus/browse/1/">Browse all recordings →</a>
     <a href="/corpus/summaries/">Explore summaries →</a>
     <a href="/corpus/analysis/">Explore text dimensions →</a>
+    <a href="/corpus/channel-history/">Channel history →</a>
   </nav>
   <details class="corpus-limitations">
     <summary>Machine transcripts are unreviewed — read the limitations</summary>
@@ -101,11 +102,6 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
       <dd>source listings</dd>
     </div>
   </dl>
-  <nav class="corpus-more" aria-label="More about the archive">
-    <a href="/corpus/channel-history/"><strong>Channel history</strong><span>Channel names, subscriber and view counts from archived channel pages</span></a>
-    <a href="/corpus/dates/"><strong>How recordings are dated</strong><span>Where dates come from and how estimates are made</span></a>
-    <a href="/corpus/mention-bursts/"><strong>What was talked about when</strong><span>Games, products and platforms named unusually often</span></a>
-  </nav>
 
   <CorpusSearch recordCount={recordingLevel ? catalog.recordings.filter(r=>r.searchable_segment_count>0).length : stats.transcriptSegments} facets={facets} recordingLevel={recordingLevel} />
 
@@ -145,11 +141,6 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
 </CorpusLayout>
 
 <style>
-  .corpus-more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .6rem; margin: 1rem 0 1.25rem; }
-  .corpus-more a { display: grid; gap: .2rem; padding: .7rem .9rem; border: 1px solid var(--corpus-line); border-radius: .45rem; background: var(--corpus-panel); text-decoration: none; }
-  .corpus-more a:hover { border-color: var(--corpus-accent); }
-  .corpus-more strong { color: var(--corpus-accent); font-size: .92rem; }
-  .corpus-more span { color: var(--corpus-muted); font-size: .82rem; line-height: 1.4; }
   .corpus-shortcuts { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
   .corpus-shortcuts a { padding: .75rem 1rem; border: 1px solid var(--corpus-line); border-radius: .4rem; background: var(--corpus-panel); text-decoration: none; }
   .corpus-limitations { margin: 1rem 0; color: var(--corpus-muted); font-size: .9rem; }

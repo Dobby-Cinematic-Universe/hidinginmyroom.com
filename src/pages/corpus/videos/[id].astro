@@ -23,6 +23,7 @@ import { loadSummaryRelease } from '../../../lib/summaries/release';
 import { knownSpeakerLabel, showSpeakerLabels } from '../../../lib/corpus/presentation.mjs';
 import RecordingPlayer from '../../../components/corpus/RecordingPlayer.astro';
 import InlineSummary from '../../../components/summaries/InlineSummary.astro';
+import DatingNote from '../../../components/corpus/DatingNote.astro';
 
 export const getStaticPaths = (async () => {
   const catalog = await loadCorpusCatalog();
@@ -193,6 +194,7 @@ const noAudio = annotation?.media_status === 'no_audio';
             </ul>
           )
         }
+        <DatingNote />
       </section>
 
       <section class="recording__revisions" aria-labelledby="revisions-title">

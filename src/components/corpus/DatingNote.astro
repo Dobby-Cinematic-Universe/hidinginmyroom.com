@@ -1,0 +1,55 @@
+---
+import { datingOverview } from '../../lib/corpus/dating-overview';
+const o = await datingOverview();
+const fmt = (n: number) => n.toLocaleString('en-US');
+---
+<details class="dating-note" id="how-dates-work">
+  <summary>How recordings are dated</summary>
+  <p>Every date is an upload or stream date: when a recording was published, not when the events it describes happened. {fmt(o.dated)} of {fmt(o.total)} recordings have a catalog date; the rest show a labelled estimate where one can be made.</p>
+
+  <h4>Catalog dates</h4>
+  <p>A date that the platform or the archive displayed for that very recording.</p>
+  <table>
+    <thead><tr><th scope="col">Where the date comes from</th><th scope="col">Recordings</th></tr></thead>
+    <tbody>{o.byBasis.map(([label, n]) => <tr><td>{label}</td><td>{fmt(n)}</td></tr>)}</tbody>
+  </table>
+  <ul>
+    <li><strong>Checked against independent evidence.</strong> 1,784 catalog dates were compared with archived copies of channel listings or video pages. All agreed to within a day.</li>
+    <li><strong>One day of slack.</strong> Older archive files carry the day YouTube displayed (US Pacific time) and newer ones the UTC day, so the same video can appear a day apart in two sources.</li>
+    <li><strong>Kick streams.</strong> Their archive file names use a clock ten hours ahead of UTC. Catalog dates are the UTC start day, one day earlier than the file name for about half of them. Archived clip times and the weekdays and clock times said in the streams both support this.</li>
+    <li><strong>Re-uploads.</strong> A few recordings re-upload older material. The date is right for the upload; the content is older.</li>
+  </ul>
+
+  <h4>Estimates for recordings without a catalog date</h4>
+  <p>Estimates never replace a catalog date. Each one says what it rests on, here and wherever the recording is listed.</p>
+  <table>
+    <thead><tr><th scope="col">Kind of estimate</th><th scope="col">Recordings</th></tr></thead>
+    <tbody>{o.estimates.map(([label, n]) => <tr><td>{label}</td><td>{fmt(n)}</td></tr>)}</tbody>
+  </table>
+  <ul>
+    <li><strong>Matching text.</strong> The transcript is identical to, or shares most of its text with, a dated recording. Where an archived listing or video page confirms the date, lists show only the dated copy.</li>
+    <li><strong>Archived listing.</strong> An archived channel video list showed the video as "N days, weeks or months ago". YouTube rounds such ages down, which gives a window. All 505 videos with a known date fell inside their window when tested.</li>
+    <li><strong>Combined evidence.</strong> A range of a week or less from several clues: an archived stream record, a date label in an earlier transcript index, a weekday or date said in the recording, or the release date of something mentioned. Shown as "circa".</li>
+    <li><strong>Date in title.</strong> The title itself contains a date.</li>
+    <li><strong>Estimated period.</strong> An undated clip from an archived collection of Twitch clips gets the period that the collection's dated clips cover.</li>
+    <li><strong>Estimated date.</strong> A statistical estimate from the words used, given as a month with a range. On recordings with known dates it lands within three months at the median and within a year for 83%. Tested on 3,039 dated recordings, the stated ranges contained the true date about 85% of the time.</li>
+  </ul>
+
+  <h4>Limits</h4>
+  <ul>
+    <li>A release date of a game or phone only gives an earliest date, and only when the recording shows it in use. Mentions alone are not used.</li>
+    <li>A weekday said aloud matches the catalog weekday about three times in four, and is within a day more than nine times in ten.</li>
+    <li>Date labels from the earlier transcript index agreed with archived evidence in 11 of 12 checkable cases. They are plausible, not established.</li>
+    <li>Recordings with no transcript, or a very short one, usually have no estimate.</li>
+  </ul>
+</details>
+<style>
+  .dating-note{margin-top:1rem;font-size:.86rem;line-height:1.55;scroll-margin-top:1rem}
+  .dating-note summary{cursor:pointer;color:var(--corpus-accent);font-weight:650;padding:.3rem 0}
+  .dating-note p,.dating-note li{color:var(--corpus-muted)}
+  .dating-note h4{margin:1rem 0 .3rem;font-size:.9rem}
+  .dating-note ul{padding-left:1.1rem;margin:.4rem 0}.dating-note li{margin:.3rem 0}
+  .dating-note table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:.4rem 0}
+  .dating-note th,.dating-note td{text-align:left;padding:.25rem .4rem;border-bottom:1px solid var(--corpus-line)}
+  .dating-note th{color:var(--corpus-muted);font-weight:600}.dating-note td:last-child,.dating-note th:last-child{text-align:right}
+</style>
