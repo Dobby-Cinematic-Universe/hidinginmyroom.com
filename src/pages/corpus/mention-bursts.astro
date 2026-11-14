@@ -11,8 +11,9 @@ const first = Math.min(...bursts.map((b) => monthNo(b.start)), 2016 * 12), last 
 const W = 900, L = 150, R = 12, T = 22, rowH = 15, H = T + subjects.length * rowH + 8;
 const x = (m: number) => L + ((m - first) / (last - first)) * (W - L - R);
 const years = Array.from({ length: Math.floor(last / 12) - Math.ceil(first / 12) + 1 }, (_, i) => Math.ceil(first / 12) + i);
-const colour = { game: 'var(--corpus-accent)', product: 'var(--corpus-warning)', platform: 'var(--corpus-accent-strong)' } as const;
+const colour = { game: 'var(--corpus-accent)', product: 'var(--corpus-warning)', platform: '#c4a1ff' } as const;
 const label = { game: 'Games', product: 'Products and brands', platform: 'Platforms' } as const;
+const kind = { game: 'Game', product: 'Product', platform: 'Platform' } as const;
 const span = (b: { start: string; end: string; end_known: boolean }) => `${b.start} to ${b.end}${b.end_known ? '' : ' (archive thins out; end unknown)'}`;
 ---
 <CorpusLayout title="What was talked about when | HIMR Public Corpus" description="Stretches of months in which the transcripts name a game, product or platform unusually often.">
@@ -37,7 +38,7 @@ const span = (b: { start: string; end: string; end_known: boolean }) => `${b.sta
       <h2 id="table-title">All stretches</h2>
       <table>
         <thead><tr><th scope="col">Subject</th><th scope="col">Kind</th><th scope="col">Months</th><th scope="col">Length</th><th scope="col">Recordings naming it</th><th scope="col">Rate compared with other times</th></tr></thead>
-        <tbody>{bursts.map((b) => <tr><td>{b.subject}</td><td>{label[b.type]}</td><td>{span(b)}</td><td>{b.months} {b.months === 1 ? 'month' : 'months'}</td><td>{b.recordings}</td><td>{b.ratio === null ? '—' : `${b.ratio}×`}</td></tr>)}</tbody>
+        <tbody>{bursts.map((b) => <tr><td>{b.subject}</td><td>{kind[b.type]}</td><td>{span(b)}</td><td>{b.months} {b.months === 1 ? 'month' : 'months'}</td><td>{b.recordings}</td><td>{b.ratio === null ? '—' : `${b.ratio}×`}</td></tr>)}</tbody>
       </table>
     </section>
     <section aria-labelledby="limits-title">
@@ -58,7 +59,7 @@ const span = (b: { start: string; end: string; end_known: boolean }) => `${b.sta
   figure{margin:0;padding:.8rem;border:1px solid var(--corpus-line);border-radius:.5rem;background:var(--corpus-panel);overflow-x:auto}
   svg{display:block;width:100%;min-width:44rem;height:auto}svg text{fill:var(--corpus-muted);font-size:10px}svg :global(.grid){stroke:var(--corpus-line);stroke-width:1}
   figcaption{margin-top:.5rem;color:var(--corpus-muted);font-size:.8rem}.key{display:inline-flex;align-items:center;gap:.35rem;margin-right:1rem}.key i{display:inline-block;width:.8rem;height:.5rem;border-radius:2px}.note{display:block;margin-top:.25rem}
-  table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:.35rem .6rem;border-bottom:1px solid var(--corpus-line)}th{color:var(--corpus-muted);font-weight:600}td:first-child,td:nth-child(3){white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:.35rem .6rem;border-bottom:1px solid var(--corpus-line)}th{color:var(--corpus-muted);font-weight:600}td:first-child,td:nth-child(3),td:nth-child(4){white-space:nowrap}
   li{margin:.3rem 0;color:var(--corpus-muted)}
   @media (max-width:40rem){table{display:block;overflow-x:auto}}
 </style>
