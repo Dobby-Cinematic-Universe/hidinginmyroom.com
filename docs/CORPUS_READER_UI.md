@@ -68,8 +68,42 @@ A wording-based estimate shows a month and an approximate range based on model
 errors, widened after a check against archived listing dates. The details explain that these ranges can miss the true date, especially
 near the archive's earliest and latest years. Text matches can reflect re-uploads
 or reused material. Browse cards explicitly say "Estimated"; filters and sorting
-still treat these recordings as undated. Recordings without an entry keep
-"Date unresolved" alone.
+still treat these recordings as undated, with one exception described below.
+Recordings without an entry keep "Date unresolved" alone.
+
+### Circa dates, folded copies, earlier titles and channel history
+
+These are reader overlays from archived channel listings. The pinned corpus release,
+its catalog dates and titles, the summaries and the transcript analysis are unchanged.
+
+- **Circa dates.** An archived listing window of at most 31 days, matched by YouTube
+  ID, places the recording in date order and in the year filter. Its card reads
+  "circa 2024-02-01 to 2024-02-10 (archived listing)". Wider windows and wording
+  estimates stay "Estimated" and undated for sorting.
+- **Folded copies.** An undated recording with an identical transcript to a dated
+  recording, whose listing window agrees with that date, is another copy of it. Browse
+  lists show only the dated recording; the copy's page stays reachable, says which
+  recording it is a copy of, and the dated recording lists its copies under "Other
+  copies". The copy's title still finds the dated recording in the title filter.
+- **Earlier titles.** `title-history.json` (projected by
+  [public-title-history.mjs](../src/lib/corpus/public-title-history.mjs)) holds other
+  titles the same YouTube video carried in archived listings. The recording page
+  shows them as "Also titled", and the browse title filter matches them. They are
+  observations of the public listing, not a verified edit history.
+- **Channel history.** `/corpus/channel-history/` charts subscriber readings and
+  typical views about a month after upload from `channel-history.json` (projected by
+  [public-channel-history.mjs](../src/lib/corpus/public-channel-history.mjs)).
+  Every subscriber reading links to the archived page it was read from. The file
+  holds aggregates only.
+
+All three sidecars are optional, validated when a release candidate is prepared, and
+must be re-exported when a new preview is selected. Transcript search needs no
+rebuild: it indexes spoken words, and titles are filtered from `recordings.json`.
+
+A date read from an archived copy of the video's own YouTube page (`basis: archived_page`, or a `page` object
+confirming a copy date) is shown as "<date> (archived video page)" with a link to the archived page. It orders and
+filters like a circa date, and an identical transcript it confirms is folded like a listing-confirmed one. The page
+shows YouTube's time zone, so the text says it can differ by one day. The catalog date is still not changed.
 
 ## Corpus discovery pass
 

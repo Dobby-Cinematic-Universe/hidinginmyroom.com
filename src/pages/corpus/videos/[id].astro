@@ -14,7 +14,8 @@ import {
 } from '../../../lib/corpus/release';
 import type { CorpusRecordingSummary } from '../../../lib/corpus/types';
 import { recordingAttribution } from '../../../lib/corpus/attribution';
-import { recordingDateEstimate } from '../../../lib/corpus/date-estimates';
+import { recordingDateEstimate, recordingOverlay } from '../../../lib/corpus/date-estimates';
+import { titleHistory } from '../../../lib/corpus/title-history';
 import { loadSummaryRelease } from '../../../lib/summaries/release';
 import { knownSpeakerLabel, showSpeakerLabels } from '../../../lib/corpus/presentation.mjs';
 import RecordingPlayer from '../../../components/corpus/RecordingPlayer.astro';
@@ -42,6 +43,12 @@ const dateEstimate = recording.date_label ? undefined : await recordingDateEstim
 const dateCopy = dateEstimate?.copy
   ? (await loadCorpusCatalog()).recordings.find((r) => r.recording_id === dateEstimate.copy!.recording_id)
   : undefined;
+// Reader overlays from archived channel listings: other copies of this recording and earlier titles.
+const overlay = await recordingOverlay();
+const catalogRows = overlay.copies.has(recording.recording_id) || dateEstimate?.duplicateOf ? (await loadCorpusCatalog()).recordings : [];
+const otherCopies = (overlay.copies.get(recording.recording_id) ?? []).flatMap((id) => catalogRows.filter((r) => r.recording_id === id));
+const duplicateTarget = dateEstimate?.duplicateOf ? catalogRows.find((r) => r.recording_id === dateEstimate.duplicateOf) : undefined;
+const earlierTitles = (await titleHistory())[recording.recording_id] ?? [];
 const linkedSummary = (await loadSummaryRelease()).summaries.find((r) => r.recording_id === recording.recording_id);
 const platforms = [...new Set(recording.sources.map((source) => source.platform))];
 const noAudio = annotation?.media_status === 'no_audio';
@@ -63,9 +70,10 @@ const noAudio = annotation?.media_status === 'no_audio';
         <p class="corpus-eyebrow">Recording</p>
         <h1>{recording.title}</h1>
         <p class="recording__summary">
-          {recording.date_label || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
+          {recording.date_label || dateEstimate?.short || 'Date unresolved'} · {formatDuration(recording.duration_ms)}
         </p>
-        {dateEstimate && <p class="recording__summary recording__date-estimate">{dateEstimate.short}</p>}
+        {duplicateTarget && <p class="recording__summary recording__date-estimate">Another copy of <a href={`/corpus/videos/${duplicateTarget.slug}/`}>{duplicateTarget.title}</a> ({duplicateTarget.date_label}); lists show that recording.</p>}
+        {earlierTitles.length > 0 && <p class="recording__summary recording__date-estimate">Also titled: {earlierTitles.map((t) => t.title).join(' · ')}</p>}
       </div>
       <div class="recording__badges" aria-label="Recording status">
         {noAudio && <span class="corpus-badge">No audio</span>}
@@ -108,7 +116,20 @@ const noAudio = annotation?.media_status === 'no_audio';
             <dd class="recording__date-explanation">
               {dateEstimate.detail}
               {dateEstimate.copyNote && <> {dateEstimate.copyNote}</>}
+              {dateEstimate.source && <> <a href={dateEstimate.source} target="_blank" rel="noopener noreferrer">Archived page</a>.</>}
               {dateCopy && <> <a href={`/corpus/videos/${dateCopy.slug}/`}>{dateCopy.title}</a></>}
+            </dd>
+          </div>}
+          {earlierTitles.length > 0 && <div>
+            <dt>Other titles</dt>
+            <dd class="recording__date-explanation">
+              Archived copies of the channel's video listing show this video under other titles: {earlierTitles.map((t) => `“${t.title}” (listing archived ${t.seen})`).join('; ')}. These are observations of the public listing, not a verified edit history.
+            </dd>
+          </div>}
+          {otherCopies.length > 0 && <div>
+            <dt>Other copies</dt>
+            <dd class="recording__date-explanation">
+              Recordings with an identical transcript, dated consistently by an archived channel listing: {otherCopies.map((r, i) => <>{i > 0 && '; '}<a href={`/corpus/videos/${r.slug}/`}>{r.title}</a></>)}. Lists show only this recording.
             </dd>
           </div>}
           <div>

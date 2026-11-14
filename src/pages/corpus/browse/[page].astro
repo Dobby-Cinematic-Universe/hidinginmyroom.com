@@ -19,7 +19,8 @@ export async function getStaticPaths() {
   // frontmatter scope are not available there. Keep the route-build constant local.
   const pageSize = 100;
   const catalog = await loadCorpusCatalog();
-  const recordings = [...catalog.recordings].sort((a,b)=>(b.date_label||'').localeCompare(a.date_label||'')||a.title.localeCompare(b.title));
+  const { browseOrder } = await import('../../../lib/corpus/date-estimates');
+  const recordings = await browseOrder([...catalog.recordings]);
   const pageCount = Math.ceil(recordings.length / pageSize);
 
   return Array.from({ length: pageCount }, (_, index) => {

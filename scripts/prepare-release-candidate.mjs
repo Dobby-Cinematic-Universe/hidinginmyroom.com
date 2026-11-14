@@ -8,6 +8,8 @@ import {validateSummaryRelease} from '../src/lib/summaries/schema.mjs';
 import {summaryQualityFindings} from './summary-quality.mjs';
 import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
 import {projectDateEstimates} from '../src/lib/corpus/public-date-estimates.mjs';
+import {projectTitleHistory} from '../src/lib/corpus/public-title-history.mjs';
+import {projectChannelHistory} from '../src/lib/corpus/public-channel-history.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
 import {groupingInput,groupingDigest,attachEventGroups} from '../src/lib/corpus/event-groups.mjs';
@@ -68,6 +70,10 @@ await writeFile(root+'/src/data/corpus/attribution.json',JSON.stringify(annotati
 let dateEstimates={schema_version:1,recordings:{}};
 try{dateEstimates=projectDateEstimates(JSON.parse(await readFile(source+'/corpus/date-estimates.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
 await writeFile(root+'/src/data/corpus/date-estimates.json',JSON.stringify(dateEstimates));
+// Optional sidecar: earlier titles from archived channel listings. Catalog titles are not changed.
+let titleHistory={schema_version:1,recordings:{}};
+try{titleHistory=projectTitleHistory(JSON.parse(await readFile(source+'/corpus/title-history.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
+await writeFile(root+'/src/data/corpus/title-history.json',JSON.stringify(titleHistory));
 await writeFile(root+'/src/data/corpus/graph/derived-config.json',JSON.stringify({corpus_release:manifest.release_id,summary_release:summaries.release_id}));
 // Preserve existing similarity groups only for exact content-addressed event IDs.
 // New descriptions remain ungrouped; do not fabricate similarity decisions.
@@ -92,6 +98,12 @@ if(!held.length){report.release_blockers=report.release_blockers.filter(s=>!s.st
 report.graph={events:graph.events.length,groups:grouped.eventGroups?.length||0,compact_event_pages:true};
 report.public_attribution_records=Object.keys(annotations.recordings).length;
 report.date_estimate_records=Object.keys(dateEstimates.recordings).length;
+// Optional sidecar: subscriber readings and typical early views from archived channel pages.
+let channelHistory=projectChannelHistory(null);
+try{channelHistory=projectChannelHistory(JSON.parse(await readFile(source+'/corpus/channel-history.json','utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
+await writeFile(root+'/src/data/corpus/channel-history.json',JSON.stringify(channelHistory));
+report.channel_history_readings=channelHistory.channels.reduce((n,c)=>n+c.readings.length,0);
+report.title_history_records=Object.keys(titleHistory.recordings).length;
 report.release_blockers=report.release_blockers.filter(s=>!s.startsWith('Derived Entities')&&!s.startsWith('Public attribution'));
 await save();
 const run=(args)=>new Promise((resolve,reject)=>{const child=spawn(process.execPath,args,{cwd:root,env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1',...chatEnv},stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Candidate command exited '+code)));});

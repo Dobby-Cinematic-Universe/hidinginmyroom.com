@@ -20,3 +20,14 @@ test('optional length combines with title and availability; clearing it restores
   assert.deepEqual(filterRecordings(durations,{length:'5-20'}).map(r=>r.href),['/b']);
   assert.equal(filterRecordings(durations,{length:''}).length,3);
 });
+
+test('circa dates order and filter like dates; folded copies are hidden but searchable by alias',()=>{
+  const more=[...rows,{title:'Circa upload',date:null,year:null,circa:'2024-05-01',href:'/d',hasTranscript:true},
+    {title:'Copy of later dinner [abc]',date:null,year:null,circa:'2024-09-02',duplicateOf:'/b',href:'/e',hasTranscript:true}];
+  more[0]={...more[0],aliases:['Copy of later dinner [abc]','An earlier name']};
+  assert.deepEqual(filterRecordings(more).map(r=>r.href),['/b','/d','/a','/c']);
+  assert.deepEqual(filterRecordings(more,{year:'2024'}).map(r=>r.href),['/b','/d','/a']);
+  assert.deepEqual(filterRecordings(more,{year:'undated'}).map(r=>r.href),['/c']);
+  assert.deepEqual(filterRecordings(more,{q:'earlier name'}).map(r=>r.href),['/b']);
+  assert.deepEqual(filterRecordings(more,{q:'abc'}).map(r=>r.href),['/b']);
+});

@@ -1,0 +1,118 @@
+---
+import CorpusLayout from '../../layouts/CorpusLayout.astro';
+import { loadChannelHistory } from '../../lib/corpus/channel-history';
+
+const history = await loadChannelHistory();
+const channels = history.channels.filter((c) => c.readings.length > 1);
+const views = history.early_views;
+const fmt = (n: number) => n.toLocaleString('en-US');
+const compact = (n: number) => (n >= 1000 ? `${Math.round(n / 1000)}k` : String(n));
+const dayNumber = (d: string) => Date.parse(d) / 864e5;
+
+// Subscriber chart geometry (one shared time axis, one line per channel).
+const W = 760, H = 300, L = 52, R = 14, T = 14, B = 30;
+const all = channels.flatMap((c) => c.readings);
+const x0 = Math.min(...all.map((r) => dayNumber(r.date))), x1 = Math.max(...all.map((r) => dayNumber(r.date)));
+const yMax = Math.ceil(Math.max(1, ...all.map((r) => r.subscribers)) / 20000) * 20000;
+const px = (d: string) => L + ((dayNumber(d) - x0) / Math.max(1, x1 - x0)) * (W - L - R);
+const py = (v: number) => T + (1 - v / yMax) * (H - T - B);
+const years = all.length ? Array.from({ length: Number(all.map((r) => r.date).sort().at(-1)!.slice(0, 4)) - Number(all.map((r) => r.date).sort()[0].slice(0, 4)) }, (_, i) => Number(all.map((r) => r.date).sort()[0].slice(0, 4)) + i + 1) : [];
+const yTicks = Array.from({ length: yMax / 20000 + 1 }, (_, i) => i * 20000);
+const stroke = { main: 'var(--corpus-accent)', second: 'var(--corpus-warning)' } as const;
+
+// Early-view chart geometry (median with interquartile range per half-year).
+const vMax = Math.max(1, ...views.map((v) => v.p75));
+const band = (W - L - R) / Math.max(1, views.length);
+const vy = (v: number) => T + (1 - v / vMax) * (H - T - B);
+const vTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round((vMax * f) / 1000) * 1000);
+
+// Milestones table: first reading, last reading of each year, and the highest reading.
+const milestones = (readings: typeof all) => {
+  const keep = new Map<string, (typeof all)[number]>();
+  keep.set('first', readings[0]);
+  for (const r of readings) keep.set(r.date.slice(0, 4), r);
+  const peak = readings.reduce((a, b) => (b.subscribers > a.subscribers ? b : a));
+  return { rows: [...new Set(keep.values())], peak };
+};
+---
+<CorpusLayout title="Channel history | HIMR Public Corpus" description="Subscriber counts and typical early view counts for the channels, read from archived copies of their public pages.">
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb"><a href="/corpus/">Corpus</a><span aria-hidden="true">/</span><span aria-current="page">Channel history</span></nav>
+  <header class="history-header">
+    <p class="corpus-eyebrow">Archived public channel pages</p>
+    <h1>Channel history</h1>
+    <p>Subscriber counts and typical early view counts, read from copies of the channels' public YouTube pages saved by the Internet Archive's Wayback Machine. Each subscriber reading links to the archived page it was read from. The numbers describe what those pages displayed on the day they were archived.</p>
+  </header>
+
+  {channels.length === 0 ? <p class="corpus-muted">No channel history is attached to this release.</p> : <article class="history-copy">
+    <section aria-labelledby="subs-title">
+      <h2 id="subs-title">Subscribers</h2>
+      <figure>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Subscriber counts over time for ${channels.map((c) => c.label).join(' and ')}. The table below gives the values.`}>
+          {yTicks.map((t) => <><line x1={L} x2={W - R} y1={py(t)} y2={py(t)} class="grid" /><text x={L - 6} y={py(t) + 4} text-anchor="end">{compact(t)}</text></>)}
+          {years.map((y) => <text x={px(`${y}-01-01`)} y={H - 10} text-anchor="middle">{y}</text>)}
+          {channels.map((c) => <>
+            <polyline fill="none" stroke={stroke[c.key]} stroke-width="2" points={c.readings.map((r) => `${px(r.date).toFixed(1)},${py(r.subscribers).toFixed(1)}`).join(' ')} />
+            {c.readings.map((r) => <circle cx={px(r.date)} cy={py(r.subscribers)} r="2.2" fill={stroke[c.key]}><title>{`${c.label}: ${fmt(r.subscribers)} on ${r.date}`}</title></circle>)}
+          </>)}
+        </svg>
+        <figcaption>{channels.map((c, i) => <span class="key"><i style={`background:${stroke[c.key]}`}></i>{c.label} ({c.readings.length} readings)</span>)}<span class="note">Dots are archived readings. Lines join them and do not show what happened in between.</span></figcaption>
+      </figure>
+      <p class="corpus-muted">In the tables, "about" marks counts that YouTube showed rounded.</p>
+      {channels.map((c) => { const m = milestones(c.readings); return <>
+        <h3>{c.label}</h3>
+        <p>First archived reading: {fmt(c.readings[0].subscribers)} on {c.readings[0].date}. Highest: {fmt(m.peak.subscribers)} on {m.peak.date}. Latest: {fmt(c.readings.at(-1)!.subscribers)} on {c.readings.at(-1)!.date}.</p>
+        <table>
+          <thead><tr><th scope="col">Archived on</th><th scope="col">Subscribers shown</th><th scope="col">Source</th></tr></thead>
+          <tbody>{m.rows.map((r) => <tr><td>{r.date}</td><td>{r.rounded_to > 1 && <span class="corpus-muted">about </span>}{fmt(r.subscribers)}</td><td><a href={r.source} target="_blank" rel="noopener noreferrer">Archived page</a></td></tr>)}</tbody>
+        </table>
+        <details><summary>All {c.readings.length} readings</summary>
+          <table>
+            <thead><tr><th scope="col">Archived on</th><th scope="col">Subscribers shown</th><th scope="col">Source</th></tr></thead>
+            <tbody>{c.readings.map((r) => <tr><td>{r.date}</td><td>{fmt(r.subscribers)}</td><td><a href={r.source} target="_blank" rel="noopener noreferrer">Archived page</a></td></tr>)}</tbody>
+          </table>
+        </details>
+      </>; })}
+    </section>
+
+    {views.length > 0 && <section aria-labelledby="views-title">
+      <h2 id="views-title">Typical views about a month after upload</h2>
+      <p>For each half-year, the median view count shown for a video roughly one month after it was published, across both channels. The bar is the median; the line spans the middle half of videos. Only videos with an archived reading at about that age are counted.</p>
+      <figure>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Median views about one month after upload, by half-year. The table below gives the values.">
+          {vTicks.map((t) => <><line x1={L} x2={W - R} y1={vy(t)} y2={vy(t)} class="grid" /><text x={L - 6} y={vy(t) + 4} text-anchor="end">{compact(t)}</text></>)}
+          {views.map((v, i) => <>
+            <rect x={L + i * band + band * 0.2} width={band * 0.6} y={vy(v.median_views)} height={Math.max(0, H - B - vy(v.median_views))} rx="2" fill="var(--corpus-accent-strong)"><title>{`${v.period}: median ${fmt(v.median_views)} views (${v.videos} videos)`}</title></rect>
+            <line x1={L + i * band + band / 2} x2={L + i * band + band / 2} y1={vy(v.p75)} y2={vy(v.p25)} stroke="var(--corpus-text)" stroke-width="1.5" />
+            {(i % 2 === 0 || views.length <= 10) && <text x={L + i * band + band / 2} y={H - 10} text-anchor="middle">{v.period.replace('H', ' H')}</text>}
+          </>)}
+        </svg>
+      </figure>
+      <table>
+        <thead><tr><th scope="col">Half-year</th><th scope="col">Videos counted</th><th scope="col">Median views</th><th scope="col">Middle half</th><th scope="col">Per 1,000 subscribers</th></tr></thead>
+        <tbody>{views.map((v) => <tr><td>{v.period.replace('H', ' H')}</td><td>{v.videos}</td><td>{fmt(v.median_views)}</td><td>{fmt(v.p25)}–{fmt(v.p75)}</td><td>{v.per_1000_subscribers === null ? '—' : fmt(v.per_1000_subscribers)}</td></tr>)}</tbody>
+      </table>
+    </section>}
+
+    <section aria-labelledby="limits-title">
+      <h2 id="limits-title">How to read this</h2>
+      <ul>
+        <li>Readings exist only for days on which a page happened to be archived. Gaps between readings can be months long, so the timing of rises and falls is approximate.</li>
+        <li>YouTube rounds public subscriber counts. Since late 2019 the pages show three significant figures, so small changes are invisible.</li>
+        <li>View counts are those displayed in archived video listings. A video's age at the reading is worked out from the listing's relative display (such as "3 weeks ago") and is approximate.</li>
+        <li>Videos that were never captured in a listing at about one month old are not counted, so the view figures cover a subset of uploads.</li>
+        <li>These are counts displayed by the platform. They say nothing about why they changed.</li>
+      </ul>
+    </section>
+  </article>}
+</CorpusLayout>
+<style>
+  .history-header{max-width:52rem;margin-bottom:1.5rem}.history-header h1{margin:.2rem 0 .6rem}.history-header p:last-child{color:var(--corpus-muted)}
+  .history-copy{display:grid;gap:2rem;max-width:60rem}.history-copy h2{margin:0 0 .6rem}.history-copy h3{margin:1.2rem 0 .3rem;font-size:1rem}
+  figure{margin:0 0 1rem;padding:.8rem;border:1px solid var(--corpus-line);border-radius:.5rem;background:var(--corpus-panel)}
+  figure{overflow-x:auto}svg{display:block;width:100%;min-width:34rem;height:auto}.note{display:block;margin-top:.25rem}td:first-child,td:last-child,th{white-space:nowrap}svg text{fill:var(--corpus-muted);font-size:11px}svg :global(.grid){stroke:var(--corpus-line);stroke-width:1}
+  figcaption{margin-top:.5rem;color:var(--corpus-muted);font-size:.8rem}.key{display:inline-flex;align-items:center;gap:.35rem;margin-right:1rem}.key i{display:inline-block;width:.8rem;height:.2rem;border-radius:1px}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:.35rem .6rem;border-bottom:1px solid var(--corpus-line)}th{color:var(--corpus-muted);font-weight:600}
+  details{margin-top:.6rem}summary{cursor:pointer;color:var(--corpus-accent);font-size:.85rem}li{margin:.3rem 0;color:var(--corpus-muted)}
+  .history-copy>*{min-width:0}
+  @media (max-width:40rem){th,td{padding:.3rem .35rem}table{display:block;overflow-x:auto}}
+</style>

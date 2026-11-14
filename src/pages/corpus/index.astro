@@ -101,6 +101,7 @@ const landingRecordings = [...recordings].sort((a,b)=>(b.date_label||'').localeC
       <dd>source listings</dd>
     </div>
   </dl>
+  <p class="corpus-muted"><a href="/corpus/channel-history/">Channel history</a>: subscriber and view counts from archived channel pages.</p>
 
   <CorpusSearch recordCount={recordingLevel ? catalog.recordings.filter(r=>r.searchable_segment_count>0).length : stats.transcriptSegments} facets={facets} recordingLevel={recordingLevel} />
 
