@@ -51,8 +51,6 @@ pnpm-debug.log*
 /corpus/artifacts/
 
 # Local source videos, audio, captures, and analysis workspaces
-/vidspublic/
-/vidsprivate/
 /media-analysis/
 /analysis/
 /captures/
@@ -100,6 +98,7 @@ Thumbs.db
 /autonomous_controller/
 /evaluation/
 /operator_console/
+/expression_scanner/
 /pipeline/*
 !/pipeline/__init__.py
 !/pipeline/event_embedding_groups.py
