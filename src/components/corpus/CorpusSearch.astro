@@ -256,7 +256,9 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
             continue;
           }
           const item = document.createElement('li');
+          item.className = 'corpus-clickable-card';
           const link = document.createElement('a');
+          link.className = 'corpus-card-link';
           const title = document.createElement('strong');
           const detail = document.createElement('span');
           const excerpt = document.createElement('p');
@@ -548,10 +550,6 @@ const { recordCount, facets, recordingLevel = false } = Astro.props;
     padding: 0.85rem 1rem;
     color: var(--corpus-text);
     text-decoration: none;
-  }
-
-  .corpus-search__results a:hover {
-    background: var(--corpus-panel-strong);
   }
 
   .corpus-search__results li > .inline-summary {

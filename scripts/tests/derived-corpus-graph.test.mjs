@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createDerivedGraph,dateMentions} from '../../src/lib/corpus/derived-graph.mjs';
+import {createDerivedGraph,dateMentions,isDiscoveredEntityLabel} from '../../src/lib/corpus/derived-graph.mjs';
 
 const catalog={releaseId:'test',generatedAt:'2026-09-17T00:00:00Z',facets:{speakers:['Daniel','Mila','SPEAKER_0000','Playback / game audio','Unknown speaker']},recordings:[
   {recording_id:'a',slug:'a',title:'First recording',date_label:'2020-01-01',date_basis:'filename'},
@@ -45,4 +45,16 @@ test('sentence lead-ins are not promoted to entity names',()=>{
   assert.ok(!g.entities.some(e=>e.label==='Whether Daniel'));
   assert.ok(g.entities.some(e=>e.label==='Daniel'));
   assert.ok(g.entities.some(e=>e.label==='Chris Broad'));
+});
+
+
+test('single-name discovery cannot bypass stopwords, including normalized variants',()=>{
+  const text='Daniel called The a friend, named And, and called Monday a holiday. His friend Sunny met Chris Broad.';
+  const g=createDerivedGraph(catalog,[summary('a',text),summary('b',text)]).finish();
+  for(const label of ['The','And','Monday'])assert.ok(!g.entities.some(e=>e.label===label),label);
+  assert.ok(g.entities.some(e=>e.label==='Sunny'));
+  assert.ok(g.entities.some(e=>e.label==='Chris Broad'));
+  for(const label of ['the','THE','“The”','  Ｔｈｅ  ','And','This Person'])assert.equal(isDiscoveredEntityLabel(label),false,label);
+  const known={...catalog,facets:{speakers:['Will Smith']}};
+  assert.ok(createDerivedGraph(known,[summary('a','Will Smith spoke.')]).finish().entities.some(e=>e.label==='Will Smith'));
 });

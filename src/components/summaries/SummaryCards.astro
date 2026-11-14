@@ -6,9 +6,9 @@ interface Props { cards: ReturnType<typeof summaryCard>[] }
 const { cards } = Astro.props;
 ---
 <ul class="summary-cards">
-  {cards.map((card) => <li>
+  {cards.map((card) => <li class="corpus-clickable-card">
     <span class="summary-kicker">{card.kind === 'transcript' ? 'Recording' : card.kind} · {card.kind === 'archive' ? 'Selected archive' : (!card.period && card.dateText) || periodLabel(card.period)}</span>
-    <h3><a href={card.href}>{card.title}</a></h3>
+    <h3><a class="corpus-card-link" href={card.href}>{card.title}</a></h3>
     <p>{card.excerpt}</p>
     {card.kind === 'transcript' && <InlineSummary id={card.id} />}
   </li>)}

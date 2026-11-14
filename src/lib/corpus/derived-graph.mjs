@@ -8,6 +8,13 @@ const nonPeople = /^(?:background noise|playback(?: \/ game audio)?|game audio|t
 const places = ['Japan','Thailand','England','United Kingdom','South Korea','Korea','China','Taiwan','Hong Kong','Germany','Canada','Australia','Tokyo','Osaka','Kyoto','Bangkok','London'];
 const platforms = ['YouTube','Twitch','Patreon','Discord','Reddit','TikTok','Instagram'];
 
+const discoveryLeadIn = /^(?:And|Or|But|An|A|They|Them|You|Your|We|Our|He|She|Him|My|Me|Us|Am|Are|Were|Was|Have|Has|Had|Been|Being|Then|Than|So|Because|There|Here|These|Those|Yes|Yet|Very|Today|Yesterday|Tomorrow|The|This|That|His|Her|Their|When|After|Before|During|According|Last|Next|One|Two|Three|First|Second|Whether|Why|How|What|Which|Who|Where|If|While|Despite|Both|Did|Does|Will|Would|Could|Should|Can|Some|Several|Many|Most|More|Other|Only|Any|All|Still|Also|About|Around|As|At|By|For|From|In|Into|Is|It|Its|On|Since|To|Until|With|Without|No|Not)\b/i;
+const discoveryCalendar = /\b(?:January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i;
+export function isDiscoveredEntityLabel(value) {
+  const label=String(value).normalize('NFKC').trim().replace(/^[^\p{L}]+|[^\p{L}]+$/gu,'');
+  return Boolean(label) && !discoveryLeadIn.test(label) && !discoveryCalendar.test(label);
+}
+
 export function personLabel(value) {
   const label=knownSpeakerLabel(value);
   return label && !nonPeople.test(label) ? label.replace(/\s*\(uncertain\)$/i,'') : null;
@@ -23,7 +30,7 @@ export function createDerivedGraph(catalog,summaries) {
   const entities=new Map(), events=new Map();
   const recordings=new Map(catalog.recordings.map(r=>[r.recording_id,r]));
   function addEntity(label,type) {
-    label=label.trim();const k=key(label);
+    label=label.trim();if(type==='unknown'&&!isDiscoveredEntityLabel(label))return;const k=key(label);
     if (!entities.has(k)) entities.set(k,{entity_id:'entity_'+hash(k),slug:'entity-'+hash(k),label,
       entity_type:type,mentions:new Map(),speakerRecordings:new Map()});
   }
@@ -41,8 +48,7 @@ export function createDerivedGraph(catalog,summaries) {
     for(const item of Object.values(summary.sections).flat()) {
       for(const match of item.text.matchAll(/\b[A-Z][a-z]{2,}(?:[ '-][A-Z][a-z]{2,}){1,2}\b/g)) {
         const label=match[0];
-        if (/^(?:The|This|That|His|Her|Their|When|After|Before|During|According|Last|Next|One|Two|Three|First|Second|Whether|Why|How|What|Which|Who|Where|If|While|Despite|Both|Did|Does|Will|Would|Could|Should|Can|Some|Several|Many|Most|More|Other|Only|Any|All|Still|Also|About|Around|As|At|By|For|From|In|Into|Is|It|Its|On|Since|To|Until|With|Without|No|Not)\b/.test(label))continue;
-        if (/\b(?:January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/.test(label))continue;
+        if (!isDiscoveredEntityLabel(label))continue;
         seen.add(label);
       }
       for(const match of item.text.matchAll(/\b(?:named|called|friend|advisor|instructor|coworker)\s+([A-Z][a-z]{2,})\b/g))seen.add(match[1]);

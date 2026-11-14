@@ -63,9 +63,9 @@ const initial = [...rows].sort((a,b) => (b.period ?? '').localeCompare(a.period 
       const pages = Math.max(1, Math.ceil(matches.length / 24)); page = Math.min(page,pages-1);
       const list = document.createElement('ul'); list.className = 'summary-cards';
       for (const card of matches.slice(page*24,(page+1)*24)) {
-        const li = document.createElement('li'); const meta = document.createElement('span'); meta.className = 'summary-kicker';
+        const li = document.createElement('li'); li.className = 'corpus-clickable-card'; const meta = document.createElement('span'); meta.className = 'summary-kicker';
         meta.textContent = `${card.kind === 'transcript' ? 'Recording' : card.kind} · ${card.kind === 'archive' ? 'Selected archive' : (!card.period && card.dateText) || periodLabel(card.period)}`;
-        const h = document.createElement('h3'); const a = document.createElement('a'); a.href = card.href; a.textContent = card.title; h.append(a);
+        const h = document.createElement('h3'); const a = document.createElement('a'); a.className = 'corpus-card-link'; a.href = card.href; a.textContent = card.title; h.append(a);
         const p = document.createElement('p'); p.textContent = card.excerpt; li.append(meta,h,p); list.append(li);
         if(card.kind==='transcript'){
           const details=document.createElement('details');details.className='inline-summary';details.dataset.summaryId=card.id;

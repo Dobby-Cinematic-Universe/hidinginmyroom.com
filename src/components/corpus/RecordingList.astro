@@ -19,8 +19,8 @@ const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kin
   {
     recordings.map((recording) => {
       return (
-        <li>
-          <a href={`/corpus/videos/${recording.slug}/`}>
+        <li class="corpus-clickable-card">
+          <a class="corpus-card-link" href={`/corpus/videos/${recording.slug}/`}>
             <div>
               <strong>{recording.title}</strong>
               <span>
@@ -65,10 +65,6 @@ const summaries = new Map((await loadSummaryRelease()).summaries.filter(s=>s.kin
     padding: 0.85rem 1rem;
     color: var(--corpus-text);
     text-decoration: none;
-  }
-
-  .recording-list a:hover {
-    background: var(--corpus-panel-strong);
   }
 
   .recording-list a > div:first-child {

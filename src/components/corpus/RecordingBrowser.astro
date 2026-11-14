@@ -36,7 +36,7 @@ const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date
       const matches=filterRecordings(rows,values) as Row[],pages=Math.max(1,Math.ceil(matches.length/40));page=Math.min(page,pages);
       const fragment=document.createDocumentFragment();
       for(const r of matches.slice((page-1)*40,page*40)){
-        const li=document.createElement('li'),a=document.createElement('a'),meta=document.createElement('p');a.href=r.href;a.textContent=r.title;
+        const li=document.createElement('li'),a=document.createElement('a'),meta=document.createElement('p');li.className='corpus-clickable-card';a.className='corpus-card-link';a.href=r.href;a.textContent=r.title;
         meta.textContent=`${r.date||r.dateEstimate||'Date unresolved'} · ${r.duration} · ${r.hasTranscript?'Transcript available':'Metadata only'}`;li.append(a,meta);
         const q=String(values.q||'').trim().toLocaleLowerCase().split(/\s+/).filter(Boolean),alias=q.length&&!q.every(w=>r.title.toLocaleLowerCase().includes(w))?r.aliases?.find(t=>q.some(w=>t.toLocaleLowerCase().includes(w))):undefined;
         if(alias){const p=document.createElement('p');p.textContent=`Also titled: ${alias}`;li.append(p);}

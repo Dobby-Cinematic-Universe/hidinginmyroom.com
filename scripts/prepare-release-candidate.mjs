@@ -9,6 +9,7 @@ import {summaryQualityFindings} from './summary-quality.mjs';
 import {projectAttribution} from '../src/lib/corpus/public-attribution.mjs';
 import {projectDateEstimates} from '../src/lib/corpus/public-date-estimates.mjs';
 import {projectTitleHistory} from '../src/lib/corpus/public-title-history.mjs';
+import {validateNetworkProjection} from '../src/lib/corpus/network-dynamics.mjs';
 import {projectDateNotes} from '../src/lib/corpus/public-date-notes.mjs';
 import {projectSearchAliases,projectRelatedRecordings,projectChapters,projectMentionBursts} from '../src/lib/corpus/public-reader-extras.mjs';
 import {projectChannelHistory} from '../src/lib/corpus/public-channel-history.mjs';
@@ -77,6 +78,17 @@ let dateNotes={schema_version:1,recordings:{}};
 try{dateNotes=projectDateNotes(JSON.parse(await readFile(source+'/corpus/date-notes.json','utf8')),records);}catch(error){if(error.code!=='ENOENT')throw error;}
 await writeFile(root+'/src/data/corpus/date-notes.json',JSON.stringify(dateNotes));
 const extraReport={}; // merged into the candidate report once it exists
+// Preserve the validated public mention-network projection, including its release binding.
+try {
+  const file=source+'/corpus/network-dynamics.json';
+  const network=validateNetworkProjection(JSON.parse(await readFile(file,'utf8')),{
+    corpus_release:manifest.release_id,summary_release:summaries.release_id,
+    corpus_manifest_sha256:createHash('sha256').update(await readFile(root+'/src/data/corpus/manifest.json')).digest('hex'),
+  });
+  await writeFile(root+'/src/data/corpus/network-dynamics.json',JSON.stringify(network));
+  extraReport.network_dynamics_included=true;
+} catch(error) { if(error.code!=='ENOENT')throw error; }
+
 // Browser-playable media copies are listed per corpus release. A release that keeps every listed recording
 // (same ids, same sources) keeps the list; rehearse with it bound to the selected release.
 {

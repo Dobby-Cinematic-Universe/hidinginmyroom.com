@@ -33,7 +33,8 @@ const value={publication_approved:false,deployable:false,pages_checked:pages,bro
 if(!report.held_summaries.length)value.remaining=value.remaining.filter(s=>!s.startsWith('Missing transcript'));
 if(!report.release_blockers.some(s=>s.startsWith('Archive overview')))value.remaining=value.remaining.filter(s=>!s.startsWith('Archive overview'));
 if(report.graph){
-  value.production_graph_counts={entities:files.filter(f=>/^corpus\/entities\/[^/]+\/index.html$/.test(f)).length,events:report.graph.events,event_groups:report.graph.groups,description_pages:files.filter(f=>/^corpus\/event-descriptions\/[^/]+\/index.html$/.test(f)).length};
+  value.production_graph_counts={entities:files.filter(f=>/^corpus\/entities\/[^/]+\/index.html$/.test(f)).length,events:report.graph.events,event_groups:files.filter(f=>/^corpus\/event-groups\/[^/]+\/index.html$/.test(f)).length,description_pages:files.filter(f=>/^corpus\/event-descriptions\/[^/]+\/index.html$/.test(f)).length};
+  if(value.production_graph_counts.event_groups!==report.graph.groups)throw Error('Built event-group pages do not match the prepared grouping; regenerate stale groups before publication');
   value.remaining=value.remaining.filter(s=>!s.startsWith('Derived entity'));
 }
 if(report.public_attribution_records){value.public_attribution_records=report.public_attribution_records;value.remaining=value.remaining.filter(s=>!s.startsWith('Attribution'));}
