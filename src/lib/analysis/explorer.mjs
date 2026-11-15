@@ -9,11 +9,12 @@ function requireValue(condition, field) {
 /** Validate the deliberately small, public-facing projection before the browser sees it. */
 export function validateAnalysisRelease(value) {
   requireValue(isObject(value), 'root');
-  exactKeys(value, ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis','historical_input'], 'root', ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis']);
+  exactKeys(value, ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis','historical_input','design'], 'root', ['schema_version','status','corpus_release_id','questionnaire_version','model','generated_at','coverage','questions','videos','analysis']);
   if (value.historical_input !== undefined) {
     exactKeys(value.historical_input, ['active_corpus_release_id','basis'], 'historical_input');
     requireValue(/^release_[a-f0-9]{24}$/.test(value.historical_input.active_corpus_release_id) && value.historical_input.active_corpus_release_id !== value.corpus_release_id && value.historical_input.basis === 'reviewed_transcript_update_historical_scores', 'historical_input');
   }
+  if (value.design !== undefined) validateDesign(value.design, value);
   requireValue(value.schema_version === 1, 'schema_version');
   requireValue(['pilot', 'complete'].includes(value.status), 'status');
   for (const key of ['corpus_release_id', 'questionnaire_version', 'model', 'generated_at']) requireValue(str(value[key]), key);
@@ -43,7 +44,7 @@ export function validateAnalysisRelease(value) {
   for (const factor of value.analysis?.factors ?? []) if (isObject(factor) && str(factor.id)) factorIds.add(factor.id);
   for (const [i, video] of value.videos.entries()) {
     requireValue(isObject(video), `videos.${i}`);
-    exactKeys(video, ['recording_id','revision_id','title','href','date','date_basis','category','coverage','question_scores','factor_scores','classifications','noul_scores','scored_passage'], `videos.${i}`, ['recording_id','revision_id','title','href','date','date_basis','category','coverage','question_scores','factor_scores']);
+    exactKeys(video, ['recording_id','revision_id','title','href','date','date_basis','category','coverage','question_scores','factor_scores','classifications','noul_scores','scored_passage','design','second'], `videos.${i}`, ['recording_id','revision_id','title','href','date','date_basis','category','coverage','question_scores','factor_scores']);
     for (const key of ['recording_id', 'revision_id', 'title', 'href', 'date_basis']) requireValue(str(video[key]), `videos.${i}.${key}`);
     requireValue(video.href.startsWith('/corpus/videos/'), `videos.${i}.href`);
     requireValue(video.date === null || str(video.date), `videos.${i}.date`);
@@ -81,6 +82,17 @@ export function validateAnalysisRelease(value) {
     }
     for(const [id,probability] of Object.entries(video.noul_scores??{})) requireValue(value.questions.some(q=>q.id===id&&q.type==='noul')&&(probability===null||finite(probability)&&probability>=0&&probability<=1),`videos.${i}.noul_scores.${id}`);
   }
+  for (const [i, video] of value.videos.entries()) {
+    if (video.design !== undefined) {
+      exactKeys(video.design, ['kind','words','windows','short_text','fit_cohort','factor_scores','version_of'], `videos.${i}.design`);
+      requireValue(RECORDING_KINDS.includes(video.design.kind) && Number.isInteger(video.design.words) && video.design.words >= 0 && Number.isInteger(video.design.windows) && video.design.windows >= 0, `videos.${i}.design.counts`);
+      requireValue(['short_text','fit_cohort','factor_scores'].every((key) => typeof video.design[key] === 'boolean'), `videos.${i}.design.flags`);
+      requireValue(video.design.version_of === null || (videoIds.has(video.design.version_of) && video.design.version_of !== video.recording_id), `videos.${i}.design.version_of`);
+    }
+    if (video.second !== undefined) {
+      requireValue(isObject(video.second) && Object.entries(video.second).every(([id, n]) => factorIds.has(id) && finite(n)), `videos.${i}.second`);
+    }
+  }
   requireValue(value.videos.length===value.coverage.scored_recordings,'coverage.video_count');
   requireValue(isObject(value.analysis), 'analysis');
   const analysis = value.analysis;
@@ -105,6 +117,20 @@ export function validateAnalysisRelease(value) {
   requireValue(isObject(analysis.diagnostics), 'analysis.diagnostics');
   requireValue(Object.entries(analysis.diagnostics).every(([k,v])=>/^[a-z][a-z0-9_]{0,63}$/.test(k)&&((v===null)||(typeof v==='boolean')||(finite(v))||(typeof v==='string'&&v.length<=160&&!/(?:\/home\/|\/mnt\/|research\/|api[_-]?key|bearer\s|transcript|token)/i.test(v)))), 'analysis.diagnostics.safe_projection');
   return value;
+}
+
+export const RECORDING_KINDS = ['video', 'stream', 'clip'];
+
+/** Release-level facts of a window-based analysis: how text was cut and which second model rated it. */
+function validateDesign(design, release) {
+  exactKeys(design, ['window_words','min_words','second_rater'], 'design');
+  requireValue(Number.isInteger(design.window_words) && design.window_words > 0 && Number.isInteger(design.min_words) && design.min_words >= 0, 'design.words');
+  if (design.second_rater !== null) {
+    exactKeys(design.second_rater, ['model','recordings','windows','max_windows_per_recording','factor_agreement','trend_agreement'], 'design.second_rater', ['model','recordings','windows','max_windows_per_recording','factor_agreement']);
+    requireValue(str(design.second_rater.model) && ['recordings','windows','max_windows_per_recording'].every((key) => Number.isInteger(design.second_rater[key]) && design.second_rater[key] >= 0), 'design.second_rater.counts');
+    requireValue(isObject(design.second_rater.factor_agreement) && Object.values(design.second_rater.factor_agreement).every((n) => finite(n) && n >= -1 && n <= 1), 'design.second_rater.factor_agreement');
+    if (design.second_rater.trend_agreement !== undefined) requireValue(isObject(design.second_rater.trend_agreement) && Object.values(design.second_rater.trend_agreement).every((row) => isObject(row) && Object.values(row).every((v) => ['up','down','flat'].includes(v))), 'design.second_rater.trend_agreement');
+  }
 }
 
 function exactKeys(value, keys, field, required = keys) {
@@ -154,6 +180,11 @@ export function filterAndSortVideos(videos, filters, kind, metric) {
   const selected = videos.filter((video) =>
     (!filters.year || (filters.year === 'undated' ? !video.date : video.date?.slice(0, 4) === filters.year)) &&
     (!filters.category || video.category === filters.category) &&
+    (!filters.recording_kind || video.design?.kind === filters.recording_kind) &&
+    (!filters.subject || video.classifications?.class_subject?.choice === filters.subject) &&
+    (filters.versions !== 'one' || !video.design?.version_of) &&
+    (filters.short_texts !== 'hide' || !video.design?.short_text) &&
+    (!filters.min_windows || (video.design?.windows ?? 0) >= Number(filters.min_windows)) &&
     (!needle || `${video.title} ${video.category ?? ''}`.toLocaleLowerCase().includes(needle))
   );
   const direction = filters.direction === 'asc' ? 1 : -1;
@@ -189,6 +220,7 @@ export function groupTimeSeries(videos, metric, kind, interval = 'year') {
     period: row.period,
     x: interval === 'month' ? Number(row.period.slice(0,4)) + (Number(row.period.slice(5,7))-1)/12 : Number(row.period.slice(0,4)),
     mean: row.values.reduce((sum, n) => sum + n, 0) / row.values.length,
+    ...meanInterval(row.values),
     low: row.lows.length && row.lows.every(finite) ? row.lows.reduce((sum, n) => sum + n, 0) / row.lows.length : null,
     high: row.highs.length && row.highs.every(finite) ? row.highs.reduce((sum, n) => sum + n, 0) / row.highs.length : null,
     n: row.values.length,
@@ -196,7 +228,26 @@ export function groupTimeSeries(videos, metric, kind, interval = 'year') {
   }));
 }
 
-export function trendInterpretation(kind, questionType) {
+/** 95% interval of a mean, treating the values as independent; null below five values. */
+export function meanInterval(values) {
+  const n = values.length;
+  if (n < 5) return { ci_low: null, ci_high: null };
+  const mean = values.reduce((sum, v) => sum + v, 0) / n;
+  const se = Math.sqrt(values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / (n - 1) / n);
+  return { ci_low: mean - 1.96 * se, ci_high: mean + 1.96 * se };
+}
+
+/** A readable name for a question: "Self critical · style" rather than its short code. */
+export function questionLabel(question) {
+  const match = /^(style|affect|rhetoric|reception|class)_(.+)$/.exec(question.id);
+  const group = { style: 'style', affect: 'emotion', rhetoric: 'rhetoric', reception: 'predicted reception', class: 'classification' }[match?.[1]] ?? String(question.domain ?? '').replace(/_/g, ' ');
+  const readable = /^[A-Z]/.test(question.short_name ?? '') ? question.short_name : null;
+  const name = readable ?? (match?.[2] ?? question.id).replace(/_/g, ' ');
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}${group && !/\(predicted\)$/.test(name) ? ` · ${group}` : ''}`;
+}
+
+export function trendInterpretation(kind, questionType, windowed = false) {
+  if (windowed && !(kind === 'classification' && questionType === 'choice')) return `Each point is the mean ${kind === 'factor' ? 'factor score' : kind === 'classification' ? 'model-estimated yes/no probability' : 'rubric score'} of the recordings of one kind in that period. A recording's score is the mean of its passages, which all hold the same number of words. The band is a 95% interval for the period mean and treats recordings as independent; it is not shown for periods with fewer than five recordings. Videos and streams are drawn apart because they differ in length and in what they are about, so a pooled line would follow their changing mix.`;
   if (kind === 'classification' && questionType === 'choice') return 'Nominal categories have no meaningful numeric time trend. Use the table to compare the predicted labels; this chart is not shown for this question.';
   if (kind === 'classification' && questionType === 'noul') return 'Each point is the mean model-estimated yes/no probability among scored recordings in that period. These are model probabilities, not observed event rates; no period confidence interval is shown.';
   if (kind === 'factor') return 'Each point is the mean factor score among scored recordings in that period. Any band averages per-recording bootstrap-stability endpoints; it is not a jointly bootstrapped interval for the period mean or a statistical confidence interval.';

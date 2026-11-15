@@ -23,4 +23,10 @@ test('optional payload rejects wrong axes, nonfinite statistics and malformed mo
   const broken=structuredClone(fixture);broken.changes.F1.sensitivity[0].candidates=[null];assert.equal(validateTemporalComparisons(broken,release),null);
   const unsupported=structuredClone(fixture);unsupported.trajectories.F1[0].standardized.weight_coverage=.5;assert.equal(validateTemporalComparisons(unsupported,release),null);
   const nonfinite=structuredClone(fixture);nonfinite.distributions.F1.genre[0].distribution.mean=Infinity;assert.equal(validateTemporalComparisons(nonfinite,release),null);
+  // Window-based releases carry the same analysis for videos and streams apart; each part is checked like the whole.
+  const split={...structuredClone(fixture),kinds:{video:structuredClone(fixture),stream:structuredClone(fixture)}};
+  assert.equal(validateTemporalComparisons(split,release),split);
+  const badKind=structuredClone(split);badKind.kinds.video.changes.F1.sensitivity[0].candidates=[null];assert.equal(validateTemporalComparisons(badKind,release),null);
+  assert.equal(validateTemporalComparisons({...structuredClone(fixture),kinds:{podcast:structuredClone(fixture)}},release),null);
+  assert.equal(validateTemporalComparisons({...structuredClone(fixture),kinds:{}},release),null);
 });

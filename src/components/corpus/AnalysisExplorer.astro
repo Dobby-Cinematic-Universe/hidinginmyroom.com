@@ -11,24 +11,28 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   <p role="status" aria-live="polite" data-status>Loading the score release…</p>
   <div data-content hidden>
     <p data-historical-input hidden></p>
-    <aside class="scope-note"><p>Scores are model judgments about transcript text; predicted reception is not an observed audience response. Open a recording's evidence to inspect its source passages.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. Classification outputs, including text-to-speech indicators, are model inferences and may be false positives; they do not independently verify audio or production methods. Short excerpts may provide especially weak evidence. Speaker labels and transcript wording may be wrong. The score ranges shown follow the release method and are not automatically statistical confidence intervals. Factor names are provisional descriptions of this fitted model.</p></details></aside>
+    <aside class="scope-note"><p>Scores are a language model's ratings of transcript wording. They are not facts about a person, and predicted reception is not an observed audience response. Open a recording's evidence to see the passages behind its scores.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. A passage can hold several voices, quoted speech or messages read aloud, and the transcript wording may be wrong. Classifications are model inferences and may be wrong; they do not verify anything about the audio. How much text is rated changes the scores, which is why every passage holds the same number of words and why shorter texts carry no dimension scores. No human rating has yet been compared with these scores. Dimension names are provisional descriptions of this fitted model.</p></details></aside>
     <details class="section-jumps"><summary>Jump to an analysis</summary><nav class="explorer-nav" aria-label="Analysis sections">
       <div><span>Browse and explore</span><a href="#analysis-videos">Video rankings</a><a href="#analysis-trend">Scores over time</a><a href="#analysis-discovery">Recording maps and similarity</a><a href="#analysis-relationships">Question relationships</a><a href="#analysis-map">Question map</a></div>
       <div><span>Look more closely</span><a href="#analysis-passage-insights">Passage variability</a><a href="#analysis-temporal-comparisons">Time, genre and candidate shifts</a><a href="#analysis-correlations">Full correlations</a></div>
       <div><span>Model and methods</span><a href="#analysis-factors">Factor loadings</a><a href="#analysis-factor-diagnostics">Residuals and dimensionality</a><a href="#analysis-robustness">Robustness</a><a href="/corpus/analysis/methods/">Methods</a></div>
     </nav></details>
-    <section id="analysis-videos" aria-labelledby="video-scores-title"><h2 id="video-scores-title">Videos by dimension</h2>
-    <p class="chart-note">These filters apply to this table and <a href="#analysis-trend">Scores over time</a>. Other views use their own selectors and analysis cohorts.</p>
+    <section id="analysis-videos" aria-labelledby="video-scores-title"><h2 id="video-scores-title">Recordings by dimension</h2>
+    <p class="chart-note">Rank recordings by a dimension or a single question. These filters also apply to <a href="#analysis-trend">Scores over time</a>; other views use their own selectors.</p>
     <form class="controls" data-controls>
       <fieldset class="dimension-controls"><legend>Choose what to compare</legend>
-      <label>Dimension type<select name="kind"><option value="question">Numeric question</option><option value="factor">Estimated factor</option><option value="classification">Classification / yes-no</option></select></label>
-      <label>Dimension<select name="metric"></select></label>
+      <label>Compare by<select name="kind"><option value="factor">Dimension (related questions together)</option><option value="question">Single question</option><option value="classification">Classification or yes/no</option></select></label>
+      <label>Choose<select name="metric"></select></label>
       </fieldset>
-      <fieldset><legend>Choose recordings</legend>
+      <fieldset class="recording-controls"><legend>Choose recordings</legend>
+      <label data-kind-control hidden>Kind<select name="recording_kind"><option value="">All kinds</option><option value="video">Videos</option><option value="stream">Streams</option><option value="clip">Clips</option></select></label>
       <label>Year<select name="year"><option value="">All years</option></select></label>
       <label>Category<select name="category"><option value="">All categories</option></select></label>
-      <label>Find a video<input name="text" type="search" placeholder="Search title or category" /></label>
+      <label data-subject-control hidden>Subject<select name="subject"><option value="">All subjects</option></select></label>
+      <label data-length-control hidden>Length<select name="min_windows"><option value="">Any length</option><option value="3">3 or more passages</option><option value="10">10 or more passages</option></select></label>
+      <label>Find a recording<input name="text" type="search" placeholder="Search title or category" /></label>
       </fieldset>
+      <div class="recording-options" data-design-options hidden><label><input type="checkbox" name="versions" value="one" checked /> One version of each recording</label><label><input type="checkbox" name="short_texts" value="hide" checked /> Leave out texts shorter than one passage</label></div>
       <details class="dimension-explanation" data-rubric><summary data-rubric-title>Question rubric</summary><aside class="factor-description" data-factor-description hidden aria-live="polite"></aside><div data-rubric-content></div></details>
       <div class="table-toolbar" aria-label="Table sorting and size">
       <label>Sort<select name="sort"><option value="score">Score</option><option value="date">Recording date</option><option value="title">Title</option></select></label>
@@ -37,7 +41,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       </div>
     </form>
       <p data-video-count role="status"></p>
-      <div class="table-scroll"><table><thead><tr><th scope="col">Recording</th><th scope="col">Date</th><th scope="col">Recording category</th><th scope="col">Score / outcome</th><th scope="col">Range / option probabilities</th><th scope="col">Coverage</th></tr></thead><tbody data-video-rows></tbody></table></div>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Recording</th><th scope="col">Date</th><th scope="col" data-col-length>Kind and length</th><th scope="col">Category</th><th scope="col" data-col-score>Score</th><th scope="col" data-col-detail>Spread across passages</th></tr></thead><tbody data-video-rows></tbody></table></div>
       <nav class="analysis-pager" data-pager aria-label="Score results pages" hidden><button type="button" data-prev>Previous</button><span data-page role="status"></span><button type="button" data-next>Next</button></nav>
       <details data-selected hidden><summary data-selected-title>Selected recording evidence</summary><div data-evidence></div></details>
     </section>
@@ -47,8 +51,10 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       <p id="trend-method-status" class="chart-note" data-trend-method-status hidden></p>
       <p class="chart-note" data-trend-summary></p><p class="trend-empty" data-trend-empty role="status" hidden></p>
       <AnalysisChartFrame label="Scores over time chart" minWidth="48rem"><svg data-trend viewBox="0 0 760 320" role="img" aria-label="Mean dimension scores over recording time"></svg></AnalysisChartFrame>
-      <details data-trend-values><summary>View all period values and recording mix</summary><div class="table-scroll"><table><thead><tr><th scope="col">Period</th><th scope="col">Mean</th><th scope="col">Range (see trend method)</th><th scope="col">Recordings</th><th scope="col">Mean coverage</th><th scope="col">Recording categories</th></tr></thead><tbody data-trend-rows></tbody></table></div></details>
+      <p class="trend-legend" data-trend-legend hidden></p>
+      <details data-trend-values><summary>View all period values</summary><div class="table-scroll"><table><thead><tr><th scope="col">Period</th><th scope="col" data-trend-col-series>Series</th><th scope="col">Mean</th><th scope="col" data-trend-col-range>Range (see trend method)</th><th scope="col">Recordings</th><th scope="col" data-trend-col-extra>Recording categories</th></tr></thead><tbody data-trend-rows></tbody></table></div></details>
       <details><summary>Trend method, uncertainty and date coverage</summary><p class="chart-note" data-trend-note></p><p class="warning" data-date-warning></p></details>
+      <div class="trend-agreement" data-trend-agreement hidden><h3>Which trends hold</h3><p class="chart-note" data-trend-agreement-note></p><div class="table-scroll"><table><thead><tr><th scope="col" rowspan="2">Dimension</th><th scope="colgroup" colspan="2">Videos</th><th scope="colgroup" colspan="2">Streams</th><th scope="col" rowspan="2">Holds everywhere</th><th scope="col" rowspan="2">Agreement of the two models</th></tr><tr><th scope="col">First model</th><th scope="col">Second model</th><th scope="col">First model</th><th scope="col">Second model</th></tr></thead><tbody data-trend-agreement-rows></tbody></table></div></div>
     </section>
     <AnalysisDiscovery />
     <AnalysisRelationships />
@@ -69,7 +75,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
 </section>
 
 <script>
-  import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, questionLabel, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
   import { historicalPassageHref } from '../../lib/analysis/historical-compatibility.mjs';
   import type { AnalysisQuestion, AnalysisRelease, AnalysisVideo } from '../../lib/analysis/explorer.mjs';
   import factorAnnotations from '../../data/analysis/factor-descriptions.json';
@@ -115,7 +121,9 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     const dateBasisLabel = (value:string) => ({unknown:'Unknown / unverified',retained_archive_metadata:'Archive metadata',archive_filename:'Archive filename',archived_video_page:'Archived video page',torrent_filename:'Archive filename',torrent_filename_utc:'Archive filename, converted to UTC',filename_date:'Archive filename'} as Record<string,string>)[value]??humanize(value);
     const uncertaintyLabel = (value:string|null|undefined) => ({model_rating_range:'Passage-mixture rating range (not a mean interval)',bootstrap_stability:'Bootstrap stability range',bootstrap_stability_range:'Bootstrap stability range',bootstrap_stability_unavailable:'Stability range unavailable',insufficient_or_inapplicable:'Insufficient evidence or not applicable',passage_distribution_not_video_probability:'Passage-score distribution (not a video probability)'} as Record<string,string>)[value??'']??(value?humanize(value):'Uncertainty not stated');
     const option = (label: string, value: string) => { const e=n('option',label) as HTMLOptionElement; e.value=value; return e; };
-    function metrics() { return kindSelect.value === 'factor' ? release.analysis.factors.map(f => ({id:f.id,label:factorDisplayLabel(f,factorDescriptions)})) : release.questions.filter(q=>kindSelect.value==='classification'?q.type==='choice'||q.type==='noul':q.type==='score').map(q => ({id:q.id,label:`${q.short_name} · ${humanize(q.domain)}`})); }
+    function metrics() { return kindSelect.value === 'factor' ? release.analysis.factors.map(f => ({id:f.id,label:factorDisplayLabel(f,factorDescriptions)})) : release.questions.filter(q=>kindSelect.value==='classification'?q.type==='choice'||q.type==='noul':q.type==='score').map(q => ({id:q.id,label:questionLabel(q)})); }
+    const windowed=()=>release.videos.some(v=>v.design);
+    const kindLabel=(kind:string)=>({video:'Video',stream:'Stream',clip:'Clip'} as Record<string,string>)[kind]??humanize(kind);
     function activeQuestions() { const allowed = new Set(release.analysis.question_ids); return release.questions.filter(q => allowed.has(q.id)&&q.type==='score'); }
     function updateRubric(){
       const question=release.questions.find(q=>q.id===metricSelect.value);
@@ -128,7 +136,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         interpretation.append(n('p','These descriptions summarize this fitted text model, not verified personal traits. Signs are arbitrary; higher is not inherently better or worse.'));
       }
       const host=root.querySelector<HTMLElement>('[data-rubric-content]')!;host.replaceChildren();
-      root.querySelector<HTMLElement>('[data-rubric-title]')!.textContent=question?`Question rubric: ${question.short_name}`:`Factor definition: ${factor?.id??'No dimension selected'}`;
+      root.querySelector<HTMLElement>('[data-rubric-title]')!.textContent=question?`Question wording and levels: ${questionLabel(question)}`:`What this dimension measures: ${factor?factorDisplayLabel(factor,factorDescriptions):'No dimension selected'}`;
       if(question){host.append(n('p',question.instructions));if(Array.isArray(question.criteria)){const list=n('ol');for(const [i,anchor] of question.criteria.entries())list.append(n('li',`${i}: ${anchor}`));host.append(list);}else{const list=n('dl');for(const [key,description] of Object.entries(question.criteria)){list.append(n('dt',humanize(key)),n('dd',description));}host.append(list);}}
       else if(factor){
         host.append(n('p',`${factor.label===factor.id?'':`${factor.id}: `}${factor.label}. Loadings summarize the estimated relation between eligible numeric questions and this exploratory factor. Factor scores are regression-estimated coordinates from standardized questions, not 0–4 rubric ratings. Their sign is arbitrary; higher is not inherently better or worse.`));
@@ -147,6 +155,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       const directionSelect=controls.elements.namedItem('direction') as HTMLSelectElement;
       for(const choice of Array.from(directionSelect.options))choice.textContent=directionLabels[choice.value==='desc'?0:1];
       const rows=filterAndSortVideos(release.videos,values,kind,selectedMetric);
+      root.querySelector<HTMLElement>('[data-col-score]')!.textContent=nominal?'Outcome':kind==='classification'?'Probability of yes':'Score';
+      root.querySelector<HTMLElement>('[data-col-detail]')!.textContent=nominal?'Most likely options':kind==='factor'?(windowed()?'Range when the model is refitted':'Range'):kind==='question'&&windowed()?'Spread across passages':'Range';
       const body=root.querySelector<HTMLTableSectionElement>('[data-video-rows]')!; body.replaceChildren();
       const pages=Math.max(1,Math.ceil(rows.length/pageSize));currentPage=Math.min(currentPage,pages);
       for(const video of rows.slice((currentPage-1)*pageSize,currentPage*pageSize)) {
@@ -156,10 +166,21 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         const date=n('td',video.date?`${video.date} · ${dateBasisLabel(video.date_basis)}`:(dateTexts[video.recording_id]??'Date unresolved'));
         const category=n('td',video.category ? humanize(video.category) : 'Unclassified');
         const descriptor=release.questions.find(q=>q.id===selectedMetric);
+        const design=video.design;
+        const length=n('td',design?`${design.short_text?'Short text':kindLabel(design.kind)} · ${design.words.toLocaleString()} words${design.short_text?'':` · ${design.windows.toLocaleString()} ${design.windows===1?'passage':'passages'}`}`:'—');
+        if(design?.version_of){const other=release.videos.find(item=>item.recording_id===design.version_of);const note=n('small',other?`Another version of “${other.title}”`:'Another version of a listed recording');note.className='row-note';length.append(note);}
         const value=n('td',kind==='classification'&&descriptor?.type==='choice'?(score?.choice?humanize(score.choice):'Unknown'):kind==='classification'&&descriptor?.type==='noul'?(score?.value==null?'—':`${fmt(score.value*100)}%`):fmt(score?.value));
-        const range=n('td',kind==='classification'&&descriptor?.type==='choice'?Object.entries(score?.probabilities??{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,p])=>`${humanize(key)} ${fmt(p*100)}%`).join(' · ')||'—':score?.low != null || score?.high != null ? `${fmt(score.low)}–${fmt(score.high)} · ${uncertaintyLabel(score.uncertainty)}` : score?.uncertainty?uncertaintyLabel(score.uncertainty):'—');
-        const coverage=n('td',`${fmt(video.coverage*100)}% transcript coverage${score?.coverage == null ? '' : ` · ${fmt(score.coverage*100)}% item coverage`}`);
-        tr.append(titleCell,date,category,value,range,coverage); body.append(tr);
+        const second=kind==='factor'?video.second?.[selectedMetric]:undefined;
+        if(second!==undefined){const note=n('small',`Second model: ${fmt(second)}`);note.className='row-note';note.title='The same recording scored on this dimension from a second model\'s ratings. See “Which trends hold” for how closely the two models agree.';value.append(note);}
+        const parts:string[]=[];
+        if(kind==='classification'&&descriptor?.type==='choice')parts.push(Object.entries(score?.probabilities??{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,p])=>`${humanize(key)} ${fmt(p*100)}%`).join(' · '));
+        else if(kind==='question'&&design&&score?.heterogeneity!=null&&design.windows>1)parts.push(`±${fmt(score.heterogeneity)}`);
+        else if(score?.low != null || score?.high != null)parts.push(design&&kind==='factor'?`${fmt(score.low)} to ${fmt(score.high)}`:`${fmt(score.low)}–${fmt(score.high)} · ${uncertaintyLabel(score.uncertainty)}`);
+        else if(score?.uncertainty&&!design)parts.push(uncertaintyLabel(score.uncertainty));
+        const partial=Math.min(video.coverage,score?.coverage??1);
+        if(partial<0.995)parts.push(`rated in ${fmt(partial*100)}% of the text`);
+        const range=n('td',parts.filter(Boolean).join(' · ')||'—');
+        tr.append(titleCell,date,length,category,value,range); body.append(tr);
       }
       root.querySelector<HTMLElement>('[data-video-count]')!.textContent=`${rows.length.toLocaleString()} of ${release.videos.length.toLocaleString()} recordings · showing ${rows.length?(currentPage-1)*pageSize+1:0}–${Math.min(currentPage*pageSize,rows.length)} · sorted by ${values.sort==='score'&&nominal?'outcome':values.sort} · missing sort values last`;
       pager.hidden=pages<=1;previous.disabled=currentPage===1;next.disabled=currentPage===pages;pager.querySelector<HTMLElement>('[data-page]')!.textContent=`Page ${currentPage} of ${pages}`;
@@ -169,7 +190,14 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       selectedId=video.recording_id; selectedVideo=video; selectedNode.hidden=false; selectedNode.open=true;
       root.querySelector<HTMLElement>('[data-selected-title]')!.textContent=`Evidence and question scores: ${video.title}`;
       const panel=root.querySelector<HTMLElement>('[data-evidence]')!; panel.replaceChildren();
-      const p=n('p',`Recording date: ${video.date?`${video.date} (${dateBasisLabel(video.date_basis)})`:(dateTexts[video.recording_id]??'unresolved')}. Scores refer to transcript revision ${video.revision_id}. Overall transcript coverage: ${fmt(video.coverage*100)}%.`); panel.append(p);
+      const design=video.design;
+      const p=n('p',`Recording date: ${video.date?`${video.date} (${dateBasisLabel(video.date_basis)})`:(dateTexts[video.recording_id]??'unresolved')}. ${design?`${design.short_text?'Short text':kindLabel(design.kind)} of ${design.words.toLocaleString()} words, rated in ${design.windows.toLocaleString()} ${design.windows===1?'passage':'passages'}. `:''}Scores refer to transcript revision ${video.revision_id}.${video.coverage<0.995?` Overall transcript coverage: ${fmt(video.coverage*100)}%.`:''}`); panel.append(p);
+      if(design){
+        const other=design.version_of?release.videos.find(item=>item.recording_id===design.version_of):null;
+        const note=design.short_text?'This text is shorter than one passage. It has question scores but no dimension scores, and short texts are rated lower than full passages on most questions.':other?`This is another version of “${other.title}”. Dimension scores are given to one version of each recording.`:'';
+        if(note){const info=n('p',note);info.className='chart-note';panel.append(info);}
+        const legendNote=n('p','Each value is the mean of the passages on a scale of 0 to 4. ± is the spread between passages; the levels in brackets are those the model used in nine ratings out of ten.');legendNote.className='chart-note';panel.append(legendNote);
+      }
       const textQuality=video.classifications?.class_transcript_quality?.choice;
       if(textQuality==='substantial_noise'||textQuality==='unintelligible') {
         const warning=n('p',`Text-quality caution: the model classified this recording's text as ${humanize(textQuality).toLowerCase()}. Transcription problems may affect every score, including hypothetical audience confusion. This quality label is itself unverified.`);
@@ -184,19 +212,24 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       for(const question of release.questions) {
         if(question.type!=='score') continue;
         const score=scoreFor(video,question.id,'question'); if(!score) continue;
-        const li=n('li'),strong=n('strong',`${question.short_name}: ${fmt(score.value)}${score.low!=null||score.high!=null?` (${fmt(score.low)}–${fmt(score.high)})`:''}`);
-        li.append(strong,n('span',` — ${humanize(question.domain)}; item coverage ${score.coverage==null?'not reported':`${fmt(score.coverage*100)}%`}; ${uncertaintyLabel(score.uncertainty)}`));
+        const li=n('li'),strong=n('strong',`${question.short_name}: ${fmt(score.value)}${design&&score.heterogeneity!=null&&design.windows>1?` ± ${fmt(score.heterogeneity)}`:''}${score.low!=null||score.high!=null?` (${fmt(score.low)}–${fmt(score.high)})`:''}`);
+        li.append(strong,n('span',design?`${score.coverage!=null&&score.coverage<0.995?` — rated in ${fmt(score.coverage*100)}% of the text`:''}`:` — ${humanize(question.domain)}; item coverage ${score.coverage==null?'not reported':`${fmt(score.coverage*100)}%`}; ${uncertaintyLabel(score.uncertainty)}`));
         list.append(li);
       }
       for(const question of release.questions.filter(q=>q.type==='choice')){
         const classification=video.classifications?.[question.id];if(!classification)continue;
         const li=n('li'),choice=classification.choice??'Unknown',description=typeof question.criteria==='object'&&!Array.isArray(question.criteria)?question.criteria[choice]:'',strong=n('strong',`${question.short_name}: ${humanize(choice)}`);
+        if(design){
+          // Window-based releases: the share of passages (weighted by the model's probabilities) for each option that reaches 1%.
+          const shares=Object.entries(classification.probabilities).filter(([,probability])=>probability!=null&&probability>=0.01).sort((a,b)=>(b[1] as number)-(a[1] as number)).map(([key,probability])=>`${humanize(key)} ${Math.round((probability as number)*100)}%`);
+          li.append(strong,n('span',` — ${description}${shares.length>1?` Across passages: ${shares.join(', ')}.`:''}`));list.append(li);continue;
+        }
         li.append(strong,n('span',` — ${description}; item coverage ${classification.coverage==null?'not reported':`${fmt(classification.coverage*100)}%`}; confidence ${fmt(classification.confidence)}`));
         const options=n('ul');for(const [key,probability] of Object.entries(classification.probabilities))options.append(n('li',`${humanize(key)}: ${fmt(probability*100)}%`));li.append(options);list.append(li);
       }
       for(const question of release.questions.filter(q=>q.type==='noul')){
         const probability=video.noul_scores?.[question.id];if(probability===undefined||probability===null)continue;
-        const li=n('li');li.append(n('strong',`${question.short_name}: ${fmt(probability*100)}% probability`),n('span',` — ${question.instructions}`));list.append(li);
+        const li=n('li');li.append(n('strong',`${question.short_name}: ${design?`${Math.round(probability*100)}%`:`${fmt(probability*100)}% probability`}`),n('span',` — ${question.instructions}${design?' (mean probability of yes across passages)':''}`));list.append(li);
       }
       if(!list.childElementCount) list.append(n('li','No question scores or classifications are included for this recording.'));
       const scoreDetails=n('details') as HTMLDetailsElement,scoreSummary=n('summary','All included question scores and classifications');scoreDetails.append(scoreSummary,list);panel.append(scoreDetails);
@@ -248,7 +281,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       for(const question of questions){const opt=option(`${question.short_name} · ${humanize(question.domain)}`,question.id);select.append(opt);}
       const activeQuestion=release.questions.some(q=>q.id===metricSelect.value&&questions.some(pq=>pq.id===q.id))?metricSelect.value:questions[0]?.id;
       if(activeQuestion)select.value=activeQuestion;label.append(select);toolbar.append(label);
-      const note=n('p','The horizontal axis uses recording time. Points show passage scores; vertical bars show score levels with nonzero probability, not confidence intervals. Gaps in available scores break the line. Select a point or table heading to open that timestamp and transcript revision.');note.className='chart-note';
+      const note=n('p',`The horizontal axis uses recording time. Points show passage scores; vertical bars span ${release.design?'the levels that hold the middle 90% of the model\'s probability':'score levels with nonzero probability'}, not confidence intervals. Gaps in available scores break the line. Select a point or table heading to open that timestamp and transcript revision.`);note.className='chart-note';
       const chart=document.createElementNS('http://www.w3.org/2000/svg','svg');chart.setAttribute('viewBox','0 0 760 246');chart.setAttribute('role','img');chart.setAttribute('aria-label','Passage score timeline');chart.classList.add('passage-timeline');
       const chunkSize=20;let chunkPage=0;const pager=n('nav');pager.className='passage-pager';pager.setAttribute('aria-label','Passage heatmap pages');const back=n('button','Earlier passages') as HTMLButtonElement,forward=n('button','Later passages') as HTMLButtonElement,chunkLabel=n('span');back.type=forward.type='button';pager.append(back,chunkLabel,forward);
       const gridHost=n('div');gridHost.className='table-scroll passage-grid-scroll';
@@ -285,7 +318,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       const filters=Object.fromEntries(new FormData(controls)) as Record<string,string>;
       const visible=filterAndSortVideos(release.videos,filters,kind,metric);
       const context=root.querySelector<HTMLElement>('[data-trend-context]')!;
-      const selections=[yearSelect.selectedOptions[0]?.textContent??'All years',categorySelect.selectedOptions[0]?.textContent??'All categories',...(filters.text?[`Title/category search: “${filters.text}”`]:[])];
+      const chosenLabel=(name:string)=>{const element=controls.elements.namedItem(name) as HTMLSelectElement|null;return element&&element.value?[element.selectedOptions[0]?.textContent??element.value]:[];};
+      const selections=[...chosenLabel('recording_kind'),yearSelect.selectedOptions[0]?.textContent??'All years',categorySelect.selectedOptions[0]?.textContent??'All categories',...chosenLabel('subject'),...chosenLabel('min_windows'),...(filters.text?[`Title/category search: “${filters.text}”`]:[])];
       context.textContent=`${metricSelect.selectedOptions[0]?.textContent??'No dimension selected'} · ${selections.join(' · ')} · ${visible.length.toLocaleString()} matching recordings`;
       const svg=root.querySelector<SVGSVGElement>('[data-trend]')!,empty=root.querySelector<HTMLElement>('[data-trend-empty]')!,values=root.querySelector<HTMLElement>('[data-trend-values]')!;
       const dateWarning=root.querySelector<HTMLElement>('[data-date-warning]')!,summary=root.querySelector<HTMLElement>('[data-trend-summary]')!,methodStatus=root.querySelector<HTMLElement>('[data-trend-method-status]')!;
@@ -296,6 +330,69 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       root.querySelector<HTMLElement>('[data-trend-method-control]')!.hidden=kind!=='factor'||!supplement?.joint_trends;
       root.querySelector<HTMLElement>('[data-trend-note]')!.textContent=trendInterpretation(kind,descriptor?.type);
       if(nominal) { empty.textContent='This dimension contains category labels, not numeric scores. Review its outcomes in the table above, or choose a numeric question, factor, or yes/no probability to see a time series.';empty.hidden=false;values.hidden=true;svg.toggleAttribute('hidden',true);return; }
+      const legend=root.querySelector<HTMLElement>('[data-trend-legend]')!;legend.replaceChildren();legend.hidden=true;
+      root.querySelector<HTMLElement>('[data-trend-col-series]')!.hidden=!windowed();root.querySelector<HTMLElement>('[data-trend-col-extra]')!.hidden=windowed();
+      if(windowed()){
+        // Window-based releases: videos and streams are drawn apart, each with a 95% interval of the period mean.
+        const interval=intervalSelect.value as 'year'|'month';
+        root.querySelector<HTMLElement>('[data-trend-method-control]')!.hidden=true;
+        root.querySelector<HTMLElement>('[data-trend-note]')!.textContent=trendInterpretation(kind,descriptor?.type,true);
+        root.querySelector<HTMLElement>('[data-trend-col-range]')!.textContent='95% interval of the mean';
+        const chosen=filters.recording_kind;
+        const seriesColor:Record<string,string>={video:'var(--analysis-series-1)',stream:'var(--analysis-series-2)',clip:'var(--analysis-series-3)'};
+        const groups=(chosen?[chosen]:['video','stream']).map(key=>({key,label:`${kindLabel(key)}s`,color:seriesColor[key]??'var(--analysis-series-1)',series:groupTimeSeries(visible.filter(v=>v.design?.kind===key),metric,kind,interval)})).filter(g=>g.series.length);
+        summary.textContent=kind==='classification'?'Mean model-estimated yes/no probabilities by period, not observed event rates.':`Period means of recording scores${chosen?'':', videos and streams apart'}. Shading is a 95% interval of each period mean.`;
+        if(!groups.length){empty.textContent='No dated scores are available for this dimension and selection. Change the filters or the time interval.';empty.hidden=false;values.hidden=true;summary.textContent='';svg.toggleAttribute('hidden',true);return;}
+        const ns='http://www.w3.org/2000/svg', el=(tag:string,attrs:Record<string,string>)=>{const x=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))x.setAttribute(k,v);return x;};
+        const all=groups.flatMap(g=>g.series),nums=all.flatMap(p=>[p.mean,...(p.ci_low==null||p.ci_high==null?[]:[p.ci_low,p.ci_high])]);
+        const min=Math.min(...nums),max=Math.max(...nums),pad=(max-min)*.12||1,x0=62,x1=groups.length>1?676:738,y0=26,y1=268,minDate=Math.min(...all.map(p=>p.x)),maxDate=Math.max(...all.map(p=>p.x));
+        const X=(x:number)=>maxDate===minDate?(x0+x1)/2:x0+(x-minDate)/(maxDate-minDate)*(x1-x0),Y=(v:number)=>y1-(v-min+pad)/(max-min+2*pad)*(y1-y0);
+        // Round tick values; the zero line, where it falls inside the range, is drawn stronger.
+        const rawStep=(max-min+2*pad)/4,magnitude=10**Math.floor(Math.log10(rawStep)),tickStep=[1,2,5,10].map(m=>m*magnitude).find(m=>m>=rawStep)??rawStep;
+        for(let tick=Math.ceil((min-pad)/tickStep)*tickStep;tick<=max+pad+1e-9;tick+=tickStep){const value=Math.abs(tick)<tickStep/1e6?0:tick,y=Y(value);svg.append(el('line',{x1:String(x0),x2:String(x1),y1:String(y),y2:String(y),stroke:'currentColor','stroke-opacity':value===0?'.42':'.16'}));const t=el('text',{x:String(x0-8),y:String(y+4),fill:'currentColor','font-size':'12','text-anchor':'end'});t.textContent=fmt(Number(value.toPrecision(6)));svg.append(t);}
+        const periods=[...new Map(all.map(p=>[p.period,p.x])).entries()].sort((a,b)=>a[1]-b[1]),step=Math.max(1,Math.ceil(periods.length/8));
+        periods.forEach(([period,x],i)=>{if(i%step&&i!==periods.length-1)return;const t=el('text',{x:String(X(x)),y:'298',fill:'currentColor','font-size':'12','text-anchor':'middle'});t.textContent=period;svg.append(t);});
+        const ends:{y:number;label:string;color:string;x:number}[]=[];
+        for(const g of groups){
+          const banded=g.series.filter(p=>p.ci_low!=null&&p.ci_high!=null);
+          if(banded.length>1)svg.append(el('polygon',{points:[...banded.map(p=>`${X(p.x)},${Y(p.ci_low as number)}`),...banded.slice().reverse().map(p=>`${X(p.x)},${Y(p.ci_high as number)}`)].join(' '),fill:g.color,'fill-opacity':'.18'}));
+        }
+        for(const g of groups){
+          // Periods with fewer than five recordings are hollow points and are not joined to the line.
+          const solid=g.series.filter(p=>p.n>=5);
+          if(solid.length>1)svg.append(el('polyline',{points:solid.map(p=>`${X(p.x)},${Y(p.mean)}`).join(' '),fill:'none',stroke:g.color,'stroke-width':'2','stroke-linejoin':'round','stroke-linecap':'round'}));
+          for(const p of g.series){const few=p.n<5;svg.append(el('circle',{cx:String(X(p.x)),cy:String(Y(p.mean)),r:few?'3.5':'4.5',fill:few?'var(--corpus-panel)':g.color,stroke:few?g.color:'var(--corpus-panel)','stroke-width':'2'}));}
+          const last=(solid.length?solid:g.series).at(-1)!;ends.push({y:Y(last.mean),label:g.label,color:g.color,x:X(last.x)});
+          const item=n('span'),swatch=n('i');swatch.style.background=g.color;item.append(swatch,document.createTextNode(`${g.label} · ${g.series.reduce((sum,p)=>sum+p.n,0).toLocaleString()} dated recordings`));legend.append(item);
+        }
+        if(groups.length>1){
+          // Direct labels at the line ends, in text ink with a short key in the series colour; nudged apart if they would collide.
+          ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<15)ends[i].y=ends[i-1].y+15;
+          for(const end of ends){svg.append(el('line',{x1:String(x1+10),x2:String(x1+22),y1:String(end.y),y2:String(end.y),stroke:end.color,'stroke-width':'2','stroke-linecap':'round'}));const t=el('text',{x:String(x1+27),y:String(end.y+4),fill:'currentColor','font-size':'12'});t.textContent=end.label;svg.append(t);}
+        }
+        legend.append(n('span','Shaded: 95% interval of the period mean'));
+        if(all.some(p=>p.n<5))legend.append(n('span','Hollow point: fewer than five recordings'));
+        legend.hidden=false;
+        // Hover and keyboard readout: a hairline snaps to the nearest period and one readout lists every series there.
+        const frame=svg.parentElement as HTMLElement;frame.style.position='relative';
+        let tip=frame.querySelector<HTMLElement>('.trend-tip');if(!tip){tip=n('div') as HTMLElement;tip.className='trend-tip';tip.setAttribute('role','status');frame.append(tip);}
+        tip.hidden=true;
+        const hair=el('line',{y1:String(y0),y2:String(y1),stroke:'currentColor','stroke-opacity':'.55','stroke-width':'1',visibility:'hidden','pointer-events':'none'});svg.append(hair);
+        let active=-1;
+        const showAt=(index:number)=>{
+          active=Math.max(0,Math.min(periods.length-1,index));const [period,x]=periods[active];hair.setAttribute('x1',String(X(x)));hair.setAttribute('x2',String(X(x)));hair.setAttribute('visibility','visible');
+          tip!.replaceChildren(n('strong',period));
+          for(const g of groups){const p=g.series.find(point=>point.period===period),row=n('p'),key=n('i');key.style.background=g.color;row.append(key,n('b',p?fmt(p.mean):'—'),document.createTextNode(` ${g.label}${p?` · ${p.n} ${p.n===1?'recording':'recordings'}${p.ci_low==null?'':` · ${fmt(p.ci_low)} to ${fmt(p.ci_high)}`}`:' · none'}`));tip!.append(row);}
+          const box=svg.getBoundingClientRect(),left=box.width*X(x)/760;tip!.hidden=false;tip!.style.left=`${Math.min(Math.max(8,left+12),Math.max(8,box.width-tip!.offsetWidth-8))}px`;tip!.style.top='8px';
+        };
+        const hide=()=>{hair.setAttribute('visibility','hidden');tip!.hidden=true;active=-1;};
+        svg.onpointermove=event=>{const box=svg.getBoundingClientRect(),sx=(event.clientX-box.left)/box.width*760;let best=0;periods.forEach(([,x],i)=>{if(Math.abs(X(x)-sx)<Math.abs(X(periods[best][1])-sx))best=i;});showAt(best);};
+        svg.onpointerleave=hide;svg.setAttribute('tabindex','0');svg.onblur=hide;svg.onfocus=()=>showAt(active<0?periods.length-1:active);
+        svg.onkeydown=event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();showAt((active<0?periods.length-1:active)+(event.key==='ArrowRight'?1:-1));}else if(event.key==='Escape')hide();};
+        root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!.replaceChildren(...groups.flatMap(g=>g.series.map(p=>{const tr=n('tr');for(const val of [p.period,g.label,fmt(p.mean),p.ci_low==null?'fewer than five recordings':`${fmt(p.ci_low)} to ${fmt(p.ci_high)}`,String(p.n)])tr.append(n('td',val));return tr;})));
+        const bases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);dateWarning.textContent=`Date bases represented: ${bases.join(', ')||'none'}. Periods use catalog recording dates; recordings without one are left out. Year-only dates are omitted from the month view.`;
+        return;
+      }
       const interval=intervalSelect.value as 'year'|'month';
       const joint=kind==='factor'?selectJointTrendSeries(supplement,metric,interval,filters,trendMethodSelect.value):null;
       const series=joint?.series??groupTimeSeries(visible,metric,kind,interval).map(row=>({...row,...(kind==='factor'?{low:null,high:null}:{}),genre_counts:{} as Record<string,number>}));
@@ -315,7 +412,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       if(band.length===series.length&&high.length===series.length) svg.append(el('polygon',{points:[...band,...high].join(' '),fill:'var(--corpus-accent)','fill-opacity':'.18'}));
       if(series.length>1) svg.append(el('polyline',{points:series.map((s,i)=>`${X(i)},${Y(s.mean)}`).join(' '),fill:'none',stroke:'var(--corpus-accent)','stroke-width':'3'}));
       series.forEach((s,i)=>{const c=el('circle',{cx:String(X(i)),cy:String(Y(s.mean)),r:'5',fill:'var(--corpus-accent)'});const title=el('title',{});title.textContent=`${s.period}: mean ${fmt(s.mean)}, n=${s.n}`;c.append(title);svg.append(c);});
-      const body=root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!;body.replaceChildren(...series.map(s=>{const tr=n('tr'),composition=Object.entries(s.genre_counts).sort((a,b)=>b[1]-a[1]).map(([category,count])=>`${humanize(category)}: ${count} (${fmt(count/s.n*100)}%)`).join(' · ');for(const val of [s.period,fmt(s.mean),s.low==null&&s.high==null?'—':`${fmt(s.low)}–${fmt(s.high)}`,String(s.n),s.coverage==null?'—':`${fmt(s.coverage*100)}%`,composition||'Available with full-cohort factor trends'])tr.append(n('td',val));return tr;}));
+      const body=root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!;body.replaceChildren(...series.map(s=>{const tr=n('tr'),composition=Object.entries(s.genre_counts).sort((a,b)=>b[1]-a[1]).map(([category,count])=>`${humanize(category)}: ${count} (${fmt(count/s.n*100)}%)`).join(' · ');for(const val of [s.period,fmt(s.mean),s.low==null&&s.high==null?'—':`${fmt(s.low)}–${fmt(s.high)}`,String(s.n),composition||'Available with full-cohort factor trends'])tr.append(n('td',val));return tr;}));
       const dateBases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);root.querySelector<HTMLElement>('[data-date-warning]')!.textContent=`Date bases represented: ${dateBases.join(', ')||'none'}. Periods use catalog recording dates. ${joint?'Joint factor trends require a known month, including in yearly view.':'Year-only dates are omitted from month view.'}`;
     }
     function drawCorrelations() {
@@ -383,6 +480,21 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       if(release.analysis.status==='insufficient_data')rootFactors.append(n('p',`Factor loadings are shown as provisional exploratory output; the release did not establish a stable factor solution. Eligible-question sample: ${release.analysis.primary_factor_n??'not reported'} recordings.`));
       for(const factor of release.analysis.factors){const section=n('section'),details=n('details') as HTMLDetailsElement,leaders=largestFactorLoadings(factor,release.questions),summaryText=leaders.slice(0,3).map(item=>`${item.short_name} ${item.loading>0?'+':''}${fmt(item.loading)}`).join(' · '),summary=n('summary',`${factorDisplayLabel(factor,factorDescriptions)} · strongest: ${summaryText||'not reported'}`),table=n('table'),head=n('thead'),tr=n('tr');for(const text of ['Question','Pattern coefficient','Reported interval'])tr.append(n('th',text));head.append(tr);const body=n('tbody');for(const q of release.questions){const loading=factor.loadings[q.id];if(loading===undefined)continue;const row=n('tr'),interval=factor.loading_intervals[q.id];for(const text of [q.short_name,fmt(loading),interval?`${fmt(interval[0])}–${fmt(interval[1])}`:'—'])row.append(n('td',text));body.append(row);}table.append(head,body);const scroll=n('div');scroll.className='table-scroll';scroll.append(table);details.append(summary);const description=factorDescriptions[factor.id];if(description)details.append(n('p',description.description));details.append(scroll);section.append(details);rootFactors.append(section);}
     }
+    function drawTrendAgreement(){
+      const second=release.design?.second_rater,host=root.querySelector<HTMLElement>('[data-trend-agreement]')!;
+      if(!second?.trend_agreement){host.hidden=true;return;}
+      const word=(sign:string|undefined)=>sign==='up'?'▲ rises':sign==='down'?'▼ falls':sign==='flat'?'no clear change':'—';
+      root.querySelector<HTMLElement>('[data-trend-agreement-note]')!.textContent=`Direction of each dimension from 2015 to 2025, for videos and streams apart and for two models: ${release.model} rated every passage, and ${second.model} rated ${second.recordings.toLocaleString()} distinct recordings again (at most ${second.max_windows_per_recording} passages each). A direction is given when the 95% interval of the yearly slope excludes zero. A trend is said to hold only if all four show the same rise or fall; "Mixed" means they disagree. The last column is the correlation of the two models' recording scores.`;
+      const keys=['video_first','video_second','stream_first','stream_second'];
+      root.querySelector<HTMLTableSectionElement>('[data-trend-agreement-rows]')!.replaceChildren(...release.analysis.factors.map(factor=>{
+        const row=second.trend_agreement?.[factor.id]??{},tr=n('tr'),head=n('th',factorDisplayLabel(factor,factorDescriptions)) as HTMLTableCellElement;head.scope='row';tr.append(head);
+        for(const key of keys)tr.append(n('td',word(row[key])));
+        const signs=keys.map(key=>row[key]),agree=signs.every(sign=>sign&&sign===signs[0]),holds=agree&&signs[0]!=='flat';
+        // All four "no clear change" is agreement too; only a disagreement is mixed.
+        const verdict=n('td',holds?(signs[0]==='up'?'Rises':'Falls'):agree?'No clear change':'Mixed');if(holds)verdict.className='holds';tr.append(verdict,n('td',Number(second.factor_agreement[factor.id]).toFixed(2)));return tr;
+      }));
+      host.hidden=false;
+    }
     function selectQuestion(q:AnalysisQuestion){kindSelect.value='question';metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));metricSelect.value=q.id;currentPage=1;render();}
     function render() { currentPage=1;updateRubric();renderVideos();drawTrend(); }
     async function shardDigest(videos:AnalysisVideo[]) {
@@ -409,8 +521,12 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         const historical=root.querySelector<HTMLElement>('[data-historical-input]')!;
         historical.hidden=!release.historical_input;
         historical.textContent=release.historical_input?`Scores use the earlier transcript inputs from ${release.generated_at.slice(0,10)}. Reviewed speaker labels and some transcripts have since changed; scores and fitted dimensions have not been recalculated. Passage links open the current recording at the original scored time, where wording or segmentation may differ.`:'';
-        const meta=root.querySelector<HTMLElement>('[data-release-meta]')!;meta.textContent=`${release.status==='pilot'?'Pilot':'Complete'} · ${release.coverage.scored_recordings.toLocaleString()} / ${release.coverage.total_recordings.toLocaleString()} recordings scored · ${release.coverage.scored_chunks.toLocaleString()} / ${release.coverage.total_chunks.toLocaleString()} transcript chunks · ${release.model} · ${release.generated_at} · questionnaire ${release.questionnaire_version}`;
+        const meta=root.querySelector<HTMLElement>('[data-release-meta]')!;meta.textContent=`${release.status==='pilot'?'Pilot':'Complete'} · ${release.coverage.scored_recordings.toLocaleString()} / ${release.coverage.total_recordings.toLocaleString()} recordings scored · ${release.coverage.scored_chunks.toLocaleString()} / ${release.coverage.total_chunks.toLocaleString()} ${release.design?`passages of ${release.design.window_words} words`:'transcript chunks'} · ${release.model}${release.design?.second_rater?` (second model ${release.design.second_rater.model})`:''} · ${release.generated_at} · questionnaire ${release.questionnaire_version}`;
+        if(!release.analysis.factors.length)kindSelect.value='question';
         metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));
+        if(windowed()){for(const name of ['kind-control','length-control','design-options'])root.querySelector<HTMLElement>(`[data-${name}]`)!.hidden=false;}
+        const subjectQuestion=release.questions.find(q=>q.id==='class_subject');
+        if(subjectQuestion&&!Array.isArray(subjectQuestion.criteria)){(controls.elements.namedItem('subject') as HTMLSelectElement).append(...Object.keys(subjectQuestion.criteria).filter(key=>release.videos.some(v=>v.classifications?.class_subject?.choice===key)).map(key=>option(humanize(key),key)));root.querySelector<HTMLElement>('[data-subject-control]')!.hidden=false;}
         const years=[...new Set(release.videos.flatMap(v=>v.date?[v.date.slice(0,4)]:[]))].sort().reverse();yearSelect.append(...years.map(y=>option(y,y)),option('Undated','undated'));
         const categories=[...new Set(release.videos.flatMap(v=>v.category?[v.category]:[]))].sort();categorySelect.append(...categories.map(c=>option(humanize(c),c)));
         controls.addEventListener('input',()=>{currentPage=1;render();});controls.addEventListener('change',(event)=>{if(event.target===kindSelect){metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));}currentPage=1;render();});
@@ -426,7 +542,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
           if(video)showEvidence(video);
         });
       const correlationDetails=root.querySelector<HTMLDetailsElement>('[data-correlation-details]')!;correlationDetails.addEventListener('toggle',()=>{if(correlationDetails.open&&correlationDetails.dataset.rendered!=='true'){drawCorrelations();correlationDetails.dataset.rendered='true';}});
-      drawMds();drawFactors();render();
+      drawMds();drawFactors();drawTrendAgreement();render();
         root.querySelector<HTMLElement>('[data-diagnostics]')!.textContent=JSON.stringify(release.analysis.diagnostics,null,2);
       } catch (error) { if(import.meta.env.DEV) console.error('Analysis preview load failed',error); status.hidden=false;status.textContent='The transcript scoring release could not be loaded or failed validation.'; }
     }
@@ -460,6 +576,24 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   .analysis-explorer .controls{display:grid;grid-template-columns:1fr;gap:.75rem;align-items:end;padding:0;margin:.8rem 0 0;min-width:0}
   .analysis-explorer .controls fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.8rem;border:0;padding:0;margin:0;min-width:0}
   .analysis-explorer .controls .dimension-controls{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+  .analysis-explorer .controls .recording-controls{grid-template-columns:repeat(auto-fit,minmax(9.25rem,1fr))}
+  /* Chart series colours for the dark panel, checked with the palette validator (lightness, chroma, colour-vision separation, contrast). */
+  .analysis-explorer{--analysis-series-1:#3987e5;--analysis-series-2:#d95926;--analysis-series-3:#199e70}
+  .analysis-explorer .trend-tip{position:absolute;z-index:2;max-width:22rem;padding:.5rem .7rem;border:1px solid var(--corpus-line);border-radius:.45rem;background:var(--corpus-panel-strong,#162235);color:var(--corpus-text);font-size:.82rem;line-height:1.45;pointer-events:none;box-shadow:0 6px 18px rgb(0 0 0 / .35)}
+  .analysis-explorer .trend-tip p{margin:.15rem 0;color:var(--corpus-muted)}
+  .analysis-explorer .trend-tip b{color:var(--corpus-text)}
+  .analysis-explorer .trend-tip i{display:inline-block;width:.9rem;height:2px;margin-right:.4rem;vertical-align:middle}
+  .analysis-explorer .recording-options{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-size:.86rem;color:var(--corpus-muted)}
+  .analysis-explorer .controls .recording-options label{display:inline-flex;flex-direction:row;align-items:center;gap:.45rem;margin:0;cursor:pointer;width:auto;color:var(--corpus-muted);font-size:.86rem}
+  .analysis-explorer .controls .recording-options input[type=checkbox]{appearance:auto;width:1.05rem;height:1.05rem;min-height:0;padding:0;margin:0;flex:none;accent-color:var(--corpus-accent)}
+  .analysis-explorer [data-video-rows] td:nth-child(5){white-space:nowrap}
+  .analysis-explorer .trend-agreement{margin-top:1rem}
+  .analysis-explorer .trend-agreement h3{font-size:1rem;margin:0 0 .4rem}
+  .analysis-explorer .trend-agreement td.holds{font-weight:650;color:var(--corpus-accent)}
+  .analysis-explorer .row-note{display:block;color:var(--corpus-muted);font-size:.78rem;line-height:1.4;margin-top:.15rem}
+  .analysis-explorer .trend-legend{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.85rem;color:var(--corpus-muted);margin:.4rem 0 .8rem}
+  .analysis-explorer .trend-legend span{display:inline-flex;align-items:center;gap:.4rem}
+  .analysis-explorer .trend-legend i{width:.8rem;height:.8rem;border-radius:50%;display:inline-block}
   .analysis-explorer .controls legend{color:var(--corpus-text);font-size:.85rem;font-weight:650;padding:0;margin-bottom:.65rem}
   .analysis-explorer .dimension-explanation{margin:0;padding:.55rem .7rem;border:1px solid var(--corpus-line);border-radius:.4rem;font-size:.85rem}
   .analysis-explorer .table-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.75rem;border-top:1px solid var(--corpus-line);padding-top:.75rem;min-width:0}
@@ -475,6 +609,9 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   .analysis-explorer .table-scroll{overflow:auto;max-width:100%;min-width:0;border:1px solid var(--corpus-line);border-radius:.45rem}
   .analysis-explorer .table-scroll:focus-within{border-color:var(--corpus-accent)}
   .analysis-explorer table{width:100%;border-collapse:collapse;min-width:38rem;font-size:.86rem}
+  /* Recording rankings: keep short columns on one line and scroll sideways on phones rather than wrap word by word. */
+  .analysis-explorer #analysis-videos table{min-width:52rem}
+  .analysis-explorer #analysis-videos td:nth-child(2),.analysis-explorer #analysis-videos td:nth-child(3){min-width:8.5rem}
   .analysis-explorer th,.analysis-explorer td{padding:.55rem .65rem;border-bottom:1px solid var(--corpus-line);text-align:left;vertical-align:top}
   .analysis-explorer tbody tr:last-child>*{border-bottom:0}
   .analysis-explorer tbody tr:hover{background:color-mix(in srgb,var(--corpus-accent) 5%,transparent)}

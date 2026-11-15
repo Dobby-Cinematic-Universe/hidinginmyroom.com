@@ -11,7 +11,9 @@ export async function validatePassageInsights(data, release) {
   if (!Array.isArray(data.rankings)||data.rankings.length!==qids.length||!Array.isArray(data.eligible_recordings)||data.eligible_recordings.length!==qids.length) return null;
   for (const [qi,rows] of data.rankings.entries()) {
     if (!Array.isArray(rows)||rows.length>release.videos.length) return null;
-    if(!Number.isInteger(data.eligible_recordings[qi])||data.eligible_recordings[qi]!==rows.length)return null;
+    const cap=data.ranking_cap;
+    if(cap!==undefined&&(!Number.isInteger(cap)||cap<1))return null;
+    if(!Number.isInteger(data.eligible_recordings[qi])||(cap===undefined?data.eligible_recordings[qi]!==rows.length:rows.length!==Math.min(cap,data.eligible_recordings[qi])))return null;
     const seen=new Set();
     for(const r of rows){
       if(!Array.isArray(r)||r.length!==12||!Number.isInteger(r[0])||r[0]<0||r[0]>=data.recording_ids.length||seen.has(r[0])||!Number.isInteger(r[1])||r[1]<3) return null;
@@ -65,7 +67,7 @@ export function renderPassageInsights(root,release,data){
   function draw(){
     const qi=data.question_ids.indexOf(question.value),rows=rankPassageVariation(data,question.value,metric.value).filter(r=>r[1]>=Number(minimum.value)&&(!category.value||(release.videos[r[0]].category||'unknown')===category.value));
     page=Math.min(page,Math.max(0,Math.ceil(rows.length/20)-1));
-    summary.textContent=`${data.eligible_recordings[qi].toLocaleString()} recordings have at least three scored passages for this question. Showing ${rows.length?page*20+1:0}–${Math.min(rows.length,(page+1)*20)} of ${rows.length} recordings matching these controls.`;
+    summary.textContent=`${data.eligible_recordings[qi].toLocaleString()} recordings have at least three scored passages for this question.${data.ranking_cap&&data.eligible_recordings[qi]>data.ranking_cap?` The ${data.ranking_cap.toLocaleString()} with the largest spread between passages are listed.`:''} Showing ${rows.length?page*20+1:0}–${Math.min(rows.length,(page+1)*20)} of ${rows.length} recordings matching these controls.`;
     const[t,body]=table(['Recording','Passages','Mean','Passage SD','End − start','Adjacent change','Extremes']);
     for(const r of rows.slice(page*20,(page+1)*20)){
       const video=release.videos[r[0]],tr=document.createElement('tr'),title=cell(tr,'');title.append(link(video.href,video.title));

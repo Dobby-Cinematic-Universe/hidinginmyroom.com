@@ -2,6 +2,7 @@ import {readFile} from 'node:fs/promises';
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {localPreviewRoot} from '../local-preview';
+import {versionPhraseText} from './public-reader-extras.mjs';
 
 async function sidecar<T>(name:string,empty:T):Promise<T>{
   const root=localPreviewRoot();
@@ -30,6 +31,13 @@ export function relatedRecordings(){
 export async function recordingChapters(id:string):Promise<Chapter[]>{
   chapters??=sidecar<{recordings:Record<string,Chapter[]>}>('chapters.json',{recordings:{}}).then(v=>v.recordings);
   return (await chapters)[id]??[];
+}
+export interface VersionLink {target:string;phrase:string}
+let versions:Promise<Record<string,VersionLink[]>>|undefined;
+/** Other recordings of the same video (another archive copy, a re-upload, the same broadcast elsewhere). Machine-detected. */
+export async function versionLinks(id:string):Promise<VersionLink[]>{
+  versions??=sidecar<{recordings:Record<string,VersionLink[]>}>('version-links.json',{recordings:{}}).then(v=>v.recordings);
+  return ((await versions)[id]??[]).map((v)=>({target:v.target,phrase:versionPhraseText(v.phrase)}));
 }
 export const searchAliases=()=>sidecar<{sets:{canonical:string;forms:string[]}[]}>('search-aliases.json',{sets:[]});
 export interface MentionBurst {subject:string;type:'game'|'product'|'platform';start:string;end:string;months:number;ratio:number|null;recordings:number;end_known:boolean;both_transcript_kinds:boolean}

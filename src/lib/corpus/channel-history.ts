@@ -5,8 +5,11 @@ import {localPreviewRoot} from '../local-preview';
 import {projectChannelHistory} from './public-channel-history.mjs';
 
 export interface SubscriberReading {date:string;subscribers:number;rounded_to:number;source:string}
+/** Month-end values worked out from archived statistics pages; `sources` are those pages. */
+export interface MonthEndStatistics {date:string;subscribers:number|null;rounded_to:number|null;views:number|null;sources:string[]}
 export interface ChannelHistory {
-  channels:{key:'main'|'second';label:string;readings:SubscriberReading[];names:{name:string|null;first_seen:string;last_seen:string;changed_after:string|null;changed_before:string|null;source:string}[]}[];
+  channels:{key:'main'|'second';label:string;readings:SubscriberReading[];names:{name:string|null;first_seen:string;last_seen:string;changed_after:string|null;changed_before:string|null;source:string}[];
+    monthly:MonthEndStatistics[];view_readings:{date:string;views:number;source:string}[];monthly_views_uncertainty:number|null}[];
   early_views:{period:string;videos:number;median_views:number;p25:number;p75:number;median_age_days:number;per_1000_subscribers:number|null}[];
 }
 

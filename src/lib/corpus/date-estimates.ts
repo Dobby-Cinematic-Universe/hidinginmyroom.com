@@ -5,7 +5,7 @@ import {localPreviewRoot} from '../local-preview';
 import {describeDateEstimate,circaDate,duplicateOf} from './public-date-estimates.mjs';
 
 export interface DateEstimate {
-  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date'|'archived_listing'|'archived_page'|'evidence_date'|'collection_period';
+  basis:'exact_copy'|'full_copy'|'text_estimate'|'title_date'|'archived_listing'|'archived_page'|'evidence_date'|'collection_period'|'source_recording'|'source_estimate'|'series_period';
   date:string;
   copy:{kind:'exact'|'full'|'partial';recording_id:string;date:string}|null;
   estimate:{month:string;low:string;high:string;confidence_band:number}|null;
@@ -13,7 +13,9 @@ export interface DateEstimate {
   page?:{date:string;captured:string;source:string};
   evidence?:{from:string;to:string;sources:string[]};
   narrowed_by?:string[];
-  period?:{from:string;to:string;collection:string;dated_members:number};
+  period?:{from:string;to:string;collection?:string;dated_members?:number;rule?:string};
+  /** Another recording whose transcript holds this recording's words: dated (date, tier, relation) or undated (relation only). */
+  source?:{recording_id:string;date?:string;tier?:'A'|'B';relation:'same_recording'|'not_after'|'inside_undated_recording'};
 }
 type Release={recordings:Record<string,DateEstimate>};
 let cached:Promise<Release>|undefined;

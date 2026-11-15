@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {filterAndSortVideos,groupTimeSeries,hrefAtTime,largestFactorLoadings,scoreFor,trendInterpretation,validateAnalysisRelease} from '../../src/lib/analysis/explorer.mjs';
+import {RECORDING_KINDS,filterAndSortVideos,groupTimeSeries,hrefAtTime,largestFactorLoadings,meanInterval,questionLabel,scoreFor,trendInterpretation,validateAnalysisRelease} from '../../src/lib/analysis/explorer.mjs';
 import {analysisShardId} from '../../src/lib/analysis/shards.mjs';
 
 const bank=JSON.parse(await readFile(new URL('../../src/data/analysis/questions.json',import.meta.url),'utf8'));
@@ -57,9 +57,40 @@ test('sorts unknown scores last while filtering by date, category and title',()=
 
 test('uses the same records for a time-series mean and score ranges, and omits incomplete bands',()=>{
   const data=fixture(),series=groupTimeSeries(data.videos,q1.id,'question','year');
-  assert.deepEqual({...series[0],low:Number(series[0].low.toFixed(6))},{period:'2020',x:2020,mean:.5,low:.4,high:.6,n:2,coverage:.7});
+  assert.deepEqual({...series[0],low:Number(series[0].low.toFixed(6))},{period:'2020',x:2020,mean:.5,ci_low:null,ci_high:null,low:.4,high:.6,n:2,coverage:.7});
   data.videos[1].question_scores[q1.id].low=null;
   assert.equal(groupTimeSeries(data.videos,q1.id,'question','year')[0].low,null);
+});
+
+test('period means carry a 95% interval from five recordings on, and none below',()=>{
+  assert.deepEqual(meanInterval([1,2,3,4]),{ci_low:null,ci_high:null});
+  const interval=meanInterval([1,2,3,4,5,6]);
+  assert.ok(Math.abs(interval.ci_low-(3.5-1.96*Math.sqrt(3.5/6)))<1e-12&&Math.abs(interval.ci_high-(3.5+1.96*Math.sqrt(3.5/6)))<1e-12);
+});
+
+test('names questions readably and filters by kind, subject, versions and short texts',()=>{
+  assert.equal(questionLabel({id:'style_self_critical',domain:'expressed_style'}),'Self critical · style');
+  assert.equal(questionLabel({id:'reads_messages_aloud',domain:'content'}),'Reads messages aloud · content');
+  const design=(kind,extra={})=>({kind,words:900,windows:2,short_text:false,fit_cohort:true,factor_scores:true,version_of:null,...extra});
+  const rows=[['a','video',{}],['b','stream',{}],['c','video',{version_of:'a'}],['d','clip',{short_text:true,windows:1}]].map(([id,kind,extra])=>({recording_id:id,title:id,date:'2020-01-01',category:null,question_scores:{q:{value:1}},classifications:{class_subject:{choice:id==='b'?'food_and_drink':'daily_life'}},design:design(kind,extra)}));
+  const ids=(filters)=>filterAndSortVideos(rows,filters,'question','q').map(v=>v.recording_id).sort().join('');
+  assert.equal(ids({}),'abcd');
+  assert.equal(ids({versions:'one',short_texts:'hide'}),'ab');
+  assert.equal(ids({recording_kind:'video'}),'ac');
+  assert.equal(ids({subject:'food_and_drink'}),'b');
+  assert.equal(RECORDING_KINDS.join(),'video,stream,clip');
+});
+
+test('accepts checked design facts on a release and rejects malformed ones',()=>{
+  const data=fixture();
+  const design={kind:'video',words:900,windows:2,short_text:false,fit_cohort:true,factor_scores:true,version_of:null};
+  data.videos[0].design={...design};data.videos[1].design={...design,kind:'stream',version_of:data.videos[0].recording_id,fit_cohort:false};
+  data.design={window_words:500,min_words:20,second_rater:null};
+  assert.equal(validateAnalysisRelease(structuredClone(data)).videos[1].design.version_of,data.videos[0].recording_id);
+  for(const bad of [{...design,kind:'podcast'},{...design,words:-1},{...design,version_of:'rec_missing'},{...design,extra:1},{...design,version_of:data.videos[0].recording_id}]){
+    const broken=structuredClone(data);broken.videos[0].design=bad;assert.throws(()=>validateAnalysisRelease(broken));
+  }
+  const broken=structuredClone(data);broken.design={window_words:0,min_words:20,second_rater:null};assert.throws(()=>validateAnalysisRelease(broken));
 });
 
 test('uses chronological month positions and ignores unresolved dates',()=>{

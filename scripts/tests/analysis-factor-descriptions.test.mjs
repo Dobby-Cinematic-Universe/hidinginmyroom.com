@@ -62,7 +62,7 @@ test('unknown factors and incomplete annotations are excluded', async () => {
   assert.deepEqual(Object.keys(await resolveFactorDescriptions(release, annotations)), ['F1']);
 });
 
-test('authored annotations cover nine factors with explicit saved-orientation caveats', async () => {
+test('authored annotations cover eight factors bound to the windowed analysis fit', async () => {
   const annotations = JSON.parse(await readFile(new URL('../../src/data/analysis/factor-descriptions.json', import.meta.url), 'utf8'));
   const pin = JSON.parse(await readFile(new URL('../../analysis-release.json', import.meta.url), 'utf8'));
   assert.equal(annotations.corpus_release_id, pin.corpus_release);
@@ -70,17 +70,16 @@ test('authored annotations cover nine factors with explicit saved-orientation ca
   assert.equal(annotations.model, pin.model);
   assert.equal(annotations.generated_at, pin.source_generated_at);
   assert.equal(annotations.loadings_sha256, pin.loadings_sha256);
-  assert.deepEqual(Object.keys(annotations.descriptions), Array.from({ length: 9 }, (_, index) => `F${index + 1}`));
-  assert.match(annotations.descriptions.F5.higher, /^Less expressed care/);
-  assert.match(annotations.descriptions.F5.lower, /^More expressed care/);
-  assert.match(annotations.descriptions.F6.higher, /^Calmer/);
-  assert.match(annotations.descriptions.F1.higher, /^More certain/);
-  assert.match(annotations.descriptions.F1.lower, /^More qualified/);
-  assert.match(annotations.descriptions.F2.higher, /^More expressed disappointment/);
-  assert.match(annotations.descriptions.F2.lower, /^More positive/);
-  assert.match(annotations.descriptions.F8.higher, /^Less conflict, rebuttal/);
-  assert.match(annotations.descriptions.F9.higher, /^Less narrative or scene setting/);
-  assert.match(annotations.descriptions.F9.lower, /^More narrative or scene-setting/);
-  assert.match(annotations.descriptions.F7.description, /not a diagnosis/);
-  assert.match(annotations.descriptions.F8.description, /not additional live speakers/);
+  assert.deepEqual(Object.keys(annotations.descriptions), Array.from({ length: 8 }, (_, index) => `F${index + 1}`));
+  assert.match(annotations.descriptions.F1.higher, /^More direct, organized, persuasive/);
+  assert.match(annotations.descriptions.F2.higher, /^More positive, proud or hopeful/);
+  assert.match(annotations.descriptions.F3.higher, /^More talk about oneself/);
+  assert.match(annotations.descriptions.F4.higher, /^More compassionate, respectful and warm/);
+  assert.match(annotations.descriptions.F5.higher, /^More storytelling/);
+  assert.match(annotations.descriptions.F5.lower, /^More answering back/);
+  assert.match(annotations.descriptions.F6.higher, /^More energetic, angry or confrontational/);
+  assert.match(annotations.descriptions.F6.lower, /^Calmer/);
+  assert.match(annotations.descriptions.F7.higher, /^More joking, playful/);
+  assert.match(annotations.descriptions.F8.higher, /^More qualified, tentative/);
+  assert.match(annotations.descriptions.F8.lower, /^More certain, categorical/);
 });

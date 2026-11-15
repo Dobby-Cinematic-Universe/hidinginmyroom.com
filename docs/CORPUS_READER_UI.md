@@ -210,3 +210,73 @@ Sidecars beside the catalog, each optional and projected by `scripts/prepare-rel
 
 `--local-analysis=<run directory>` lets a candidate rehearse with a completed local analysis run before its bundle
 is pinned.
+
+### Source recordings and passed-on estimates (2026-11-14, second update)
+
+`date-estimates.json` has three more forms and one more optional field. All are projected and checked by
+`src/lib/corpus/public-date-estimates.mjs`; nothing else on the site switches on the basis.
+
+- `basis: source_recording` carries `source: {recording_id, date, tier, relation}`. The recording's words lie inside
+  a dated recording (tier `A` firm, `B` probable) and it takes that recording's catalog date. With
+  `relation: same_recording` it is shown as "circa <date> (part of a dated recording)" and orders and filters like a
+  circa date. With `relation: not_after` the recording found may only be a later replay; it is shown as
+  "<date> or earlier" and is never a circa date. The recording page links the source recording.
+- `basis: source_estimate` carries `source: {recording_id, basis: text_estimate, relation: inside_undated_recording}`
+  and repeats the containing recording's `estimate` (and `narrowed_by`). The projection rejects it unless both
+  equal the containing recording's own row.
+- `basis: series_period` carries `period: {from, to, rule}` with `rule` `same clip name` (one day) or
+  `between numbered neighbours` (a range). Never a circa date.
+- A dated `source` may also accompany `title_date`, `archived_listing` and `archived_page`. The explanation then
+  adds that the words are also found inside a recording of that date, and says so when it differs from a title date
+  by more than a month.
+- Evidence source names gained `excerpt` (a dated excerpt cut from the recording) and `replay` (older dated
+  material played back in it).
+
+Two more reader additions of the same update:
+
+- `version-links.json`: other recordings of the same video (a second archive copy, a re-upload, the same broadcast
+  on another platform). Each link is `{target, phrase}`; the phrase describes the other recording compared with this
+  one and must match the fixed forms of `VERSION_PHRASE` in `src/lib/corpus/public-reader-extras.mjs`. The
+  recording page lists them as "Other versions of this video" under the title, beside "Refers back to", and leaves out
+  copies it already lists under "Other copies".
+- `channel-history.json` may carry, per channel, `monthly` (month-end subscriber and total-view values worked out
+  from archived copies of a statistics site, each row with the archived pages it rests on), `view_readings` (total
+  views shown on archived copies of the channel's About page) and `monthly_views_uncertainty`. The channel history
+  page draws the month-end subscriber values as a thin line and has a "Total views" section. Sources are checked
+  against fixed address forms in `src/lib/corpus/public-channel-history.mjs`.
+
+## Text-analysis explorer for window-based releases (2026-11-14)
+
+An analysis release may now say how it was made (`design` on the release) and how each recording entered it
+(`design` on a recording). Both are optional and checked by `src/lib/analysis/explorer.mjs`; a release without
+them is shown as before.
+
+- **Release `design`:** `window_words` (every passage holds this many words), `min_words` (shorter transcripts are
+  not rated), and `second_rater`: a second model's name, how many recordings and passages it rated, its agreement
+  with the first model per dimension, and optionally the direction of each dimension's trend by kind and model.
+- **Recording `design`:** `kind` (video, stream or clip), `words`, `windows`, `short_text` (shorter than one
+  passage), `fit_cohort`, `factor_scores`, and `version_of` (the recording that represents this one).
+  A recording may also carry `second`: the second model's score on each fitted dimension.
+- **Recordings by dimension** opens on the first dimension. Filters: kind, year, category, subject, length
+  (3 or 10 passages and more) and a title search. Two boxes, on by default, keep one version of each recording
+  and leave out texts shorter than one passage. The table shows kind, words and passages, the score, and for a
+  question the spread across passages.
+- **Scores over time** draws videos and streams as separate lines with a 95% interval of each period mean.
+  A period with fewer than five recordings is a hollow point without an interval. Hovering, or focusing the chart
+  and using the arrow keys, shows every series at one period. "Which trends hold" under the chart needs a
+  second model's scores (`design.second_rater`); the table and the row notes call it the second model.
+- **Recording map** starts on the recording closest to the centre and can be coloured by kind. A copy or a short
+  text has no place on the map; the panel names the recording that represents it.
+- **Time, genre and candidate shifts** has a kind selector; `temporal-comparisons.json` carries the same analysis
+  for videos and streams apart under `kinds`.
+- **Inside recordings** lists, per question, the 500 recordings with the largest spread between passages
+  (`ranking_cap` in `passage-insights.json`).
+- Questions are named by the bank's `short_name`, which is a readable name from version 2 on
+  (`questionLabel` in `explorer.mjs` falls back to a name made from the question id).
+- The chart colours for videos, streams and clips (`--analysis-series-1` to `-3`) were checked against the corpus
+  panel colour for lightness, chroma, colour-vision separation and contrast.
+- Factors are oriented so that the largest loading is positive (`pipeline/typesafe_analysis.py`), so a higher
+  score means more of what the dimension is named after.
+
+`src/data/analysis/questions.json` is version 2 of the question bank. `src/data/analysis/factor-descriptions.json`
+still belongs to the published analysis; it is replaced together with `analysis-release.json` at publication.

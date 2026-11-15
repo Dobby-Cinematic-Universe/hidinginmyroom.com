@@ -16,7 +16,7 @@ import type { CorpusRecordingSummary } from '../../../lib/corpus/types';
 import { recordingAttribution } from '../../../lib/corpus/attribution';
 import { recordingDateEstimate, recordingOverlay } from '../../../lib/corpus/date-estimates';
 import { recordingDateNote, describeDateBasis } from '../../../lib/corpus/date-notes';
-import { relatedRecordings, recordingChapters } from '../../../lib/corpus/reader-extras';
+import { relatedRecordings, recordingChapters, versionLinks } from '../../../lib/corpus/reader-extras';
 import { recordingDateTexts } from '../../../lib/corpus/date-estimates';
 import { titleHistory } from '../../../lib/corpus/title-history';
 import { loadSummaryRelease } from '../../../lib/summaries/release';
@@ -71,6 +71,11 @@ const relatedRows = related.forward.has(recording.recording_id) || related.backw
 const linkDate = await recordingDateTexts();
 const refersTo = (related.forward.get(recording.recording_id) ?? []).flatMap((l) => { const row = relatedRows.get(l.target); return row ? [{ row, href: momentHref(l.position_ms), ms: l.position_ms }] : []; });
 const referredBy = (related.backward.get(recording.recording_id) ?? []).flatMap((l) => { const row = relatedRows.get(l.source); return row ? [{ row }] : []; });
+// Other recordings of the same video (another archive copy, a re-upload, the same broadcast elsewhere); copies already listed above are left out.
+const versionRows = await versionLinks(recording.recording_id);
+const versionCatalog = versionRows.length ? new Map((await loadCorpusCatalog()).recordings.map((r) => [r.recording_id, r])) : new Map();
+const listedCopies = new Set([...otherCopies.map((r) => r.recording_id), ...(duplicateTarget ? [duplicateTarget.recording_id] : [])]);
+const versions = versionRows.flatMap((v) => { const row = versionCatalog.get(v.target); return row && !listedCopies.has(v.target) ? [{ row, phrase: v.phrase }] : []; });
 const chapters = mainTranscript ? await recordingChapters(recording.recording_id) : [];
 const platforms = [...new Set(recording.sources.map((source) => source.platform))];
 const noAudio = annotation?.media_status === 'no_audio';
@@ -107,6 +112,12 @@ const noAudio = annotation?.media_status === 'no_audio';
       {refersTo.length > 0 && <p><strong>Refers back to:</strong> {refersTo.map((x, i) => <>{i > 0 && '; '}<a href={`/corpus/videos/${x.row.slug}/`}>{x.row.title}</a> ({linkDate(x.row.recording_id, x.row.date_label, 'date unresolved')}){x.href && <> · <a href={x.href}>jump to the mention ({momentTime(x.ms)})</a></>}</>)}</p>}
       {referredBy.length > 0 && <p><strong>Referred to in:</strong> {referredBy.map((x, i) => <>{i > 0 && '; '}<a href={`/corpus/videos/${x.row.slug}/`}>{x.row.title}</a> ({linkDate(x.row.recording_id, x.row.date_label, 'date unresolved')})</>)}</p>}
       <p class="corpus-muted">Detected automatically from a spoken reference to an earlier recording. It can be wrong.</p>
+    </section>}
+
+    {versions.length > 0 && <section class="recording__related recording__versions" aria-labelledby="versions-title">
+      <p id="versions-title"><strong>Other versions of this video</strong></p>
+      <ul>{versions.map((x) => <li><a href={`/corpus/videos/${x.row.slug}/`}>{x.row.title}</a> <span class="corpus-muted">· {linkDate(x.row.recording_id, x.row.date_label, 'date unresolved')} · {x.phrase}</span></li>)}</ul>
+      <p class="corpus-muted">Found by machine from video ids, lengths and transcripts. Each note compares the other recording with this one. It does not say why a version exists.</p>
     </section>}
 
     {chapters.length > 0 && <details class="recording__chapters">
@@ -348,6 +359,8 @@ const noAudio = annotation?.media_status === 'no_audio';
   .transcript__segments li.is-playing { border-color: var(--corpus-accent); background: var(--corpus-panel-strong); }
   .recording__related { margin: .6rem 0; font-size: .92rem; }
   .recording__related p { margin: .2rem 0; }
+  .recording__versions ul { margin: .2rem 0; padding-left: 1.1rem; display: grid; gap: .2rem; }
+  .recording__versions a { overflow-wrap: anywhere; }
   .recording__chapters { margin: .6rem 0; }
   .recording__chapters > summary { cursor: pointer; color: var(--corpus-muted); padding: .35rem 0; }
   .recording__chapters li a { display: inline-block; min-width: 4.2rem; padding-block: .15rem; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; }

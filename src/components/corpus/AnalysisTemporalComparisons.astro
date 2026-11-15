@@ -3,13 +3,13 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
 ---
 <section id="analysis-temporal-comparisons" data-temporal-root aria-labelledby="temporal-title">
   <h2 id="temporal-title">Time, genre and candidate shifts</h2>
-  <p>Compare the observed archive with a common genre mix, inspect cohort distributions, and explore changes in monthly scores.</p>
+  <p>Compare the observed archive with a common genre mix, inspect cohort distributions, and explore changes in monthly scores. <span data-kind-note hidden>Videos and streams are analysed apart, because a pooled line would follow their changing mix.</span></p>
   <p data-status role="status">Waiting for temporal comparisons…</p>
   <div data-content hidden>
-    <label>Factor <select data-factor></select></label>
+    <div class="temporal-controls"><label data-kind-row hidden>Kind <select data-kind><option value="video">Videos</option><option value="stream">Streams</option></select></label><label>Factor <select data-factor></select></label></div>
     <p data-cohort class="analysis-note"></p>
     <h3>Raw and common-mix yearly trends</h3>
-    <p class="analysis-note">Raw means use each year’s recordings. Adjusted means use a fixed genre mix from the dated cohort. Estimates require at least five recordings in every target stratum; unsupported years have gaps. These are descriptive means.</p>
+    <p class="analysis-note">Raw means use each year’s recordings. Adjusted means use a fixed genre mix from the dated cohort. Estimates require at least five recordings in every target stratum; unsupported years have gaps. Years with fewer than five recordings are listed in the table but not drawn. These are descriptive means.</p>
     <AnalysisChartFrame label="Raw and common-mix yearly trends"><div data-trend></div></AnalysisChartFrame>
     <details><summary>Yearly values and composition</summary><div class="table-scroll" data-year-table></div><p data-weights class="analysis-note"></p></details>
     <h3>Compare two cohorts</h3>
@@ -37,7 +37,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   const fmt=(n:number|null)=>n===null?'—':n.toFixed(3);
   const node=(tag:string,text?:string)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
   const svgNode=(tag:string,attrs:Record<string,string|number>,text?:string)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n;};
-  let data:TemporalComparisons;
+  let data:TemporalComparisons,whole:TemporalComparisons;
   function table(host:HTMLElement,heads:string[],rows:Array<Array<string|number>>) {
     const t=node('table'),h=node('thead'),tr=node('tr'),b=node('tbody'); heads.forEach(v=>{const cell=node('th',v);cell.setAttribute('scope','col');tr.append(cell);});h.append(tr);
     rows.forEach(row=>{const r=node('tr');row.forEach((v,i)=>{const cell=node(i?'td':'th',String(v));if(!i)cell.setAttribute('scope','row');r.append(cell);});b.append(r);});t.append(h,b);host.replaceChildren(t);
@@ -46,23 +46,28 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     const svg=svgNode('svg',{viewBox:'0 0 700 250',role:'img','aria-label':label});svg.append(svgNode('title',{},label));host.replaceChildren(svg);return svg;
   }
   function drawTrend(fid:string) {
-    const rows=data.trajectories[fid],svg=chart(get('[data-trend]'),'Yearly raw and common genre mix means');if(!rows.length)return;
+    // Years with fewer than five recordings stay in the table but are not drawn: one or two recordings are not a yearly mean.
+    const allRows=data.trajectories[fid],rows=allRows.filter(r=>r.raw.n>=5),svg=chart(get('[data-trend]'),'Yearly raw and common genre mix means');if(!rows.length)return;
     const vals=rows.flatMap(r=>[r.raw.mean,...(r.standardized.value===null?[]:[r.standardized.value])]);const lo=Math.min(...vals)-.15,hi=Math.max(...vals)+.15;
     const x=(p:string)=>calendarX(p,rows[0].period,rows.at(-1)!.period),y=(v:number)=>210-(v-lo)/(hi-lo)*175;
     for(const v of [lo,(lo+hi)/2,hi])svg.append(svgNode('text',{x:4,y:y(v)+4},v.toFixed(2)));
     for(const row of rows)svg.append(svgNode('text',{x:x(row.period),y:236,'text-anchor':'middle'},row.period));
-    for(const [key,color] of [['raw','#60a5fa'],['adjusted','#fb923c']] as const){let previous:{x:number;y:number;year:number}|null=null;
+    for(const [key,color] of [['raw','#3987e5'],['adjusted','#d95926']] as const){let previous:{x:number;y:number;year:number}|null=null;
       for(const row of rows){const v=key==='raw'?row.raw.mean:row.standardized.value;if(v===null){previous=null;continue;}const point={x:x(row.period),y:y(v),year:Number(row.period)};
         if(previous&&point.year===previous.year+1)svg.append(svgNode('line',{x1:previous.x,y1:previous.y,x2:point.x,y2:point.y,stroke:color,'stroke-width':2}));
         const c=svgNode('circle',{cx:point.x,cy:point.y,r:4,fill:color});c.append(svgNode('title',{},`${row.period}: ${key} ${fmt(v)}, n=${row.raw.n}`));svg.append(c);previous=point;}}
-    svg.append(svgNode('circle',{cx:48,cy:14,r:4,fill:'#60a5fa'}),svgNode('text',{x:58,y:18},'Raw'),svgNode('circle',{cx:113,cy:14,r:4,fill:'#fb923c'}),svgNode('text',{x:123,y:18},'Common genre mix'));
-    table(get('[data-year-table]'),['Year','Recordings','Raw mean','Common-mix mean','Target weight supported','Unsupported strata','Genre counts'],rows.map(r=>[r.period,r.raw.n,fmt(r.raw.mean),fmt(r.standardized.value),`${(100*r.standardized.weight_coverage).toFixed(1)}%`,r.standardized.unsupported_genres.join(', ')||'None',Object.entries(r.genre_counts).map(([g,n])=>`${g}: ${n}`).join('; ')]));
+    svg.append(svgNode('circle',{cx:48,cy:14,r:4,fill:'#3987e5'}),svgNode('text',{x:58,y:18},'Raw'),svgNode('circle',{cx:113,cy:14,r:4,fill:'#d95926'}),svgNode('text',{x:123,y:18},'Common genre mix'));
+    table(get('[data-year-table]'),['Year','Recordings','Raw mean','Common-mix mean','Target weight supported','Unsupported strata','Genre counts'],allRows.map(r=>[r.period,r.raw.n,fmt(r.raw.mean),fmt(r.standardized.value),`${(100*r.standardized.weight_coverage).toFixed(1)}%`,r.standardized.unsupported_genres.join(', ')||'None',Object.entries(r.genre_counts).map(([g,n])=>`${g}: ${n}`).join('; ')]));
     get('[data-weights]').textContent=`Fixed target: ${Object.entries(data.standardization.weights).map(([g,w])=>`${g} ${(w*100).toFixed(1)}%`).join(', ')}. ${data.standardization.rare_genre_rule}`;
   }
   function updateCohorts(fid:string) {
     const groups=data.distributions[fid][select('[data-group]').value as 'year'|'genre'];
     for(const selector of ['[data-first]','[data-second]']){const target=select(selector),old=target.value;target.replaceChildren(...groups.map(g=>new Option(`${g.group} (${g.distribution.n})`,g.group)));if(groups.some(g=>g.group===old))target.value=old;}
-    if(select('[data-first]').value===select('[data-second]').value&&groups.length>1)select('[data-second]').selectedIndex=groups.length-1;
+    if(select('[data-first]').value===select('[data-second]').value&&groups.length>1){
+      // Default to the first and last cohort with at least ten recordings.
+      const solid=groups.map((g,i)=>g.distribution.n>=10?i:-1).filter(i=>i>=0);
+      select('[data-first]').selectedIndex=solid.length>1?solid[0]:0;select('[data-second]').selectedIndex=solid.length>1?solid.at(-1)!:groups.length-1;
+    }
   }
   function drawDistribution(fid:string) {
     const groups=data.distributions[fid][select('[data-group]').value as 'year'|'genre'];const a=groups.find(g=>g.group===select('[data-first]').value),b=groups.find(g=>g.group===select('[data-second]').value);
@@ -77,7 +82,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       get('[data-contrast]').textContent+=` Shared supported strata cover ${(overlap*100).toFixed(1)}% of the target genre mix. ${common===null?'Common-mix difference suppressed because at least one target stratum has insufficient observations.':`Difference between common-mix means: ${fmt(common)}.`}`;
     }
     const rows=[a,b],lo=Math.min(...rows.map(g=>g.distribution.p10))-.1,hi=Math.max(...rows.map(g=>g.distribution.p90))+.1;const svg=chart(get('[data-distribution]'),'Selected cohort score distributions');const x=(v:number)=>100+550*(v-lo)/(hi-lo);
-    rows.forEach((g,i)=>{const d=g.distribution,y=70+i*80;svg.append(svgNode('text',{x:5,y:y-15},g.group),svgNode('line',{x1:x(d.p10),x2:x(d.p90),y1:y,y2:y,stroke:'#94a3b8','stroke-width':3}),svgNode('rect',{x:x(d.q25),y:y-13,width:Math.max(1,x(d.q75)-x(d.q25)),height:26,fill:'#60a5fa'}),svgNode('line',{x1:x(d.median),x2:x(d.median),y1:y-16,y2:y+16,stroke:'currentColor','stroke-width':2}),svgNode('circle',{cx:x(d.mean),cy:y,r:5,fill:'#fb923c'}));});
+    rows.forEach((g,i)=>{const d=g.distribution,y=70+i*80;svg.append(svgNode('text',{x:5,y:y-15},g.group),svgNode('line',{x1:x(d.p10),x2:x(d.p90),y1:y,y2:y,stroke:'#94a3b8','stroke-width':3}),svgNode('rect',{x:x(d.q25),y:y-13,width:Math.max(1,x(d.q75)-x(d.q25)),height:26,fill:'#3987e5'}),svgNode('line',{x1:x(d.median),x2:x(d.median),y1:y-16,y2:y+16,stroke:'currentColor','stroke-width':2}),svgNode('circle',{cx:x(d.mean),cy:y,r:5,fill:'#d95926'}));});
     [lo,(lo+hi)/2,hi].forEach(v=>svg.append(svgNode('text',{x:x(v),y:230,'text-anchor':'middle'},v.toFixed(2))));
     table(get('[data-distribution-table]'),['Cohort','n','Mean','SD','10th','25th','Median','75th','90th'],rows.map(g=>[g.group,g.distribution.n,...(['mean','sd','p10','q25','median','q75','p90'] as Array<keyof Distribution>).map(k=>fmt(g.distribution[k]))]));
   }
@@ -86,8 +91,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     get('[data-change-status]').textContent=`${changes.eligible_months} eligible months in ${changes.calendar_runs} calendar-contiguous runs; ${setting.candidates.length} candidate boundaries in this setting.`;
     const svg=chart(get('[data-change-chart]'),'Calendar spaced monthly factor means with candidate boundaries');
     if(points.length){const lo=Math.min(...points.map(p=>p.mean))-.15,hi=Math.max(...points.map(p=>p.mean))+.15;const x=(p:string)=>calendarX(p,points[0].period,points.at(-1)!.period),y=(v:number)=>210-175*(v-lo)/(hi-lo);
-      for(const p of points){const circle=svgNode('circle',{cx:x(p.period),cy:y(p.mean),r:3,fill:'#60a5fa'});circle.append(svgNode('title',{},`${p.period}: ${fmt(p.mean)}; n=${p.n}`));svg.append(circle);}
-      for(const c of setting.candidates){svg.append(svgNode('line',{x1:x(c.period),x2:x(c.period),y1:25,y2:213,stroke:'#fb923c','stroke-dasharray':'4 4'}));}
+      for(const p of points){const circle=svgNode('circle',{cx:x(p.period),cy:y(p.mean),r:3,fill:'#3987e5'});circle.append(svgNode('title',{},`${p.period}: ${fmt(p.mean)}; n=${p.n}`));svg.append(circle);}
+      for(const c of setting.candidates){svg.append(svgNode('line',{x1:x(c.period),x2:x(c.period),y1:25,y2:213,stroke:'#d95926','stroke-dasharray':'4 4'}));}
       for(const p of [points[0].period,points[Math.floor(points.length/2)].period,points.at(-1)!.period])svg.append(svgNode('text',{x:x(p),y:238,'text-anchor':'middle'},p));
       [lo,(lo+hi)/2,hi].forEach(v=>svg.append(svgNode('text',{x:2,y:y(v)},v.toFixed(2))));}
     table(get('[data-change-table]'),['Candidate month','Before → after mean','n before / after','Pooled-SD effect','Settings agreeing','Comparison span','Genre counts before / after'],setting.candidates.map(c=>[c.period,`${fmt(c.before.mean)} → ${fmt(c.after.mean)}`,`${c.before.n} / ${c.after.n}`,fmt(c.pooled_sd_effect),`${changeAgreement(changes,c.period)} / ${changes.sensitivity.length}`,`${c.before_start} – ${c.after_end}`,`${JSON.stringify(c.before_genre_counts)} / ${JSON.stringify(c.after_genre_counts)}`]));
@@ -95,13 +100,22 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   function update(){const fid=select('[data-factor]').value;drawTrend(fid);updateCohorts(fid);drawDistribution(fid);drawChanges(fid);}
   document.addEventListener('analysis-release-ready',async(event)=>{
     const detail=(event as CustomEvent<{release:AnalysisRelease;supplement?:{temporal_comparisons?:unknown}}>).detail;
-    const validated=validateTemporalComparisons(detail.supplement?.temporal_comparisons,detail.release);if(!validated){get('[data-status]').textContent='Temporal comparisons are unavailable for this release.';return;}data=validated;
+    const validated=validateTemporalComparisons(detail.supplement?.temporal_comparisons,detail.release);if(!validated){get('[data-status]').textContent='Temporal comparisons are unavailable for this release.';return;}whole=validated;
+    const kindSelect=select('[data-kind]'),kinds=whole.kinds?Object.keys(whole.kinds) as Array<'video'|'stream'>:[];
+    if(kinds.length){for(const option of Array.from(kindSelect.options))option.hidden=option.disabled=!kinds.includes(option.value as 'video'|'stream');kindSelect.value=kinds.includes('video')?'video':kinds[0];get('[data-kind-row]').hidden=false;get('[data-kind-note]').hidden=false;}
+    const firstFactor=detail.release.analysis.factors[0].id;
+    const choose=()=>{
+      data=(kinds.length?whole.kinds![kindSelect.value as 'video'|'stream']:whole) as TemporalComparisons;
+      const modes=data.changes[firstFactor].sensitivity,previous=select('[data-setting]').value;
+      select('[data-setting]').replaceChildren(...modes.map((m,i)=>new Option(`${m.averaging_months}-month averages · minimum ${m.minimum_months} months · penalty ${m.penalty_multiplier}`,String(i))));
+      if(Number(previous)<modes.length)select('[data-setting]').value=previous||'0';
+      get('[data-cohort]').textContent=`${data.cohort.n.toLocaleString()} ${kinds.length?`${kindSelect.selectedOptions[0].textContent!.toLowerCase()} with dimension scores`:'recordings with primary factor scores'}; ${data.cohort.dated_n.toLocaleString()} have month-resolved dates, ${data.cohort.undated_n.toLocaleString()} are excluded from time comparisons.`;
+      get('[data-method]').textContent=data.change_method;
+    };
+    choose();kindSelect.addEventListener('change',()=>{choose();update();});
     const descriptions=await resolveFactorDescriptions(detail.release,annotations);
     select('[data-factor]').replaceChildren(...detail.release.analysis.factors.map(f=>new Option(factorDisplayLabel(f,descriptions),f.id)));
-    const modes=data.changes[detail.release.analysis.factors[0].id].sensitivity;
-    select('[data-setting]').replaceChildren(...modes.map((m,i)=>new Option(`${m.averaging_months}-month averages · minimum ${m.minimum_months} months · penalty ${m.penalty_multiplier}`,String(i))));
-    get('[data-cohort]').textContent=`${data.cohort.n.toLocaleString()} recordings with primary factor scores; ${data.cohort.dated_n.toLocaleString()} have month-resolved dates, ${data.cohort.undated_n.toLocaleString()} are excluded from time comparisons.`;
-    get('[data-method]').textContent=data.change_method;get('[data-content]').hidden=false;get('[data-status]').textContent='';get('[data-status]').hidden=true;update();
+    get('[data-content]').hidden=false;get('[data-status]').textContent='';get('[data-status]').hidden=true;update();
     select('[data-factor]').addEventListener('change',update);select('[data-group]').addEventListener('change',()=>{updateCohorts(select('[data-factor]').value);drawDistribution(select('[data-factor]').value);});
     for(const selector of ['[data-first]','[data-second]'])select(selector).addEventListener('change',()=>drawDistribution(select('[data-factor]').value));select('[data-setting]').addEventListener('change',()=>drawChanges(select('[data-factor]').value));
   },{once:true});

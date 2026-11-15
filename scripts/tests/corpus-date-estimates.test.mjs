@@ -122,3 +122,78 @@ test('an undated clip of a dated collection gets the collection period, never a 
   assert.throws(()=>project({basis:'collection_period',date:'2018-01',copy:null,estimate:null,period:{from:'2017-06-03',to:'2019-01-27',collection:'twitch_clips',dated_members:389}}),/Invalid collection period basis/);
   assert.throws(()=>project({basis:'collection_period',date:'2017-06',copy:null,estimate:null,period:{from:'2017-06-03',to:'2019-01-27',collection:'other',dated_members:389}}),/Invalid collection period/);
 });
+
+test('a clip whose words lie inside a dated recording takes that recording’s date as a circa date',()=>{
+  const row=project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'same_recording'}});
+  const text=describeDateEstimate(row);
+  assert.equal(text.card,'circa 2018-02-14 (part of a dated recording)');
+  assert.match(text.detail,/found inside a longer recording dated 2018-02-14, so it is taken to be an excerpt.*used here as an estimate.*not the day this clip was made/);
+  assert.equal(circaDate(row),'2018-02-14');assert.equal(duplicateOf(row),undefined);assert.equal(text.copy.recording_id,'d');
+  assert.match(describeDateEstimate(project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'B',relation:'same_recording'}})).detail,/\(a probable match\)/);
+  // The source must be another, dated recording, and its catalog date is the only date the estimate can carry.
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-15',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-15',tier:'A',relation:'same_recording'}}),/Invalid source recording/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'u2',date:'2018-02-14',tier:'A',relation:'same_recording'}}),/Invalid source recording/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'u',date:'2018-02-14',tier:'A',relation:'same_recording'}}),/Invalid source recording/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'C',relation:'same_recording'}}),/Invalid source recording/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null}),/Invalid source recording basis/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:est,source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'same_recording'}}),/Invalid source recording basis/);
+  assert.throws(()=>project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'same_recording',path:'/mnt/archive'}}),/Unexpected source field/);
+});
+
+test('a source that may only be a later replay gives a latest possible day, never a circa date',()=>{
+  const row=project({basis:'source_recording',date:'2018-02-14',copy:null,estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'not_after'}});
+  const text=describeDateEstimate(row);
+  assert.equal(text.label,'Latest possible date');
+  assert.equal(text.card,'2018-02-14 or earlier (part of a dated recording)');
+  assert.match(text.detail,/latest possible day and not an estimate of the day itself\. Not a verified/);
+  assert.equal(circaDate(row),undefined);assert.equal(text.circa,undefined);
+});
+
+test('a clip inside an undated recording is given that recording’s wording estimate, unchanged',()=>{
+  const stream={basis:'text_estimate',date:'2023-07',copy:null,estimate:est,narrowed_by:['calendar_clue']};
+  const clip={basis:'source_estimate',date:'2023-07',copy:null,estimate:est,narrowed_by:['calendar_clue'],source:{recording_id:'u2',basis:'text_estimate',relation:'inside_undated_recording'}};
+  const out=projectDateEstimates({recordings:{u:clip,u2:stream}},catalog).recordings.u;
+  const text=describeDateEstimate(out);
+  assert.equal(text.card,'Estimated July 2023 (part of an undated recording)');
+  assert.match(text.detail,/no catalog date either\. That recording's estimate is passed on: July 2023; approximate range October 2022–August 2024\. Its range was narrowed using a weekday or date said in the recording\..*Not a verified/);
+  assert.equal(circaDate(out),undefined);assert.equal(text.copy.recording_id,'u2');assert.deepEqual(out.source,{recording_id:'u2',relation:'inside_undated_recording'});
+  // The passed-on estimate must be the containing recording's own, and that recording must be undated.
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,estimate:{...est,month:'2023-08'},date:'2023-08'},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,narrowed_by:['release_anchor']},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:clip}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,source:{recording_id:'d',basis:'text_estimate',relation:'inside_undated_recording'}},u2:stream}},catalog),/Invalid source estimate/);
+});
+
+test('a clip with no match of its own can take a day or a range from clips with the same name',()=>{
+  const day=project({basis:'series_period',date:'2025-04-25',copy:null,estimate:null,period:{from:'2025-04-25',to:'2025-04-25',rule:'same clip name'}});
+  assert.equal(describeDateEstimate(day).card,'Estimated 2025-04-25 (another file of the same clip)');
+  const range=project({basis:'series_period',date:'2025-07-21',copy:null,estimate:null,period:{from:'2025-07-21',to:'2025-08-14',rule:'between numbered neighbours'}});
+  const text=describeDateEstimate(range);
+  assert.equal(text.card,'Estimated 2025-07-21 to 2025-08-14 (numbered clip series)');
+  assert.match(text.detail,/No recording that holds these words was found\..*between 2025-07-21 and 2025-08-14\. Not a verified/);
+  assert.equal(circaDate(day),undefined);assert.equal(circaDate(range),undefined);
+  assert.throws(()=>project({basis:'series_period',date:'2025-07-21',copy:null,estimate:null,period:{from:'2025-07-21',to:'2025-08-14',rule:'same clip name'}}),/Invalid series period/);
+  assert.throws(()=>project({basis:'series_period',date:'2025-07-22',copy:null,estimate:null,period:{from:'2025-07-21',to:'2025-08-14',rule:'between numbered neighbours'}}),/Invalid series period basis/);
+  assert.throws(()=>project({basis:'series_period',date:'2025-07-21',copy:null,estimate:null,period:{from:'2025-07-21',to:'2025-08-14',rule:'guess'}}),/Invalid series period/);
+});
+
+test('a dated source can be mentioned beside a title or listing date, and a conflict with the title is stated',()=>{
+  const cat2=[{recording_id:'t',date_label:null,title:'Photos stream (circa 20181210)'},{recording_id:'d',date_label:'2018-10-27'}];
+  const row=projectDateEstimates({recordings:{t:{basis:'title_date',date:'2018-12-10',copy:null,estimate:null,source:{recording_id:'d',date:'2018-10-27',tier:'A',relation:'same_recording'}}}},cat2).recordings.t;
+  const text=describeDateEstimate(row);
+  assert.equal(text.card,'Estimated 2018-12-10 (title)');
+  assert.match(text.detail,/also found inside a recording dated 2018-10-27, which differs from the date in the title; neither is verified\.$/);
+  assert.equal(text.copy.recording_id,'d');
+  const listed=project({basis:'archived_listing',date:'2018-02-10',copy:null,estimate:null,listing:{from:'2018-02-10',to:'2018-02-12'},source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'same_recording'}});
+  assert.match(describeDateEstimate(listed).detail,/also found inside a recording dated 2018-02-14\.$/);
+  // A copy date needs no second witness, and a period never carries one.
+  assert.throws(()=>project({basis:'exact_copy',date:'2018-02-14',copy:{kind:'exact',recording_id:'d',date:'2018-02-14'},estimate:null,source:{recording_id:'d',date:'2018-02-14',tier:'A',relation:'same_recording'}}),/Invalid source recording/);
+});
+
+test('excerpt and replay evidence are named, and a range inside one month reads as such',()=>{
+  const ev=project({basis:'evidence_date',date:'2025-09-23',copy:null,estimate:null,evidence:{from:'2025-09-18',to:'2025-09-23',sources:['excerpt','replay','calendar_clue']}});
+  assert.equal(describeDateEstimate(ev).card,'circa 2025-09-23 (dated excerpt)');
+  assert.match(describeDateEstimate(ev).detail,/using a dated excerpt that was cut from this recording, older dated material played back in it and a weekday or date said in the recording/);
+  const tight=project({basis:'text_estimate',date:'2023-11',copy:null,estimate:{month:'2023-11',low:'2023-11',high:'2023-11',confidence_band:2},narrowed_by:['excerpt']});
+  assert.match(describeDateEstimate(tight).detail,/^Estimated November 2023; the range lies within November 2023\. The range was narrowed using a dated excerpt that was cut from this recording\./);
+});

@@ -2,6 +2,7 @@
 //   search aliases      other spellings of a game, product or place name found in the machine transcripts
 //   related recordings  a recording that names an earlier recording ("refers back to")
 //   chapters            machine-detected topic shifts in long recordings, with a few frequent words each
+//   version links       other recordings of the same video, with one fixed-form phrase each
 const FORM=/^[a-z0-9à-ÿ][a-z0-9à-ÿ '\-]{1,38}$/,WORD=/^[a-z][a-z'\-]{2,24}$/,ID=/^rec_[a-f0-9]{32}$/;
 const only=(o,allowed,what)=>{for(const k of Object.keys(o))if(!allowed.includes(k))throw Error(`Unexpected ${what} field ${k}`);};
 
@@ -30,6 +31,43 @@ export function expandQuery(query,sets,limit=6){
     }
   }
   return out;
+}
+
+// Other recordings of the same video (a second archive copy, a re-upload, the same broadcast on another platform),
+// each with one neutral phrase about how it relates to this one. The phrase is machine-generated; only the fixed
+// forms below pass, so no free text can enter the public file.
+const DUR='(?:\\d+ seconds?|\\d+ minutes?|\\d+ h \\d+ min|\\d+ h)';
+const PART=`(?:${DUR} (?:more|less) (?:at the start|at the end|inside)|\\d+ smaller differences?|the transcript ends where the shorter copy ends)`;
+const LEN=`(?:same length|(?:about the same length|${DUR} (?:longer|shorter))(?: \\(${PART}(?:; ${PART})*\\))?)`;
+export const VERSION_PHRASE=new RegExp(`^(?:another copy of the same upload \\(identical transcript\\)|same upload from another archive \\(separate machine transcript\\)|`+
+  `same recording by length, no shared video id \\(separate machine transcript\\)|same video id from another archive(?:, ${DUR} (?:longer|shorter))? \\(one copy has no transcript\\)|`+
+  `(?:another upload of the same video \\(different video id\\)|same broadcast on (?:YouTube|Twitch|Kick)|re-upload \\d+ days? later|earlier upload, \\d+ days? before|same video id|`+
+  `another recording of the same video|another copy with the same transcript), ${LEN})$`);
+// Reader wording for a stored phrase. The file keeps the fixed machine forms above; only the page text changes.
+// "more/less at the start" becomes "extra/missing at the start", "inside" becomes "in the middle", a single part that
+// repeats the whole difference is folded into it, and "1 days" becomes "1 day".
+export function versionPhraseText(phrase){
+  let text=String(phrase).replace(/\b1 days\b/g,'1 day');
+  text=text.replace(new RegExp(`(${DUR}) (longer|shorter) \\((${DUR}) (?:more|less) (at the start|at the end|inside)\\)$`),(all,whole,dir,part,where)=>
+    whole===part?`${whole} ${dir} ${where==='inside'?'in the middle':where}`:all);
+  return text.replace(new RegExp(`(${DUR}) (more|less) (at the start|at the end|inside)`,'g'),(_,d,dir,where)=>
+    `${d} ${dir==='more'?'extra':'missing'} ${where==='inside'?'in the middle':where}`);
+}
+export function projectVersionLinks(input,catalog){
+  const ids=new Set(catalog.map(r=>r.recording_id));const recordings={};
+  for(const [id,rows] of Object.entries(input?.recordings||{})){
+    if(!ids.has(id))continue;
+    if(!Array.isArray(rows)||rows.length>8)throw Error('Invalid version links');
+    const kept=[];const seen=new Set();
+    for(const row of rows){
+      only(row,['target','phrase'],'version link');
+      if(!ID.test(row.target||'')||row.target===id||seen.has(row.target)||typeof row.phrase!=='string'||!VERSION_PHRASE.test(row.phrase))throw Error('Invalid version link');
+      seen.add(row.target);
+      if(ids.has(row.target))kept.push({target:row.target,phrase:row.phrase});
+    }
+    if(kept.length)recordings[id]=kept;
+  }
+  return {schema_version:1,recordings};
 }
 
 export function projectRelatedRecordings(input,catalog){

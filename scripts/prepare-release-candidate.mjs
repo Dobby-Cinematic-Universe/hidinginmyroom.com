@@ -11,7 +11,7 @@ import {projectDateEstimates} from '../src/lib/corpus/public-date-estimates.mjs'
 import {projectTitleHistory} from '../src/lib/corpus/public-title-history.mjs';
 import {validateNetworkProjection} from '../src/lib/corpus/network-dynamics.mjs';
 import {projectDateNotes} from '../src/lib/corpus/public-date-notes.mjs';
-import {projectSearchAliases,projectRelatedRecordings,projectChapters,projectMentionBursts} from '../src/lib/corpus/public-reader-extras.mjs';
+import {projectSearchAliases,projectRelatedRecordings,projectChapters,projectMentionBursts,projectVersionLinks} from '../src/lib/corpus/public-reader-extras.mjs';
 import {projectChannelHistory} from '../src/lib/corpus/public-channel-history.mjs';
 import {normalizeSummaryUnicode} from '../src/lib/summaries/unicode.mjs';
 import {createDerivedGraph} from '../src/lib/corpus/derived-graph.mjs';
@@ -101,7 +101,7 @@ try {
   }
 }
 // Optional machine-derived reader aids: search spellings, "refers back to" links and topic-shift chapters.
-for(const [name,project_,empty] of [['search-aliases.json',v=>projectSearchAliases(v),{schema_version:1,sets:[]}],['related-recordings.json',v=>projectRelatedRecordings(v,records),{schema_version:1,recordings:{}}],['chapters.json',v=>projectChapters(v,records),{schema_version:1,recordings:{}}],['mention-bursts.json',v=>projectMentionBursts(v),{schema_version:1,bursts:[]}]]){
+for(const [name,project_,empty] of [['search-aliases.json',v=>projectSearchAliases(v),{schema_version:1,sets:[]}],['related-recordings.json',v=>projectRelatedRecordings(v,records),{schema_version:1,recordings:{}}],['chapters.json',v=>projectChapters(v,records),{schema_version:1,recordings:{}}],['version-links.json',v=>projectVersionLinks(v,records),{schema_version:1,recordings:{}}],['mention-bursts.json',v=>projectMentionBursts(v),{schema_version:1,bursts:[]}]]){
   let value=empty;
   try{value=project_(JSON.parse(await readFile(source+'/corpus/'+name,'utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
   await writeFile(root+'/src/data/corpus/'+name,JSON.stringify(value));

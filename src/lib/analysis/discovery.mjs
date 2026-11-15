@@ -68,10 +68,14 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
   umapOption.disabled=!umap;
   if(!umap)umapOption.textContent='UMAP · unavailable for this release';
   if(umap){const p=umap.method.parameters;root.querySelector('[data-discovery-umap-method]').textContent=`${umap.method.package} ${umap.method.package_version}; ${p.n_neighbors} neighbors; minimum distance ${p.min_dist}; ${p.metric} distance; seed ${p.random_state}. Precomputed from the same standardized ${data.factor_ids.length}-factor profiles as PCA. No scores or neighbors are recomputed when switching views.`;}
-  let selected=release.videos[0]?.recording_id;
+  // Start on the recording closest to the cohort centre rather than on whichever sorts first.
+  let selected=data.points.length?data.points.reduce((best,p)=>p.radius<best.radius?p:best).id:release.videos[0]?.recording_id;
+  const windowed=release.videos.some(v=>v.design);
+  if(windowed&&!color.querySelector('option[value="kind"]')){const option=el('option','Kind (video or stream)');option.value='kind';color.append(option);}
+  const noProfile=v=>!windowed||!v.design?'profile unavailable':v.design.short_text?'short text':v.design.version_of?'other version':'profile unavailable';
   let viewport=null;
   const cameras=new Map();
-  const optionNodes=new Map(release.videos.map(v=>{const option=el('option',`${v.title} · ${v.date??dateTexts[v.recording_id]??'Undated'}${points.has(v.recording_id)?'':' · profile unavailable'}`);option.value=v.recording_id;return [v.recording_id,option];}));
+  const optionNodes=new Map(release.videos.map(v=>{const option=el('option',`${v.title} · ${v.date??dateTexts[v.recording_id]??'Undated'}${points.has(v.recording_id)?'':` · ${noProfile(v)}`}`);option.value=v.recording_id;return [v.recording_id,option];}));
   let lastQuery=null,matches=[];
   const picker=root.querySelector('[data-discovery-picking]');
   const clearPicker=()=>{if(picker){picker.replaceChildren();picker.hidden=true;}};
@@ -99,7 +103,11 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     detail.append(el('h3',video.title));
     const link=el('a','Open transcript');link.href=video.href;detail.append(link);
     const inspect=el('button','Inspect passages');inspect.type='button';inspect.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('analysis-select-recording',{detail:{recording_id:selected}})));detail.append(inspect);
-    if(!points.has(selected)){detail.append(el('p','This recording has no complete saved factor profile, so a projection and neighbors cannot be calculated.'));return;}
+    if(!points.has(selected)){
+      const other=video.design?.version_of?videos.get(video.design.version_of):null;
+      detail.append(el('p',video.design?.short_text?'This text is shorter than one passage. It has question scores but no dimension scores, so it has no place on the map.':other?`This is another version of “${other.title}”. Dimension scores and the map use one version of each recording.`:'This recording has no complete saved factor profile, so a projection and neighbors cannot be calculated.'));
+      if(other){const jump=el('button',`Show “${other.title}”`);jump.type='button';jump.addEventListener('click',()=>chooseNeighbor(other.recording_id));detail.append(jump);}
+      return;}
     const nearby=neighbors.get(selected)??[];
     detail.append(el('p',`Full-profile distance from the cohort center: ${fmt(points.get(selected).radius)}. Greater distance identifies an unusual combination of saved scores; it is not a psychological classification.`));
     const list=el('ol');for(const item of nearby){const li=el('li');const button=el('button',`${videos.get(item.id).title} · distance ${fmt(item.distance)}`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(item.id));li.append(button);list.append(li);}detail.append(el('h4','Closest recording profiles'),list);
@@ -115,7 +123,7 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     const existing=chart.querySelector('svg');
     if(existing&&chart.dataset.color===color.value&&chart.dataset.projection===projection.id){markSelection(existing);return;}
     clearPicker();
-    summary.textContent=`${data.cohort_n.toLocaleString()} complete profiles are mapped; ${data.excluded_recordings} recordings lack a complete profile. ${projection.summary}`;
+    summary.textContent=windowed?`${data.cohort_n.toLocaleString()} distinct recordings are mapped. ${data.excluded_recordings.toLocaleString()} others are further versions of a recording or texts shorter than one passage. ${projection.summary}`:`${data.cohort_n.toLocaleString()} complete profiles are mapped; ${data.excluded_recordings} recordings lack a complete profile. ${projection.summary}`;
     const projectionPoints=new Map(plotPoints.map(p=>[p.id,p]));
     const xs=plotPoints.map(p=>p.x),ys=plotPoints.map(p=>p.y);
     const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
@@ -130,7 +138,8 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     const clipped=svgEl('g',{'clip-path':'url(#recording-map-clip)'}),layer=svgEl('g',{'data-map-layer':''}),axes=svgEl('g',{'pointer-events':'none'});clipped.append(layer);svg.append(clipped,axes);
     const categories=[...new Set(release.videos.map(v=>v.category??'Unknown'))].sort();
     const years=release.videos.map(v=>Number(v.date?.slice(0,4))).filter(y=>y>0),minyear=Math.min(...years),maxyear=Math.max(...years);
-    const paint=video=>color.value==='year'?(video.date?`hsl(${250-210*(Number(video.date.slice(0,4))-minyear)/(maxyear-minyear||1)} 70% 55%)`:'#888'):`hsl(${categories.indexOf(video.category??'Unknown')*137.508%360} 65% 55%)`;
+    const kindColors={video:'#3987e5',stream:'#d95926',clip:'#199e70'}; // validated for the dark panel, all pairs
+    const paint=video=>color.value==='kind'?(kindColors[video.design?.kind]??'#888'):color.value==='year'?(video.date?`hsl(${250-210*(Number(video.date.slice(0,4))-minyear)/(maxyear-minyear||1)} 70% 55%)`:'#888'):`hsl(${categories.indexOf(video.category??'Unknown')*137.508%360} 65% 55%)`;
     const circles=[];
     for(const point of plotPoints){const c=svgEl('circle',{cx:px(point.x),cy:py(point.y),r:2.7,fill:paint(videos.get(point.id)),opacity:.55});c.append(svgEl('title',{}));c.firstChild.textContent=`${videos.get(point.id).title} · ${projection.axes[0]} ${fmt(point.x)} · ${projection.axes[1]} ${fmt(point.y)}`;layer.append(c);circles.push(c);}
     mark(svg);
@@ -157,7 +166,7 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
       const list=el('ol');for(const candidate of candidates){const video=videos.get(candidate.id),li=el('li'),button=el('button',`${video.title} · ${video.date??dateTexts[video.recording_id]??'Undated'} · ${candidate.distance.toFixed(1)} px from click`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(candidate.id));li.append(button);list.append(li);}picker.append(list);list.querySelector('button')?.focus();
     });
     const legend=root.querySelector('[data-discovery-legend]');legend.replaceChildren();
-    for(const [text,fill] of color.value==='year'?[[`${minyear} (purple) → ${maxyear} (orange)`,''],['Undated','#888']]:categories.map(c=>[c,paint({category:c})])){const span=el('span',text);if(fill){const marker=el('i');marker.style.backgroundColor=fill;span.prepend(marker);}legend.append(span);}
+    for(const [text,fill] of color.value==='kind'?[['Videos',kindColors.video],['Streams',kindColors.stream],...(release.videos.some(v=>v.design?.kind==='clip'&&points.has(v.recording_id))?[['Clips',kindColors.clip]]:[])]:color.value==='year'?[[`${minyear} (purple) → ${maxyear} (orange)`,''],['Undated','#888']]:categories.map(c=>[c,paint({category:c})])){const span=el('span',text);if(fill){const marker=el('i');marker.style.backgroundColor=fill;span.prepend(marker);}legend.append(span);}
   }
   search.addEventListener('input',options);select.addEventListener('change',()=>{selected=select.value;show();});color.addEventListener('change',draw);view.addEventListener('change',draw);options();
   const variance=root.querySelector('[data-discovery-variance]');

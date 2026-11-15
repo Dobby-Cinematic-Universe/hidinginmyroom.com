@@ -9,7 +9,8 @@ export interface DatingOverview {
   estimates: [string, number][];
 }
 
-const order = ['Date from matching text', 'Date from archived listing', 'Date from combined evidence', 'Date in title', 'Estimated date', 'Estimated period', 'No date or estimate'];
+const order = ['Date from matching text', 'Date from the recording it is part of', 'Latest possible date', 'Date from archived video page', 'Date from archived listing', 'Date from combined evidence', 'Date in title',
+  'Estimated date', 'Estimate from the recording it is part of', 'Date from clips with the same name', 'Estimated period', 'No date or estimate'];
 let overview: Promise<DatingOverview> | undefined;
 
 /** Corpus-wide date-source counts, computed once per build and shared by every recording page. */

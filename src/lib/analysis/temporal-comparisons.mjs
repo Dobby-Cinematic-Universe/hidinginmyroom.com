@@ -7,7 +7,17 @@ export function compareDistributions(first, second) {
   return { difference, pooledSdEffect: variance !== null && variance > 1e-12 ? difference / Math.sqrt(variance) : null };
 }
 
+/** Validates the whole artifact and, in window-based releases, the same analysis for videos and streams apart. */
 export function validateTemporalComparisons(value, release) {
+  const checked = validateTemporalBody(value, release);
+  if (!checked || value.kinds === undefined) return checked;
+  const kinds = value.kinds;
+  if (kinds === null || typeof kinds !== 'object' || Array.isArray(kinds) || !Object.keys(kinds).length || Object.keys(kinds).some(kind => !['video', 'stream'].includes(kind))) return null;
+  for (const body of Object.values(kinds)) if (!validateTemporalBody(body, release)) return null;
+  return checked;
+}
+
+function validateTemporalBody(value, release) {
   const object = v => v !== null && typeof v === 'object' && !Array.isArray(v);
   const finite = v => typeof v === 'number' && Number.isFinite(v);
   const count = v => Number.isSafeInteger(v) && v >= 0;

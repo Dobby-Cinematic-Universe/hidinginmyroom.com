@@ -23,3 +23,10 @@ test('release binding rejects altered source, cohort, entropy, counters and rank
   const {release,data}=await fixture();assert.equal(await validatePassageInsights(data,release),data);
   for(const change of [d=>d.source_generated_at='old',d=>d.loadings_sha256='wrong',d=>d.recording_ids.reverse(),d=>d.groups[0].values[0][6]=1.1,d=>d.groups[0].values[0][4]=4,d=>d.rankings[0][0][0]=10,d=>d.locators[0][0][1]=2,d=>d.eligible_recordings[0]=8,d=>d.rankings[0].push(d.rankings[0][0])]){const copy=structuredClone(data);change(copy);assert.equal(await validatePassageInsights(copy,release),null);}
 });
+test('a capped ranking lists at most the cap and may count more eligible recordings',async()=>{
+  const {release,data}=await fixture();
+  const capped={...structuredClone(data),ranking_cap:1,eligible_recordings:[2]};capped.rankings[0]=[capped.rankings[0][1]];
+  assert.equal(await validatePassageInsights(capped,release),capped);
+  assert.equal((await validatePassageInsights({...capped,eligible_recordings:[1]},release))?.ranking_cap,1);
+  for(const change of [d=>d.ranking_cap=0,d=>d.rankings[0].push(data.rankings[0][0]),d=>d.eligible_recordings[0]=0]){const copy=structuredClone(capped);change(copy);assert.equal(await validatePassageInsights(copy,release),null);}
+});

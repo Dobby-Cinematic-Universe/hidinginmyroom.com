@@ -13,7 +13,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   <p data-insights-summary aria-live="polite"></p>
   <AnalysisChartFrame label="Passage variability distribution" minWidth="40rem"><div data-insights-plot></div></AnalysisChartFrame>
   <details><summary>Expand recording rankings and passage links</summary><div class="table-scroll" data-insights-ranks></div></details>
-  <p class="chart-note">Means and passage variability use word-count weights, differing from the original recording averages’ character weights. Rankings include every recording with at least three scored passages. Unequal chunk lengths, missing passages, and topic changes affect these descriptive comparisons.</p>
+  <p class="chart-note">Rankings list recordings with at least three scored passages. A large spread between passages can reflect a change of topic or of voice as well as noise in the ratings.</p>
   <h3>Ambiguity and coverage</h3>
   <label>Compare by <select data-insights-dimension><option value="all">Whole archive</option><option value="year">Year</option><option value="genre">Recording category</option><option value="quality">Transcript quality rating</option></select></label>
   <div class="table-scroll" data-insights-dashboard></div>
