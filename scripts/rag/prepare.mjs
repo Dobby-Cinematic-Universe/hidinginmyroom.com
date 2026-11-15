@@ -27,8 +27,15 @@ const summaries=JSON.parse(await readFile(path.join(base,'summaries/refreshed.js
 validateSummaryRelease(summaries,new Set(records.map(r=>r.recording_id)),{allowPrepared:true});
 if(summaryQualityFindings(summaries).length)throw Error('Placeholder summary content must be recovered before indexing');
 const byId=new Map(records.map(r=>[r.recording_id,r]));
+const chunkedSummaries=new Set(process.argv.filter(arg=>arg.startsWith('--chunk-synthesis=')).map(arg=>arg.slice('--chunk-synthesis='.length)));
+try{const previous=JSON.parse(await readFile(path.join(root,'manifest.json'),'utf8'));for(const d of previous.documents)if(d.kind==='synthesis'&&d.source_sha256)chunkedSummaries.add(d.summary_id);}catch(e){if(e.code!=='ENOENT')throw e;}
 const docs=[];await mkdir(path.join(root,'documents'),{recursive:true,mode:0o700});
-async function document(text,meta){const sha=hash(text),key=`${meta.kind}-${sha.slice(0,32)}.txt`;await writeFile(path.join(root,'documents',key),text,{mode:0o600});docs.push({key,sha256:sha,bytes:Buffer.byteLength(text),...meta});}
+async function document(text,meta){
+  if(meta.kind==='synthesis'&&chunkedSummaries.has(meta.summary_id)&&!meta.source_sha256){
+    const split=text.indexOf('\n\n'),header=text.slice(0,split+2),body=text.slice(split+2);let remaining=body,part=0;
+    while(remaining){let end=Math.min(12000,remaining.length);if(end<remaining.length){const boundary=remaining.lastIndexOf(' ',end);if(boundary>0)end=boundary+1;}const piece=remaining.slice(0,end);remaining=remaining.slice(end);await document(header+piece,{...meta,source_sha256:hash(text),part:part++});}return;
+  }
+  const sha=hash(text),key=`${meta.kind}-${sha.slice(0,32)}.txt`;await writeFile(path.join(root,'documents',key),text,{mode:0o600});docs.push({key,sha256:sha,bytes:Buffer.byteLength(text),...meta});}
 for(const s of summaries.summaries.filter(s=>s.kind==='transcript')){
   const r=byId.get(s.recording_id);if(!r||!['cloud','third_party'].includes(annotations[r.recording_id]?.origin))continue;
   const href=`/corpus/videos/${r.slug}/`;

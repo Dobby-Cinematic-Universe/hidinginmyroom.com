@@ -1,5 +1,5 @@
 {
-  "release": "91600ecfb89923a2c6aa98e2756a229f70a151b284d5ecff3d11c5e555827517",
+  "release": "db994ec585e67ab937b192ae20193548c17fe4fadc3d1d62cbc7912f3892781a",
   "documents": {
     "summary-7e6f4dfc848c03bbe06d8c3fcd074b53.txt": {
       "title": "Why I hated being Unemployed [kQUj6mZJEF8]",
@@ -45066,7 +45066,27 @@
       "href": "/corpus/summaries/monthly-2026-09/",
       "kind": "synthesis"
     },
-    "synthesis-bac2fb46b375c7491f303d051202bc46.txt": {
+    "synthesis-67ede8e26912f798c53e56b4005057f5.txt": {
+      "title": "Undated recordings summary",
+      "href": "/corpus/summaries/monthly-undated/",
+      "kind": "synthesis"
+    },
+    "synthesis-fa7974504485b142f60682456c19b326.txt": {
+      "title": "Undated recordings summary",
+      "href": "/corpus/summaries/monthly-undated/",
+      "kind": "synthesis"
+    },
+    "synthesis-7117934b78a4f6ce9ad8787a7cf1a30c.txt": {
+      "title": "Undated recordings summary",
+      "href": "/corpus/summaries/monthly-undated/",
+      "kind": "synthesis"
+    },
+    "synthesis-ac30bc1c0c1ca600658ae3feb2d71b7d.txt": {
+      "title": "Undated recordings summary",
+      "href": "/corpus/summaries/monthly-undated/",
+      "kind": "synthesis"
+    },
+    "synthesis-2c44b850a3df3eba9575286a14c4b51c.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
@@ -45116,12 +45136,67 @@
       "href": "/corpus/summaries/yearly-2023/",
       "kind": "synthesis"
     },
-    "synthesis-64ab4f0c478ea3f5ff1f1db3be941112.txt": {
+    "synthesis-159e272d8e8ca8d799122e5cf2ec3c49.txt": {
       "title": "2024 summary",
       "href": "/corpus/summaries/yearly-2024/",
       "kind": "synthesis"
     },
-    "synthesis-879eb85fe9ba2e31855a9c355cadbbd2.txt": {
+    "synthesis-da773f8cc500e55c2270a69b3c06e80d.txt": {
+      "title": "2024 summary",
+      "href": "/corpus/summaries/yearly-2024/",
+      "kind": "synthesis"
+    },
+    "synthesis-bfdbd1cf74c07f4130cea659383eb58b.txt": {
+      "title": "2024 summary",
+      "href": "/corpus/summaries/yearly-2024/",
+      "kind": "synthesis"
+    },
+    "synthesis-6d29a5b3f79b39ac151278af5a47b90a.txt": {
+      "title": "2024 summary",
+      "href": "/corpus/summaries/yearly-2024/",
+      "kind": "synthesis"
+    },
+    "synthesis-956bee1b2284f2ad0cf02b3ea4eda00b.txt": {
+      "title": "2024 summary",
+      "href": "/corpus/summaries/yearly-2024/",
+      "kind": "synthesis"
+    },
+    "synthesis-9315ff73dfbf15b1ce95ee50c00d110e.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-af4eec3e2245319f07c073d2f31e356a.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-be91eef330a41221961af49be2da8148.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-370be4e1ee61e8346db8f5c326267c3f.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-cdb280dda596f16ecf729d6ff00e6ab7.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-a644becef219f8f66917907c697c176b.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-180e7473c21cc822baef8d93eb967eff.txt": {
+      "title": "2025 summary",
+      "href": "/corpus/summaries/yearly-2025/",
+      "kind": "synthesis"
+    },
+    "synthesis-467af5a3eefb5e7d7e373d806cc1839d.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
@@ -45131,7 +45206,207 @@
       "href": "/corpus/summaries/yearly-2026/",
       "kind": "synthesis"
     },
-    "synthesis-33db44127f6ee0e118b961002edc3b97.txt": {
+    "synthesis-40cfe345cca2c88c074eef2f89575249.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-875dbfc863e1fe82f8d41b2b760529d8.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-e766ac3859ddc7ab8b1963e29d4bdd2f.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-5208e43f6ef08da14b1ab4634d929728.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-332773527d3732adc1bbff10dcc15f5e.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-014e19a5627dcf8fb011e7a075686721.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-8eb297a384e9039e454673dada6d239c.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-8aad510b6f4df97ed31edf902d47be3d.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-ece5b33362f54da05759da22c2bc9bb3.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-7fc1157e6f09cd55977f9fa1cbbd218a.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-47b54d64b5f087f407292a8d666c9a93.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-7cde149caf6b41028b8c23c96228305b.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-bb268ca2a019d337f929d822b15835b9.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-4ee97638cb8f3ebb95b8e4573bd7abb4.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-5e5752202de9f881e52fc2e534d57dd2.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-53c352f4764b5f246578c433f25faab2.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-f73179d3b353bc81bb455eb774a3a5bb.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-e60007ad56dee78be67a717fef45398f.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-b1b28a4ad73e733102e0c8b383860ef6.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-5126aa1c61a5e3e0665c51cbdd1996cb.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-b59ca9b3454f8ddb0dee0377da0ce275.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-c39bc9225c094d069f45e946c2349bd3.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-d454e4f4c3a595ff8547e5bbd83459c1.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-bf3e28844ba6a4a66e22dc76ed5827dc.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-74e22464a1dc4db3b6f992b4803e6c67.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-25e8b711962674b2726b66299f65d07b.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-22ffd981ba2986f470c694cc51a7b0e6.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-c849d3f32259c339468a44b058045cd8.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-fce9ac36594cb0b5bbef69870483eef9.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-a42b16c703d37b6bf5ebdb7f08fbcb20.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-9a65819893e9a031689a94c0841ee0e0.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-8b8e29444432c739c37d739eee59a270.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-749a41cba080ece6c3b366f677067bca.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-d18cca9a0fa51082b8018d411a6d0f2d.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-367e2862a2e02c6b1f1416847fad0c88.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-085bfdd177ac9ddf40422740312343eb.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-524e5b29fc9cbb86f3c4caa45fe34738.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-7baa959ae59711a985d2973f585cd6ae.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-fe39d5feaadac2c3df8c02b1b7b02e7b.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-3fd59650f787bfeca2697310abbddc93.txt": {
+      "title": "Archive overview",
+      "href": "/corpus/summaries/archive-overview/",
+      "kind": "synthesis"
+    },
+    "synthesis-2e4fa3ee0398f73d69bb7959bb0517b6.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
