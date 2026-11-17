@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {RECORDING_KINDS,filterAndSortVideos,groupTimeSeries,hrefAtTime,largestFactorLoadings,meanInterval,questionLabel,scoreFor,trendInterpretation,validateAnalysisRelease} from '../../src/lib/analysis/explorer.mjs';
+import {RECORDING_KINDS,filterAndSortVideos,groupTimeSeries,hrefAtTime,largestFactorLoadings,meanInterval,questionLabel,recordingDate,scoreFor,trendInterpretation,validateAnalysisRelease} from '../../src/lib/analysis/explorer.mjs';
 import {analysisShardId} from '../../src/lib/analysis/shards.mjs';
 
 const bank=JSON.parse(await readFile(new URL('../../src/data/analysis/questions.json',import.meta.url),'utf8'));
@@ -183,4 +183,19 @@ test('factor selector leaders are the six largest absolute finite pattern coeffi
   assert.equal(leaders.length,6);
   assert.deepEqual(leaders.map(item=>item.loading),[-.95,.8,-.7,.6,.5,.4]);
   assert.equal(leaders[0].short_name,questions[1].short_name);
+});
+
+test('a recording without a catalog date is placed by its estimated date; a catalog date is never replaced',()=>{
+  const data=validateAnalysisRelease(fixture()),undated=data.videos[2];
+  undated.question_scores[q1.id]={value:.6,low:.5,high:.7,uncertainty:'model_rating_range',coverage:.9,confidence:.8,heterogeneity:.2,probabilities:null,evidence:[]};
+  assert.equal(recordingDate(undated),null);
+  assert.deepEqual(groupTimeSeries(data.videos,q1.id,'question','year').map(s=>[s.period,s.n]),[['2020',2]]);
+  undated.estimated_date='2019-06';data.videos[0].estimated_date='1999-01';
+  assert.equal(recordingDate(undated),'2019-06');assert.equal(recordingDate(data.videos[0]),'2020-01-01');
+  assert.deepEqual(groupTimeSeries(data.videos,q1.id,'question','year').map(s=>[s.period,s.n]),[['2019',1],['2020',2]]);
+  assert.deepEqual(groupTimeSeries(data.videos,q1.id,'question','month').map(s=>s.period),['2019-06','2020-01','2020-12']);
+  const base={sort:'date',direction:'asc',category:'',text:''};
+  assert.deepEqual(filterAndSortVideos(data.videos,{...base,year:'2019'},'question',q1.id).map(v=>v.title),['Fictional C']);
+  assert.deepEqual(filterAndSortVideos(data.videos,{...base,year:'undated'},'question',q1.id),[]);
+  assert.deepEqual(filterAndSortVideos(data.videos,{...base,year:''},'question',q1.id).map(v=>v.title),['Fictional C','Fictional A','Fictional B']);
 });

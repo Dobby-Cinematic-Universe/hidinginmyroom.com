@@ -3,6 +3,8 @@ import path from 'node:path';
 import { analysisAssetDirectory, loadAnalysisRelease } from './release';
 import { validateSupplementPart } from './supplement.mjs';
 import type { AnalysisSupplement } from './supplement.mjs';
+import { PASSAGE_TABLE_FILE, validatePassageTable } from './passage-table.mjs';
+import type { PassageTable } from './passage-table.mjs';
 
 const assets = {
   robustness: 'extended-robustness.json', joint_trends: 'joint-trends.json', map_diagnostics: 'map-diagnostics.json',
@@ -11,7 +13,7 @@ const assets = {
 } as const;
 
 export async function readAnalysisAsset(relative: string): Promise<unknown | null> {
-  if (!Object.values(assets).includes(relative as typeof assets[keyof typeof assets]) && !/^passages\/rec_[a-f0-9]{32}\.json$/.test(relative)) throw new Error('Unrecognized analysis asset.');
+  if (!Object.values(assets).includes(relative as typeof assets[keyof typeof assets]) && relative !== PASSAGE_TABLE_FILE && !/^passages\/rec_[a-f0-9]{32}\.json$/.test(relative)) throw new Error('Unrecognized analysis asset.');
   const base = await analysisAssetDirectory();
   if (relative.startsWith('passages/')) {
     try {
@@ -25,6 +27,16 @@ export async function readAnalysisAsset(relative: string): Promise<unknown | nul
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; throw error; }
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 8 * 1024 * 1024 || (import.meta.env.DEV && (stat.mode & 0o077) !== 0)) throw new Error('Invalid supplemental analysis file.');
   return JSON.parse(await readFile(file, 'utf8'));
+}
+
+/** The optional passage table of the release, or null when the release has none or it does not match. */
+export async function loadPassageTable(): Promise<PassageTable | null> {
+  const release = await loadAnalysisRelease();
+  if (!release) return null;
+  try {
+    const value = await readAnalysisAsset(PASSAGE_TABLE_FILE);
+    return value ? validatePassageTable(value, release) : null;
+  } catch (error) { if (import.meta.env.DEV) console.warn('Optional passage table unavailable:', error); return null; }
 }
 
 export async function loadSupplement(): Promise<AnalysisSupplement | null> {

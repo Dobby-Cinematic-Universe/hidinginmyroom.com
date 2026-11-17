@@ -1,0 +1,206 @@
+---
+import CorpusLayout from '../../../layouts/CorpusLayout.astro';
+import data from '../../../lib/analysis/validation-studies.json';
+
+type Dimension = (typeof data.dimensions)[number];
+const f2 = (x: number) => x.toFixed(2);
+// A value that rounds onto a line of the rule without lying on it is shown with three decimals, so the table agrees with the standing.
+const near = (x: number, line: number) => (x !== line && x.toFixed(2) === line.toFixed(2) ? x.toFixed(3) : x.toFixed(2));
+const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+const word = (k: number) => WORDS[k] ?? String(k);
+const Word = (k: number) => word(k).replace(/^./, (c) => c.toUpperCase());
+const signed = (x: number) => (x < 0 ? '−' : '+') + Math.abs(x).toFixed(2);
+const range = (v: number[]) => `${f2(v[0])} to ${f2(v[1])}`;
+const n = (x: number) => x.toLocaleString('en-US');
+const { first, second } = data.studies;
+const { rule, summary } = data;
+const standing = (d: { verdict: string; settled: boolean }) =>
+  d.verdict === 'usable' ? (d.settled ? 'Supported' : 'At the line: passes narrowly')
+  : d.verdict === 'borderline' ? 'At the line: misses narrowly'
+  : d.verdict === 'unclear rubric' ? 'Raters do not agree'
+  : 'Misread by the models';
+const standingClass = (d: { verdict: string; settled: boolean }) => (d.verdict === 'usable' && d.settled ? 'ok' : d.verdict === 'unclear rubric' || d.verdict === 'misread' ? 'no' : 'mid');
+const supported = data.dimensions.filter((d) => d.verdict === 'usable' && d.settled);
+const atLine = data.dimensions.filter((d) => !(d.verdict === 'usable' && d.settled) && d.verdict !== 'unclear rubric' && d.verdict !== 'misread');
+const unclear = data.dimensions.filter((d) => d.verdict === 'unclear rubric');
+const misread = data.dimensions.filter((d) => d.verdict === 'misread');
+const names = (list: Dimension[]) => list.map((d) => d.label.toLowerCase());
+const sentence = (items: string[]) => { const sep = items.some((x) => /,| and /.test(x)) ? '; ' : ', '; return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(sep)}${sep === '; ' ? '; and' : ' and'} ${items[items.length - 1]}`; };
+const care = data.dimensions.find((d) => d.id === 'F4')!;
+const firstSettled = data.first_study_questions.filter((q) => q.verdict === 'usable' && q.settled);
+const firstOpen = data.first_study_questions.filter((q) => !(q.verdict === 'usable' && q.settled));
+
+// Chart geometry: one row per dimension, two panels on a shared 0-to-1 scale.
+const rowH = 40, top = 52, labelW = 236, panelW = 206, gap = 44, width = labelW + 2 * panelW + gap + 14;
+const height = top + rowH * data.dimensions.length + 34;
+const ax = labelW, bx = labelW + panelW + gap;
+const X = (x0: number, v: number) => x0 + Math.max(0, Math.min(1, v)) * panelW;
+const ticks = [0, 0.2, 0.4, 0.6, 0.8, 1];
+const split = (label: string) => {
+  if (label.length <= 30) return [label];
+  const words = label.split(' '); let a = '';
+  while (words.length && (a + ' ' + words[0]).trim().length <= 30) a = (a + ' ' + words.shift()).trim();
+  return [a, words.join(' ')];
+};
+---
+<CorpusLayout title="Human rating studies | HIMR transcript analysis" description="Two studies in which paid raters read transcript excerpts and answered the questions the language models answer: which dimensions of the transcript analysis human readers support, and which they leave open.">
+  <nav class="corpus-breadcrumbs" aria-label="Breadcrumb"><a href="/corpus/">Corpus</a><span aria-hidden="true">/</span><a href="/corpus/analysis/">Transcript analysis</a><span aria-hidden="true">/</span><span aria-current="page">Human rating studies</span></nav>
+  <header class="validation-header">
+    <p class="corpus-eyebrow">Research methods · human rating studies</p>
+    <h1>Do people read transcripts as the models do?</h1>
+    <p>The <a href="/corpus/analysis/">transcript analysis</a> rests on a language model's ratings of wording. In two studies in November 2026, paid raters read excerpts of the same transcripts and answered the same questions. This page gives what their ratings support and what they leave open. Ratings by people and by models describe the wording of an excerpt. They are not facts about anyone in a recording.</p>
+  </header>
+
+  <article class="validation-copy">
+    <section class="validation-brief" aria-labelledby="brief-title">
+      <h2 id="brief-title">In brief</h2>
+      <ul>
+        <li><strong>Who rated.</strong> {n(first.raters)} raters in the first study and {n(second.raters)} in the second gave {n(first.ratings + second.ratings)} ratings of {n(first.excerpts + second.excerpts)} excerpts of 250 words.</li>
+        <li><strong>The rule came first.</strong> What counts as support was fixed before any rating was collected.</li>
+        <li><strong>{Word(supported.length)} of {word(data.dimensions.length)} dimensions are supported:</strong> {sentence(names(supported))}. Raters agree with each other on these, and the models' scores follow them.</li>
+        <li><strong>{Word(atLine.length)} lie at the line:</strong> {sentence(names(atLine))}. The evidence neither settles them nor rules them out.</li>
+        {unclear.length > 0 && <li><strong>{unclear.length === 1 ? 'One does' : `${Word(unclear.length)} do`} not work in people:</strong> {sentence(names(unclear))}. Raters do not agree with each other, so their ratings cannot test a model.</li>}
+        <li><strong>{misread.length === 0 ? 'Nothing is misread.' : `${Word(misread.length)} misread.`}</strong> {misread.length === 0 ? 'Wherever raters agree with each other, the models follow them.' : `Raters agree on ${sentence(names(misread))} and the models do not follow them.`}</li>
+        <li><strong>Rankings, not levels.</strong> The models order excerpts much as people do. Their numbers on the scale of 0 to 4 are their own.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>What the raters did</h2>
+      <p>Raters were adults recruited through the platform CloudResearch Connect. Each read two practice excerpts and then eight excerpts, and answered questions on each. An excerpt was the first 250 words of a 500-word passage of a machine transcript, shown as plain text. The models rated the same 250 words for this comparison. Every question has five described levels from 0 to 4, with the wording the models receive, and raters could answer "cannot judge".</p>
+      <p><strong>The first study</strong> (15 November 2026) took {word(first.questions)} questions, the ones that weigh most in the eight dimensions. Each of {first.excerpts} excerpts was rated on each question by five people. Of the excerpts, 56 were drawn at random and 104 were chosen so that high and low model scores were both well represented; the results are restated for the archive as a whole.</p>
+      <p><strong>The second study</strong> (16 November 2026) took {second.questions} questions, two for each dimension, and made the dimension the unit. Its {second.excerpts} excerpts are two passages from each of {second.recordings} recordings drawn at random, half of them videos and half streams. Every rater read a different mix of excerpts, so that a rater's general level, strict or generous, could be estimated and taken out. Half the raters were shown sample answers after the practice excerpts; this did not bring them closer to the models.</p>
+    </section>
+
+    <section>
+      <h2>The rule</h2>
+      <p>Two numbers are computed for each dimension. The first is how far raters agree with each other: the reliability of the mean of five raters per question, between 0 and 1. The second is how closely a model's score follows that mean: a correlation.</p>
+      <ul>
+        <li><strong>Supported:</strong> the reliability is {f2(rule.reliability)} or more, and at least one model correlates with the raters at {f2(rule.correlation)} or more.</li>
+        <li><strong>Raters do not agree:</strong> the reliability is under {f2(rule.unclear_below)}. The question does not work in people, so it cannot show whether a model is right.</li>
+        <li><strong>Misread:</strong> raters agree ({f2(rule.reliability)} or more) and no model follows them ({`under ${f2(rule.misread_below)}`}).</li>
+        <li><strong>At the line:</strong> anything else, and any result whose 95% interval crosses one of these lines.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>The eight dimensions</h2>
+      <p>Results of the second study. The left panel shows how far raters agree; the right panel shows how closely each of the two models follows them. <code>jev-1.14.0</code> is the model whose scores the explorer shows.</p>
+      <div class="validation-legend" aria-hidden="true">
+        <span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4.5" class="m-people" /></svg>Raters' agreement</span>
+        <span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4.5" class="m-jev" /></svg>jev-1.14.0</span>
+        <span><svg viewBox="0 0 14 14"><rect x="3" y="3" width="8" height="8" transform="rotate(45 7 7)" class="m-drex" /></svg>drex-max</span>
+        <span><svg viewBox="0 0 22 14"><line x1="1" y1="7" x2="21" y2="7" class="m-line" /></svg>95% interval</span>
+      </div>
+      <div class="validation-chart">
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="For each of the eight dimensions: the reliability of the raters' mean with its line at 0.60, and each model's correlation with the raters with its line at 0.50. The table below gives every value.">
+          <text x={ax} y="16" class="t-head">Raters agree with each other</text>
+          <text x={ax} y="32" class="t-sub">reliability of the mean of five</text>
+          <text x={bx} y="16" class="t-head">Models follow the raters</text>
+          <text x={bx} y="32" class="t-sub">correlation with the mean of five</text>
+          {[ax, bx].map((x0) => ticks.map((t) => <g><line x1={X(x0, t)} y1={top - 6} x2={X(x0, t)} y2={height - 28} class="grid" /><text x={X(x0, t)} y={height - 12} class="t-tick" text-anchor="middle">{t.toFixed(1)}</text></g>))}
+          <line x1={X(ax, rule.reliability)} y1={top - 10} x2={X(ax, rule.reliability)} y2={height - 28} class="rule" /><text x={X(ax, rule.reliability) + 4} y={top - 2} class="t-rule">{f2(rule.reliability)}</text>
+          <line x1={X(bx, rule.correlation)} y1={top - 10} x2={X(bx, rule.correlation)} y2={height - 28} class="rule" /><text x={X(bx, rule.correlation) + 4} y={top - 2} class="t-rule">{f2(rule.correlation)}</text>
+          {data.dimensions.map((d, i) => {
+            const y = top + rowH * i + rowH / 2, lines = split(d.label);
+            return (
+              <g>
+                {i > 0 && <line x1="0" y1={top + rowH * i} x2={width} y2={top + rowH * i} class="sep" />}
+                {lines.map((line, k) => <text x={labelW - 14} y={y + 4 + (k - (lines.length - 1) / 2) * 14} class="t-label" text-anchor="end">{line}</text>)}
+                <g><title>{`${d.label}: raters' agreement ${f2(d.reliability)} (95% interval ${range(d.reliability_interval)})`}</title>
+                  <line x1={X(ax, d.reliability_interval[0])} y1={y} x2={X(ax, d.reliability_interval[1])} y2={y} class="iv iv-people" /><circle cx={X(ax, d.reliability)} cy={y} r="5" class="m-people ring" /><rect x={ax} y={y - rowH / 2} width={panelW} height={rowH} class="hit" /></g>
+                <g><title>{`${d.label}: jev-1.14.0 ${f2(d.jev)} (95% interval ${range(d.jev_interval)})`}</title>
+                  <line x1={X(bx, d.jev_interval[0])} y1={y - 7} x2={X(bx, d.jev_interval[1])} y2={y - 7} class="iv iv-jev" /><circle cx={X(bx, d.jev)} cy={y - 7} r="5" class="m-jev ring" /><rect x={bx} y={y - rowH / 2} width={panelW} height={rowH / 2} class="hit" /></g>
+                <g><title>{`${d.label}: drex-max ${f2(d.drex)} (95% interval ${range(d.drex_interval)})`}</title>
+                  <line x1={X(bx, d.drex_interval[0])} y1={y + 7} x2={X(bx, d.drex_interval[1])} y2={y + 7} class="iv iv-drex" /><rect x={X(bx, d.drex) - 4.5} y={y + 7 - 4.5} width="9" height="9" transform={`rotate(45 ${X(bx, d.drex)} ${y + 7})`} class="m-drex ring" /><rect x={bx} y={y} width={panelW} height={rowH / 2} class="hit" /></g>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <div class="validation-table">
+        <table>
+          <caption>Second study: the eight dimensions. Brackets hold 95% intervals from resampling recordings.</caption>
+          <thead><tr><th scope="col">Dimension</th><th scope="col">Standing</th><th scope="col">Raters' agreement</th><th scope="col">jev-1.14.0</th><th scope="col">drex-max</th><th scope="col">Questions asked</th></tr></thead>
+          <tbody>
+            {data.dimensions.map((d) => <tr><th scope="row">{d.label}</th><td class={`standing ${standingClass(d)}`}>{standing(d)}</td><td>{near(d.reliability, rule.reliability)} <small>[{range(d.reliability_interval)}]</small></td><td>{near(d.jev, rule.correlation)} <small>[{range(d.jev_interval)}]</small></td><td>{near(d.drex, rule.correlation)} <small>[{range(d.drex_interval)}]</small></td><td>{d.questions.join(', ')}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+      <p>Over the eight dimensions the two models follow the raters equally well: {f2(summary.over_the_eight_dimensions.jev)} for <code>jev-1.14.0</code> and {f2(summary.over_the_eight_dimensions.drex)} for <code>drex-max</code> on average.</p>
+      {unclear.map((d) => <p>On "{d.label}" the raters' agreement is {f2(d.reliability)}. One of its two questions, about stated limits of knowledge, is one on which raters do not agree with each other at all. The models' scores on this dimension are consistent readings by models, and nothing more can be said for them here.</p>)}
+    </section>
+
+    <section>
+      <h2>Single questions</h2>
+      <p>The first study judged single questions by the same rule. {Word(firstSettled.length)} of {word(data.first_study_questions.length)} are supported: {sentence(firstSettled.map((q) => q.name.toLowerCase()))}. The other {word(firstOpen.length)} lie at the line, and what holds them back is how far raters agree with each other, not the models: on every one of them the better model correlates with the raters at 0.50 or more. No question is misread.</p>
+      <div class="validation-table">
+        <table>
+          <caption>First study: the twelve questions, restated for the archive. Brackets hold 95% intervals from resampling excerpts.</caption>
+          <thead><tr><th scope="col">Question</th><th scope="col">Standing</th><th scope="col">Raters' agreement</th><th scope="col">jev-1.14.0</th><th scope="col">drex-max</th></tr></thead>
+          <tbody>
+            {data.first_study_questions.map((q) => <tr><th scope="row">{q.name}</th><td class={`standing ${standingClass(q)}`}>{q.verdict === 'usable' && q.settled ? 'Supported' : 'At the line'}</td><td>{near(q.reliability, rule.reliability)} <small>[{range(q.reliability_interval)}]</small></td><td>{near(q.jev, rule.correlation)} <small>[{range(q.jev_interval)}]</small></td><td>{near(q.drex, rule.correlation)} <small>[{range(q.drex_interval)}]</small></td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>What else the ratings show</h2>
+      <p>These analyses were added after the results above had been read, so they carry less weight.</p>
+      <ul>
+        <li><strong>The first study repeats.</strong> Across the {word(summary.between_the_studies.questions)} questions rated in both studies, how well a model follows the raters on a question correlates at {f2(summary.between_the_studies.jev)} and {f2(summary.between_the_studies.drex)} between the studies.</li>
+        <li><strong>A model is closer to readers' shared reading than one reader is.</strong> Against what a very large panel of readers would say together, the models' dimension scores correlate at {f2(summary.with_an_unlimited_panel.jev)} and {f2(summary.with_an_unlimited_panel.drex)} on average. One rater's answers to a dimension's two questions correlate with it at {f2(summary.with_an_unlimited_panel.one_rating_of_each_question)}.</li>
+        <li><strong>The models follow the passage, not only the recording.</strong> When raters place one passage of a recording higher than the other, the models tend to as well: the differences correlate at {f2(summary.two_passages_of_one_recording.jev)} and {f2(summary.two_passages_of_one_recording.drex)} on average over the dimensions.</li>
+        <li><strong>Levels differ.</strong> On average a model's mean score on a question lies {f2(summary.distance_of_levels.jev)} and {f2(summary.distance_of_levels.drex)} scale points from the raters' mean. The largest distance is on {summary.distance_of_levels.largest.question.toLowerCase()}, which <code>jev-1.14.0</code> rates {f2(Math.abs(summary.distance_of_levels.largest.jev_minus_people))} points {summary.distance_of_levels.largest.jev_minus_people > 0 ? 'higher' : 'lower'} than people do.</li>
+        <li><strong>One score does not mean the same in streams and videos.</strong> On "{care.label}", at the same model score, raters place excerpts of streams {f2(Math.abs(care.streams_at_same_score))} standard deviations {care.streams_at_same_score < 0 ? 'lower' : 'higher'} than excerpts of videos (95% interval {signed(care.streams_interval[0])} to {signed(care.streams_interval[1])}).</li>
+        <li><strong>A third model does the same.</strong> <code>d1.2-ultra</code>, a model from a third maker released after both studies, was put to the same test on the same excerpts. Over the eight dimensions it follows the raters at {f2(summary.over_the_eight_dimensions.d12u)}, level with the other two, and it misses on the same excerpts. Its levels are closer to people's ({f2(summary.distance_of_levels.d12u)} scale points on average). What the studies found is not a property of one model.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>What this means for the explorer</h2>
+      <ul>
+        <li><strong>Supported dimensions.</strong> On {sentence(names(supported))}, a higher score goes with wording that human readers also place higher. Comparisons and rankings on these dimensions have that support.</li>
+        <li><strong>Dimensions at the line.</strong> On {sentence(names(atLine))}, read differences with more caution. On care and regard for others, compare videos with videos and streams with streams, as the trend views already do.</li>
+        {unclear.length > 0 && <li><strong>{sentence(unclear.map((d) => d.label))}.</strong> These scores have no support from human readers. They remain a model's reading.</li>}
+        <li><strong>Trends.</strong> Of the two trends that the <a href="/corpus/analysis/methods/">methods page</a> reports, the fall of self-disclosure and self-criticism is on a supported dimension. The fall of care and regard for others is on a dimension at the line.</li>
+        <li><strong>Levels.</strong> A score says where a passage stands among other passages. It does not say what a reader would answer on the scale of 0 to 4.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>What the studies do not show</h2>
+      <ul>
+        <li><strong>Wording, not people.</strong> Agreement between raters and models is agreement about how an excerpt is worded. It establishes nothing about anyone's character, mental state or intentions, and nothing about whether a statement is true.</li>
+        <li><strong>Sixteen questions of sixty.</strong> Each dimension was tested through two of its questions. The other rated questions, the classifications and the reception estimates were not put to raters.</li>
+        <li><strong>Excerpts of 250 words.</strong> The explorer's scores are of 500-word passages, and a recording's score is the mean of its passages. Those steps were not tested directly.</li>
+        <li><strong>Text only.</strong> Raters read machine transcripts with their errors, as the models do. Nobody listened to a recording.</li>
+        <li><strong>These raters.</strong> The raters are paid crowd workers who read English, not trained coders, and nothing else is known about them. Other readers might agree with each other more or less.</li>
+        <li><strong>These models, at this time.</strong> The comparison holds for the models as they answered in November 2026.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Report, data and code</h2>
+      <p>The full report, every rating without anything that identifies a rater, the models' scores and a script that recomputes every figure are in the <a href="https://github.com/Dobby-Cinematic-Universe/rating-studies-public">rating-studies-public repository on GitHub</a>.</p>
+    </section>
+  </article>
+</CorpusLayout>
+
+<style>
+  .validation-header{max-width:66rem}.validation-header h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.08;letter-spacing:-.04em}.validation-header p:last-child{max-width:72ch;color:var(--corpus-muted);font-size:1.08rem}
+  .validation-copy{max-width:60rem}.validation-copy section{margin:2.25rem 0}.validation-copy section>p,.validation-copy section>ul{max-width:72ch}.validation-copy h2{font-size:1.45rem;line-height:1.25}.validation-copy p,.validation-copy li{color:var(--corpus-muted)}.validation-copy strong{color:var(--corpus-text)}.validation-copy li{margin:.55rem 0}.validation-copy code{font-size:.92em}
+  .validation-brief{max-width:72ch;padding:1rem 1.2rem;border:1px solid var(--corpus-line);border-left:3px solid var(--corpus-accent);border-radius:.6rem;background:var(--corpus-panel)}.validation-brief h2{margin-top:0}
+  /* Series colours are those of the explorer's charts (checked there with the palette validator); shape differs as well as colour. */
+  .validation-copy{--v-jev:#3987e5;--v-drex:#d95926}
+  .validation-legend{display:flex;flex-wrap:wrap;gap:.3rem 1.3rem;font-size:.85rem;color:var(--corpus-muted);margin:.9rem 0 .5rem}.validation-legend span{display:inline-flex;align-items:center;gap:.4rem}.validation-legend svg{height:.9rem;width:auto;flex:none}
+  .validation-chart{overflow-x:auto;border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);padding:.8rem .6rem .3rem}.validation-chart svg{display:block;width:100%;min-width:40rem;height:auto}
+  .validation-chart text{fill:var(--corpus-muted);font-size:11.5px}.validation-chart .t-head{fill:var(--corpus-text);font-size:12.5px;font-weight:650}.validation-chart .t-label{fill:var(--corpus-text);font-size:12px}.validation-chart .t-tick,.validation-chart .t-rule{font-size:10.5px}
+  .validation-chart .grid{stroke:var(--corpus-line);stroke-width:1;opacity:.55}.validation-chart .sep{stroke:var(--corpus-line);stroke-width:1;opacity:.45}.validation-chart .rule{stroke:var(--corpus-muted);stroke-width:1.2;stroke-dasharray:4 3}
+  .validation-chart .iv{stroke-width:2;stroke-linecap:round}.iv-people{stroke:var(--corpus-muted)}.iv-jev{stroke:var(--v-jev)}.iv-drex{stroke:var(--v-drex)}
+  .m-people{fill:var(--corpus-text)}.m-jev{fill:var(--v-jev)}.m-drex{fill:var(--v-drex)}.m-line{stroke:var(--corpus-muted);stroke-width:2}.validation-chart .ring{stroke:var(--corpus-panel);stroke-width:2}.validation-chart .hit{fill:transparent}
+  .validation-table{overflow-x:auto;margin:1rem 0}.validation-table table{width:100%;border-collapse:collapse;font-size:.88rem}.validation-table caption{caption-side:top;text-align:left;color:var(--corpus-muted);font-size:.85rem;padding-bottom:.45rem}
+  .validation-table th,.validation-table td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--corpus-line);vertical-align:top;color:var(--corpus-muted)}.validation-table thead th{color:var(--corpus-text);font-weight:650;white-space:nowrap}.validation-table tbody th{color:var(--corpus-text);font-weight:600}
+  .validation-table td small{white-space:nowrap;font-size:.86em}.validation-table td{font-variant-numeric:tabular-nums}
+  .validation-table .standing{color:var(--corpus-text);white-space:nowrap}.validation-table .standing::before{content:'';display:inline-block;width:.55rem;height:.55rem;margin-right:.45rem;border-radius:50%;border:1.5px solid var(--corpus-muted)}.validation-table .standing.ok::before{background:var(--corpus-accent);border-color:var(--corpus-accent)}.validation-table .standing.mid::before{background:linear-gradient(90deg,var(--corpus-muted) 50%,transparent 50%)}
+</style>

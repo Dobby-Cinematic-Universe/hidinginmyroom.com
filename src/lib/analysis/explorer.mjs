@@ -175,10 +175,16 @@ function compareMaybe(a, b, direction = 1) {
   return (a < b ? -1 : a > b ? 1 : 0) * direction;
 }
 
+/** The date a recording is placed by: its catalog date, else its estimated date (set by the page from the
+ *  corpus's date estimates), else null. An estimated date is never shown without saying that it is one. */
+export function recordingDate(video) {
+  return video.date ?? video.estimated_date ?? null;
+}
+
 export function filterAndSortVideos(videos, filters, kind, metric) {
   const needle = (filters.text ?? '').trim().toLocaleLowerCase();
   const selected = videos.filter((video) =>
-    (!filters.year || (filters.year === 'undated' ? !video.date : video.date?.slice(0, 4) === filters.year)) &&
+    (!filters.year || (filters.year === 'undated' ? !recordingDate(video) : recordingDate(video)?.slice(0, 4) === filters.year)) &&
     (!filters.category || video.category === filters.category) &&
     (!filters.recording_kind || video.design?.kind === filters.recording_kind) &&
     (!filters.subject || video.classifications?.class_subject?.choice === filters.subject) &&
@@ -193,7 +199,7 @@ export function filterAndSortVideos(videos, filters, kind, metric) {
     const avalue=kind==='classification'?(av?.choice??av?.value??null):(av?.value??null);
     const bvalue=kind==='classification'?(bv?.choice??bv?.value??null):(bv?.value??null);
     const result = filters.sort === 'date'
-      ? compareMaybe(a.date, b.date, direction)
+      ? compareMaybe(recordingDate(a), recordingDate(b), direction)
       : filters.sort === 'title'
         ? a.title.localeCompare(b.title) * (filters.direction === 'desc' ? -1 : 1)
         : compareMaybe(avalue,bvalue,direction);
@@ -205,8 +211,9 @@ export function filterAndSortVideos(videos, filters, kind, metric) {
 export function groupTimeSeries(videos, metric, kind, interval = 'year') {
   const groups = new Map();
   for (const video of videos) {
-    if (!validTrendDate(video.date, video.date_basis, interval)) continue;
-    const key = interval === 'month' ? video.date.slice(0, 7) : video.date.slice(0, 4);
+    const date = recordingDate(video);
+    if (!validTrendDate(date, video.date ? video.date_basis : 'estimated', interval)) continue;
+    const key = interval === 'month' ? date.slice(0, 7) : date.slice(0, 4);
     const score = scoreFor(video, metric, kind);
     if (!score || !finite(score.value)) continue;
     const row = groups.get(key) ?? { period: key, values: [], lows: [], highs: [], coverages: [] };

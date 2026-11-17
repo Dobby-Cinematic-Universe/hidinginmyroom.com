@@ -1,0 +1,51 @@
+---
+import annotations from '../../data/analysis/factor-descriptions.json';
+import validation from '../../lib/analysis/validation-studies.json';
+
+// Names of the dimensions (bound to one factor solution by its hash) and their standing in the human rating studies.
+const standing = (id: string) => {
+  const d = validation.dimensions.find((x) => x.id === id);
+  return !d ? 'none' : d.verdict === 'usable' && d.settled ? 'supported' : d.verdict === 'unclear rubric' ? 'raters do not agree' : 'at the line';
+};
+const dimensions = Object.entries(annotations.descriptions).map(([id, d]) => ({ id, label: d.label, standing: standing(id) }));
+---
+<section class="passage-explorer" data-passage-explorer data-dimensions={JSON.stringify(dimensions)} data-loadings={annotations.loadings_sha256}>
+  <aside class="pe-scope"><p>Scores are a language model's ratings of the wording of a passage. They are not facts about a person. A passage can hold several voices, quoted speech or messages read aloud, and the transcript wording may be wrong.</p>
+    <details><summary>What a passage score is</summary><p>A passage holds 500 words, about three minutes of speech. Every video and stream with at least one full passage is included; texts shorter than a passage and clips are not. Where passages are added up (subjects, topics), one version of each recording counts. A recording without a catalog date is placed by its estimated date in the views by year; estimates are not verified dates. A passage's dimension score uses the weights of a recording's score on the passage's own ratings. It is given in standard deviations of recording scores and is noisier than a recording's mean. Subjects and addressees are classifications by the model from wording alone. A dimension carries a mark for its standing in the <a href="/corpus/analysis/validation/">human rating studies</a>, which rated 250-word excerpts.</p></details></aside>
+  <p class="pe-status" data-status role="status">Loading the passage table…</p>
+</section>
+
+<script>
+  import { mountPassageExplorer } from '../../lib/analysis/passage-explorer-ui.mjs';
+  for (const root of document.querySelectorAll<HTMLElement>('[data-passage-explorer]')) mountPassageExplorer(root, { dimensions: JSON.parse(root.dataset.dimensions ?? '[]'), loadingsSha256: root.dataset.loadings ?? null });
+</script>
+
+<style is:global>
+  /* Series colours are those of the analysis explorer's charts, checked there with the palette validator. */
+  .passage-explorer{--pe-s1:#3987e5;--pe-s2:#d95926;--pe-s3:#199e70;max-width:var(--corpus-max);min-width:0}
+  .passage-explorer .pe-scope{border:1px solid var(--corpus-line);border-left:3px solid var(--corpus-accent);border-radius:.6rem;background:var(--corpus-panel);padding:.7rem 1rem;max-width:80ch;font-size:.92rem}.passage-explorer .pe-scope p{margin:.3rem 0;color:var(--corpus-muted)}.passage-explorer .pe-scope summary{cursor:pointer;color:var(--corpus-text);font-size:.88rem}
+  .passage-explorer .pe-status{color:var(--corpus-muted);font-size:.9rem}
+  .passage-explorer .pe-tabs{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;padding:.6rem 0;border-bottom:1px solid var(--corpus-line);position:sticky;top:0;background:var(--corpus-bg);z-index:3}
+  .passage-explorer .pe-tabs button{background:transparent;border:1px solid var(--corpus-line);color:var(--corpus-muted);border-radius:2rem;padding:.35rem .9rem;font:inherit;font-size:.88rem;cursor:pointer}
+  .passage-explorer .pe-tabs button[aria-selected=true]{background:var(--corpus-accent);border-color:var(--corpus-accent);color:#08212a;font-weight:650}
+  .passage-explorer .pe-only{margin-left:auto;display:inline-flex;align-items:center;gap:.45rem;color:var(--corpus-muted);font-size:.86rem;cursor:pointer}.passage-explorer .pe-only input{accent-color:var(--corpus-accent);width:1rem;height:1rem}
+  .passage-explorer .pe-body{padding-top:1rem}.passage-explorer .pe-body h2,.passage-explorer .pe-body h3{scroll-margin-top:4rem}.passage-explorer .pe-body h2{font-size:1.3rem;margin:.2rem 0 .3rem}.passage-explorer .pe-body h3{font-size:1.05rem;margin:1.6rem 0 .4rem}.passage-explorer .pe-body h4{font-size:.88rem;margin:0 0 .1rem}
+  .passage-explorer .pe-body p{color:var(--corpus-muted);max-width:78ch;margin:.4rem 0}.passage-explorer small,.passage-explorer .pe-key{color:var(--corpus-muted);font-size:.8rem}
+  .passage-explorer .pe-controls{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:end;margin:.8rem 0}.passage-explorer .pe-controls label{display:grid;gap:.2rem;font-size:.8rem;color:var(--corpus-muted)}
+  .passage-explorer select,.passage-explorer input[type=search]{background:var(--corpus-panel);color:var(--corpus-text);border:1px solid var(--corpus-line);border-radius:.4rem;padding:.4rem .55rem;font:inherit;font-size:.9rem;min-width:9rem;max-width:100%}
+  .passage-explorer .pe-panel{border:1px solid var(--corpus-line);border-radius:.6rem;background:var(--corpus-panel);padding:.8rem;margin:.6rem 0;min-width:0;overflow-x:auto}.passage-explorer .pe-scroll{overflow-x:auto}.passage-explorer .pe-results{max-height:36rem;overflow-y:auto}
+  .passage-explorer .pe-grid-panels{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.6rem}.passage-explorer .pe-grid-panels .pe-panel{margin:0;padding:.5rem .6rem}
+  .passage-explorer .pe-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}@media(max-width:60rem){.passage-explorer .pe-two{grid-template-columns:1fr}}
+  .passage-explorer .pe-legend{display:flex;flex-wrap:wrap;gap:.2rem 1.2rem;font-size:.84rem;color:var(--corpus-muted);margin:.4rem 0}.passage-explorer .pe-legend span{display:inline-flex;align-items:center;gap:.4rem}.passage-explorer .pe-legend i{width:1rem;height:3px;display:inline-block;border-radius:2px}.passage-explorer .pe-legend i.pe-dot{width:.6rem;height:.6rem;border-radius:50%}.passage-explorer .pe-legend i.pe-diamond{border-radius:0;transform:rotate(45deg)}
+  .passage-explorer svg{display:block;width:100%;height:auto}.passage-explorer .pe-panel>svg{min-width:26rem}.passage-explorer .pe-grid-panels svg{min-width:0}.passage-explorer svg text{fill:var(--corpus-muted);font-size:11px}.passage-explorer svg .pe-rowlabel{fill:var(--corpus-text);font-size:12px}
+  .passage-explorer .pe-grid{stroke:var(--corpus-line);stroke-width:1;opacity:.6}.passage-explorer .pe-zero{stroke:var(--corpus-muted);stroke-width:1;stroke-dasharray:3 3}.passage-explorer .pe-cross{stroke:var(--corpus-muted);stroke-width:1}.passage-explorer .pe-ring{stroke:var(--corpus-panel);stroke-width:1.5}
+  .passage-explorer .pe-stand{fill:none;stroke:var(--corpus-muted);stroke-width:1.5}.passage-explorer .pe-stand-ok{fill:var(--corpus-accent);stroke:var(--corpus-accent)}.passage-explorer .pe-stand-none{stroke:none}.passage-explorer .pe-stand-half{fill:var(--corpus-muted)}
+  .passage-explorer table{border-collapse:collapse;width:100%;font-size:.86rem}.passage-explorer caption{caption-side:top;text-align:left;color:var(--corpus-text);font-weight:650;padding-bottom:.35rem}.passage-explorer th,.passage-explorer td{text-align:left;padding:.38rem .55rem;border-bottom:1px solid var(--corpus-line);color:var(--corpus-muted);vertical-align:top}
+  .passage-explorer thead th{color:var(--corpus-text);font-weight:650;white-space:nowrap}.passage-explorer tbody th{color:var(--corpus-text);font-weight:600}.passage-explorer td.pe-num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--corpus-text)}
+  .passage-explorer .pe-badge{display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap}.passage-explorer .pe-badge::before{content:'';width:.55rem;height:.55rem;border-radius:50%;border:1.5px solid var(--corpus-muted);flex:none}.passage-explorer .pe-badge.pe-ok::before{background:var(--corpus-accent);border-color:var(--corpus-accent)}.passage-explorer .pe-badge.pe-mid::before{background:linear-gradient(90deg,var(--corpus-muted) 50%,transparent 50%)}.passage-explorer .pe-badge.pe-none::before{display:none}
+  .passage-explorer .pe-list{max-height:15rem;overflow:auto;border:1px solid var(--corpus-line);border-radius:.4rem;background:var(--corpus-panel);display:grid}.passage-explorer .pe-list button{all:unset;padding:.3rem .55rem;cursor:pointer;font-size:.86rem;color:var(--corpus-muted)}.passage-explorer .pe-list button:hover,.passage-explorer .pe-list button[aria-selected=true]{background:var(--corpus-panel-strong);color:var(--corpus-text)}.passage-explorer .pe-list button:focus-visible{outline:2px solid var(--corpus-accent);outline-offset:-2px}
+  .passage-explorer .pe-link{all:unset;cursor:pointer;color:var(--corpus-accent);text-decoration:underline}.passage-explorer .pe-link:focus-visible{outline:2px solid var(--corpus-accent)}
+  .passage-explorer .pe-card{border:1px solid var(--corpus-line);border-left:3px solid var(--pe-s1);border-radius:.6rem;background:var(--corpus-panel-strong);padding:.7rem 1rem;margin:.6rem 0}.passage-explorer .pe-card p{margin:.25rem 0}
+  .passage-explorer .pe-scores{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0}.passage-explorer .pe-scores span{padding:.15rem .5rem;border-radius:.35rem;font-size:.84rem;color:var(--corpus-text);font-variant-numeric:tabular-nums}.passage-explorer .pe-scores .pe-badge{padding:0}
+  .passage-explorer .pe-tip{position:fixed;z-index:20;pointer-events:none;max-width:22rem;padding:.45rem .65rem;border:1px solid var(--corpus-line);border-radius:.45rem;background:var(--corpus-panel-strong);font-size:.82rem;line-height:1.45;box-shadow:0 6px 18px rgb(0 0 0/.35);display:none;color:var(--corpus-muted)}.passage-explorer .pe-tip b{color:var(--corpus-text)}.passage-explorer .pe-tip i{display:inline-block;width:.8rem;height:2px;margin-right:.35rem;vertical-align:middle}
+</style>

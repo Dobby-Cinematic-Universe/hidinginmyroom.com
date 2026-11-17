@@ -1,7 +1,10 @@
 ---
 import { loadCorpusCatalog } from '../../lib/corpus/release';
 import { durationOptions } from '../../lib/corpus/duration.mjs';
-const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date_year?[r.date_year]:[]))].sort((a,b)=>b-a);
+import { estimatedDates } from '../../lib/corpus/date-estimates';
+// Years of catalog dates and of the estimated dates of recordings without one.
+const estimated=await estimatedDates();
+const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date_year?[Number(r.date_year)]:estimated.has(r.recording_id)?[Number(estimated.get(r.recording_id)!.slice(0,4))]:[]))].sort((a,b)=>b-a);
 ---
 <section data-recording-browser aria-label="Find recordings" hidden>
   <form>
@@ -25,7 +28,7 @@ const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date
     root.hidden=false;
     const form=root.querySelector('form')!,status=root.querySelector<HTMLElement>('[data-status]')!,list=root.querySelector('[data-results]')!;
     const pager=root.querySelector<HTMLElement>('[data-pager]')!,prev=root.querySelector<HTMLButtonElement>('[data-prev]')!,next=root.querySelector<HTMLButtonElement>('[data-next]')!;
-    type Row={title:string;href:string;date:string|null;dateEstimate?:string|null;circa?:string;duplicateOf?:string;aliases?:string[];year:number|null;duration:string;durationMs:number|null;hasTranscript:boolean;summaryId:string|null};
+    type Row={title:string;href:string;date:string|null;dateEstimate?:string|null;circa?:string;estimated?:string;duplicateOf?:string;aliases?:string[];year:number|null;duration:string;durationMs:number|null;hasTranscript:boolean;summaryId:string|null};
     let rows:Row[]|undefined,pending:Promise<void>|undefined,page=1;
     const params=new URLSearchParams(location.search);
     for(const name of ['q','year','availability','length','sort']){const c=form.elements.namedItem(name) as HTMLInputElement;if(params.has(name))c.value=params.get(name)!;}

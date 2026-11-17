@@ -11,11 +11,11 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   <p role="status" aria-live="polite" data-status>Loading the score release…</p>
   <div data-content hidden>
     <p data-historical-input hidden></p>
-    <aside class="scope-note"><p>Scores are a language model's ratings of transcript wording. They are not facts about a person, and predicted reception is not an observed audience response. Open a recording's evidence to see the passages behind its scores.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. A passage can hold several voices, quoted speech or messages read aloud, and the transcript wording may be wrong. Classifications are model inferences and may be wrong; they do not verify anything about the audio. How much text is rated changes the scores, which is why every passage holds the same number of words and why shorter texts carry no dimension scores. No human rating has yet been compared with these scores. Dimension names are provisional descriptions of this fitted model.</p></details></aside>
+    <aside class="scope-note"><p>Scores are a language model's ratings of transcript wording. They are not facts about a person, and predicted reception is not an observed audience response. Open a recording's evidence to see the passages behind its scores.</p><details><summary>Interpretation and uncertainty limits</summary><p>These scores do not establish a person's enduring personality, mental health, private emotional state, or the truth of a statement. A passage can hold several voices, quoted speech or messages read aloud, and the transcript wording may be wrong. Classifications are model inferences and may be wrong; they do not verify anything about the audio. How much text is rated changes the scores, which is why every passage holds the same number of words and why shorter texts carry no dimension scores. Human raters have rated excerpts on sixteen questions: their ratings support four of the eight dimensions, leave three at the line and do not support one (<a href="/corpus/analysis/validation/">human rating studies</a>). Dimension names are provisional descriptions of this fitted model.</p></details></aside>
     <details class="section-jumps"><summary>Jump to an analysis</summary><nav class="explorer-nav" aria-label="Analysis sections">
       <div><span>Browse and explore</span><a href="#analysis-videos">Video rankings</a><a href="#analysis-trend">Scores over time</a><a href="#analysis-discovery">Recording maps and similarity</a><a href="#analysis-relationships">Question relationships</a><a href="#analysis-map">Question map</a></div>
       <div><span>Look more closely</span><a href="#analysis-passage-insights">Passage variability</a><a href="#analysis-temporal-comparisons">Time, genre and candidate shifts</a><a href="#analysis-correlations">Full correlations</a></div>
-      <div><span>Model and methods</span><a href="#analysis-factors">Factor loadings</a><a href="#analysis-factor-diagnostics">Residuals and dimensionality</a><a href="#analysis-robustness">Robustness</a><a href="/corpus/analysis/methods/">Methods</a></div>
+      <div><span>Model and methods</span><a href="#analysis-factors">Factor loadings</a><a href="#analysis-factor-diagnostics">Residuals and dimensionality</a><a href="#analysis-robustness">Robustness</a><a href="/corpus/analysis/methods/">Methods</a><a href="/corpus/analysis/validation/">Human rating studies</a><a href="/corpus/analysis/passage-explorer/">Passage explorer</a></div>
     </nav></details>
     <section id="analysis-videos" aria-labelledby="video-scores-title"><h2 id="video-scores-title">Recordings by dimension</h2>
     <p class="chart-note">Rank recordings by a dimension or a single question. These filters also apply to <a href="#analysis-trend">Scores over time</a>; other views use their own selectors.</p>
@@ -75,13 +75,14 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
 </section>
 
 <script>
-  import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, questionLabel, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
+  import { filterAndSortVideos, groupTimeSeries, hrefAtTime, largestFactorLoadings, questionLabel, recordingDate, scoreFor, trendInterpretation, validateAnalysisRelease } from '../../lib/analysis/explorer.mjs';
   import { historicalPassageHref } from '../../lib/analysis/historical-compatibility.mjs';
   import type { AnalysisQuestion, AnalysisRelease, AnalysisVideo } from '../../lib/analysis/explorer.mjs';
   import factorAnnotations from '../../data/analysis/factor-descriptions.json';
   import { factorDisplayLabel, resolveFactorDescriptions } from '../../lib/analysis/factor-descriptions.mjs';
   import type { FactorDescription } from '../../lib/analysis/factor-descriptions.mjs';
   import { validatePassageData } from '../../lib/analysis/passage-data.mjs';
+  import { readVerifiedShard } from '../../lib/analysis/shard-verify.mjs';
   import type { AnalysisPassageData } from '../../lib/analysis/passage-data.mjs';
   import { validatePassageShardIndex, validatePassageShardBytes } from '../../lib/analysis/passage-shards.mjs';
   import type { PassageShardDescriptor } from '../../lib/analysis/passage-shards.mjs';
@@ -115,7 +116,9 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     let currentPage=1;
       let pageSize=Number(pageSizeSelect.value);
     const n = (tag: string, text?: string) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; return e; };
-    const fmt = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? '—' : value.toLocaleString(undefined, { maximumFractionDigits: 3 });
+    // One shared formatter: making one per number is the slow part of formatting.
+    const number3 = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });
+    const fmt = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? '—' : number3.format(value);
     const fmtTime = (milliseconds:number) => { const total=Math.floor(milliseconds/1000),hours=Math.floor(total/3600),minutes=Math.floor(total%3600/60),seconds=total%60;return `${hours}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`; };
     const humanize = (value:string) => value.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toLocaleUpperCase()).replace(/\bTts\b/g,'TTS').replace(/\bNoul\b/g,'No/Yes');
     const dateBasisLabel = (value:string) => ({unknown:'Unknown / unverified',retained_archive_metadata:'Archive metadata',archive_filename:'Archive filename',archived_video_page:'Archived video page',torrent_filename:'Archive filename',torrent_filename_utc:'Archive filename, converted to UTC',filename_date:'Archive filename'} as Record<string,string>)[value]??humanize(value);
@@ -390,7 +393,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         svg.onpointerleave=hide;svg.setAttribute('tabindex','0');svg.onblur=hide;svg.onfocus=()=>showAt(active<0?periods.length-1:active);
         svg.onkeydown=event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();showAt((active<0?periods.length-1:active)+(event.key==='ArrowRight'?1:-1));}else if(event.key==='Escape')hide();};
         root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!.replaceChildren(...groups.flatMap(g=>g.series.map(p=>{const tr=n('tr');for(const val of [p.period,g.label,fmt(p.mean),p.ci_low==null?'fewer than five recordings':`${fmt(p.ci_low)} to ${fmt(p.ci_high)}`,String(p.n)])tr.append(n('td',val));return tr;})));
-        const bases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);dateWarning.textContent=`Date bases represented: ${bases.join(', ')||'none'}. Periods use catalog recording dates; recordings without one are left out. Year-only dates are omitted from the month view.`;
+        const bases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);dateWarning.textContent=`Date bases represented: ${bases.join(', ')||'none'}. Periods use catalog recording dates; ${visible.filter(v=>!v.date&&v.estimated_date).length.toLocaleString()} recordings without one are placed by their estimated date. Year-only dates are omitted from the month view.`;
         return;
       }
       const interval=intervalSelect.value as 'year'|'month';
@@ -413,7 +416,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       if(series.length>1) svg.append(el('polyline',{points:series.map((s,i)=>`${X(i)},${Y(s.mean)}`).join(' '),fill:'none',stroke:'var(--corpus-accent)','stroke-width':'3'}));
       series.forEach((s,i)=>{const c=el('circle',{cx:String(X(i)),cy:String(Y(s.mean)),r:'5',fill:'var(--corpus-accent)'});const title=el('title',{});title.textContent=`${s.period}: mean ${fmt(s.mean)}, n=${s.n}`;c.append(title);svg.append(c);});
       const body=root.querySelector<HTMLTableSectionElement>('[data-trend-rows]')!;body.replaceChildren(...series.map(s=>{const tr=n('tr'),composition=Object.entries(s.genre_counts).sort((a,b)=>b[1]-a[1]).map(([category,count])=>`${humanize(category)}: ${count} (${fmt(count/s.n*100)}%)`).join(' · ');for(const val of [s.period,fmt(s.mean),s.low==null&&s.high==null?'—':`${fmt(s.low)}–${fmt(s.high)}`,String(s.n),composition||'Available with full-cohort factor trends'])tr.append(n('td',val));return tr;}));
-      const dateBases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);root.querySelector<HTMLElement>('[data-date-warning]')!.textContent=`Date bases represented: ${dateBases.join(', ')||'none'}. Periods use catalog recording dates. ${joint?'Joint factor trends require a known month, including in yearly view.':'Year-only dates are omitted from month view.'}`;
+      const dateBases=[...new Set(visible.filter(v=>v.date).map(v=>v.date_basis))].map(dateBasisLabel);root.querySelector<HTMLElement>('[data-date-warning]')!.textContent=`Date bases represented: ${dateBases.join(', ')||'none'}. Periods use catalog recording dates${joint?'':'; a recording without one is placed by its estimated date'}. ${joint?'Joint factor trends require a known month, including in yearly view.':'Year-only dates are omitted from month view.'}`;
     }
     function drawCorrelations() {
       const questions=activeQuestions(), ids=questions.map(q=>release.analysis.question_ids.indexOf(q.id));
@@ -497,12 +500,10 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     }
     function selectQuestion(q:AnalysisQuestion){kindSelect.value='question';metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));metricSelect.value=q.id;currentPage=1;render();}
     function render() { currentPage=1;updateRubric();renderVideos();drawTrend(); }
-    async function shardDigest(videos:AnalysisVideo[]) {
-      const bytes=new TextEncoder().encode(JSON.stringify(videos)),digest=await crypto.subtle.digest('SHA-256',bytes);
-      return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('').slice(0,16);
-    }
-    // Labelled estimates for recordings without a catalog date; display only, never used in trends or filters.
+    // Recordings without a catalog date: `dateTexts` is the labelled estimate shown wherever a date is printed;
+    // `estimatedDates` is the estimated day or month that places the recording in date order, the year filter and periods.
     let dateTexts:Record<string,string>={};
+    const estimatedDates:Promise<Record<string,string>>=fetch('/corpus/estimated-dates.json').then(r=>r.ok?r.json():{}).catch(()=>({}));
     async function init() {
       try {
         fetch('/corpus/date-texts.json').then(r=>r.ok?r.json():{}).then(v=>{dateTexts=v;}).catch(()=>{});
@@ -512,12 +513,15 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         if(import.meta.env.PROD&&payload.passage_shards===undefined)throw new Error('Published passage index is missing or incompatible with this release.');
         if(!Array.isArray(payload.video_shards)||payload.video_shards.some((s,i)=>!/^\d{3,}-[a-f0-9]{16}$/.test(s.id)||!s.id.startsWith(`${String(i).padStart(3,'0')}-`)||s.url!==`/corpus/analysis/shards/${s.id}.json`||!Number.isInteger(s.count)||s.count<1||s.count>100))throw new Error('Invalid score shard index.');
         const videos:AnalysisVideo[]=[];
-        for(let start=0;start<payload.video_shards.length;start+=3){
-          const batch=payload.video_shards.slice(start,start+3);
-          const responses=await Promise.all(batch.map(async shard=>{status.textContent=`Loading transcript analysis data… ${Math.min(start+batch.length,payload.video_shards!.length)} of ${payload.video_shards!.length} groups`;const result=await fetch(shard.url);if(!result.ok)throw new Error('score shard unavailable');const data=await result.json();if(data.schema_version!==1||data.shard_id!==shard.id||data.corpus_release_id!==payload.release!.corpus_release_id||!Array.isArray(data.videos)||data.videos.length!==shard.count||await shardDigest(data.videos as AnalysisVideo[])!==shard.id.slice(shard.id.indexOf('-')+1))throw new Error('invalid or stale score shard');return data.videos as AnalysisVideo[]}));
+        // Six groups at a time: each is checked against its identity as it arrives (see shard-verify.mjs).
+        for(let start=0;start<payload.video_shards.length;start+=6){
+          const batch=payload.video_shards.slice(start,start+6);
+          const responses=await Promise.all(batch.map(async shard=>{status.textContent=`Loading transcript analysis data… ${Math.min(start+batch.length,payload.video_shards!.length)} of ${payload.video_shards!.length} groups`;const result=await fetch(shard.url);if(!result.ok)throw new Error('score shard unavailable');return readVerifiedShard(new Uint8Array(await result.arrayBuffer()),shard,payload.release!.corpus_release_id);}));
           for(const shardRows of responses)videos.push(...shardRows);
         }
-        release=validateAnalysisRelease({...payload.release,videos});passageShardIndex=validatePassageShardIndex(payload.passage_shards,release);factorDescriptions=await resolveFactorDescriptions(release,factorAnnotations);supplement=await loadAnalysisSupplement(release);document.dispatchEvent(new CustomEvent('analysis-release-ready',{detail:{release,supplement,diagnostics:supplement?.map_diagnostics}})); status.textContent='';status.hidden=true;content.hidden=false;
+        release=validateAnalysisRelease({...payload.release,videos});
+        {const estimates=await estimatedDates;for(const video of release.videos){const value=video.date?undefined:estimates[video.recording_id];if(typeof value==='string'&&/^\d{4}(-\d{2}){0,2}$/.test(value))video.estimated_date=value;}}
+        passageShardIndex=validatePassageShardIndex(payload.passage_shards,release);factorDescriptions=await resolveFactorDescriptions(release,factorAnnotations);supplement=await loadAnalysisSupplement(release);document.dispatchEvent(new CustomEvent('analysis-release-ready',{detail:{release,supplement,diagnostics:supplement?.map_diagnostics}})); status.textContent='';status.hidden=true;content.hidden=false;
         const historical=root.querySelector<HTMLElement>('[data-historical-input]')!;
         historical.hidden=!release.historical_input;
         historical.textContent=release.historical_input?`Scores use the earlier transcript inputs from ${release.generated_at.slice(0,10)}. Reviewed speaker labels and some transcripts have since changed; scores and fitted dimensions have not been recalculated. Passage links open the current recording at the original scored time, where wording or segmentation may differ.`:'';
@@ -527,7 +531,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
         if(windowed()){for(const name of ['kind-control','length-control','design-options'])root.querySelector<HTMLElement>(`[data-${name}]`)!.hidden=false;}
         const subjectQuestion=release.questions.find(q=>q.id==='class_subject');
         if(subjectQuestion&&!Array.isArray(subjectQuestion.criteria)){(controls.elements.namedItem('subject') as HTMLSelectElement).append(...Object.keys(subjectQuestion.criteria).filter(key=>release.videos.some(v=>v.classifications?.class_subject?.choice===key)).map(key=>option(humanize(key),key)));root.querySelector<HTMLElement>('[data-subject-control]')!.hidden=false;}
-        const years=[...new Set(release.videos.flatMap(v=>v.date?[v.date.slice(0,4)]:[]))].sort().reverse();yearSelect.append(...years.map(y=>option(y,y)),option('Undated','undated'));
+        const years=[...new Set(release.videos.flatMap(v=>recordingDate(v)?[recordingDate(v)!.slice(0,4)]:[]))].sort().reverse();yearSelect.append(...years.map(y=>option(y,y)),...(release.videos.some(v=>!recordingDate(v))?[option('Undated','undated')]:[]));
         const categories=[...new Set(release.videos.flatMap(v=>v.category?[v.category]:[]))].sort();categorySelect.append(...categories.map(c=>option(humanize(c),c)));
         controls.addEventListener('input',()=>{currentPage=1;render();});controls.addEventListener('change',(event)=>{if(event.target===kindSelect){metricSelect.replaceChildren(...metrics().map(m=>option(m.label,m.id)));}currentPage=1;render();});
         pageSizeSelect.addEventListener('change',()=>{pageSize=Number(pageSizeSelect.value);currentPage=1;renderVideos();});

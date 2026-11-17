@@ -137,9 +137,9 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     const defs=svgEl('defs',{}),clip=svgEl('clipPath',{id:'recording-map-clip'});clip.append(svgEl('rect',{x:pad,y:pad,width:width-2*pad,height:height-2*pad}));defs.append(clip);svg.append(defs);
     const clipped=svgEl('g',{'clip-path':'url(#recording-map-clip)'}),layer=svgEl('g',{'data-map-layer':''}),axes=svgEl('g',{'pointer-events':'none'});clipped.append(layer);svg.append(clipped,axes);
     const categories=[...new Set(release.videos.map(v=>v.category??'Unknown'))].sort();
-    const years=release.videos.map(v=>Number(v.date?.slice(0,4))).filter(y=>y>0),minyear=Math.min(...years),maxyear=Math.max(...years);
+    const dated=v=>v.date??v.estimated_date??null,years=release.videos.map(v=>Number(dated(v)?.slice(0,4))).filter(y=>y>0),minyear=Math.min(...years),maxyear=Math.max(...years);
     const kindColors={video:'#3987e5',stream:'#d95926',clip:'#199e70'}; // validated for the dark panel, all pairs
-    const paint=video=>color.value==='kind'?(kindColors[video.design?.kind]??'#888'):color.value==='year'?(video.date?`hsl(${250-210*(Number(video.date.slice(0,4))-minyear)/(maxyear-minyear||1)} 70% 55%)`:'#888'):`hsl(${categories.indexOf(video.category??'Unknown')*137.508%360} 65% 55%)`;
+    const paint=video=>color.value==='kind'?(kindColors[video.design?.kind]??'#888'):color.value==='year'?(dated(video)?`hsl(${250-210*(Number(dated(video).slice(0,4))-minyear)/(maxyear-minyear||1)} 70% 55%)`:'#888'):`hsl(${categories.indexOf(video.category??'Unknown')*137.508%360} 65% 55%)`;
     const circles=[];
     for(const point of plotPoints){const c=svgEl('circle',{cx:px(point.x),cy:py(point.y),r:2.7,fill:paint(videos.get(point.id)),opacity:.55});c.append(svgEl('title',{}));c.firstChild.textContent=`${videos.get(point.id).title} · ${projection.axes[0]} ${fmt(point.x)} · ${projection.axes[1]} ${fmt(point.y)}`;layer.append(c);circles.push(c);}
     mark(svg);

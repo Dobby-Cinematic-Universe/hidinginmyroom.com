@@ -31,3 +31,13 @@ test('circa dates order and filter like dates; folded copies are hidden but sear
   assert.deepEqual(filterRecordings(more,{q:'earlier name'}).map(r=>r.href),['/b']);
   assert.deepEqual(filterRecordings(more,{q:'abc'}).map(r=>r.href),['/b']);
 });
+
+test('an estimated date places an undated recording in date order and the year filter',()=>{
+  const more=[...rows,{title:'Estimated month',date:null,year:null,estimated:'2024-05',href:'/f',hasTranscript:true},
+    {title:'Circa wins',date:null,year:null,circa:'2023-02-01',estimated:'2024-12',href:'/g',hasTranscript:true}];
+  assert.deepEqual(filterRecordings(more,{year:'undated'}).map(r=>r.href),['/c']);
+  assert.ok(filterRecordings(more,{year:'2024'}).some(r=>r.href==='/f')&&!filterRecordings(more,{year:'2024'}).some(r=>r.href==='/g'));
+  assert.deepEqual(filterRecordings(more,{year:'2023'}).map(r=>r.href).filter(h=>h==='/g'),['/g']);
+  const order=filterRecordings(more).map(r=>r.href);
+  assert.ok(order.indexOf('/f')<order.indexOf('/g')&&order.at(-1)==='/c');
+});

@@ -16,6 +16,7 @@
 /src/data/analysis/passage-insights.json
 /src/data/analysis/factor-diagnostics.json
 /src/data/analysis/temporal-comparisons.json
+/src/data/analysis/passage-table.json
 /src/data/analysis/passages/
 /coverage/
 *.tsbuildinfo

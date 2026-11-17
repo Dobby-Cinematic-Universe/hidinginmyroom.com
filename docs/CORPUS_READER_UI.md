@@ -280,3 +280,45 @@ them is shown as before.
 
 `src/data/analysis/questions.json` is version 2 of the question bank. `src/data/analysis/factor-descriptions.json`
 still belongs to the published analysis; it is replaced together with `analysis-release.json` at publication.
+
+## Passage explorer
+
+`/corpus/analysis/passage-explorer/` holds four views on single passages: subjects by year, the course of one
+recording, topics, and a passage finder. They are computed in the browser from the release's **passage table**
+(`passage-table.json`), an optional member of the analysis bundle: one row per full passage of every video and
+stream, with the passage's dimension scores, subject, addressee and start time, and the passages that name each
+topic (products, games, platforms and a few places; no people). Each recording is marked as the version the analysis
+counts or as another version: the views that add passages up (subjects, topics) count one version of each recording,
+while every version can be opened and, on request, searched. Years in the views come from catalog dates or,
+when those are absent, labelled date estimates. A new year appears without a code change. The table holds no transcript text; each passage links
+to its place in the transcript. `src/lib/analysis/passage-table.mjs` validates the table against the release and
+holds the aggregations; `scripts/check-analysis-release.mjs` checks it when it is present, and
+`scripts/analysis-release-bundle.py` packs and restores it. A release without the table stays valid, and the page
+then says that the passage views are not available. Dimensions carry their standing from the human rating studies
+(`src/lib/analysis/validation-studies.json`).
+
+## Estimated dates in date order, year filters and periods (2026-11-16)
+
+By the owner's decision, a recording without a catalog date is placed by its estimated date wherever recordings
+are ordered or grouped by date: the browse page (order and year filter; a circa date still comes first where both
+exist), the analysis explorer (date order, year filter, the periods of the trend chart, the year colours of the
+recording map) and the passage explorer's views by year. The catalog date is never changed, a catalog date is never
+replaced by an estimate, and an estimate is always shown as one. `/corpus/estimated-dates.json` serves the estimated
+day or month per recording; `/corpus/date-texts.json` still serves the labelled text. The precomputed panels of the
+analysis release (joint trends, temporal comparisons) keep the dates they were computed with.
+
+## Loading the analysis explorer (2026-11-16)
+
+A CPU profile of the page load showed that the largest single cost in the page's own code was checking each score
+shard against its identity by serializing it again. `src/lib/analysis/shard-verify.mjs` now hashes the bytes of
+`videos` where they lie in the response and parses the same bytes, with the old path kept for a body laid out
+otherwise. Shards load six at a time, and numbers share one formatter.
+
+Score shards are served in a compact lossless encoding (`src/lib/analysis/shard-codec.mjs`, shard schema version
+2): a list of like-shaped rows is written as columns, so key names appear once per shard instead of once per score.
+It decodes to exactly the rows of the release, key order included; `encodeShard` checks that for every shard at
+build time and carries a shard as it is if the check fails. A shard's identity is the hash of the encoded rows it
+serves. On the release of 2026-11-14 the shards shrink from 45.7 MB to 10.9 MB of JSON (5.0 MB to 3.5 MB
+compressed). The release bundle and `release.json` are unchanged: only what the explorer downloads is encoded. The
+local release checkers (`pipeline/check_analysis_site_release.mjs`, `check_analysis_live_release.mjs`) read both
+the old and the new shard format. What remains at load is the validation of every score.

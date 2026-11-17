@@ -35,6 +35,12 @@ export async function recordingDateEstimate(id:string){
   return describeDateEstimate((await cached).recordings[id]);
 }
 
+/** The estimated date itself (a day, a month or a year) of each recording that has an estimate. */
+export async function estimatedDates():Promise<Map<string,string>>{
+  cached??=load();
+  return new Map(Object.entries((await cached).recordings).filter(([,row])=>typeof row?.date==='string'&&/^\d{4}(-\d{2}){0,2}$/.test(row.date)).map(([id,row])=>[id,row.date]));
+}
+
 /** Card text ("Estimated …") for an undated recording in lists; undefined when none exists. */
 export async function recordingDateEstimateCard(id:string):Promise<string|undefined>{
   return (await recordingDateEstimate(id))?.card;
@@ -53,10 +59,10 @@ export async function recordingOverlay():Promise<{circa:Map<string,string>;dupli
   return {circa,duplicateOf:dup,copies};
 }
 
-/** Catalog order for static lists: newest first by catalog date or circa date; folded copies removed. */
+/** Catalog order for static lists: newest first by catalog date, circa date or estimated date; folded copies removed. */
 export async function browseOrder<T extends {recording_id:string;date_label:string|null;title:string}>(recordings:T[]):Promise<T[]>{
-  const {circa,duplicateOf:dup}=await recordingOverlay();
-  const date=(r:T)=>r.date_label||circa.get(r.recording_id)||'';
+  const [{circa,duplicateOf:dup},estimated]=await Promise.all([recordingOverlay(),estimatedDates()]);
+  const date=(r:T)=>r.date_label||circa.get(r.recording_id)||estimated.get(r.recording_id)||'';
   return recordings.filter(r=>!dup.has(r.recording_id)).sort((a,b)=>date(b).localeCompare(date(a))||a.title.localeCompare(b.title));
 }
 

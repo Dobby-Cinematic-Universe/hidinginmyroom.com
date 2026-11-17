@@ -156,6 +156,8 @@ try{
     await cp(from+'/public-release.json',to+'/release.json');
     for(const name of ['extended-robustness.json','joint-trends.json','map-diagnostics.json','recording-discovery.json','recording-umap.json','passage-insights.json','factor-diagnostics.json','temporal-comparisons.json'])await cp(from+'/'+name,to+'/'+name);
     await cp(from+'/passages',to+'/passages',{recursive:true});
+    // The passage table is an optional member of an analysis run.
+    try{await cp(from+'/passage-table.json',to+'/passage-table.json',{errorOnExist:false});}catch(error){if(error.code!=='ENOENT')throw error;}
     // Factor annotations are bound to the analysis they describe; the run directory carries the re-bound copy.
     await cp(from+'/factor-descriptions.json',to+'/factor-descriptions.json');
     report.analysis_bundle_restored=false;report.local_analysis_run=path.basename(from);

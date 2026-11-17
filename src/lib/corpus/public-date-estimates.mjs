@@ -126,8 +126,9 @@ const MONTHS=['January','February','March','April','May','June','July','August',
 const month=v=>`${MONTHS[Number(v.slice(5,7))-1]} ${v.slice(0,4)}`;
 
 // An archived listing window of at most CIRCA_DAYS is narrow enough to place the recording in
-// date order and year filters as an approximate ("circa") date. Wider windows and model
-// estimates never are. The catalog date itself is still not changed.
+// date order and year filters as an approximate ("circa") date. Since 2026-11-16 every other
+// estimate of an undated recording also places it there (owner's decision), after the circa date
+// where both exist, and is shown as an estimate. The catalog date itself is still not changed.
 export const CIRCA_DAYS=31;
 const days=l=>Math.round((Date.parse(l.to)-Date.parse(l.from))/864e5);
 // A copy date that the listing confirms keeps the dated copy's own (exact) date.

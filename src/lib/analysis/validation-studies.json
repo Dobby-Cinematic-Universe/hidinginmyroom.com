@@ -1,0 +1,629 @@
+{
+ "note": "Generated from the replication results of the two rating studies. Correlations and reliabilities are for the mean of five raters per question; intervals are 95% intervals from resampling.",
+ "rule": {
+  "reliability": 0.6,
+  "correlation": 0.5,
+  "unclear_below": 0.4,
+  "misread_below": 0.3
+ },
+ "studies": {
+  "first": {
+   "date": "2026-11-15",
+   "raters": 205,
+   "excerpts": 160,
+   "questions": 12,
+   "ratings": 9648,
+   "cannot_judge": 192
+  },
+  "second": {
+   "date": "2026-11-16",
+   "raters": 211,
+   "excerpts": 160,
+   "recordings": 80,
+   "questions": 16,
+   "ratings": 13248,
+   "cannot_judge": 256
+  }
+ },
+ "dimensions": [
+  {
+   "id": "F1",
+   "label": "Direct, organized argument",
+   "higher": "More direct, organized, persuasive talk that develops a point.",
+   "questions": [
+    "Persuasion",
+    "Persistence"
+   ],
+   "reliability": 0.705813,
+   "reliability_interval": [
+    0.651113,
+    0.745153
+   ],
+   "jev": 0.683136,
+   "jev_interval": [
+    0.618868,
+    0.745244
+   ],
+   "drex": 0.715347,
+   "drex_interval": [
+    0.650391,
+    0.778173
+   ],
+   "d12u": 0.670646,
+   "d12u_interval": [
+    0.592948,
+    0.739573
+   ],
+   "verdict": "usable",
+   "settled": true,
+   "jev_with_panel": 0.832617,
+   "one_rating_with_panel": 0.587145,
+   "streams_at_same_score": -0.115711,
+   "streams_interval": [
+    -0.404319,
+    0.15333
+   ]
+  },
+  {
+   "id": "F2",
+   "label": "Positive tone versus disappointment",
+   "higher": "More positive, proud or hopeful wording.",
+   "questions": [
+    "Positive tone",
+    "Disappointment"
+   ],
+   "reliability": 0.860039,
+   "reliability_interval": [
+    0.821734,
+    0.884418
+   ],
+   "jev": 0.789769,
+   "jev_interval": [
+    0.730634,
+    0.83932
+   ],
+   "drex": 0.755693,
+   "drex_interval": [
+    0.686034,
+    0.813862
+   ],
+   "d12u": 0.770464,
+   "d12u_interval": [
+    0.710878,
+    0.825043
+   ],
+   "verdict": "usable",
+   "settled": true,
+   "jev_with_panel": 0.837691,
+   "one_rating_with_panel": 0.728407,
+   "streams_at_same_score": -0.324942,
+   "streams_interval": [
+    -0.561584,
+    -0.097762
+   ]
+  },
+  {
+   "id": "F3",
+   "label": "Self-disclosure and self-criticism",
+   "higher": "More talk about oneself, including self-criticism, taking responsibility and sadness.",
+   "questions": [
+    "Self-disclosure",
+    "Self-critical"
+   ],
+   "reliability": 0.836713,
+   "reliability_interval": [
+    0.798306,
+    0.863399
+   ],
+   "jev": 0.798281,
+   "jev_interval": [
+    0.733463,
+    0.853169
+   ],
+   "drex": 0.806449,
+   "drex_interval": [
+    0.751721,
+    0.848311
+   ],
+   "d12u": 0.813118,
+   "d12u_interval": [
+    0.760903,
+    0.856186
+   ],
+   "verdict": "usable",
+   "settled": true,
+   "jev_with_panel": 0.871065,
+   "one_rating_with_panel": 0.705998,
+   "streams_at_same_score": 0.133309,
+   "streams_interval": [
+    -0.084763,
+    0.34271
+   ]
+  },
+  {
+   "id": "F4",
+   "label": "Care and regard for others",
+   "higher": "More compassionate, respectful and warm wording about other people.",
+   "questions": [
+    "Compassion",
+    "Respect"
+   ],
+   "reliability": 0.662761,
+   "reliability_interval": [
+    0.528886,
+    0.746956
+   ],
+   "jev": 0.501707,
+   "jev_interval": [
+    0.307227,
+    0.668187
+   ],
+   "drex": 0.500784,
+   "drex_interval": [
+    0.302741,
+    0.667123
+   ],
+   "d12u": 0.55705,
+   "d12u_interval": [
+    0.392007,
+    0.692084
+   ],
+   "verdict": "usable",
+   "settled": false,
+   "jev_with_panel": 0.628687,
+   "one_rating_with_panel": 0.535144,
+   "streams_at_same_score": -0.502496,
+   "streams_interval": [
+    -0.823995,
+    -0.186266
+   ]
+  },
+  {
+   "id": "F5",
+   "label": "Narrative versus rebuttal",
+   "higher": "More storytelling: events in sequence, with setting and outcome.",
+   "questions": [
+    "Narrative",
+    "Rebuttal"
+   ],
+   "reliability": 0.595874,
+   "reliability_interval": [
+    0.454792,
+    0.683588
+   ],
+   "jev": 0.696892,
+   "jev_interval": [
+    0.584531,
+    0.774552
+   ],
+   "drex": 0.644555,
+   "drex_interval": [
+    0.518175,
+    0.741337
+   ],
+   "d12u": 0.6665,
+   "d12u_interval": [
+    0.529408,
+    0.764401
+   ],
+   "verdict": "borderline",
+   "settled": false,
+   "jev_with_panel": 0.911063,
+   "one_rating_with_panel": 0.497903,
+   "streams_at_same_score": -0.072693,
+   "streams_interval": [
+    -0.323829,
+    0.166135
+   ]
+  },
+  {
+   "id": "F6",
+   "label": "Energetic and angry versus calm",
+   "higher": "More energetic, angry or confrontational wording.",
+   "questions": [
+    "Energetic",
+    "Calm"
+   ],
+   "reliability": 0.768204,
+   "reliability_interval": [
+    0.71231,
+    0.804503
+   ],
+   "jev": 0.818615,
+   "jev_interval": [
+    0.770269,
+    0.859057
+   ],
+   "drex": 0.750048,
+   "drex_interval": [
+    0.691075,
+    0.8013
+   ],
+   "d12u": 0.762534,
+   "d12u_interval": [
+    0.704049,
+    0.811835
+   ],
+   "verdict": "usable",
+   "settled": true,
+   "jev_with_panel": 0.929148,
+   "one_rating_with_panel": 0.627807,
+   "streams_at_same_score": 0.202896,
+   "streams_interval": [
+    -0.047205,
+    0.451197
+   ]
+  },
+  {
+   "id": "F7",
+   "label": "Humor and imaginative language",
+   "higher": "More joking, playful, imaginative or ironic wording.",
+   "questions": [
+    "Humor",
+    "Imaginative"
+   ],
+   "reliability": 0.58511,
+   "reliability_interval": [
+    0.435532,
+    0.671351
+   ],
+   "jev": 0.559756,
+   "jev_interval": [
+    0.446215,
+    0.66133
+   ],
+   "drex": 0.493206,
+   "drex_interval": [
+    0.354189,
+    0.599947
+   ],
+   "d12u": 0.512753,
+   "d12u_interval": [
+    0.387217,
+    0.618071
+   ],
+   "verdict": "borderline",
+   "settled": false,
+   "jev_with_panel": 0.734519,
+   "one_rating_with_panel": 0.468763,
+   "streams_at_same_score": 0.012177,
+   "streams_interval": [
+    -0.250403,
+    0.281955
+   ]
+  },
+  {
+   "id": "F8",
+   "label": "Hedging and open-mindedness versus certainty",
+   "higher": "More qualified, tentative and exploratory wording.",
+   "questions": [
+    "Hedging",
+    "Knowledge limits"
+   ],
+   "reliability": 0.344567,
+   "reliability_interval": [
+    0.164214,
+    0.461953
+   ],
+   "jev": 0.510132,
+   "jev_interval": [
+    0.38971,
+    0.625308
+   ],
+   "drex": 0.57869,
+   "drex_interval": [
+    0.474306,
+    0.68059
+   ],
+   "d12u": 0.576601,
+   "d12u_interval": [
+    0.472182,
+    0.675579
+   ],
+   "verdict": "unclear rubric",
+   "settled": false,
+   "jev_with_panel": 0.864439,
+   "one_rating_with_panel": 0.315333,
+   "streams_at_same_score": -0.19127,
+   "streams_interval": [
+    -0.496523,
+    0.125545
+   ]
+  }
+ ],
+ "first_study_questions": [
+  {
+   "name": "Positive tone",
+   "dimension": "F2",
+   "reliability": 0.846199,
+   "reliability_interval": [
+    0.813597,
+    0.873154
+   ],
+   "jev": 0.89145,
+   "jev_interval": [
+    0.866949,
+    0.91281
+   ],
+   "drex": 0.877192,
+   "drex_interval": [
+    0.852946,
+    0.896718
+   ],
+   "verdict": "usable",
+   "settled": true
+  },
+  {
+   "name": "Disappointment",
+   "dimension": "F2",
+   "reliability": 0.836633,
+   "reliability_interval": [
+    0.795785,
+    0.867082
+   ],
+   "jev": 0.754534,
+   "jev_interval": [
+    0.691096,
+    0.816278
+   ],
+   "drex": 0.715401,
+   "drex_interval": [
+    0.66313,
+    0.76545
+   ],
+   "verdict": "usable",
+   "settled": true
+  },
+  {
+   "name": "Self-critical",
+   "dimension": "F3",
+   "reliability": 0.791767,
+   "reliability_interval": [
+    0.744883,
+    0.830514
+   ],
+   "jev": 0.757979,
+   "jev_interval": [
+    0.698145,
+    0.815566
+   ],
+   "drex": 0.756303,
+   "drex_interval": [
+    0.703662,
+    0.808857
+   ],
+   "verdict": "usable",
+   "settled": true
+  },
+  {
+   "name": "Self-disclosure",
+   "dimension": "F3",
+   "reliability": 0.755056,
+   "reliability_interval": [
+    0.708747,
+    0.797713
+   ],
+   "jev": 0.792245,
+   "jev_interval": [
+    0.761208,
+    0.82164
+   ],
+   "drex": 0.845167,
+   "drex_interval": [
+    0.810499,
+    0.874108
+   ],
+   "verdict": "usable",
+   "settled": true
+  },
+  {
+   "name": "Calm",
+   "dimension": "F6",
+   "reliability": 0.613261,
+   "reliability_interval": [
+    0.535021,
+    0.674196
+   ],
+   "jev": 0.66054,
+   "jev_interval": [
+    0.581799,
+    0.734206
+   ],
+   "drex": 0.680186,
+   "drex_interval": [
+    0.601214,
+    0.751139
+   ],
+   "verdict": "usable",
+   "settled": false
+  },
+  {
+   "name": "Persistence",
+   "dimension": "F1",
+   "reliability": 0.566331,
+   "reliability_interval": [
+    0.466968,
+    0.6397
+   ],
+   "jev": 0.647666,
+   "jev_interval": [
+    0.568695,
+    0.727363
+   ],
+   "drex": 0.600103,
+   "drex_interval": [
+    0.517662,
+    0.679694
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Narrative",
+   "dimension": "F5",
+   "reliability": 0.553748,
+   "reliability_interval": [
+    0.45184,
+    0.631482
+   ],
+   "jev": 0.466633,
+   "jev_interval": [
+    0.382845,
+    0.547822
+   ],
+   "drex": 0.570295,
+   "drex_interval": [
+    0.494425,
+    0.647602
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Energetic",
+   "dimension": "F6",
+   "reliability": 0.52543,
+   "reliability_interval": [
+    0.469843,
+    0.608507
+   ],
+   "jev": 0.71306,
+   "jev_interval": [
+    0.661325,
+    0.754309
+   ],
+   "drex": 0.649459,
+   "drex_interval": [
+    0.601365,
+    0.686088
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Humor",
+   "dimension": "F7",
+   "reliability": 0.523672,
+   "reliability_interval": [
+    0.438096,
+    0.615626
+   ],
+   "jev": 0.697768,
+   "jev_interval": [
+    0.620027,
+    0.753825
+   ],
+   "drex": 0.630945,
+   "drex_interval": [
+    0.563529,
+    0.691218
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Compassion",
+   "dimension": "F4",
+   "reliability": 0.495974,
+   "reliability_interval": [
+    0.372359,
+    0.594459
+   ],
+   "jev": 0.50553,
+   "jev_interval": [
+    0.408472,
+    0.600428
+   ],
+   "drex": 0.52609,
+   "drex_interval": [
+    0.449261,
+    0.609395
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Persuasion",
+   "dimension": "F1",
+   "reliability": 0.454049,
+   "reliability_interval": [
+    0.336147,
+    0.548511
+   ],
+   "jev": 0.595497,
+   "jev_interval": [
+    0.510749,
+    0.670472
+   ],
+   "drex": 0.596267,
+   "drex_interval": [
+    0.525556,
+    0.663628
+   ],
+   "verdict": "borderline",
+   "settled": false
+  },
+  {
+   "name": "Hedging",
+   "dimension": "F8",
+   "reliability": 0.448577,
+   "reliability_interval": [
+    0.340639,
+    0.558477
+   ],
+   "jev": 0.595725,
+   "jev_interval": [
+    0.516373,
+    0.667617
+   ],
+   "drex": 0.59045,
+   "drex_interval": [
+    0.525552,
+    0.653499
+   ],
+   "verdict": "borderline",
+   "settled": false
+  }
+ ],
+ "summary": {
+  "over_the_eight_dimensions": {
+   "jev": 0.669786,
+   "drex": 0.655597,
+   "d12u": 0.666208
+  },
+  "first_study_over_twelve_questions": {
+   "jev": 0.673219,
+   "drex": 0.669821
+  },
+  "with_an_unlimited_panel": {
+   "jev": 0.826154,
+   "drex": 0.812005,
+   "one_rating_of_each_question": 0.558312
+  },
+  "between_the_studies": {
+   "jev": 0.94674,
+   "drex": 0.904605,
+   "questions": 12
+  },
+  "two_passages_of_one_recording": {
+   "jev": 0.542189,
+   "drex": 0.502486
+  },
+  "distance_of_levels": {
+   "jev": 0.367214,
+   "drex": 0.334705,
+   "d12u": 0.178602,
+   "largest": {
+    "question": "Hedging",
+    "jev_minus_people": 1.060552
+   }
+  },
+  "pooled_usable_questions": [
+   "Positive tone",
+   "Disappointment",
+   "Self-disclosure",
+   "Self-critical",
+   "Calm"
+  ]
+ }
+}

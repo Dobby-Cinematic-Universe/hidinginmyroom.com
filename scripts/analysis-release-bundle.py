@@ -17,9 +17,11 @@ PREFIX = 'src/data/analysis/'
 SUPPLEMENTS = ('extended-robustness.json', 'joint-trends.json', 'map-diagnostics.json',
                'recording-discovery.json', 'recording-umap.json', 'passage-insights.json',
                'factor-diagnostics.json', 'temporal-comparisons.json')
+# Members a release may hold or lack: a bundle without them stays valid.
+OPTIONAL = ('passage-table.json',)
 MAX_ARCHIVE = 150_000_000
 MAX_UNPACKED = 600_000_000
-MAX_FILES = 10009
+MAX_FILES = 10009 + len(OPTIONAL)
 MANIFEST_KEYS = {'version', 'type', 'sha256', 'bytes', 'unpacked_bytes', 'files',
                  'corpus_release', 'questionnaire_version', 'model', 'source_generated_at',
                  'scored_recordings', 'scored_passages', 'loadings_sha256'}
@@ -57,7 +59,7 @@ def allowed(name):
     p = PurePosixPath(name)
     if p.is_absolute() or '..' in p.parts or '\\' in name or str(p) != name:
         return False
-    return name in {PREFIX+'release.json', *(PREFIX+s for s in SUPPLEMENTS)} or bool(
+    return name in {PREFIX+'release.json', *(PREFIX+s for s in SUPPLEMENTS), *(PREFIX+s for s in OPTIONAL)} or bool(
         re.fullmatch(re.escape(PREFIX)+r'passages/rec_[a-f0-9]{32}\.json', name))
 
 
@@ -78,7 +80,7 @@ def validate_manifest(m, corpus):
                        ('scored_recordings', 10000), ('scored_passages', 1_000_000)]:
         if type(m[key]) is not int or not 0 < m[key] <= limit:
             raise ValueError('Invalid analysis manifest bound: '+key)
-    if m['files'] != m['scored_recordings'] + 9:
+    if not 0 <= m['files'] - m['scored_recordings'] - 9 <= len(OPTIONAL):
         raise ValueError('Manifest inventory count mismatch')
     for key in ('sha256', 'loadings_sha256'):
         if not isinstance(m[key], str) or not re.fullmatch('[a-f0-9]{64}', m[key]):
@@ -104,7 +106,7 @@ def verify(directory, m, full=True):
         raise ValueError('Scored passage count mismatch')
     expected = {'release.json', *SUPPLEMENTS, *('passages/'+id+'.json' for id in ids)}
     actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()}
-    if actual != expected:
+    if actual - set(OPTIONAL) != expected:
         raise ValueError('Analysis file inventory mismatch')
     total = 0
     for video in videos:
@@ -138,6 +140,7 @@ def pack(source, output, corpus_pin):
         directory = Path(folder)
         paths = [('public-release.json', 'release.json')] + [(s, s) for s in SUPPLEMENTS]
         paths += [('passages/'+v['recording_id']+'.json', 'passages/'+v['recording_id']+'.json') for v in release['videos']]
+        paths += [(s, s) for s in OPTIONAL if (source/s).exists()]
         size = 0
         for src, target in paths:
             file = source/src

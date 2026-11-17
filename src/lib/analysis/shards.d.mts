@@ -1,2 +1,3 @@
-import type { AnalysisVideo } from './explorer.mjs';
-export function analysisShardId(index: number, videos: AnalysisVideo[]): string;
+export const ANALYSIS_SHARD_SIZE: number;
+export function analysisShardId(index: number, videos: unknown[]): string;
+export function analysisShards(videos: unknown[]): { id: string; count: number; encoded: unknown[] }[];
