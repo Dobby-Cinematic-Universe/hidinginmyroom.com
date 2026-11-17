@@ -23,6 +23,14 @@ const sections = [...document.querySelectorAll<HTMLElement>('.transcript')].map(
   const rows = list ? [...list.querySelectorAll<HTMLElement>(':scope > li[data-start-ms]')] : [];
   return {section,list,rows,active:null as HTMLElement|null};
 });
+let selectedRow: HTMLElement | null = null;
+function selectTranscriptRow(row: HTMLElement | null) {
+  selectedRow?.querySelector('.transcript__timestamp')?.removeAttribute('aria-description');
+  selectedRow?.classList.remove('is-selected');
+  selectedRow = row;
+  selectedRow?.classList.add('is-selected');
+  if (row?.dataset.detail) row.querySelector('.transcript__timestamp')?.setAttribute('aria-description', `Segment ${row.dataset.detail}`);
+}
 const kind = () => source?.selectedOptions[0]?.dataset.kind;
 function reveal(list: HTMLElement, row: HTMLElement) {
   const outer=list.getBoundingClientRect(), inner=row.getBoundingClientRect();
@@ -49,7 +57,7 @@ function chooseSource() {
   video.hidden=kind()!=='video';youtubeButton.hidden=kind()!=='youtube';
   if(kind()==='video'){ video.preload='none';video.src=source.value; } else video.load();
   for(const {section} of sections){const follow=section.querySelector<HTMLInputElement>('[data-follow-playback]');if(follow){follow.disabled=kind()!=='video';if(follow.disabled)follow.checked=false;}}
-  if(status)status.textContent='Click a transcript timestamp to seek.';
+  if(status)status.textContent='Select a transcript timestamp to seek and show its time range and segment ID.';
 }
 source?.addEventListener('change',chooseSource);chooseSource();
 youtubeButton?.addEventListener('click',()=>loadYoutube());
@@ -71,6 +79,7 @@ video?.addEventListener('timeupdate',()=>{
 });
 for(const {section,list,rows} of sections){
   if(!list)continue;
+  list.dataset.jsSelection='true';
   const tools=section.querySelector<HTMLElement>('[data-transcript-tools]');if(tools)tools.hidden=false;
   const search=section.querySelector<HTMLInputElement>('[data-transcript-search]');
   const count=section.querySelector<HTMLElement>('[data-transcript-count]');
@@ -91,13 +100,16 @@ for(const {section,list,rows} of sections){
   list.addEventListener('click',event=>{
     const link=(event.target as Element).closest<HTMLAnchorElement>('.transcript__timestamp');if(!link)return;
     const row=link.closest<HTMLElement>('li[data-start-ms]');if(!row)return;
-    event.preventDefault();history.replaceState(null,'',link.hash);reveal(list,row);seek(Number(row.dataset.startMs)/1000);
+    event.preventDefault();history.replaceState(null,'',link.hash);selectTranscriptRow(row);reveal(list,row);seek(Number(row.dataset.startMs)/1000);
+    if(status && row.dataset.detail)status.textContent+=` Segment ${row.dataset.detail}.`;
   });
 }
 // Hash links remain useful without JavaScript; with it they also cue the player.
 function visitHash(){
   let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}
   const row=document.getElementById(id);
-  if(row?.dataset.startMs){const list=row.closest<HTMLElement>('.transcript__segments');if(list){row.hidden=false;reveal(list,row);}seek(Number(row.dataset.startMs)/1000);}
+  const list=row?.closest<HTMLElement>('.transcript__segments');
+  selectTranscriptRow(list && row?.dataset.startMs ? row : null);
+  if(row?.dataset.startMs && list){row.hidden=false;reveal(list,row);seek(Number(row.dataset.startMs)/1000);}
 }
 window.addEventListener('hashchange',visitHash);if(location.hash)visitHash();

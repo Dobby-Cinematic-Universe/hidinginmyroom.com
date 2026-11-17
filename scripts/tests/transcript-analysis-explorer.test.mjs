@@ -199,3 +199,13 @@ test('a recording without a catalog date is placed by its estimated date; a cata
   assert.deepEqual(filterAndSortVideos(data.videos,{...base,year:'undated'},'question',q1.id),[]);
   assert.deepEqual(filterAndSortVideos(data.videos,{...base,year:''},'question',q1.id).map(v=>v.title),['Fictional C','Fictional A','Fictional B']);
 });
+
+test('the title filter matches every word in any order, in the title, an earlier title or the category',()=>{
+  const data=validateAnalysisRelease(fixture()),base={sort:'title',direction:'asc',category:'',year:''},find=text=>filterAndSortVideos(data.videos,{...base,text},'question',q1.id).map(v=>v.title);
+  data.videos[0].title='A trip to Japan in spring';data.videos[1].title='Japan again';data.videos[1].aliases=['My old trip diary'];
+  assert.deepEqual(find('japan trip'),['A trip to Japan in spring','Japan again']);       // the second through its earlier title
+  assert.deepEqual(find('TRIP   japan'),['A trip to Japan in spring','Japan again']);
+  assert.deepEqual(find('spring japan'),['A trip to Japan in spring']);
+  assert.deepEqual(find('diary'),['Japan again']);assert.deepEqual(find('japan vlog'),['A trip to Japan in spring']);   // 'vlog' is the first recording's category
+  assert.deepEqual(find('japan winter'),[]);assert.equal(find('').length,3);assert.equal(find('   ').length,3);
+});

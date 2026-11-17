@@ -56,7 +56,8 @@ const years=[...new Set((await loadCorpusCatalog()).recordings.flatMap(r=>r.date
       render();
     }
     let timer:ReturnType<typeof setTimeout>;
-    form.addEventListener('input',()=>{page=1;clearTimeout(timer);timer=setTimeout(()=>void update(),150);});
+    // 80 ms is enough to skip the keystrokes of a fast typist; filtering and drawing take about 30 ms.
+    form.addEventListener('input',()=>{page=1;clearTimeout(timer);timer=setTimeout(()=>void update(),80);});
     form.addEventListener('submit',e=>{e.preventDefault();page=1;void update();});
     form.addEventListener('reset',()=>{page=1;setTimeout(()=>void update(),0);});
     prev.addEventListener('click',()=>{page--;render();root.scrollIntoView({block:'start'});});next.addEventListener('click',()=>{page++;render();root.scrollIntoView({block:'start'});});

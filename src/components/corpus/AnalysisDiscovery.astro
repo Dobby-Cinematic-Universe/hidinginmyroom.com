@@ -6,7 +6,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   <p>Find recordings with similar combinations of factor scores and inspect the passages behind their ratings.</p>
   <p data-discovery-summary class="chart-note" aria-live="polite"></p>
   <div class="discovery-controls">
-    <label>Find a recording <input type="search" data-discovery-search placeholder="Title, year, or category" /></label>
+    <label>Find a recording <input type="search" data-discovery-search placeholder="Words of a title, earlier title, date or category" /></label>
     <label>Selected recording <select data-discovery-recording></select></label>
     <label for="recording-map-view">Map view <select id="recording-map-view" data-discovery-view><option value="pca">PCA · broad variation</option><option value="umap" disabled>UMAP · local neighborhoods</option></select></label>
     <label>Color points by <select data-discovery-color><option value="year">Year</option><option value="category">Category</option></select></label>

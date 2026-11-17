@@ -322,3 +322,36 @@ serves. On the release of 2026-11-14 the shards shrink from 45.7 MB to 10.9 MB o
 compressed). The release bundle and `release.json` are unchanged: only what the explorer downloads is encoded. The
 local release checkers (`pipeline/check_analysis_site_release.mjs`, `check_analysis_live_release.mjs`) read both
 the old and the new shard format. What remains at load is the validation of every score.
+
+## Interaction and rendering measurements (2026-11-17)
+
+Measured on a built candidate in a headless browser. Interactions of the explorers, the browse filter and the
+corpus search respond in under 70 ms, with three exceptions that were changed: the recording map's selector listed
+every recording on each keystroke (now at most 300 matches, options made when first listed, titles lowercased
+once); the corpus search loaded its index only on the first query (now when the form is first focused or pressed);
+the browse filter waited 150 ms after typing (now 80 ms).
+
+Rendering cost is concentrated in the recording pages: the largest holds 16,000 segments in 112,000 elements and
+spends over two seconds in layout and style at load. Two things were tried on the built page and **not** adopted:
+`content-visibility: auto` on every segment made scrolling and the transcript filter far slower (the filter took
+over a minute), and on the explorer's sections it made no measurable difference. Removing the per-segment
+"Segment details" element (29% of the pages' HTML, three of seven elements per segment) halves the load time of the
+largest page. The owner approved it on 2026-11-17: a segment's time range and identifier are now a `data-detail`
+attribute, shown by CSS on the selected segment (`li:target::after`), with no script. On the built site the largest
+recording page went from 112,000 to 64,000 elements and from 2.2 s to 1.0 s of layout and style at load, and the
+whole site from 3.95 GB to 3.35 GB.
+
+In the analysis explorer, rendering at load is small and no section costs more than 40 ms to lay out. A change of
+the recording map's colouring now recolours the dots in place instead of drawing the chart again (62 ms to 22 ms),
+and a dot gets its tooltip element when the pointer first reaches it. With the capped selector this takes the page
+from 17,700 to 10,600 elements. The correlation matrix (about 130 ms to open, 110 ms per resize) was left as it is.
+
+## One rule for title searches (2026-11-17)
+
+Title searches follow one rule, in `src/lib/corpus/title-search.mjs`: every word of the query must occur in the
+searched text, in any order and not necessarily adjacent; case does not matter. The searched text is the title and
+the recording's earlier titles (with the titles of identical copies folded into it), plus what a view adds: the
+category in the analysis explorer's filter, the date and category in the recording map's selector, the date in the
+passage explorer's recording search. The browse page uses the same functions. `/corpus/title-aliases.json` serves
+the earlier titles to the client-rendered views; a row found only through an earlier title says "Also titled".
+Before, the three analysis searches needed the query as one unbroken string and did not search earlier titles.

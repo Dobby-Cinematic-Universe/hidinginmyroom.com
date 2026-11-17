@@ -299,7 +299,7 @@ const noAudio = annotation?.media_status === 'no_audio';
                     const fragment = segmentFragment(transcript, segment);
                     const speaker = showSpeakers ? knownSpeakerLabel(segment.speaker_label) : null;
                     return (
-                      <li id={fragment} data-start-ms={segment.start_ms} data-end-ms={segment.end_ms}>
+                      <li id={fragment} data-start-ms={segment.start_ms} data-end-ms={segment.end_ms} data-detail={`${formatTimestamp(segment.start_ms)}–${formatTimestamp(segment.end_ms)} · ${segment.segment_id}`}>
                         <div class="transcript__segment-meta">
                           <a
                             class="transcript__timestamp"
@@ -311,11 +311,6 @@ const noAudio = annotation?.media_status === 'no_audio';
                           {speaker && <span class="transcript__speaker">{speaker}</span>}
                         </div>
                         <p>{segment.text || '[No transcript text in this segment]'}</p>
-                        <details class="transcript__segment-detail"><summary>Segment details</summary><small>
-                          {formatTimestamp(segment.start_ms)}–{formatTimestamp(segment.end_ms)} · {
-                            segment.segment_id
-                          }
-                        </small></details>
                       </li>
                     );
                   })}
@@ -365,8 +360,9 @@ const noAudio = annotation?.media_status === 'no_audio';
   .recording__chapters > summary { cursor: pointer; color: var(--corpus-muted); padding: .35rem 0; }
   .recording__chapters li a { display: inline-block; min-width: 4.2rem; padding-block: .15rem; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; }
   .recording__chapters ol { list-style: none; padding: 0; margin: .5rem 0; display: grid; gap: .25rem; font-variant-numeric: tabular-nums; }
-  .transcript__segment-detail { color: var(--corpus-muted); font-size: .72rem; margin-top: .3rem; }
-  .transcript__segment-detail summary { cursor: pointer; width: max-content; }
+  /* A segment's time range and identifier are shown for the selected segment (its timestamp link selects it).
+     They were a disclosure element under every segment, which made up three of seven elements per segment. */
+  .transcript__segments:not([data-js-selection]) li:target::after, .transcript__segments li.is-selected::after { content: attr(data-detail); display: block; margin-top: .5rem; overflow-wrap: anywhere; color: var(--corpus-muted); font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: .68rem; }
   @media (max-width: 60rem) { .recording__workspace { grid-template-columns: minmax(0,1fr); } .recording__watch { position: static; } .reader-actions [data-wide-player] { display: none; } }
   @media print { .recording__watch,.transcript__tools { display: none !important; } .recording__workspace { display: block; } .transcript__segments { max-height: none; overflow: visible; } }
   .corpus-breadcrumbs {

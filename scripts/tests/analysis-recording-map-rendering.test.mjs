@@ -90,10 +90,13 @@ test('drag suppression blocks delegated picking while the next click still works
   svg.emit('click',{clientX:536,clientY:44});assert.equal(f.nodes.recording.value,'b');
 }));
 
-test('color redraw and view switching preserve the final pending per-projection camera',()=>withFixture(f=>{
+test('recolouring and view switching preserve the final pending per-projection camera',()=>withFixture(f=>{
   const first=f.nodes.map.querySelector('svg');first.emit('keydown',{key:'ArrowRight'});first.emit('keydown',{key:'+'});
+  const dots=first.querySelectorAll('circle').filter(c=>!Object.hasOwn(c.attributes,'data-discovery-selected-point')),fills=dots.map(c=>c.writes.get('fill'));
   f.nodes.color.value='category';f.nodes.color.emit('change');const second=f.nodes.map.querySelector('svg');
-  assert.notEqual(second,first);assert.equal(second.querySelector('[data-map-layer]').attributes.transform,'translate(-127.5 -52.5) scale(1.25)');
+  // A colour change recolours the dots of the same chart; it does not draw the chart again.
+  assert.equal(second,first);assert.ok(dots.length>0&&dots.every((c,i)=>c.parentNode&&c.writes.get('fill')===fills[i]+1));
+  assert.equal(second.querySelector('[data-map-layer]').attributes.transform,'translate(-127.5 -52.5) scale(1.25)');
   assert.equal(f.frames.size,0,'old projection flush cancels its pending frame');assert.equal(f.nodes.recording.value,'a');
   f.nodes.view.value='umap';f.nodes.view.emit('change');const nonlinear=f.nodes.map.querySelector('svg');
   assert.equal(nonlinear.querySelector('[data-map-layer]').attributes.transform,'translate(0 0) scale(1)');

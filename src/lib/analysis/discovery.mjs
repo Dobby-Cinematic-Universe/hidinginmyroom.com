@@ -1,4 +1,5 @@
 import { analysisLoadingHash, matchesAnalysisIdentity } from './supplement.mjs';
+import { matchesAll, searchText, searchWords } from '../corpus/title-search.mjs';
 import { recordingProjection } from './recording-umap.mjs';
 import { attachMapViewport } from './map-viewport.mjs';
 import { nearbyMapPoints } from './recording-map-picking.mjs';
@@ -75,20 +76,28 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
   const noProfile=v=>!windowed||!v.design?'profile unavailable':v.design.short_text?'short text':v.design.version_of?'other version':'profile unavailable';
   let viewport=null;
   const cameras=new Map();
-  const optionNodes=new Map(release.videos.map(v=>{const option=el('option',`${v.title} · ${v.date??dateTexts[v.recording_id]??'Undated'}${points.has(v.recording_id)?'':` · ${noProfile(v)}`}`);option.value=v.recording_id;return [v.recording_id,option];}));
-  let lastQuery=null,matches=[];
+  // The selector lists at most OPTION_LIMIT matches and makes an option only when it is first listed: rebuilding
+  // a list of every recording on each keystroke was the slowest interaction of the page. Titles are lowercased once.
+  const OPTION_LIMIT=300,optionNodes=new Map(),haystack=new Map();
+  const optionFor=v=>{let option=optionNodes.get(v.recording_id);if(!option){option=el('option',`${v.title} · ${v.date??dateTexts[v.recording_id]??'Undated'}${points.has(v.recording_id)?'':` · ${noProfile(v)}`}`);option.value=v.recording_id;optionNodes.set(v.recording_id,option);}return option;};
+  const textOf=v=>{let text=haystack.get(v.recording_id);if(text===undefined){text=searchText(v.title,v.aliases,v.date??v.estimated_date,v.category);haystack.set(v.recording_id,text);}return text;};
+  let lastQuery=null,lastListed=null,matches=[];
   const picker=root.querySelector('[data-discovery-picking]');
   const clearPicker=()=>{if(picker){picker.replaceChildren();picker.hidden=true;}};
   const dismissPicker=()=>{clearPicker();chart.querySelector('svg')?.focus();};
   picker?.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();dismissPicker();}});
   function options() {
-    const query=search.value.trim().toLocaleLowerCase();
-    if(query!==lastQuery){matches=release.videos.filter(v=>!query||`${v.title} ${v.date??''} ${v.category??''}`.toLocaleLowerCase().includes(query));select.replaceChildren(...matches.map(v=>optionNodes.get(v.recording_id)));lastQuery=query;}
+    // As on the browse page: every word must occur in the title, an earlier title, the date or the category.
+    const words=searchWords(search.value),query=words.join(' ');
+    if(query!==lastQuery){matches=words.length?release.videos.filter(v=>matchesAll(textOf(v),words)):release.videos;lastQuery=query;lastListed=null;}
+    if(!matches.some(v=>v.recording_id===selected))selected=matches[0]?.recording_id;
+    // The first matches are listed; the selected recording is always among them, wherever it stands in the matches.
+    const at=matches.findIndex(v=>v.recording_id===selected),listed=at>=OPTION_LIMIT?[...matches.slice(0,OPTION_LIMIT-1),matches[at]]:matches.slice(0,OPTION_LIMIT),key=`${query}\n${at>=OPTION_LIMIT?selected:''}`;
+    if(key!==lastListed){select.replaceChildren(...listed.map(optionFor));lastListed=key;}
     select.disabled = matches.length === 0;
     const count = root.querySelector('[data-discovery-result-count]');
-    if (count) count.textContent = matches.length ? `${matches.length.toLocaleString()} recordings match the selector search.` : 'No recordings match the selector search. Clear or change the search to select a recording.';
-    if(matches.some(v=>v.recording_id===selected))select.value=selected;
-    else selected=matches[0]?.recording_id;
+    if (count) count.textContent = matches.length ? `${matches.length.toLocaleString()} recordings match the selector search.${matches.length>OPTION_LIMIT?` The first ${OPTION_LIMIT} are listed; type part of a title or a date to narrow the list, or select a point on the map.`:''}` : 'No recordings match the selector search. Clear or change the search to select a recording.';
+    if(selected)select.value=selected;
     show();
   }
   function chooseNeighbor(id) {
@@ -116,12 +125,14 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     tr.append(el('th','Factor'),el('th','Selected recording'),...nearby.map((_,i)=>el('th',`Neighbor ${i+1}`)));head.append(tr);table.append(head);
     const body=el('tbody');for(const factor of release.analysis.factors){const row=el('tr');row.append(el('th',factor.label));for(const id of [selected,...nearby.map(n=>n.id)])row.append(el('td',fmt(videos.get(id).factor_scores[factor.id].value)));body.append(row);}table.append(body);scroll.append(table);disclosure.append(el('p','Values are the signed saved factor scores. Neighbor numbering follows the list above. Factor labels are provisional.'),scroll);detail.append(disclosure);
   }
-  let drawnProjection=null,projectedPoints=null,markSelection=null;
+  let drawnProjection=null,projectedPoints=null,markSelection=null,recolor=null;
   function draw() {
     const width=720,height=420,pad=44;
     const projection=recordingProjection(data,umap,view.value),plotPoints=projection.points;
     const existing=chart.querySelector('svg');
     if(existing&&chart.dataset.color===color.value&&chart.dataset.projection===projection.id){markSelection(existing);return;}
+    // Only the colouring changed: the dots stay where they are and take their new fill.
+    if(existing&&chart.dataset.projection===projection.id&&recolor){clearPicker();viewport?.flush();recolor();markSelection(existing);return;}
     clearPicker();
     summary.textContent=windowed?`${data.cohort_n.toLocaleString()} distinct recordings are mapped. ${data.excluded_recordings.toLocaleString()} others are further versions of a recording or texts shorter than one passage. ${projection.summary}`:`${data.cohort_n.toLocaleString()} complete profiles are mapped; ${data.excluded_recordings} recordings lack a complete profile. ${projection.summary}`;
     const projectionPoints=new Map(plotPoints.map(p=>[p.id,p]));
@@ -141,7 +152,10 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
     const kindColors={video:'#3987e5',stream:'#d95926',clip:'#199e70'}; // validated for the dark panel, all pairs
     const paint=video=>color.value==='kind'?(kindColors[video.design?.kind]??'#888'):color.value==='year'?(dated(video)?`hsl(${250-210*(Number(dated(video).slice(0,4))-minyear)/(maxyear-minyear||1)} 70% 55%)`:'#888'):`hsl(${categories.indexOf(video.category??'Unknown')*137.508%360} 65% 55%)`;
     const circles=[];
-    for(const point of plotPoints){const c=svgEl('circle',{cx:px(point.x),cy:py(point.y),r:2.7,fill:paint(videos.get(point.id)),opacity:.55});c.append(svgEl('title',{}));c.firstChild.textContent=`${videos.get(point.id).title} · ${projection.axes[0]} ${fmt(point.x)} · ${projection.axes[1]} ${fmt(point.y)}`;layer.append(c);circles.push(c);}
+    // A dot gets its tooltip when the pointer first reaches it, not one element per dot at drawing time.
+    const pointOf=new Map();
+    for(const point of plotPoints){const c=svgEl('circle',{cx:px(point.x),cy:py(point.y),r:2.7,fill:paint(videos.get(point.id)),opacity:.55});pointOf.set(c,point);layer.append(c);circles.push(c);}
+    layer.addEventListener('pointerover',event=>{const c=event.target,point=pointOf.get(c);if(!point||c.firstChild)return;const title=svgEl('title',{});title.textContent=`${videos.get(point.id).title} · ${projection.axes[0]} ${fmt(point.x)} · ${projection.axes[1]} ${fmt(point.y)}`;c.append(title);});
     mark(svg);
     const ticks=Array.from({length:5},(_,i)=>{const sx=pad+(width-2*pad)*i/4,sy=height-pad-(height-2*pad)*i/4;const xt=svgEl('text',{x:sx,y:height-20,'text-anchor':'middle','font-size':11,fill:'currentColor'}),yt=svgEl('text',{x:pad-6,y:sy,'text-anchor':'end','font-size':11,fill:'currentColor'});axes.append(xt,yt);return {sx,sy,xt,yt};});
     const renderAxes=camera=>{for(const {sx,sy,xt,yt} of ticks){const x=xmin+((sx-camera.x)/camera.scale-ox)/unitScale,y=ymin+(height-oy-(sy-camera.y)/camera.scale)/unitScale;xt.textContent=fmt(x);yt.textContent=fmt(y);}};
@@ -165,8 +179,12 @@ export function renderDiscovery(root,release,data,umap=null,dateTexts={}) {
       picker.append(el('p',`${candidates.length} recordings are within 8 screen pixels of this click, nearest first. These are two-dimensional map candidates, not the ${data.factor_ids.length}-factor closest-profile list. Zoom in or use the recording selector to narrow the choice.`));
       const list=el('ol');for(const candidate of candidates){const video=videos.get(candidate.id),li=el('li'),button=el('button',`${video.title} · ${video.date??dateTexts[video.recording_id]??'Undated'} · ${candidate.distance.toFixed(1)} px from click`);button.type='button';button.addEventListener('click',()=>chooseNeighbor(candidate.id));li.append(button);list.append(li);}picker.append(list);list.querySelector('button')?.focus();
     });
-    const legend=root.querySelector('[data-discovery-legend]');legend.replaceChildren();
-    for(const [text,fill] of color.value==='kind'?[['Videos',kindColors.video],['Streams',kindColors.stream],...(release.videos.some(v=>v.design?.kind==='clip'&&points.has(v.recording_id))?[['Clips',kindColors.clip]]:[])]:color.value==='year'?[[`${minyear} (purple) → ${maxyear} (orange)`,''],['Undated','#888']]:categories.map(c=>[c,paint({category:c})])){const span=el('span',text);if(fill){const marker=el('i');marker.style.backgroundColor=fill;span.prepend(marker);}legend.append(span);}
+    const drawLegend=()=>{
+      const legend=root.querySelector('[data-discovery-legend]');legend.replaceChildren();
+      for(const [text,fill] of color.value==='kind'?[['Videos',kindColors.video],['Streams',kindColors.stream],...(release.videos.some(v=>v.design?.kind==='clip'&&points.has(v.recording_id))?[['Clips',kindColors.clip]]:[])]:color.value==='year'?[[`${minyear} (purple) → ${maxyear} (orange)`,''],['Undated','#888']]:categories.map(c=>[c,paint({category:c})])){const span=el('span',text);if(fill){const marker=el('i');marker.style.backgroundColor=fill;span.prepend(marker);}legend.append(span);}
+    };
+    drawLegend();
+    recolor=()=>{for(let i=0;i<circles.length;i++)circles[i].setAttribute('fill',paint(videos.get(plotPoints[i].id)));chart.dataset.color=color.value;drawLegend();};
   }
   search.addEventListener('input',options);select.addEventListener('change',()=>{selected=select.value;show();});color.addEventListener('change',draw);view.addEventListener('change',draw);options();
   const variance=root.querySelector('[data-discovery-variance]');

@@ -30,7 +30,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       <label>Category<select name="category"><option value="">All categories</option></select></label>
       <label data-subject-control hidden>Subject<select name="subject"><option value="">All subjects</option></select></label>
       <label data-length-control hidden>Length<select name="min_windows"><option value="">Any length</option><option value="3">3 or more passages</option><option value="10">10 or more passages</option></select></label>
-      <label>Find a recording<input name="text" type="search" placeholder="Search title or category" /></label>
+      <label>Find a recording<input name="text" type="search" placeholder="Words of a title, earlier title or category" /></label>
       </fieldset>
       <div class="recording-options" data-design-options hidden><label><input type="checkbox" name="versions" value="one" checked /> One version of each recording</label><label><input type="checkbox" name="short_texts" value="hide" checked /> Leave out texts shorter than one passage</label></div>
       <details class="dimension-explanation" data-rubric><summary data-rubric-title>Question rubric</summary><aside class="factor-description" data-factor-description hidden aria-live="polite"></aside><div data-rubric-content></div></details>
@@ -83,6 +83,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
   import type { FactorDescription } from '../../lib/analysis/factor-descriptions.mjs';
   import { validatePassageData } from '../../lib/analysis/passage-data.mjs';
   import { readVerifiedShard } from '../../lib/analysis/shard-verify.mjs';
+  import { matchedAlias, searchWords } from '../../lib/corpus/title-search.mjs';
   import type { AnalysisPassageData } from '../../lib/analysis/passage-data.mjs';
   import { validatePassageShardIndex, validatePassageShardBytes } from '../../lib/analysis/passage-shards.mjs';
   import type { PassageShardDescriptor } from '../../lib/analysis/passage-shards.mjs';
@@ -165,6 +166,7 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
       for(const video of rows.slice((currentPage-1)*pageSize,currentPage*pageSize)) {
         const score=scoreFor(video,selectedMetric,kind), tr=n('tr');
         const titleCell=n('th') as HTMLTableCellElement; titleCell.scope='row'; const a=n('a',video.title) as HTMLAnchorElement; a.href=video.href; titleCell.append(a);
+        {const alias=matchedAlias(video.title,video.aliases,searchWords(values.text));if(alias){const note=n('span',`Also titled: ${alias}`);note.className='row-note';titleCell.append(note);}}
         const link=n('button','Evidence') as HTMLButtonElement; link.type='button'; link.className='evidence-button'; link.addEventListener('click',()=>showEvidence(video)); titleCell.append(link);
         const date=n('td',video.date?`${video.date} · ${dateBasisLabel(video.date_basis)}`:(dateTexts[video.recording_id]??'Date unresolved'));
         const category=n('td',video.category ? humanize(video.category) : 'Unclassified');
@@ -504,6 +506,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
     // `estimatedDates` is the estimated day or month that places the recording in date order, the year filter and periods.
     let dateTexts:Record<string,string>={};
     const estimatedDates:Promise<Record<string,string>>=fetch('/corpus/estimated-dates.json').then(r=>r.ok?r.json():{}).catch(()=>({}));
+    // Earlier titles a recording can also be found by in the title searches.
+    const titleAliases:Promise<Record<string,string[]>>=fetch('/corpus/title-aliases.json').then(r=>r.ok?r.json():{}).catch(()=>({}));
     async function init() {
       try {
         fetch('/corpus/date-texts.json').then(r=>r.ok?r.json():{}).then(v=>{dateTexts=v;}).catch(()=>{});
@@ -520,7 +524,8 @@ import AnalysisChartFrame from './AnalysisChartFrame.astro';
           for(const shardRows of responses)videos.push(...shardRows);
         }
         release=validateAnalysisRelease({...payload.release,videos});
-        {const estimates=await estimatedDates;for(const video of release.videos){const value=video.date?undefined:estimates[video.recording_id];if(typeof value==='string'&&/^\d{4}(-\d{2}){0,2}$/.test(value))video.estimated_date=value;}}
+        {const estimates=await estimatedDates;for(const video of release.videos){const value=video.date?undefined:estimates[video.recording_id];if(typeof value==='string'&&/^\d{4}(-\d{2}){0,2}$/.test(value))video.estimated_date=value;}
+         const aliases=await titleAliases;for(const video of release.videos){const value=aliases[video.recording_id];if(Array.isArray(value)&&value.every(item=>typeof item==='string'))video.aliases=value;}}
         passageShardIndex=validatePassageShardIndex(payload.passage_shards,release);factorDescriptions=await resolveFactorDescriptions(release,factorAnnotations);supplement=await loadAnalysisSupplement(release);document.dispatchEvent(new CustomEvent('analysis-release-ready',{detail:{release,supplement,diagnostics:supplement?.map_diagnostics}})); status.textContent='';status.hidden=true;content.hidden=false;
         const historical=root.querySelector<HTMLElement>('[data-historical-input]')!;
         historical.hidden=!release.historical_input;

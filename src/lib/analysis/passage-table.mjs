@@ -74,7 +74,7 @@ export function buildPassageFrame(value, recordings) {
     const estimated = !info.date && typeof info.estimated === 'string' && /^\d{4}/.test(info.estimated) ? info.estimated : null, dated = info.date ?? estimated;
     const y = typeof dated === 'string' && /^\d{4}/.test(dated) ? Number(dated.slice(0, 4)) : NaN;
     for (let i = start; i < start + count; i++) { rec[i] = r; kind[i] = info.kind === 'stream' ? 1 : 0; year[i] = y; counted[i] = primary; }
-    return { id, title: info.title, date: info.date ?? null, estimated, dateText: info.date ?? (estimated ? `estimated ${estimated}` : 'undated'), kind: info.kind, href: info.href, start, count, counted: primary === 1 };
+    return { id, title: info.title, date: info.date ?? null, estimated, dateText: info.date ?? (estimated ? `estimated ${estimated}` : 'undated'), aliases: Array.isArray(info.aliases) ? info.aliases.filter(item => typeof item === 'string') : [], kind: info.kind, href: info.href, start, count, counted: primary === 1 };
   });
   const scale = value.steps_per_sd, nd = table.nd, dims = table.dims;
   return { ...table, rec, kind, year, counted, recordings: rows, factorIds: value.factor_ids, subjects: value.subjects, addressees: value.addressees, topics: value.topics, windowWords: value.window_words,

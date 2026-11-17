@@ -1,3 +1,5 @@
+import { matchesAll, searchText, searchWords } from '../corpus/title-search.mjs';
+
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const str = (value) => typeof value === 'string' && value.length > 0;
@@ -182,7 +184,8 @@ export function recordingDate(video) {
 }
 
 export function filterAndSortVideos(videos, filters, kind, metric) {
-  const needle = (filters.text ?? '').trim().toLocaleLowerCase();
+  // As on the browse page: every word must occur in the title, an earlier title or the category, in any order.
+  const words = searchWords(filters.text);
   const selected = videos.filter((video) =>
     (!filters.year || (filters.year === 'undated' ? !recordingDate(video) : recordingDate(video)?.slice(0, 4) === filters.year)) &&
     (!filters.category || video.category === filters.category) &&
@@ -191,7 +194,7 @@ export function filterAndSortVideos(videos, filters, kind, metric) {
     (filters.versions !== 'one' || !video.design?.version_of) &&
     (filters.short_texts !== 'hide' || !video.design?.short_text) &&
     (!filters.min_windows || (video.design?.windows ?? 0) >= Number(filters.min_windows)) &&
-    (!needle || `${video.title} ${video.category ?? ''}`.toLocaleLowerCase().includes(needle))
+    (!words.length || matchesAll(searchText(video.title, video.aliases, video.category), words))
   );
   const direction = filters.direction === 'asc' ? 1 : -1;
   selected.sort((a, b) => {
