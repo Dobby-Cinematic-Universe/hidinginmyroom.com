@@ -4,6 +4,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {root,save} from './cloudflare.mjs';
 import {validateSummaryRelease} from '../../src/lib/summaries/schema.mjs';
+import {describeDateBasis,projectDateNotes} from '../../src/lib/corpus/public-date-notes.mjs';
 import {summaryQualityFindings} from '../summary-quality.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const full=process.argv.includes('--full');
@@ -27,6 +28,17 @@ const summaries=JSON.parse(await readFile(path.join(base,'summaries/refreshed.js
 validateSummaryRelease(summaries,new Set(records.map(r=>r.recording_id)),{allowPrepared:true});
 if(summaryQualityFindings(summaries).length)throw Error('Placeholder summary content must be recovered before indexing');
 const byId=new Map(records.map(r=>[r.recording_id,r]));
+const communityDated=records.filter(r=>r.date_basis==='community_reupload_note');
+const dateNotes=communityDated.length
+  ? projectDateNotes(JSON.parse(await readFile(path.join(base,'corpus/date-notes.json'),'utf8')),communityDated).recordings
+  : {};
+function recordingDate(r){
+  const date=r.date_label||'Unknown';
+  const note=dateNotes[r.recording_id];
+  if(r.date_basis==='community_reupload_note'&&!note)throw Error('Missing public re-upload date note');
+  return `${date} (not necessarily event date)${note?`\nDATE BASIS: ${describeDateBasis(r.date_basis,note)}`:''}`;
+}
+
 const chunkedSummaries=new Set(process.argv.filter(arg=>arg.startsWith('--chunk-synthesis=')).map(arg=>arg.slice('--chunk-synthesis='.length)));
 try{const previous=JSON.parse(await readFile(path.join(root,'manifest.json'),'utf8'));for(const d of previous.documents)if(d.kind==='synthesis'&&d.source_sha256)chunkedSummaries.add(d.summary_id);}catch(e){if(e.code!=='ENOENT')throw e;}
 const docs=[];await mkdir(path.join(root,'documents'),{recursive:true,mode:0o700});
@@ -39,7 +51,7 @@ async function document(text,meta){
 for(const s of summaries.summaries.filter(s=>s.kind==='transcript')){
   const r=byId.get(s.recording_id);if(!r||!['cloud','third_party'].includes(annotations[r.recording_id]?.origin))continue;
   const href=`/corpus/videos/${r.slug}/`;
-  await document(`TITLE: ${r.title}\nRECORDING DATE: ${r.date_label||'Unknown'} (not necessarily event date)\nSOURCE: ${href}\nTYPE: Machine-generated summary, not verified facts.\n\n`+Object.entries(s.sections).map(([name,items])=>`${name.toUpperCase()}\n${items.map(i=>`[${i.classification}] ${i.text}`).join('\n')}`).join('\n\n'),{kind:'summary',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
+  await document(`TITLE: ${r.title}\nRECORDING DATE: ${recordingDate(r)}\nSOURCE: ${href}\nTYPE: Machine-generated summary, not verified facts.\n\n`+Object.entries(s.sections).map(([name,items])=>`${name.toUpperCase()}\n${items.map(i=>`[${i.classification}] ${i.text}`).join('\n')}`).join('\n\n'),{kind:'summary',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
 }
 // Stratify over dates and origins. Whole retained transcript, not hand-picked excerpts.
 const eligible=records.filter(r=>r.transcript_revision_count>0&&['third_party','cloud'].includes(annotations[r.recording_id]?.origin)).sort((a,b)=>(a.date_label||'').localeCompare(b.date_label||'')||a.recording_id.localeCompare(b.recording_id));
@@ -48,7 +60,7 @@ if(full){
   for(const r of records){
     const href=`/corpus/videos/${r.slug}/`;
     const availability=annotations[r.recording_id]?.media_status==='no_audio'?'AUDIO: This video has no audio stream; no spoken transcript is expected.\n':'';
-    await document(`TITLE: ${r.title}\nRECORDING DATE: ${r.date_label||'Unknown'} (not necessarily event date)\nSOURCE: ${href}\nTYPE: Catalog metadata only; this entry is not evidence of what was said.\n${availability}`,{kind:'metadata',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
+    await document(`TITLE: ${r.title}\nRECORDING DATE: ${recordingDate(r)}\nSOURCE: ${href}\nTYPE: Catalog metadata only; this entry is not evidence of what was said.\n${availability}`,{kind:'metadata',title:r.title,href,recording_id:r.recording_id,date:r.date_label});
   }
   for(const s of summaries.summaries.filter(s=>s.kind!=='transcript')){
     if(!/^[a-z0-9_-]+$/.test(s.id))throw Error('Unsafe summary ID');
@@ -60,7 +72,7 @@ for(const r of selected){
   const raw=await bound(r.detail);const recording=raw.recording||raw;
   const revision=recording.transcript_revisions.filter(t=>t.lifecycle_state!=='retracted')[0];if(!revision)continue;
   let pieces=[],size=0,start=null;
-  async function flush(){if(!pieces.length)return;const href=`/corpus/videos/${r.slug}/#segment-${revision.revision_id}-${start.segment_id}`;await document(`TITLE: ${r.title}\nRECORDING DATE: ${r.date_label||'Unknown'} (not necessarily event date)\nSOURCE: ${href}\nTYPE: Unreviewed machine transcript; statements are not established facts.\n\n${pieces.join('\n')}`,{kind:'transcript',title:r.title,href,recording_id:r.recording_id,date:r.date_label,start_ms:start.start_ms,revision:revision.revision_id});pieces=[];size=0;start=null;}
+  async function flush(){if(!pieces.length)return;const href=`/corpus/videos/${r.slug}/#segment-${revision.revision_id}-${start.segment_id}`;await document(`TITLE: ${r.title}\nRECORDING DATE: ${recordingDate(r)}\nSOURCE: ${href}\nTYPE: Unreviewed machine transcript; statements are not established facts.\n\n${pieces.join('\n')}`,{kind:'transcript',title:r.title,href,recording_id:r.recording_id,date:r.date_label,start_ms:start.start_ms,revision:revision.revision_id});pieces=[];size=0;start=null;}
   for(const seg of revision.segments){const line=`[${seg.start_ms}ms] ${seg.speaker_label?seg.speaker_label+': ':''}${seg.text}`;if(size+line.length>12000)await flush();start??=seg;pieces.push(line);size+=line.length;}
   await flush();
 }

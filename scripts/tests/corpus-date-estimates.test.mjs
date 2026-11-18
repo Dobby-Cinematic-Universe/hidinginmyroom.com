@@ -197,3 +197,36 @@ test('excerpt and replay evidence are named, and a range inside one month reads 
   const tight=project({basis:'text_estimate',date:'2023-11',copy:null,estimate:{month:'2023-11',low:'2023-11',high:'2023-11',confidence_band:2},narrowed_by:['excerpt']});
   assert.match(describeDateEstimate(tight).detail,/^Estimated November 2023; the range lies within November 2023\. The range was narrowed using a dated excerpt that was cut from this recording\./);
 });
+
+test('a re-upload note is named as evidence, and a clip inside that recording takes its date',()=>{
+  const stream={basis:'evidence_date',date:'2025-12-05',copy:null,estimate:null,evidence:{from:'2025-12-04',to:'2025-12-05',sources:['reupload_note']}};
+  const text=describeDateEstimate(project(stream));
+  assert.equal(text.card,'circa 2025-12-05 (date given with re-upload)');
+  assert.match(text.detail,/^Placed between 2025-12-04 and 2025-12-05 using the date a community archivist gave when re-uploading the stream\..*not a verified/);
+  const clip={basis:'source_estimate',date:'2025-12-05',copy:null,estimate:null,evidence:stream.evidence,source:{recording_id:'u2',basis:'evidence_date',relation:'inside_undated_recording'}};
+  const out=projectDateEstimates({recordings:{u:clip,u2:stream}},catalog).recordings.u;
+  const passed=describeDateEstimate(out);
+  assert.equal(passed.card,'circa 2025-12-05 (part of an undated recording)');
+  assert.match(passed.detail,/no catalog date either\. That recording is placed between 2025-12-04 and 2025-12-05 using the date a community archivist gave when re-uploading the stream, and its date is passed on\..*not a verified date\. Lists and year filters place this recording at 2025-12-05\.$/);
+  assert.equal(circaDate(out),'2025-12-05');assert.equal(passed.circa,'2025-12-05');assert.equal(passed.copy.recording_id,'u2');
+  assert.deepEqual(out,{basis:'source_estimate',date:'2025-12-05',copy:null,estimate:null,evidence:stream.evidence,source:{recording_id:'u2',relation:'inside_undated_recording'}});
+  // The passed-on date and range must be the containing recording's own, and never come with a wording estimate.
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,date:'2025-12-04'},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,evidence:{...stream.evidence,to:'2025-12-06'}},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,estimate:est},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,source:{...clip.source,basis:'text_estimate'}},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>projectDateEstimates({recordings:{u:{...clip,evidence:undefined},u2:stream}},catalog),/Invalid source estimate/);
+  assert.throws(()=>project({basis:'text_estimate',date:'2023-07',copy:null,estimate:est,evidence:stream.evidence}),/Invalid evidence date/);
+});
+
+test('a clip inside a stream dated by the archivist says whose date it carries',()=>{
+  const dated=[{recording_id:'s',date_label:'2025-11-27',date_basis:'community_reupload_note'},{recording_id:'p',date_label:'2025-11-26',date_basis:'torrent_filename_utc'},{recording_id:'c',date_label:null},{recording_id:'c2',date_label:null}];
+  const out=projectDateEstimates({recordings:{c:{basis:'source_recording',date:'2025-11-27',copy:null,estimate:null,source:{recording_id:'s',date:'2025-11-27',tier:'A',relation:'same_recording'}},
+    c2:{basis:'source_recording',date:'2025-11-26',copy:null,estimate:null,source:{recording_id:'p',date:'2025-11-26',tier:'A',relation:'same_recording'}}}},dated).recordings;
+  assert.equal(out.c.source.stated_date,true);
+  assert.equal('stated_date' in out.c2.source,false);
+  assert.match(describeDateEstimate(out.c).detail,/That recording's date is the day the community archivist u\/HIMRedits gave when re-uploading it, not a date displayed by the platform or an archive; it is used here as an estimate\./);
+  assert.match(describeDateEstimate(out.c2).detail,/The date is that recording's upload or stream day, used here as an estimate\./);
+  // the mark comes from the catalog only; the input cannot set it
+  assert.throws(()=>projectDateEstimates({recordings:{c:{basis:'source_recording',date:'2025-11-27',copy:null,estimate:null,source:{recording_id:'s',date:'2025-11-27',tier:'A',relation:'same_recording',stated_date:true}}}},dated),/Unexpected source field/);
+});

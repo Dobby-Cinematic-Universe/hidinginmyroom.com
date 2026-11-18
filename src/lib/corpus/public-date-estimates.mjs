@@ -10,10 +10,11 @@ const PAGE_SOURCE=/^https:\/\/web\.archive\.org\/web\/\d{14}\/https?:\/\/(?:www\
 export const EVIDENCE_SOURCES={stream_metadata:'an archived stream record',legacy_index_label:'a date label in an earlier transcript index',archived_listing_unattributed:'an archived channel listing',
   calendar_clue:'a weekday or date said in the recording',release_anchor:'the release date of something mentioned',back_reference:'a reference to an earlier recording',
   event_reference:'a statement of how long ago something happened',platform_window:'the period covered by the platform\'s other recordings',
-  excerpt:'a dated excerpt that was cut from this recording',replay:'older dated material played back in it'};
+  excerpt:'a dated excerpt that was cut from this recording',replay:'older dated material played back in it',
+  reupload_note:'the date a community archivist gave when re-uploading the stream'};
 const EVIDENCE_SHORT={stream_metadata:'archived stream record',legacy_index_label:'earlier index label',archived_listing_unattributed:'archived listing',calendar_clue:'date said in recording',
   release_anchor:'release dates',back_reference:'earlier recording',event_reference:'elapsed-time statement',platform_window:'platform period',
-  excerpt:'dated excerpt',replay:'replayed older material'};
+  excerpt:'dated excerpt',replay:'replayed older material',reupload_note:'date given with re-upload'};
 const validSources=v=>Array.isArray(v)&&v.length>0&&v.length<=10&&new Set(v).size===v.length&&v.every(s=>Object.hasOwn(EVIDENCE_SOURCES,s));
 const listSources=v=>{const t=v.map(s=>EVIDENCE_SOURCES[s]);return t.length>1?`${t.slice(0,-1).join(', ')} and ${t.at(-1)}`:t[0];};
 const COPY_KINDS={exact:'exact_copy',full:'full_copy',partial:'text_estimate'};
@@ -44,9 +45,10 @@ export function projectDateEstimates(input,catalog){
     }
     let evidence=null,narrowedBy=null;
     if(row.evidence!=null){
-      // A date range of a week or less from combined evidence (labels, spoken dates, archived stream records).
+      // A date range of a week or less from combined evidence (labels, spoken dates, archived stream records, re-upload notes).
+      // A clip inside an undated recording that has such a range repeats it (basis source_estimate).
       const e=row.evidence;keys(e,['from','to','sources'],'evidence');
-      if(row.basis!=='evidence_date'||![e.from,e.to].every(v=>validDate(v)&&v.length===10)||e.from>e.to||(Date.parse(e.to)-Date.parse(e.from))/864e5>7||!validSources(e.sources))throw Error('Invalid evidence date');
+      if(!['evidence_date','source_estimate'].includes(row.basis)||![e.from,e.to].every(v=>validDate(v)&&v.length===10)||e.from>e.to||(Date.parse(e.to)-Date.parse(e.from))/864e5>7||!validSources(e.sources))throw Error('Invalid evidence date');
       evidence={from:e.from,to:e.to,sources:[...e.sources]};
     }
     if(row.narrowed_by!=null){
@@ -84,16 +86,21 @@ export function projectDateEstimates(input,catalog){
       const s=row.source,other=byId.get(s.recording_id);
       if(!other||s.recording_id===id)throw Error('Invalid source recording');
       if(row.basis==='source_estimate'){
-        // The containing recording is undated too; its own wording estimate is passed on unchanged.
+        // The containing recording is undated too; its own wording estimate, or its evidence date, is passed on unchanged.
         keys(s,['recording_id','basis','relation'],'source');
         const from=input.recordings[s.recording_id],same=(a,b)=>['month','low','high','confidence_band'].every(k=>a?.[k]===b?.[k]);
-        if(other.date_label||s.relation!=='inside_undated_recording'||s.basis!=='text_estimate'||from?.basis!=='text_estimate'||!same(from.estimate,row.estimate)||JSON.stringify(from.narrowed_by??null)!==JSON.stringify(row.narrowed_by??null))throw Error('Invalid source estimate');
+        const sameEvidence=(a,b)=>Boolean(a&&b)&&a.from===b.from&&a.to===b.to&&JSON.stringify(a.sources)===JSON.stringify(b.sources);
+        if(other.date_label||s.relation!=='inside_undated_recording'||!['text_estimate','evidence_date'].includes(s.basis)||from?.basis!==s.basis)throw Error('Invalid source estimate');
+        if(s.basis==='text_estimate'?!same(from.estimate,row.estimate)||JSON.stringify(from.narrowed_by??null)!==JSON.stringify(row.narrowed_by??null)
+          :row.date!==from.date||row.estimate!=null||row.narrowed_by!=null||!sameEvidence(from.evidence,row.evidence))throw Error('Invalid source estimate');
         source={recording_id:s.recording_id,relation:s.relation};
       }else{
         // The containing recording is dated; its catalog date is the only date this can carry.
         keys(s,['recording_id','date','tier','relation'],'source');
         if(!['source_recording','title_date','archived_listing','archived_page'].includes(row.basis)||!['A','B'].includes(s.tier)||!['same_recording','not_after'].includes(s.relation)||!validDate(s.date)||s.date.length!==10||other.date_label!==s.date)throw Error('Invalid source recording');
         source={recording_id:s.recording_id,date:s.date,tier:s.tier,relation:s.relation};
+        // Read from the catalog, never from the input: the containing recording's date is a community archivist's statement.
+        if(other.date_basis==='community_reupload_note')source.stated_date=true;
       }
     }
     if(row.basis==='title_date'){
@@ -104,7 +111,7 @@ export function projectDateEstimates(input,catalog){
     }
     else if(row.basis==='collection_period'){if(!period||row.date!==period.from.slice(0,7)||copy||estimate||listing||page||evidence||source)throw Error('Invalid collection period basis');}
     else if(row.basis==='source_recording'){if(!source?.date||row.date!==source.date||copy||estimate||listing||page||evidence||period)throw Error('Invalid source recording basis');}
-    else if(row.basis==='source_estimate'){if(!source||source.date||!estimate||row.date!==estimate.month||copy||listing||page||evidence||period)throw Error('Invalid source estimate basis');}
+    else if(row.basis==='source_estimate'){if(!source||source.date||copy||listing||page||period||(evidence?Boolean(estimate)||!validDate(row.date)||row.date.length!==10||row.date<evidence.from||row.date>evidence.to:!estimate||row.date!==estimate.month))throw Error('Invalid source estimate basis');}
     else if(row.basis==='series_period'){if(!period||row.date!==period.from||copy||estimate||listing||page||evidence||source)throw Error('Invalid series period basis');}
     else if(row.basis==='evidence_date'){if(!evidence||!validDate(row.date)||row.date.length!==10||row.date<evidence.from||row.date>evidence.to||copy||estimate||listing||page)throw Error('Invalid evidence date basis');}
     else if(row.basis==='archived_page'){if(!page||row.date!==page.date||estimate||listing||(copy&&Math.abs(Date.parse(copy.date)-Date.parse(page.date))>864e5))throw Error('Invalid archived page basis');}
@@ -134,7 +141,8 @@ const days=l=>Math.round((Date.parse(l.to)-Date.parse(l.from))/864e5);
 // A copy date that the listing confirms keeps the dated copy's own (exact) date.
 // So does a date read from an archived copy of the video's own page.
 // So does the day of a dated recording that holds a clip's words, unless that day is only the latest possible one.
-export const circaDate=row=>row?.basis==='evidence_date'?row.date:row?.basis==='source_recording'?(row.source.relation==='same_recording'?row.date:undefined):row?.page?row.date:row?.listing&&days(row.listing)<=CIRCA_DAYS?(row.basis==='archived_listing'?row.listing.from:row.date):undefined;
+// So does an evidence date, the recording's own or passed on from the undated recording that holds its words.
+export const circaDate=row=>row?.basis==='evidence_date'||(row?.basis==='source_estimate'&&row.evidence)?row.date:row?.basis==='source_recording'?(row.source.relation==='same_recording'?row.date:undefined):row?.page?row.date:row?.listing&&days(row.listing)<=CIRCA_DAYS?(row.basis==='archived_listing'?row.listing.from:row.date):undefined;
 // An identical transcript whose date an archived listing confirms is another copy of that recording.
 export const duplicateOf=row=>(row?.basis==='exact_copy'&&(row.listing||row.page)&&row.copy)||(row?.basis==='archived_page'&&row.copy?.kind==='exact')?row.copy.recording_id:undefined;
 
@@ -157,8 +165,14 @@ export function describeDateEstimate(row){
       detail:`The words of this recording are found inside a recording dated ${row.date}${probable}. Recordings that hold the same words carry dates more than a week apart, or the recording found plays older clips back, `+
         `so ${row.date} is the latest possible day and not an estimate of the day itself. Not a verified recording or upload date.`,copy:sourceCopy};
     return {label:'Date from the recording it is part of',card:`circa ${row.date} (part of a dated recording)`,short:`circa ${row.date} · part of a dated recording`,circa:row.date,
-      detail:`The words of this recording are found inside a longer recording dated ${row.date}${probable}, so it is taken to be an excerpt of that recording. The date is that recording's upload or stream day, used here as an estimate. `+
+      detail:`The words of this recording are found inside a longer recording dated ${row.date}${probable}, so it is taken to be an excerpt of that recording. ${s.stated_date?'That recording\'s date is the day the community archivist u/HIMRedits gave when re-uploading it, not a date displayed by the platform or an archive; it is':'The date is that recording\'s upload or stream day,'} used here as an estimate. `+
         `It is not the day this clip was made or uploaded. If the archive holds only a later replay and not the original, the true day is earlier. Lists and year filters place this recording at ${row.date}.`,copy:sourceCopy};
+  }
+  if(row.basis==='source_estimate'&&row.evidence){
+    const e=row.evidence,span=e.from===e.to?`on ${e.from}`:`between ${e.from} and ${e.to}`;
+    return {label:'Estimate from the recording it is part of',card:`circa ${row.date} (part of an undated recording)`,short:`circa ${row.date} · from the recording it is part of`,circa:row.date,
+      detail:`The words of this recording are found inside a longer recording that has no catalog date either. That recording is placed ${span} using ${listSources(e.sources)}, and its date is passed on. `+
+        `It is the day of that recording, not the day this clip was made or uploaded, and not a verified date. Lists and year filters place this recording at ${row.date}.`,copy:sourceCopy};
   }
   if(row.basis==='source_estimate'){
     const e=row.estimate;

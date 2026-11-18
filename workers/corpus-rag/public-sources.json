@@ -1,5 +1,5 @@
 {
-  "release": "db994ec585e67ab937b192ae20193548c17fe4fadc3d1d62cbc7912f3892781a",
+  "release": "eb4d09a5c66e408a6f84c1b37d19eb054d615cac75c565aded21e8223bc3559d",
   "documents": {
     "summary-7e6f4dfc848c03bbe06d8c3fcd074b53.txt": {
       "title": "Why I hated being Unemployed [kQUj6mZJEF8]",
@@ -20071,7 +20071,7 @@
       "href": "/corpus/videos/rec-d51dd3260cf9f0a2cc80a67127ffd5b2/",
       "kind": "summary"
     },
-    "summary-45711c89e7f9b23484b4c1ad5c80d3fd.txt": {
+    "summary-43abfda4de8b993cccb5f010f1e84cdc.txt": {
       "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
       "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/",
       "kind": "summary"
@@ -20116,7 +20116,7 @@
       "href": "/corpus/videos/rec-0a09f8c22bfc834cc7781a7fa17b6df1/",
       "kind": "summary"
     },
-    "summary-7eedbf61db295efbec85bdbb82357536.txt": {
+    "summary-494017342d6a72d4d9813b8120414bd7.txt": {
       "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
       "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/",
       "kind": "summary"
@@ -20181,7 +20181,7 @@
       "href": "/corpus/videos/rec-2a6f27fb0dbcfbd6801b7cce02c0eaf5/",
       "kind": "summary"
     },
-    "summary-cf2f52fe6cabb0e1c17aacafb0a9f5a2.txt": {
+    "summary-5e7d8b0c65f04b2461b6860cdf0d61ae.txt": {
       "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
       "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/",
       "kind": "summary"
@@ -20346,7 +20346,7 @@
       "href": "/corpus/videos/rec-32ce69a855da4a79b845add9a8f36996/",
       "kind": "summary"
     },
-    "summary-507d43a8cf5a478b8349fbd4b10ca01f.txt": {
+    "summary-cbb460854cd20ddd9451ae4a57e9fa27.txt": {
       "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
       "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/",
       "kind": "summary"
@@ -23626,9 +23626,29 @@
       "href": "/corpus/videos/rec-a3e8bf9382ce72a102646947451d69fc/",
       "kind": "metadata"
     },
+    "metadata-4e83638230700d6884d7604bb8013797.txt": {
+      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
+      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/",
+      "kind": "metadata"
+    },
+    "metadata-666962796f9f378e7f90182101e48ee3.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/",
+      "kind": "metadata"
+    },
     "metadata-36f82857e96f48aee30d568d292a5db8.txt": {
       "title": "New New YouTube Livestreams/sad 2025-10-17 03_44 [e1ec23d6-] 480p",
       "href": "/corpus/videos/rec-cc990b21af658a7e1334f879adf1a762/",
+      "kind": "metadata"
+    },
+    "metadata-78c795fd265efea989b3667f76049a7e.txt": {
+      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
+      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/",
+      "kind": "metadata"
+    },
+    "metadata-190447d5133a672f32cc17ca74596ef1.txt": {
+      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
+      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/",
       "kind": "metadata"
     },
     "metadata-606f6970af6f434e61ce0ced9b5a4a97.txt": {
@@ -43671,19 +43691,9 @@
       "href": "/corpus/videos/rec-d7d39af5f21e4802514c6684aed90e74/",
       "kind": "metadata"
     },
-    "metadata-87d59ffe663b9ccfe541259438178b01.txt": {
-      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
-      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/",
-      "kind": "metadata"
-    },
     "metadata-a489d3b009f92dfa4b4841a09464ec38.txt": {
       "title": "New New YouTube Livestreams/i lost all my money... [Hom5Gfqw_kM] 480p",
       "href": "/corpus/videos/rec-a342b31bca3434740cec976df24c0d5f/",
-      "kind": "metadata"
-    },
-    "metadata-5ef6db8ced246d187ee70d54aefc551c.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/",
       "kind": "metadata"
     },
     "metadata-cb78191adbe41c02b107caf5d30b8dfa.txt": {
@@ -43719,16 +43729,6 @@
     "metadata-368f35744ebe3a8115750100ea9e31e2.txt": {
       "title": "New New YouTube Livestreams/the end of Hiding in my Room [pj3rZKEvT0o] 480p",
       "href": "/corpus/videos/rec-65379189333c66247e6f33f005847f8d/",
-      "kind": "metadata"
-    },
-    "metadata-915271688e33538bfe05fd8dfb596cef.txt": {
-      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
-      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/",
-      "kind": "metadata"
-    },
-    "metadata-2149ba74fd4eb14e7502ba442060d008.txt": {
-      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
-      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/",
       "kind": "metadata"
     },
     "metadata-64613e1a9282faa76800849efd0ccd80.txt": {
@@ -45016,7 +45016,7 @@
       "href": "/corpus/summaries/monthly-2025-04/",
       "kind": "synthesis"
     },
-    "synthesis-16b3b0f891ebee5c2c810a25f80cf29b.txt": {
+    "synthesis-c4b616f32212928e2aa93da973c3dfd6.txt": {
       "title": "2025-05 summary",
       "href": "/corpus/summaries/monthly-2025-05/",
       "kind": "synthesis"
@@ -45041,12 +45041,12 @@
       "href": "/corpus/summaries/monthly-2025-10/",
       "kind": "synthesis"
     },
-    "synthesis-a96381181ba237264bf381a140e7b5b0.txt": {
+    "synthesis-970009f216181ab71f6a2258778c0264.txt": {
       "title": "2025-11 summary",
       "href": "/corpus/summaries/monthly-2025-11/",
       "kind": "synthesis"
     },
-    "synthesis-bfc5b33baaa1c49da8f0585c3158ce40.txt": {
+    "synthesis-21659904a62f1c47903edf283bd4533e.txt": {
       "title": "2025-12 summary",
       "href": "/corpus/summaries/monthly-2025-12/",
       "kind": "synthesis"
@@ -45066,27 +45066,27 @@
       "href": "/corpus/summaries/monthly-2026-09/",
       "kind": "synthesis"
     },
-    "synthesis-67ede8e26912f798c53e56b4005057f5.txt": {
+    "synthesis-606d962d3c28b224ba3969f43d350d43.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
     },
-    "synthesis-fa7974504485b142f60682456c19b326.txt": {
+    "synthesis-1758f24ec918395244cf7dd41de7a715.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
     },
-    "synthesis-7117934b78a4f6ce9ad8787a7cf1a30c.txt": {
+    "synthesis-2ed59cbe2a96a0675543d3790554446d.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
     },
-    "synthesis-ac30bc1c0c1ca600658ae3feb2d71b7d.txt": {
+    "synthesis-49111751559be56d6cf1fb42ffb34e69.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
     },
-    "synthesis-2c44b850a3df3eba9575286a14c4b51c.txt": {
+    "synthesis-34d193c85c6696135d328c33e09ae112.txt": {
       "title": "Undated recordings summary",
       "href": "/corpus/summaries/monthly-undated/",
       "kind": "synthesis"
@@ -45161,42 +45161,42 @@
       "href": "/corpus/summaries/yearly-2024/",
       "kind": "synthesis"
     },
-    "synthesis-9315ff73dfbf15b1ce95ee50c00d110e.txt": {
+    "synthesis-67aafed1a3f923d7744eb9a24785e24d.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-af4eec3e2245319f07c073d2f31e356a.txt": {
+    "synthesis-4c57082565cd1576765254465f8aa8e4.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-be91eef330a41221961af49be2da8148.txt": {
+    "synthesis-5a57f5a3f7f4eec87641ca17535ec49d.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-370be4e1ee61e8346db8f5c326267c3f.txt": {
+    "synthesis-114a390aae92ea9498e6ffeb39f9f488.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-cdb280dda596f16ecf729d6ff00e6ab7.txt": {
+    "synthesis-974fcb3b891afc5ef395714926a0e156.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-a644becef219f8f66917907c697c176b.txt": {
+    "synthesis-f519c90b70e88e7832f4af69ff8b64f1.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-180e7473c21cc822baef8d93eb967eff.txt": {
+    "synthesis-631458946cb7d99189b3ea58d2694083.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
     },
-    "synthesis-467af5a3eefb5e7d7e373d806cc1839d.txt": {
+    "synthesis-7a819bd0cdcc6c0eb8146dd524170a66.txt": {
       "title": "2025 summary",
       "href": "/corpus/summaries/yearly-2025/",
       "kind": "synthesis"
@@ -45206,207 +45206,197 @@
       "href": "/corpus/summaries/yearly-2026/",
       "kind": "synthesis"
     },
-    "synthesis-40cfe345cca2c88c074eef2f89575249.txt": {
+    "synthesis-6e2e6676ff87b422019b28aa2885a3d3.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-875dbfc863e1fe82f8d41b2b760529d8.txt": {
+    "synthesis-a7390362aa833158dfb2a24b56c6412f.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-e766ac3859ddc7ab8b1963e29d4bdd2f.txt": {
+    "synthesis-9f6571e35f318c14ddc1c0a8c9a1b357.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-5208e43f6ef08da14b1ab4634d929728.txt": {
+    "synthesis-2103977fde59b8b367e1e01d96f60cd1.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-332773527d3732adc1bbff10dcc15f5e.txt": {
+    "synthesis-60de56b7d9347aebeeac94133b656661.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-014e19a5627dcf8fb011e7a075686721.txt": {
+    "synthesis-29ae45e02d3bf0606d29c2c66dbe7bd9.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-8eb297a384e9039e454673dada6d239c.txt": {
+    "synthesis-2ad7759729856b34c8a3d438f8a54150.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-8aad510b6f4df97ed31edf902d47be3d.txt": {
+    "synthesis-6a3015c38b4e9922d823f44be2087e68.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-ece5b33362f54da05759da22c2bc9bb3.txt": {
+    "synthesis-6f6b43725e5e95eb4780e645f6cff064.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-7fc1157e6f09cd55977f9fa1cbbd218a.txt": {
+    "synthesis-292688840eab5bc90a7730ef42378663.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-47b54d64b5f087f407292a8d666c9a93.txt": {
+    "synthesis-360d061528ba94a91e3072ce8a0c9a92.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-7cde149caf6b41028b8c23c96228305b.txt": {
+    "synthesis-8f91b5cc8e7c74d30ffc02cfb8e89aba.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-bb268ca2a019d337f929d822b15835b9.txt": {
+    "synthesis-894d76bbd52a60f9fa72b40c560bc022.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-4ee97638cb8f3ebb95b8e4573bd7abb4.txt": {
+    "synthesis-7295c7884da7765a7889491780d7962e.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-5e5752202de9f881e52fc2e534d57dd2.txt": {
+    "synthesis-95aaec373f008ac055de861b5d79be78.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-53c352f4764b5f246578c433f25faab2.txt": {
+    "synthesis-a9e49335e8fa551027ce0cad2028a512.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-f73179d3b353bc81bb455eb774a3a5bb.txt": {
+    "synthesis-1cc4e4c9a5036e8ee916b2a8961bc647.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-e60007ad56dee78be67a717fef45398f.txt": {
+    "synthesis-6280262dd36055c24376e25e7dd014f9.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-b1b28a4ad73e733102e0c8b383860ef6.txt": {
+    "synthesis-bd2241ff0ed75c7282b30e255ec9da05.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-5126aa1c61a5e3e0665c51cbdd1996cb.txt": {
+    "synthesis-c23d12cc32e6552569f15566d821a993.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-b59ca9b3454f8ddb0dee0377da0ce275.txt": {
+    "synthesis-75a0f1afe38fbd973cd500cc84ac78af.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-c39bc9225c094d069f45e946c2349bd3.txt": {
+    "synthesis-28c1faea03a1cd15d5995f8316b64d35.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-d454e4f4c3a595ff8547e5bbd83459c1.txt": {
+    "synthesis-bbd21463accab3d2aa1c8dd6a4a2dd45.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-bf3e28844ba6a4a66e22dc76ed5827dc.txt": {
+    "synthesis-5c90562a9a75532b6b8e777f2f24578d.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-74e22464a1dc4db3b6f992b4803e6c67.txt": {
+    "synthesis-f57a4190dbb61825d6915ca0a6ae585f.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-25e8b711962674b2726b66299f65d07b.txt": {
+    "synthesis-0d168c248b180c9609929fc4498b8537.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-22ffd981ba2986f470c694cc51a7b0e6.txt": {
+    "synthesis-158e326450d3512ef137232a43f9e0b4.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-c849d3f32259c339468a44b058045cd8.txt": {
+    "synthesis-76e9f0f40b6f0ef56d7bc367aabe80d8.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-fce9ac36594cb0b5bbef69870483eef9.txt": {
+    "synthesis-4385e443661cf55b928de168d304cf2c.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-a42b16c703d37b6bf5ebdb7f08fbcb20.txt": {
+    "synthesis-8a04c21cfcf832119993658b94f24c4c.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-9a65819893e9a031689a94c0841ee0e0.txt": {
+    "synthesis-e520d206fdd9f47874239f454c623da6.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-8b8e29444432c739c37d739eee59a270.txt": {
+    "synthesis-2dea9199786a5d76be70173010debece.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-749a41cba080ece6c3b366f677067bca.txt": {
+    "synthesis-d5fc6a81768aebb279ab71167a8165cc.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-d18cca9a0fa51082b8018d411a6d0f2d.txt": {
+    "synthesis-636bdfcc6afde0dcba9cdf6644b52cb0.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-367e2862a2e02c6b1f1416847fad0c88.txt": {
+    "synthesis-6eeb2cae21b7438d08eaf926ae12b50e.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-085bfdd177ac9ddf40422740312343eb.txt": {
+    "synthesis-dddd47c4b092c538558b716fac0fce28.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-524e5b29fc9cbb86f3c4caa45fe34738.txt": {
+    "synthesis-90582643c6851dff58d20f28b99d0231.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-7baa959ae59711a985d2973f585cd6ae.txt": {
+    "synthesis-3d0860c903b7a4e2e938610f56e25f22.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
     },
-    "synthesis-fe39d5feaadac2c3df8c02b1b7b02e7b.txt": {
-      "title": "Archive overview",
-      "href": "/corpus/summaries/archive-overview/",
-      "kind": "synthesis"
-    },
-    "synthesis-3fd59650f787bfeca2697310abbddc93.txt": {
-      "title": "Archive overview",
-      "href": "/corpus/summaries/archive-overview/",
-      "kind": "synthesis"
-    },
-    "synthesis-2e4fa3ee0398f73d69bb7959bb0517b6.txt": {
+    "synthesis-17b51538299b87f4def5a034653591dc.txt": {
       "title": "Archive overview",
       "href": "/corpus/summaries/archive-overview/",
       "kind": "synthesis"
@@ -52821,26 +52811,6 @@
       "href": "/corpus/videos/rec-68dc86d78fb8fd54d079857c33f66b9b/#segment-rev_7c3f5862bcc83c2d165dd21dfec33479-rev_7c3f5862bcc83c2d165dd21dfec33479_0",
       "kind": "transcript"
     },
-    "transcript-eaa154d4eae2b7f4fec4136fe71153a3.txt": {
-      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
-      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_0",
-      "kind": "transcript"
-    },
-    "transcript-d96d405115532335e3e84e45da831f00.txt": {
-      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
-      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_134",
-      "kind": "transcript"
-    },
-    "transcript-b948bd19ee42aa4663a8babab2d7a181.txt": {
-      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
-      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_231",
-      "kind": "transcript"
-    },
-    "transcript-1f78016306f8e89d7c3ea6e205ccdb40.txt": {
-      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
-      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_358",
-      "kind": "transcript"
-    },
     "transcript-dcc84e5742403180c37de23601c8141e.txt": {
       "title": "Kick Livestreams/choosing my NEW girlfriend [bea344c5-a09b-40da-ab92-3d681bea4d61] 480p",
       "href": "/corpus/videos/rec-699db20f8428381cecd4bc3ea69eeeff/#segment-rev_eb5442424fcc8cb5c2984c4dff601a08-rev_eb5442424fcc8cb5c2984c4dff601a08_0",
@@ -54264,26 +54234,6 @@
     "transcript-1fc9dd542adc963097a18ec940f97eb1.txt": {
       "title": "Self Isolation In Korea - Day 2 [BCIXg81ldnw]",
       "href": "/corpus/videos/rec-7d3e6002a97138db22b0fdf29ed47ae0/#segment-rev_426e94253db5f499be0596e19e907173-rev_426e94253db5f499be0596e19e907173_8519",
-      "kind": "transcript"
-    },
-    "transcript-2688fb8f9bb05b9ec490d20d967a9e1d.txt": {
-      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
-      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_0",
-      "kind": "transcript"
-    },
-    "transcript-b1951afa2c4fba29dfeaaca414841b80.txt": {
-      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
-      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_114",
-      "kind": "transcript"
-    },
-    "transcript-58dcd95e25bb3abd6609f188baa647a6.txt": {
-      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
-      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_238",
-      "kind": "transcript"
-    },
-    "transcript-819cc1f2fc0cf128d6d62192ae80cb53.txt": {
-      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
-      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_365",
       "kind": "transcript"
     },
     "transcript-42eefc59209ad79cabcd5c6741a5cf7f.txt": {
@@ -58159,26 +58109,6 @@
     "transcript-a7d7427f4bc701a02ae5df6a8e387e5d.txt": {
       "title": "STOP saying my wife looks like my mum [swqZFvN5zl8]",
       "href": "/corpus/videos/rec-bc6f7d290024a0d5370a84b980eea37b/#segment-rev_f6b8461ff2e5e1005bc492a0f63960d9-rev_f6b8461ff2e5e1005bc492a0f63960d9_0",
-      "kind": "transcript"
-    },
-    "transcript-4d5cfd8c03e91d2015d8fb7a1ec6eb07.txt": {
-      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
-      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_0",
-      "kind": "transcript"
-    },
-    "transcript-d1e42e58bf0147714a24a6ae1cccd431.txt": {
-      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
-      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_155",
-      "kind": "transcript"
-    },
-    "transcript-572a4b534444f12a68e8e00c35fce2af.txt": {
-      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
-      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_272",
-      "kind": "transcript"
-    },
-    "transcript-d013accb2a71ecb7564a56ef01274185.txt": {
-      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
-      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_396",
       "kind": "transcript"
     },
     "transcript-776b088c59c135def628e039d622ab55.txt": {
@@ -64619,31 +64549,6 @@
     "transcript-bbc953b0645f2e39c77e06f253401776.txt": {
       "title": "Exploring Nara in Japan [_x5Zyr5qOAU]",
       "href": "/corpus/videos/rec-fecdf5144e6c7237863dbb0e5d46887a/#segment-rev_c060317af598e81d99502f1a2784f485-rev_c060317af598e81d99502f1a2784f485_5443",
-      "kind": "transcript"
-    },
-    "transcript-371683c2d41f5933820a590898e3e2a4.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_0",
-      "kind": "transcript"
-    },
-    "transcript-be391b182bf6fa9938c23c3879ef9c42.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_114",
-      "kind": "transcript"
-    },
-    "transcript-80fad9582a28cceed5a2d4c9d013cdfa.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_231",
-      "kind": "transcript"
-    },
-    "transcript-dff41e9d951cb744bf0ac038e36e05f0.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_331",
-      "kind": "transcript"
-    },
-    "transcript-fd6799d6c247e67534690a4ff55c4534.txt": {
-      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
-      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_431",
       "kind": "transcript"
     },
     "transcript-b52888e2c03ef6642cbf34257cfa587d.txt": {
@@ -142256,6 +142161,31 @@
       "href": "/corpus/videos/rec-50a736d680fa8e74745d66a81e4ce70c/#segment-rev_32e0a8796b7ddb7c4556f126ed1c9506-rev_32e0a8796b7ddb7c4556f126ed1c9506_1154",
       "kind": "transcript"
     },
+    "transcript-708c8bbf758cab3e92cc5eda7d32e95f.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_0",
+      "kind": "transcript"
+    },
+    "transcript-5fcc722ed491a89647135baf4b190995.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_114",
+      "kind": "transcript"
+    },
+    "transcript-63c661f2aae77a09b139c88355bb47d4.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_231",
+      "kind": "transcript"
+    },
+    "transcript-668f9e80dfb7dd7cc902d7e43eeec5f6.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_331",
+      "kind": "transcript"
+    },
+    "transcript-a265e91a0dbf4aa3a55ba43b75f0d137.txt": {
+      "title": "New New YouTube Livestreams/i'm quitting Youtube and getting a job.. bye [qgGoRz7-d1s] 480p",
+      "href": "/corpus/videos/rec-fee9c7b82e1bda0b0957c68c47cd06a9/#segment-rev_5b42f4a099bec6d601c38f027e3e47d9-rev_5b42f4a099bec6d601c38f027e3e47d9_431",
+      "kind": "transcript"
+    },
     "transcript-54bac7ba23bfe812d76926536547e384.txt": {
       "title": "Kick Livestreams/new day 2025-11-20 03_33 [28fcefc7-new-day] 480p",
       "href": "/corpus/videos/rec-1163687d326f11e5c31e217eea202d54/#segment-rev_ac2636964845c9344fd492d5917b3366-rev_ac2636964845c9344fd492d5917b3366_0",
@@ -142366,6 +142296,26 @@
       "href": "/corpus/videos/rec-310c1b7401010ec65e6bcafe20ae278e/#segment-rev_db04110a107701b975c6a5aabcdd9cab-rev_db04110a107701b975c6a5aabcdd9cab_261",
       "kind": "transcript"
     },
+    "transcript-0d0894a2ce5324397c7932c7178eca5e.txt": {
+      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
+      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_0",
+      "kind": "transcript"
+    },
+    "transcript-5a291ed9b8a70fdd2bb012c04590cb22.txt": {
+      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
+      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_114",
+      "kind": "transcript"
+    },
+    "transcript-a3c8cbd999bec195e7a70863c46fb490.txt": {
+      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
+      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_238",
+      "kind": "transcript"
+    },
+    "transcript-aaacc6a18f596182219146a7f3d76426.txt": {
+      "title": "New New YouTube Livestreams/things not looking great... [fSu8teGSA3w] 480p",
+      "href": "/corpus/videos/rec-7d89ff885fa0e7abaad6cf21bfafc156/#segment-rev_14aa4ffebc98e74954113a06597d8d55-rev_14aa4ffebc98e74954113a06597d8d55_365",
+      "kind": "transcript"
+    },
     "transcript-a43c2e3e011ff9c93d2cd1e44eb57c97.txt": {
       "title": "Kick Livestreams/IM BACK 2025-11-26 02_12 [cf550b04-im-back] 480p",
       "href": "/corpus/videos/rec-8cd9bd3e08b4b75068904695320cb1b1/#segment-rev_1f18651f0178d2b18b0e25e643469f44-rev_1f18651f0178d2b18b0e25e643469f44_0",
@@ -142414,6 +142364,26 @@
     "transcript-9bc8ae52fe8beeb106ff41ae5c937453.txt": {
       "title": "New New YouTube Livestreams/hi 2025-11-27 03_32 [c5b6a257-hi] 480p",
       "href": "/corpus/videos/rec-a3e8bf9382ce72a102646947451d69fc/#segment-rev_cac05b136ddf9ee5bb44027c83d3c426-rev_cac05b136ddf9ee5bb44027c83d3c426_0",
+      "kind": "transcript"
+    },
+    "transcript-f9ee01f6a71e168dc2bfd71a83dbd0d6.txt": {
+      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
+      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_0",
+      "kind": "transcript"
+    },
+    "transcript-22fba94c2226831d0014388e7e212621.txt": {
+      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
+      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_155",
+      "kind": "transcript"
+    },
+    "transcript-ee2fea206a7b54287c8c8378a3162460.txt": {
+      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
+      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_272",
+      "kind": "transcript"
+    },
+    "transcript-c0651af5138de9d3a47ef58996b91f10.txt": {
+      "title": "New New YouTube Livestreams/i hate you [Rb90Z5SmlcE] 480p",
+      "href": "/corpus/videos/rec-bca2730eb56d66cfbd4b89e8b6cf3216/#segment-rev_677ad85759f40bad5619fcc03a3fe27e-rev_677ad85759f40bad5619fcc03a3fe27e_396",
       "kind": "transcript"
     },
     "transcript-21d1c98e78a479df53f1d099e1776493.txt": {
@@ -142559,6 +142529,26 @@
     "transcript-009e1bf2c4422a40b6d814ca38658c71.txt": {
       "title": "Kick Livestreams/daytradding MASTERCLASS day  3 2025-12-04 03_33 [b207ff5f-daytradding-masterclass-day-3] 480p",
       "href": "/corpus/videos/rec-7f0467b078022be7152c9534fd22195d/#segment-rev_3e1fb419313897bc02c9813003e0f7a5-rev_3e1fb419313897bc02c9813003e0f7a5_0",
+      "kind": "transcript"
+    },
+    "transcript-5ecb6fd52066b69d9cc7c2bddb1342a9.txt": {
+      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
+      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_0",
+      "kind": "transcript"
+    },
+    "transcript-c22dde5a2ab156bb497bb7046c9bed48.txt": {
+      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
+      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_134",
+      "kind": "transcript"
+    },
+    "transcript-53c49be2bc5d0f50312bd97d0dd74650.txt": {
+      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
+      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_231",
+      "kind": "transcript"
+    },
+    "transcript-e83cd538482665b316bcadd7e51f3821.txt": {
+      "title": "New New YouTube Livestreams/things not looking good [PUBY9II0U48] 480p",
+      "href": "/corpus/videos/rec-68dfd5a13ce0acc6c38f7c5ea527d6f6/#segment-rev_5322eafe8471ebd323e5407e2d6fc79b-rev_5322eafe8471ebd323e5407e2d6fc79b_358",
       "kind": "transcript"
     },
     "transcript-b63fa161267dbf5bce2fe2e78032703a.txt": {

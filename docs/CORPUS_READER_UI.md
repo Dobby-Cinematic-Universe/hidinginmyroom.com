@@ -355,3 +355,34 @@ category in the analysis explorer's filter, the date and category in the recordi
 passage explorer's recording search. The browse page uses the same functions. `/corpus/title-aliases.json` serves
 the earlier titles to the client-rendered views; a row found only through an earlier title says "Also titled".
 Before, the three analysis searches needed the query as one unbroken string and did not search earlier titles.
+
+## Dates from community re-uploads, and an upper bound for estimates (2026-11-17, 2026-11-18)
+
+Four streams of November and December 2025 have no date in any archive. A community archivist re-uploaded them and
+gave a day with each. Since 2026-11-18 those days are catalog dates:
+
+- Catalog `date_basis: community_reupload_note`. `describeDateBasis` labels it "Day given by the community
+  archivist u/HIMRedits with a re-upload of the stream". The analysis explorer calls it "Community re-upload note".
+- `date-notes.json` carries one note per such recording: `basis: community_reupload_note` and `stated`, the day or
+  the two consecutive days the archivist gave. `projectDateNotes` requires the catalog date to be the first stated
+  day and rejects any other field, so no address of the re-upload or of the post reaches the site; the date note labels the source and the recording page says
+  that the re-upload's audio was matched to the recording, that the day comes from the archivist and can be a day off, and both possible dates where applicable.
+  Chat uses the same date note for these streams.
+- The "How recordings are dated" note states the exception to the catalog rule and why these dates can be a day off
+  (two other re-uploads can be checked against an archive date and differ from it by one day each).
+- A clip whose words lie inside one of these streams is a `source_recording` estimate like any clip inside a dated
+  recording. Its page says that the stream's date is the day the archivist gave: `projectDateEstimates` sets
+  `source.stated_date` from the catalog's date basis (never from the estimates file) and `describeDateEstimate`
+  words the sentence accordingly.
+
+Still supported by `src/lib/corpus/public-date-estimates.mjs`, with no record using it at present: the evidence
+source `reupload_note` for an `evidence_date`, and `basis: source_estimate` passing on an evidence date
+(`source.basis` is `evidence_date`; the row repeats the containing recording's `date` and `evidence`, carries no
+`estimate`, and is rejected unless date and range equal the containing recording's own row). The four streams were
+shown that way for one local preview before they got catalog dates.
+
+No estimate goes past 5 December 2025, the day of the last stream of 2025. The wording model and the date fusion
+were refitted and re-run with that day as the latest possible one for an undated recording. The export enforces the same cut-off. Catalog dates are not affected. The "How
+recordings are dated" note states the rule, the share of ranges that held the true date in the back-test (82% of
+3,039 dated recordings; 85% of 79 cases where a dated excerpt is the main clue) and that about one wording
+estimate in twenty is far off.

@@ -8,7 +8,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
   <p>Every date is an upload or stream date: when a recording was published, not when the events it describes happened. {fmt(o.dated)} of {fmt(o.total)} recordings have a catalog date; the rest show a labelled estimate where one can be made.</p>
 
   <h4>Catalog dates</h4>
-  <p>A date that the platform or the archive displayed for that very recording.</p>
+  <p>A date that the platform or the archive displayed for that very recording. Four streams from late 2025 are the exception: their date is the day a community archivist gave when re-uploading them.</p>
   <table>
     <thead><tr><th scope="col">Where the date comes from</th><th scope="col">Recordings</th></tr></thead>
     <tbody>{o.byBasis.map(([label, n]) => <tr><td>{label}</td><td>{fmt(n)}</td></tr>)}</tbody>
@@ -18,6 +18,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
     <li><strong>One day of slack.</strong> Older archive files carry the day YouTube displayed (US Pacific time) and newer ones the UTC day, so the same video can appear a day apart in two sources.</li>
     <li><strong>Kick streams.</strong> Their archive file names use a clock ten hours ahead of UTC. Catalog dates are the UTC start day, one day earlier than the file name for about half of them. Archived clip times and the weekdays and clock times said in the streams both support this.</li>
     <li><strong>Re-uploads.</strong> A few recordings re-upload older material. The date is right for the upload; the content is older.</li>
+    <li><strong>Days given by a community archivist.</strong> Four streams of November and December 2025 have no date in any archive. They carry the day the community archivist u/HIMRedits gave when re-uploading them, after the audio of each re-upload was matched to the recording. This is the archivist's statement, not a platform record. Two other re-uploads can be checked against an archive date and differ from it by one day each, so these four dates can be a day off. One was given as one of two days and shows the earlier.</li>
   </ul>
 
   <h4>Estimates for recordings without a catalog date</h4>
@@ -30,11 +31,11 @@ const fmt = (n: number) => n.toLocaleString('en-US');
     <li><strong>Matching text.</strong> The transcript is identical to, or shares most of its text with, a dated recording. Where an archived listing or video page confirms the date, lists show only the dated copy.</li>
     <li><strong>Part of a dated recording.</strong> The words of a clip are found inside a longer dated recording, so the clip is taken to be an excerpt of it and shown with that recording's date as "circa". When 2,500 test snippets were matched with their real source removed, one wrongly reached a firm match. The date is the day of the recording found, not the day the clip was made. Where the recording found may only be a later replay, the date is shown as "or earlier".</li>
     <li><strong>Archived listing.</strong> An archived channel video list showed the video as "N days, weeks or months ago". YouTube rounds such ages down, which gives a window. All 505 videos with a known date fell inside their window when tested.</li>
-    <li><strong>Combined evidence.</strong> A range of a week or less from several clues: an archived stream record, a date label in an earlier transcript index, a dated excerpt that was cut from the recording, a weekday or date said in the recording, or the release date of something mentioned. Shown as "circa". Where a dated excerpt is the main clue, the range held the true date in 85% of 81 test cases.</li>
+    <li><strong>Combined evidence.</strong> A range of a week or less from several clues: an archived stream record, a date label in an earlier transcript index, a dated excerpt that was cut from the recording, a weekday or date said in the recording, or the release date of something mentioned. Shown as "circa". Where a dated excerpt is the main clue, the range held the true date in 85% of 79 test cases.</li>
     <li><strong>Date in title.</strong> The title itself contains a date.</li>
     <li><strong>Estimated period.</strong> An undated clip from an archived collection of Twitch clips gets the period that the collection's dated clips cover.</li>
-    <li><strong>Estimated date.</strong> A statistical estimate from the words used, given as a month with a range. On recordings with known dates it lands within three months at the median and within a year for 83%. Tested on 3,039 dated recordings, the stated ranges contained the true date about 85% of the time. For 80 recordings that were dated only after their estimate had been made, the estimate was within a year for 74% and the date found lay inside the stated range for 86%; those estimates ran about half a year early, which the current model corrects in part.</li>
-    <li><strong>Part of an undated recording.</strong> A clip found inside a longer recording that has no catalog date either is given that recording's estimate.</li>
+    <li><strong>Estimated date.</strong> A statistical estimate from the words used, given as a month with a range. On recordings with known dates it lands within three months at the median and within a year for 83%. Tested on 3,039 dated recordings, the stated ranges contained the true date about 82% of the time. For 80 recordings that were dated only after their estimate had been made, the estimate was within a year for 74% and the date found lay inside the stated range for 86%; those estimates ran about half a year early, which the current model corrects in part. No estimate or range goes past 5 December 2025, the day of the last stream of 2025: the model and the combination of clues both treat it as the latest possible day.</li>
+    <li><strong>Part of an undated recording.</strong> A clip found inside a longer recording that has no catalog date either is given that recording's estimate, or its circa date where it has one.</li>
     <li><strong>Clips with the same name.</strong> A clip with no match of its own is given the day of another file of the same clip, or the range between its numbered neighbours.</li>
   </ul>
 
@@ -43,6 +44,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
     <li>A release date of a game or phone only gives an earliest date, and only when the recording shows it in use. Mentions alone are not used.</li>
     <li>A weekday said aloud matches the catalog weekday about three times in four, and is within a day more than nine times in ten.</li>
     <li>Date labels from the earlier transcript index agreed with archived evidence in 11 of 12 checkable cases. They are plausible, not established.</li>
+    <li>For about one recording in twenty the wording estimate is far off: the true date lies more than twice as far from the estimate as the end of the stated range. Other clues are weighed with that in mind, so a label, a listing or a date said aloud can outweigh the wording.</li>
     <li>Recordings with no transcript, or a very short one, usually have no estimate.</li>
   </ul>
 </details>

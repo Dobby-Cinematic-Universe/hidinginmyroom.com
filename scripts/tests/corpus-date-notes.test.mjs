@@ -16,3 +16,18 @@ test('date notes are kept only for dated recordings and must match the catalog b
   assert.throws(()=>projectDateNotes({recordings:{p:{...page,source:'https://example.com/x'}}},catalog),/Invalid archived page note/);
   assert.throws(()=>projectDateNotes({recordings:{k:{basis:'torrent_filename_utc',file_date:'2025-09-05'}}},catalog),/catalog date or the day after/);
 });
+
+test('a day given with a community re-upload is described as the archivist\'s statement',()=>{
+  const dated=[{recording_id:'a',date_label:'2025-12-05',date_basis:'community_reupload_note'},{recording_id:'b',date_label:'2025-11-18',date_basis:'community_reupload_note'}];
+  const out=projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-05']},b:{basis:'community_reupload_note',stated:['2025-11-18','2025-11-19']}}},dated);
+  assert.deepEqual(out.recordings,{a:{basis:'community_reupload_note',stated:['2025-12-05']},b:{basis:'community_reupload_note',stated:['2025-11-18','2025-11-19']}});
+  assert.equal(describeDateBasis('community_reupload_note'),'Day given by the community archivist u/HIMRedits with a re-upload of the stream');
+  assert.match(describeDateBasis('community_reupload_note',out.recordings.a),/^Day given by the community archivist u\/HIMRedits with a re-upload of the stream\. The re-upload's audio was matched.*archivist's statement, not a date displayed by the platform or an archive, and it can be a day off\.$/);
+  assert.match(describeDateBasis('community_reupload_note',out.recordings.b),/\(given as 2025-11-18 or 2025-11-19; the earlier day is shown\)\. The re-upload's audio/);
+  // the catalog date must be the first stated day; two stated days must be consecutive; no address or name is carried
+  assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-04']}}},dated),/Invalid re-upload note/);
+  assert.throws(()=>projectDateNotes({recordings:{b:{basis:'community_reupload_note',stated:['2025-11-18','2025-11-20']}}},dated),/Invalid re-upload note/);
+  assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:[]}}},dated),/Invalid re-upload note/);
+  assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-05'],source:'https://www.youtube.com/watch?v=abcdefghijk'}}},dated),/Invalid re-upload note/);
+  assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-05'],author:'x'}}},dated),/Unexpected date note field/);
+});
