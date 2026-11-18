@@ -4,7 +4,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {root,save} from './cloudflare.mjs';
 import {validateSummaryRelease} from '../../src/lib/summaries/schema.mjs';
-import {describeDateBasis,projectDateNotes} from '../../src/lib/corpus/public-date-notes.mjs';
+import {describeDateBasis,projectDateNotes,OTHER_RECORD_BASES} from '../../src/lib/corpus/public-date-notes.mjs';
 import {summaryQualityFindings} from '../summary-quality.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const full=process.argv.includes('--full');
@@ -28,14 +28,14 @@ const summaries=JSON.parse(await readFile(path.join(base,'summaries/refreshed.js
 validateSummaryRelease(summaries,new Set(records.map(r=>r.recording_id)),{allowPrepared:true});
 if(summaryQualityFindings(summaries).length)throw Error('Placeholder summary content must be recovered before indexing');
 const byId=new Map(records.map(r=>[r.recording_id,r]));
-const communityDated=records.filter(r=>r.date_basis==='community_reupload_note');
-const dateNotes=communityDated.length
-  ? projectDateNotes(JSON.parse(await readFile(path.join(base,'corpus/date-notes.json'),'utf8')),communityDated).recordings
+const recordingsWithDateNotes=records.filter(r=>OTHER_RECORD_BASES.includes(r.date_basis));
+const dateNotes=recordingsWithDateNotes.length
+  ? projectDateNotes(JSON.parse(await readFile(path.join(base,'corpus/date-notes.json'),'utf8')),recordingsWithDateNotes).recordings
   : {};
 function recordingDate(r){
   const date=r.date_label||'Unknown';
   const note=dateNotes[r.recording_id];
-  if(r.date_basis==='community_reupload_note'&&!note)throw Error('Missing public re-upload date note');
+  if(OTHER_RECORD_BASES.includes(r.date_basis)&&!note)throw Error('Missing public date note for a date that is not a platform or archive record');
   return `${date} (not necessarily event date)${note?`\nDATE BASIS: ${describeDateBasis(r.date_basis,note)}`:''}`;
 }
 

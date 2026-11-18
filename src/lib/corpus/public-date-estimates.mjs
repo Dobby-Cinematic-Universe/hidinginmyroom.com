@@ -11,10 +11,11 @@ export const EVIDENCE_SOURCES={stream_metadata:'an archived stream record',legac
   calendar_clue:'a weekday or date said in the recording',release_anchor:'the release date of something mentioned',back_reference:'a reference to an earlier recording',
   event_reference:'a statement of how long ago something happened',platform_window:'the period covered by the platform\'s other recordings',
   excerpt:'a dated excerpt that was cut from this recording',replay:'older dated material played back in it',
-  reupload_note:'the date a community archivist gave when re-uploading the stream'};
+  reupload_note:'the date a community archivist gave when re-uploading the stream',
+  community_post:'a community post that linked, quoted or summarised the stream at the time',stream_calendar:'the days left free by the platform\'s dated streams'};
 const EVIDENCE_SHORT={stream_metadata:'archived stream record',legacy_index_label:'earlier index label',archived_listing_unattributed:'archived listing',calendar_clue:'date said in recording',
   release_anchor:'release dates',back_reference:'earlier recording',event_reference:'elapsed-time statement',platform_window:'platform period',
-  excerpt:'dated excerpt',replay:'replayed older material',reupload_note:'date given with re-upload'};
+  excerpt:'dated excerpt',replay:'replayed older material',reupload_note:'date given with re-upload',community_post:'community post',stream_calendar:'stream calendar'};
 const validSources=v=>Array.isArray(v)&&v.length>0&&v.length<=10&&new Set(v).size===v.length&&v.every(s=>Object.hasOwn(EVIDENCE_SOURCES,s));
 const listSources=v=>{const t=v.map(s=>EVIDENCE_SOURCES[s]);return t.length>1?`${t.slice(0,-1).join(', ')} and ${t.at(-1)}`:t[0];};
 const COPY_KINDS={exact:'exact_copy',full:'full_copy',partial:'text_estimate'};
@@ -101,6 +102,9 @@ export function projectDateEstimates(input,catalog){
         source={recording_id:s.recording_id,date:s.date,tier:s.tier,relation:s.relation};
         // Read from the catalog, never from the input: the containing recording's date is a community archivist's statement.
         if(other.date_basis==='community_reupload_note')source.stated_date=true;
+        // Likewise from the catalog only: the containing recording's date is an earlier index's or a community post's record.
+        if(other.date_basis==='earlier_transcript_index')source.other_record='index';
+        if(other.date_basis==='community_link_post')source.other_record='post';
       }
     }
     if(row.basis==='title_date'){
@@ -165,7 +169,10 @@ export function describeDateEstimate(row){
       detail:`The words of this recording are found inside a recording dated ${row.date}${probable}. Recordings that hold the same words carry dates more than a week apart, or the recording found plays older clips back, `+
         `so ${row.date} is the latest possible day and not an estimate of the day itself. Not a verified recording or upload date.`,copy:sourceCopy};
     return {label:'Date from the recording it is part of',card:`circa ${row.date} (part of a dated recording)`,short:`circa ${row.date} · part of a dated recording`,circa:row.date,
-      detail:`The words of this recording are found inside a longer recording dated ${row.date}${probable}, so it is taken to be an excerpt of that recording. ${s.stated_date?'That recording\'s date is the day the community archivist u/HIMRedits gave when re-uploading it, not a date displayed by the platform or an archive; it is':'The date is that recording\'s upload or stream day,'} used here as an estimate. `+
+      detail:`The words of this recording are found inside a longer recording dated ${row.date}${probable}, so it is taken to be an excerpt of that recording. ${s.stated_date?'That recording\'s date is the day the community archivist u/HIMRedits gave when re-uploading it, not a date displayed by the platform or an archive; it is'
+        :s.other_record==='index'?'That recording\'s date comes from the file name of an earlier transcript index, not from the platform or an archive; it is'
+        :s.other_record==='post'?'That recording\'s date is the day of the first community post that linked it, not a date displayed by the platform or an archive; it is'
+        :'The date is that recording\'s upload or stream day,'} used here as an estimate. `+
         `It is not the day this clip was made or uploaded. If the archive holds only a later replay and not the original, the true day is earlier. Lists and year filters place this recording at ${row.date}.`,copy:sourceCopy};
   }
   if(row.basis==='source_estimate'&&row.evidence){

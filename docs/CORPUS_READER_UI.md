@@ -386,3 +386,32 @@ were refitted and re-run with that day as the latest possible one for an undated
 recordings are dated" note states the rule, the share of ranges that held the true date in the back-test (82% of
 3,039 dated recordings; 85% of 79 cases where a dated excerpt is the main clue) and that about one wording
 estimate in twenty is far off.
+
+## Dates from an earlier index and from community posts (2026-11-18)
+
+The catalog uses dates from the earlier transcript index and from community posts that linked directly to a video.
+The date note identifies which source supplied the day and how closely its dates agree with other evidence.
+
+- `date_basis: earlier_transcript_index` (85 recordings of 2023 and 2024): the date in the file name of an earlier
+  transcript index for the same video id. Label "Date in the file name of an earlier transcript index"; the analysis
+  explorer calls it "Earlier transcript index". A recording shown as a copy of a dated recording keeps that
+  recording's date and gets no catalog date of its own.
+- `date_basis: community_link_post` (one stream of November 2025): the UTC day of the first community post whose
+  link is the video. Label "Day of the first community post that linked the video"; explorer "Community link post".
+- `date-notes.json` carries one note per such recording with `basis` and nothing else. `projectDateNotes` rejects any
+  other field, so no post, address or user name can reach the site. `describeDateBasis` adds a sentence that says
+  whose record the date is, that it can be a day off, and the measured agreement (114 of 115; 84 of 90).
+  `OTHER_RECORD_BASES` lists the three bases of this kind; chat (`scripts/rag/prepare.mjs`) requires a note for each
+  and puts the same sentence into the document.
+- A clip whose words lie inside such a recording is a `source_recording` estimate; `projectDateEstimates` sets
+  `source.other_record` (`index` or `post`) from the catalog's date basis, never from the estimates file, and the
+  clip's page says whose record the date is.
+
+Circa dates (`basis: evidence_date`) remain for recordings dated by other clues. Two evidence sources are new in
+`EVIDENCE_SOURCES` of `src/lib/corpus/public-date-estimates.mjs`: `community_post` ("a community post that linked,
+quoted or summarised the stream at the time") and `stream_calendar` ("the days left free by the platform's dated
+streams"). The estimates file carries source names only.
+
+The "How recordings are dated" note states the three exceptions to the catalog rule with their counts, the measured
+agreement of each source, the share of ranges that held the true date in the back-test (81% of 3,039; 87% of 79
+excerpt cases) and the check of 108 earlier estimates against the days found since.

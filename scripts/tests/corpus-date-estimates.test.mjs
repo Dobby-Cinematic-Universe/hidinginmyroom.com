@@ -105,6 +105,9 @@ test('combined evidence gives a circa date of at most a week, and a wording rang
   assert.equal(text.card,'circa 2024-04-09 (earlier index label)');
   assert.match(text.detail,/between 2024-04-08 and 2024-04-10 using a date label in an earlier transcript index and a weekday or date said in the recording.*not a verified/);
   assert.equal(circaDate(ev),'2024-04-09');assert.equal(duplicateOf(ev),undefined);
+  const post=project({basis:'evidence_date',date:'2025-11-04',copy:null,estimate:null,evidence:{from:'2025-11-04',to:'2025-11-04',sources:['community_post','calendar_clue','stream_calendar']}});
+  assert.equal(describeDateEstimate(post).card,'circa 2025-11-04 (community post)');
+  assert.match(describeDateEstimate(post).detail,/a community post that linked, quoted or summarised the stream at the time, a weekday or date said in the recording and the days left free by the platform's dated streams/);
   assert.throws(()=>project({basis:'evidence_date',date:'2024-04-09',copy:null,estimate:null,evidence:{from:'2024-04-01',to:'2024-04-20',sources:['calendar_clue']}}),/Invalid evidence date/);
   assert.throws(()=>project({basis:'evidence_date',date:'2024-04-12',copy:null,estimate:null,evidence:{from:'2024-04-08',to:'2024-04-10',sources:['calendar_clue']}}),/Invalid evidence date basis/);
   assert.throws(()=>project({basis:'evidence_date',date:'2024-04-09',copy:null,estimate:null,evidence:{from:'2024-04-08',to:'2024-04-10',sources:['guess']}}),/Invalid evidence date/);
@@ -229,4 +232,14 @@ test('a clip inside a stream dated by the archivist says whose date it carries',
   assert.match(describeDateEstimate(out.c2).detail,/The date is that recording's upload or stream day, used here as an estimate\./);
   // the mark comes from the catalog only; the input cannot set it
   assert.throws(()=>projectDateEstimates({recordings:{c:{basis:'source_recording',date:'2025-11-27',copy:null,estimate:null,source:{recording_id:'s',date:'2025-11-27',tier:'A',relation:'same_recording',stated_date:true}}}},dated),/Unexpected source field/);
+});
+
+test('a clip inside a stream dated by the earlier index or a link post says whose record the date is',()=>{
+  const dated=[{recording_id:'s',date_label:'2024-04-16',date_basis:'earlier_transcript_index'},{recording_id:'p',date_label:'2025-11-16',date_basis:'community_link_post'},{recording_id:'c',date_label:null},{recording_id:'c2',date_label:null}];
+  const out=projectDateEstimates({recordings:{c:{basis:'source_recording',date:'2024-04-16',copy:null,estimate:null,source:{recording_id:'s',date:'2024-04-16',tier:'A',relation:'same_recording'}},
+    c2:{basis:'source_recording',date:'2025-11-16',copy:null,estimate:null,source:{recording_id:'p',date:'2025-11-16',tier:'A',relation:'same_recording'}}}},dated).recordings;
+  assert.equal(out.c.source.other_record,'index');assert.equal(out.c2.source.other_record,'post');
+  assert.match(describeDateEstimate(out.c).detail,/That recording's date comes from the file name of an earlier transcript index, not from the platform or an archive; it is used here as an estimate\./);
+  assert.match(describeDateEstimate(out.c2).detail,/That recording's date is the day of the first community post that linked it, not a date displayed by the platform or an archive; it is used here as an estimate\./);
+  assert.throws(()=>projectDateEstimates({recordings:{c:{basis:'source_recording',date:'2024-04-16',copy:null,estimate:null,source:{recording_id:'s',date:'2024-04-16',tier:'A',relation:'same_recording',other_record:'index'}}}},dated),/Unexpected source field/);
 });

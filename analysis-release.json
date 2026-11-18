@@ -1,16 +1,16 @@
 {
   "version": 1,
   "type": "transcript-analysis",
-  "sha256": "573d9c0bcf36b1e034dc2c68c355165835d745b27563033c8fcf02d6a1ad2bbb",
-  "bytes": 44052732,
-  "unpacked_bytes": 569704589,
+  "sha256": "8c82a645b8811772b7ce31e494aa7e094e397452c65d92e362f455edd261f781",
+  "bytes": 44060326,
+  "unpacked_bytes": 569730009,
   "files": 4438,
-  "corpus_release": "release_673b68ac74a468ae65d4bcc0",
+  "corpus_release": "release_9a2cba1beb4d57d90da75e62",
   "questionnaire_version": "himr-transcript-analysis-questions-v2",
   "model": "jev-1.14.0",
-  "source_generated_at": "2026-11-18T06:07:14+00:00",
+  "source_generated_at": "2026-11-18T19:24:46+00:00",
   "scored_recordings": 4428,
   "scored_passages": 65577,
   "loadings_sha256": "00f8c78d5817fc7718d7d80ed31a5514d72b76c281321efdbbfd0e584e46d705",
-  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/573d9c0bcf36b1e034dc2c68c355165835d745b27563033c8fcf02d6a1ad2bbb.tar.gz"
+  "url": "https://himr-corpus-release-assets.a-xauiw.workers.dev/releases/8c82a645b8811772b7ce31e494aa7e094e397452c65d92e362f455edd261f781.tar.gz"
 }

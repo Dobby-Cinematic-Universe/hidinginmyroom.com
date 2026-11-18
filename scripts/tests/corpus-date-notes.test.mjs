@@ -31,3 +31,15 @@ test('a day given with a community re-upload is described as the archivist\'s st
   assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-05'],source:'https://www.youtube.com/watch?v=abcdefghijk'}}},dated),/Invalid re-upload note/);
   assert.throws(()=>projectDateNotes({recordings:{a:{basis:'community_reupload_note',stated:['2025-12-05'],author:'x'}}},dated),/Unexpected date note field/);
 });
+
+test('a date from the earlier transcript index or a first link post carries a note that names the basis and nothing else',()=>{
+  const others=[{recording_id:'i',date_label:'2024-04-16',date_basis:'earlier_transcript_index'},{recording_id:'l',date_label:'2025-11-16',date_basis:'community_link_post'}];
+  const on=projectDateNotes({recordings:{i:{basis:'earlier_transcript_index'},l:{basis:'community_link_post'}}},others);
+  assert.deepEqual(on.recordings,{i:{basis:'earlier_transcript_index'},l:{basis:'community_link_post'}});
+  assert.equal(describeDateBasis('earlier_transcript_index'),'Date in the file name of an earlier transcript index');
+  assert.match(describeDateBasis('earlier_transcript_index',on.recordings.i),/not a date displayed by the platform or an archive, and it can be a day off: .*114 of 115/);
+  assert.match(describeDateBasis('community_link_post',on.recordings.l),/^Day of the first community post that linked the video \(UTC\)\. This is not a date displayed by the platform or an archive.*84 of 90\.$/);
+  assert.throws(()=>projectDateNotes({recordings:{i:{basis:'earlier_transcript_index',source:'https://example.org/x'}}},others),/Invalid index or link-post note/);
+  assert.throws(()=>projectDateNotes({recordings:{l:{basis:'community_link_post',post:'abc'}}},others),/Unexpected date note field/);
+  assert.throws(()=>projectDateNotes({recordings:{i:{basis:'community_link_post'}}},others),/does not match the catalog date basis/);
+});

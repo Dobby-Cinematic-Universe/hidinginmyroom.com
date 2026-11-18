@@ -4,7 +4,7 @@ import path from 'node:path';
 import {localPreviewRoot} from '../local-preview';
 import {describeDateBasis as describe} from './public-date-notes.mjs';
 
-export interface DateNote { basis:'archived_video_page'|'torrent_filename_utc'|'community_reupload_note'; captured?:string; source?:string; file_date?:string; stated?:string[] }
+export interface DateNote { basis:'archived_video_page'|'torrent_filename_utc'|'community_reupload_note'|'earlier_transcript_index'|'community_link_post'; captured?:string; source?:string; file_date?:string; stated?:string[] }
 let cached:Promise<{recordings:Record<string,DateNote>}>|undefined;
 function load(){
   const root=localPreviewRoot();
